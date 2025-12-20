@@ -2,7 +2,7 @@
 
 ## � GitHub & Firebase Integration
 
-- **Repo**: Private repo `tekneckjoe/hvac_support_app`
+- **Repo**: [joeschmoe687/hvac_support_app](https://github.com/joeschmoe687/hvac_support_app) (private)
 - **Firebase Project**: `tekneck-support` (shared with AirPro website)
 - **Website Repo**: `airpro-website` (same workspace)
 - See [README.md](README.md) for full integration documentation

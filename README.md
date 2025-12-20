@@ -2,12 +2,13 @@
 
 Mobile app for TekNeck contractors: dispatch, messaging, and CRM-lite.
 
-## 🔗 Firebase & AirPro Website Integration
+## 🔗 GitHub & Firebase Integration
 
 > **IMPORTANT FOR COPILOT/AI AGENTS**: This app shares a Firebase backend with the AirPro website.
 
 | Resource | Location |
 |----------|----------|
+| **GitHub Repo** | [joeschmoe687/hvac_support_app](https://github.com/joeschmoe687/hvac_support_app) (private) |
 | **Firebase Project** | `tekneck-support` |
 | **AirPro Website Repo** | `airpro-website` (same workspace) |
 | **Website URL** | [airpronwa.com](https://airpronwa.com) |

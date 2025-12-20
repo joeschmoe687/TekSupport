@@ -180,6 +180,12 @@ Before committing:
 
 ---
 
+## 🔗 GitHub Repository
+
+**Private Repo:** [joeschmoe687/hvac_support_app](https://github.com/joeschmoe687/hvac_support_app)
+
+---
+
 ## Security
 
 ### Secrets (DO NOT COMMIT)
