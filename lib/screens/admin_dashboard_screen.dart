@@ -1,0 +1,1363 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dispatch_screen.dart';
+import '../widgets/gradient_scaffold.dart';
+
+class AdminDashboardScreen extends StatefulWidget {
+  final VoidCallback onToggleTheme;
+  const AdminDashboardScreen({super.key, required this.onToggleTheme});
+
+  @override
+  State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
+}
+
+class _AdminDashboardScreenState extends State<AdminDashboardScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  bool _isAdmin = false;
+  bool _roleLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRole();
+  }
+
+  Future<void> _loadRole() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        setState(() {
+          _isAdmin = false;
+          _roleLoaded = true;
+          _tabController = TabController(length: 6, vsync: this);
+        });
+        return;
+      }
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      final data = doc.data() ?? {};
+      final role = (data['role'] ?? '').toString().toLowerCase();
+      final isAdmin = role == 'admin';
+      setState(() {
+        _isAdmin = isAdmin;
+        _roleLoaded = true;
+        _tabController = TabController(length: isAdmin ? 7 : 6, vsync: this);
+      });
+    } catch (_) {
+      setState(() {
+        _isAdmin = false;
+        _roleLoaded = true;
+        _tabController = TabController(length: 6, vsync: this);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_roleLoaded) {
+      _tabController.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final tabLabelStyle = const TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+    );
+
+    // Show loading indicator until role is loaded
+    if (!_roleLoaded) {
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: AppColors.backgroundGradient,
+          ),
+          child: const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryCyan),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        title: const Text(
+          'Admin Dashboard',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+        ),
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: AppColors.primaryCyan,
+          labelColor: Colors.white,
+          unselectedLabelColor: AppColors.textSecondary,
+          labelStyle: tabLabelStyle,
+          tabs: [
+            const Tab(
+              icon: Icon(Icons.dashboard, color: AppColors.textSecondary),
+              text: 'Overview',
+            ),
+            const Tab(
+              icon: Icon(Icons.assignment, color: AppColors.textSecondary),
+              text: 'Dispatch',
+            ),
+            const Tab(
+              icon: Icon(Icons.people, color: AppColors.textSecondary),
+              text: 'Customers',
+            ),
+            const Tab(
+              icon: Icon(Icons.receipt_long, color: AppColors.textSecondary),
+              text: 'Invoices',
+            ),
+            const Tab(
+              icon: Icon(Icons.price_change, color: AppColors.textSecondary),
+              text: 'Pricebook',
+            ),
+            const Tab(
+              icon: Icon(Icons.settings, color: AppColors.textSecondary),
+              text: 'Settings',
+            ),
+            if (_isAdmin)
+              const Tab(
+                icon: Icon(
+                  Icons.admin_panel_settings,
+                  color: AppColors.textSecondary,
+                ),
+                text: 'Admin',
+              ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.brightness_6,
+              color: AppColors.textSecondary,
+            ),
+            onPressed: widget.onToggleTheme,
+            tooltip: 'Toggle Theme',
+          ),
+        ],
+      ),
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            // Overview
+            _OverviewPane(primaryAccent: AppColors.primaryCyan),
+            // Dispatch (existing screen)
+            DispatchScreen(onThemeToggle: widget.onToggleTheme),
+            // Customers
+            const _CustomersPane(),
+            // Invoices
+            const _InvoicesPane(),
+            // Pricebook
+            const _PricebookPane(),
+            // Settings
+            const _SettingsPane(),
+            if (_isAdmin) const _AdminPane(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AdminPane extends StatelessWidget {
+  const _AdminPane();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Developer Tools',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Tools for debugging and device integration',
+            style: TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+          const SizedBox(height: 24),
+
+          // Device Registry Card
+          _AdminToolCard(
+            icon: Icons.device_hub,
+            title: 'Device Registry',
+            description:
+                'View and manage supported HVAC tool profiles (Weytek, CCS, Testo, etc.)',
+            accentColor: AppColors.accentBlue,
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Device Registry coming soon'),
+                  backgroundColor: AppColors.warning,
+                ),
+              );
+            },
+          ),
+
+          const SizedBox(height: 12),
+
+          // P/T Chart Tester Card
+          _AdminToolCard(
+            icon: Icons.thermostat,
+            title: 'P/T Chart Tester',
+            description:
+                'Test superheat/subcool calculations for different refrigerants',
+            accentColor: AppColors.success,
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('P/T Chart Tester coming soon'),
+                  backgroundColor: AppColors.warning,
+                ),
+              );
+            },
+          ),
+
+          const SizedBox(height: 24),
+
+          // Debug Info Section
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceDark,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.info_outline,
+                        color: AppColors.textMuted, size: 18),
+                    SizedBox(width: 8),
+                    Text(
+                      'Debug Info',
+                      style: TextStyle(
+                        color: AppColors.textMuted,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                _DebugInfoRow(label: 'App Version', value: '1.0.0'),
+                _DebugInfoRow(label: 'Flutter BLE+', value: '1.36.8'),
+                _DebugInfoRow(label: 'Hive Storage', value: 'Enabled'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AdminToolCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+  final Color accentColor;
+  final VoidCallback onTap;
+
+  const _AdminToolCard({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.accentColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceDark,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: accentColor.withOpacity(0.3)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: accentColor.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: accentColor, size: 24),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios, color: accentColor, size: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DebugInfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _DebugInfoRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+          Text(value,
+              style: const TextStyle(
+                  color: AppColors.textSecondary, fontSize: 12)),
+        ],
+      ),
+    );
+  }
+}
+
+class _OverviewPane extends StatelessWidget {
+  final Color primaryAccent;
+  const _OverviewPane({required this.primaryAccent});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Welcome, Admin',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Quick stats and shortcuts',
+            style: TextStyle(color: Colors.white70),
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Expanded(child: _JobsTodayStat(accent: primaryAccent)),
+              const SizedBox(width: 12),
+              Expanded(child: _OpenInvoicesStat(accent: primaryAccent)),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: const [
+              _QuickAction(icon: Icons.assignment, label: 'Create Job'),
+              _QuickAction(icon: Icons.person_add, label: 'Add Customer'),
+              _QuickAction(icon: Icons.receipt, label: 'New Invoice'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color accent;
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.accent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF121212),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: accent.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: const TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              color: accent,
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _JobsTodayStat extends StatelessWidget {
+  final Color accent;
+  const _JobsTodayStat({required this.accent});
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final yyyy = now.year.toString().padLeft(4, '0');
+    final mm = now.month.toString().padLeft(2, '0');
+    final dd = now.day.toString().padLeft(2, '0');
+    final todayStr = '$yyyy-$mm-$dd';
+
+    // jobDispatch date stored as 'YYYY-MM-DD' in web fix
+    final query = FirebaseFirestore.instance
+        .collection('jobDispatch')
+        .where('date', isEqualTo: todayStr);
+
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: query.snapshots(),
+      builder: (context, snapshot) {
+        final count = snapshot.hasData ? snapshot.data!.docs.length : 0;
+        return _StatCard(label: 'Jobs Today', value: '$count', accent: accent);
+      },
+    );
+  }
+}
+
+class _OpenInvoicesStat extends StatelessWidget {
+  final Color accent;
+  const _OpenInvoicesStat({required this.accent});
+
+  @override
+  Widget build(BuildContext context) {
+    // Count invoices where status != 'paid'
+    final query = FirebaseFirestore.instance
+        .collection('invoices')
+        .where('status', isNotEqualTo: 'paid');
+
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: query.snapshots(),
+      builder: (context, snapshot) {
+        final count = snapshot.hasData ? snapshot.data!.docs.length : 0;
+        return _StatCard(
+          label: 'Open Invoices',
+          value: '$count',
+          accent: accent,
+        );
+      },
+    );
+  }
+}
+
+class _QuickAction extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  const _QuickAction({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF121212),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFF4EC7F3).withOpacity(0.25)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white70, size: 18),
+          const SizedBox(width: 8),
+          Text(label, style: const TextStyle(color: Colors.white)),
+        ],
+      ),
+    );
+  }
+}
+
+// Removed placeholder pane after wiring real panes
+
+class _PricebookPane extends StatelessWidget {
+  const _PricebookPane();
+
+  @override
+  Widget build(BuildContext context) {
+    // Assumes collections: 'pricebookCategories' and 'pricebookItems' with item.categoryId
+    final categoriesStream = FirebaseFirestore.instance
+        .collection('pricebookCategories')
+        .orderBy('name')
+        .snapshots();
+    final itemsStream =
+        FirebaseFirestore.instance.collection('pricebookItems').snapshots();
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Pricebook',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Categories and items',
+            style: TextStyle(color: Colors.white70),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: categoriesStream,
+              builder: (context, catSnap) {
+                if (!catSnap.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final categories = catSnap.data!.docs;
+                return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: itemsStream,
+                  builder: (context, itemSnap) {
+                    final items = itemSnap.hasData
+                        ? itemSnap.data!.docs
+                        : const <QueryDocumentSnapshot<Map<String, dynamic>>>[];
+                    return ListView.separated(
+                      itemCount: categories.length,
+                      separatorBuilder: (_, __) =>
+                          const Divider(color: Colors.white12),
+                      itemBuilder: (context, i) {
+                        final cat = categories[i].data();
+                        final catId =
+                            (cat['id'] ?? categories[i].id).toString();
+                        final name = (cat['name'] ?? 'Category').toString();
+                        final count = items.where((d) {
+                          final data = d.data();
+                          final itemCatId =
+                              (data['categoryId'] ?? '').toString();
+                          return itemCatId == catId;
+                        }).length;
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF121212),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.white10),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Items: $count',
+                              style: const TextStyle(color: Colors.white70),
+                            ),
+                            trailing: const Icon(
+                              Icons.chevron_right,
+                              color: Colors.white54,
+                            ),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => _PricebookItemsPane(
+                                    categoryId: catId,
+                                    categoryName: name,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingsPane extends StatelessWidget {
+  const _SettingsPane();
+
+  @override
+  Widget build(BuildContext context) {
+    // Assumes a single doc 'admin' in 'settings' with booleans/toggles
+    final settingsDocStream = FirebaseFirestore.instance
+        .collection('settings')
+        .doc('admin')
+        .snapshots();
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Settings',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Preferences, roles, integrations',
+            style: TextStyle(color: Colors.white70),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: settingsDocStream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final data = snapshot.data!.data() ?? {};
+                // Toggles with safe defaults
+                final enableChatNotify =
+                    (data['enableChatNotifications'] ?? true) == true;
+                final enableDispatch = (data['enableDispatch'] ?? true) == true;
+                final requireAdminLogin =
+                    (data['requireAdminLogin'] ?? true) == true;
+                return ListView(
+                  children: [
+                    _SettingsToggle(
+                      title: 'Chat Notifications',
+                      value: enableChatNotify,
+                      onChanged: (v) async {
+                        await FirebaseFirestore.instance
+                            .collection('settings')
+                            .doc('admin')
+                            .set({
+                          'enableChatNotifications': v,
+                        }, SetOptions(merge: true));
+                      },
+                    ),
+                    _SettingsToggle(
+                      title: 'Dispatch Enabled',
+                      value: enableDispatch,
+                      onChanged: (v) async {
+                        await FirebaseFirestore.instance
+                            .collection('settings')
+                            .doc('admin')
+                            .set({
+                          'enableDispatch': v,
+                        }, SetOptions(merge: true));
+                      },
+                    ),
+                    _SettingsToggle(
+                      title: 'Require Admin Login',
+                      value: requireAdminLogin,
+                      onChanged: (v) async {
+                        await FirebaseFirestore.instance
+                            .collection('settings')
+                            .doc('admin')
+                            .set({
+                          'requireAdminLogin': v,
+                        }, SetOptions(merge: true));
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PricebookItemsPane extends StatelessWidget {
+  final String categoryId;
+  final String categoryName;
+  const _PricebookItemsPane({
+    required this.categoryId,
+    required this.categoryName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final itemsStream = FirebaseFirestore.instance
+        .collection('pricebookItems')
+        .where('categoryId', isEqualTo: categoryId)
+        .orderBy('name')
+        .snapshots();
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        title: Text(
+          categoryName,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: itemsStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final docs = snapshot.data!.docs;
+            if (docs.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No items in this category',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              );
+            }
+            return ListView.separated(
+              itemCount: docs.length,
+              separatorBuilder: (_, __) => const Divider(color: Colors.white12),
+              itemBuilder: (context, i) {
+                final data = docs[i].data();
+                final name = (data['name'] ?? 'Item').toString();
+                final price = (data['price'] ?? '').toString();
+                final code = (data['code'] ?? '').toString();
+                return Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF121212),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Text(
+                      [
+                        code.isEmpty ? null : 'Code: $code',
+                        price.isEmpty ? null : 'Price: $price',
+                      ].whereType<String>().join(' • '),
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.white54,
+                    ),
+                    onTap: () {
+                      // Future: item detail/edit
+                    },
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsToggle extends StatelessWidget {
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+  const _SettingsToggle({
+    required this.title,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF121212),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Switch(
+            value: value,
+            activeColor: const Color(0xFF4EC7F3),
+            onChanged: onChanged,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CustomersPane extends StatefulWidget {
+  const _CustomersPane();
+
+  @override
+  State<_CustomersPane> createState() => _CustomersPaneState();
+}
+
+class _CustomersPaneState extends State<_CustomersPane> {
+  String _search = '';
+  bool _saving = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final baseQuery = FirebaseFirestore.instance.collection('customers');
+    final stream = baseQuery.snapshots();
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Customers',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            onChanged: (v) => setState(() => _search = v.trim().toLowerCase()),
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'Search by name, email, phone',
+              hintStyle: const TextStyle(color: Colors.white54),
+              filled: true,
+              fillColor: const Color(0xFF121212),
+              prefixIcon: const Icon(Icons.search, color: Colors.white54),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                  color: Color(0xFF4EC7F3),
+                  width: 0.5,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final docs = snapshot.data!.docs;
+                final filtered = docs.where((d) {
+                  final data = d.data();
+                  final name = (data['name'] ?? '').toString().toLowerCase();
+                  final email = (data['email'] ?? '').toString().toLowerCase();
+                  final phone = (data['phone'] ?? '').toString().toLowerCase();
+                  if (_search.isEmpty) return true;
+                  return name.contains(_search) ||
+                      email.contains(_search) ||
+                      phone.contains(_search);
+                }).toList();
+
+                if (filtered.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No customers found',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  );
+                }
+
+                return ListView.separated(
+                  itemCount: filtered.length,
+                  separatorBuilder: (_, __) =>
+                      const Divider(color: Colors.white12),
+                  itemBuilder: (context, i) {
+                    final data = filtered[i].data();
+                    final name = (data['name'] ?? 'Unnamed').toString();
+                    final email = (data['email'] ?? '').toString();
+                    final phone = (data['phone'] ?? '').toString();
+                    return ListTile(
+                      tileColor: const Color(0xFF121212),
+                      title: Text(
+                        name,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        [email, phone].where((s) => s.isNotEmpty).join(' • '),
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.white54,
+                      ),
+                      onTap: () => _openCustomerDetail(filtered[i]),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openCustomerDetail(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data();
+    final nameCtrl = TextEditingController(text: data['name'] ?? '');
+    final emailCtrl = TextEditingController(text: data['email'] ?? '');
+    final phoneCtrl = TextEditingController(text: data['phone'] ?? '');
+    final addressCtrl = TextEditingController(text: data['address'] ?? '');
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.background,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Customer Detail',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white54),
+                      onPressed: () => Navigator.of(ctx).pop(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                _buildField('Name', nameCtrl),
+                const SizedBox(height: 12),
+                _buildField('Email', emailCtrl),
+                const SizedBox(height: 12),
+                _buildField('Phone', phoneCtrl),
+                const SizedBox(height: 12),
+                _buildField('Address', addressCtrl, maxLines: 2),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: _saving
+                            ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    AppColors.background,
+                                  ),
+                                ),
+                              )
+                            : const Icon(Icons.save, size: 16),
+                        label: Text(_saving ? 'Saving...' : 'Save'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF4EC7F3),
+                          foregroundColor: Colors.black,
+                        ),
+                        onPressed: _saving
+                            ? null
+                            : () => _saveCustomer(
+                                  doc.id,
+                                  nameCtrl.text.trim(),
+                                  emailCtrl.text.trim(),
+                                  phoneCtrl.text.trim(),
+                                  addressCtrl.text.trim(),
+                                ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.receipt_long, size: 16),
+                        label: const Text('Create Invoice'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF4EC7F3),
+                          side: const BorderSide(color: Color(0xFF4EC7F3)),
+                        ),
+                        onPressed: () => _showCreateInvoice(
+                          doc.id,
+                          nameCtrl.text.trim().isEmpty
+                              ? 'Customer'
+                              : nameCtrl.text.trim(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildField(
+    String label,
+    TextEditingController controller, {
+    int maxLines = 1,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white70)),
+        const SizedBox(height: 6),
+        TextField(
+          controller: controller,
+          maxLines: maxLines,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: const Color(0xFF121212),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.white24),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.white24),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFF4EC7F3)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _saveCustomer(
+    String id,
+    String name,
+    String email,
+    String phone,
+    String address,
+  ) async {
+    setState(() => _saving = true);
+    try {
+      await FirebaseFirestore.instance.collection('customers').doc(id).update({
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'address': address,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Customer updated')));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error saving: $e')));
+      }
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  Future<void> _showCreateInvoice(
+    String customerId,
+    String customerName,
+  ) async {
+    final amountCtrl = TextEditingController();
+    final descCtrl = TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          backgroundColor: AppColors.background,
+          title: const Text(
+            'New Invoice',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: amountCtrl,
+                keyboardType: TextInputType.number,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Amount',
+                  labelStyle: TextStyle(color: Colors.white70),
+                ),
+              ),
+              TextField(
+                controller: descCtrl,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Description',
+                  labelStyle: TextStyle(color: Colors.white70),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final now = DateTime.now().millisecondsSinceEpoch;
+                final number = 'INV-$now';
+                final amount = amountCtrl.text.trim();
+                await FirebaseFirestore.instance.collection('invoices').add({
+                  'number': number,
+                  'status': 'unpaid',
+                  'amount': amount,
+                  'description': descCtrl.text.trim(),
+                  'customerId': customerId,
+                  'customerName': customerName,
+                  'createdAt': FieldValue.serverTimestamp(),
+                  'updatedAt': FieldValue.serverTimestamp(),
+                });
+                if (mounted) {
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Invoice $number created')),
+                  );
+                }
+              },
+              child: const Text('Create'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _InvoicesPane extends StatelessWidget {
+  const _InvoicesPane();
+
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'paid':
+        return const Color(0xFF2ECC71); // green
+      case 'overdue':
+        return const Color(0xFFE74C3C); // red
+      case 'unpaid':
+      default:
+        return const Color(0xFFF1C40F); // amber
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final stream =
+        FirebaseFirestore.instance.collection('invoices').snapshots();
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Invoices',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final docs = snapshot.data!.docs;
+                if (docs.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No invoices found',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  );
+                }
+
+                return ListView.separated(
+                  itemCount: docs.length,
+                  separatorBuilder: (_, __) =>
+                      const Divider(color: Colors.white12),
+                  itemBuilder: (context, i) {
+                    final data = docs[i].data();
+                    final number = (data['number'] ?? '—').toString();
+                    final status = (data['status'] ?? 'unpaid').toString();
+                    final amount = (data['amount'] ?? '').toString();
+                    final color = _statusColor(status);
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF121212),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.white10),
+                      ),
+                      child: ListTile(
+                        title: Row(
+                          children: [
+                            Text(
+                              'Invoice $number',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: color.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: color.withOpacity(0.5),
+                                ),
+                              ),
+                              child: Text(
+                                status.toUpperCase(),
+                                style: TextStyle(
+                                  color: color,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        subtitle: Text(
+                          amount.isEmpty ? 'Amount: —' : 'Amount: $amount',
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                        trailing: const Icon(
+                          Icons.chevron_right,
+                          color: Colors.white54,
+                        ),
+                        onTap: () {
+                          // Future: open invoice detail
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -1,0 +1,563 @@
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
+
+/// Device type categories
+enum HvacDeviceType {
+  refrigerantGauge,
+  temperatureProbe,
+  refrigerantScale,
+  airflowMeter,
+  pressureProbe,
+  clampMeter,
+  vacuumGauge,
+  unknown,
+}
+
+/// Supported HVAC tool manufacturers
+enum HvacManufacturer {
+  weytek,
+  ccs,
+  testo,
+  fieldpiece,
+  parker,
+  yellowJacket,
+  weatherflow,
+  unknown,
+}
+
+/// ABM-200 multi-sensor reading (velocity, temp, humidity, pressure)
+class Abm200Reading {
+  final int velocity; // FPM
+  final double tempF; // Fahrenheit
+  final double humidity; // %RH
+  final double pressure; // in/WC or barometric
+
+  const Abm200Reading({
+    required this.velocity,
+    required this.tempF,
+    required this.humidity,
+    required this.pressure,
+  });
+
+  @override
+  String toString() =>
+      'ABM-200: ${velocity}FPM, ${tempF.toStringAsFixed(1)}°F, ${humidity.toStringAsFixed(1)}%RH, ${pressure.toStringAsFixed(1)}P';
+}
+
+/// Device profile containing BLE UUIDs and parsing logic
+class DeviceProfile {
+  final String name;
+  final HvacManufacturer manufacturer;
+  final HvacDeviceType type;
+  final List<String> serviceUuids;
+  final String? dataCharacteristicUuid;
+  final String? batteryCharacteristicUuid;
+  final double Function(List<int> rawData)? parseReading;
+  final String unit;
+
+  const DeviceProfile({
+    required this.name,
+    required this.manufacturer,
+    required this.type,
+    required this.serviceUuids,
+    this.dataCharacteristicUuid,
+    this.batteryCharacteristicUuid,
+    this.parseReading,
+    required this.unit,
+  });
+}
+
+/// Registry of known HVAC Bluetooth devices
+class DeviceRegistry {
+  static final DeviceRegistry _instance = DeviceRegistry._internal();
+  factory DeviceRegistry() => _instance;
+  DeviceRegistry._internal();
+
+  /// Known device profiles - refined with actual BLE sniffing
+  final Map<String, DeviceProfile> _profiles = {
+    // Weytek HD / Inficon Wey-Tek HD Refrigerant Scale
+    // Protocol reverse-engineered Dec 18, 2025
+    // Service UUID: E3B744F3-4309-4A3A-B877-CCACD9EFB97D
+    // Data Characteristic: handle 0x0111 (read/write/notify)
+    // CCCD: handle 0x0112 (enable notifications: write 01 00)
+    // Data format: aa aa aa aa [cmd] [flags] [weight 4B LE] [?] [chk] [?]
+    // Weight: int32_le(bytes[6:10]) / 1000.0 = ounces
+    'weytek_scale': DeviceProfile(
+      name: 'Weytek HD Scale',
+      manufacturer: HvacManufacturer.weytek,
+      type: HvacDeviceType.refrigerantScale,
+      serviceUuids: ['e3b744f3-4309-4a3a-b877-ccacd9efb97d'],
+      dataCharacteristicUuid:
+          'e3b744f3-4309-4a3a-b877-ccacd9efb97d', // Handle 0x0111
+      unit: 'oz',
+      parseReading: _parseWeytekScale,
+    ),
+
+    // CCS Airflow Meter
+    // TODO: Replace with actual UUIDs from BLE sniffing
+    'ccs_airflow': DeviceProfile(
+      name: 'CCS Airflow Meter',
+      manufacturer: HvacManufacturer.ccs,
+      type: HvacDeviceType.airflowMeter,
+      serviceUuids: ['0000ffe0-0000-1000-8000-00805f9b34fb'], // Placeholder
+      dataCharacteristicUuid: '0000ffe1-0000-1000-8000-00805f9b34fb',
+      unit: 'CFM',
+      parseReading: _parseCcsAirflow,
+    ),
+
+    // ABM-200 Airflow Meter (WeatherFlow / AAB / CPS)
+    // BLE Protocol captured Dec 19, 2025 via TekTool sniffer
+    // 14-byte packets at ~10Hz: velocity, temp, humidity, pressure
+    'abm_200': DeviceProfile(
+      name: 'ABM-200 Airflow Meter',
+      manufacturer: HvacManufacturer.weatherflow,
+      type: HvacDeviceType.airflowMeter,
+      serviceUuids: ['961f0001-d2d6-43e3-a417-3bb8217e0e01'],
+      dataCharacteristicUuid: '961f0005-d2d6-43e3-a417-3bb8217e0e01',
+      batteryCharacteristicUuid:
+          '00002a19-0000-1000-8000-00805f9b34fb', // Standard battery
+      unit: 'FPM',
+      parseReading: _parseAbm200,
+    ),
+
+    // Testo Smart Probes - Temperature (T115i)
+    // fff0 service, fff1 = write (commands), fff2 = notify (data)
+    'testo_temp_probe': DeviceProfile(
+      name: 'Testo Smart Probe (Temp)',
+      manufacturer: HvacManufacturer.testo,
+      type: HvacDeviceType.temperatureProbe,
+      serviceUuids: ['0000fff0-0000-1000-8000-00805f9b34fb'],
+      dataCharacteristicUuid: '0000fff2-0000-1000-8000-00805f9b34fb',
+      unit: '°F',
+      parseReading: _parseTestoTemp,
+    ),
+
+    // Testo Smart Probes - Pressure (T549i, T550i)
+    // fff0 service, fff1 = write (commands), fff2 = notify (data)
+    'testo_pressure_probe': DeviceProfile(
+      name: 'Testo Smart Probe (Pressure)',
+      manufacturer: HvacManufacturer.testo,
+      type: HvacDeviceType.pressureProbe,
+      serviceUuids: ['0000fff0-0000-1000-8000-00805f9b34fb'],
+      dataCharacteristicUuid: '0000fff2-0000-1000-8000-00805f9b34fb',
+      unit: 'psig',
+      parseReading: _parseTestoPressure,
+    ),
+  };
+
+  /// Get all known service UUIDs for scanning
+  List<String> getAllServiceUuids() {
+    final uuids = <String>{};
+    for (final profile in _profiles.values) {
+      uuids.addAll(profile.serviceUuids);
+    }
+    return uuids.toList();
+  }
+
+  /// Try to identify a device by its advertised service UUIDs
+  DeviceProfile? identifyDevice(dynamic scanResultOrUuids) {
+    List<String> advertisedServiceUuids;
+    String? deviceName;
+
+    // Handle flutter_blue_plus ScanResult or plain List<String>
+    if (scanResultOrUuids is List<String>) {
+      advertisedServiceUuids = scanResultOrUuids;
+    } else {
+      // Assume it's a ScanResult-like object
+      try {
+        final serviceUuids = scanResultOrUuids.advertisementData?.serviceUuids;
+        advertisedServiceUuids =
+            (serviceUuids as List?)?.map((e) => e.toString()).toList() ?? [];
+        deviceName = scanResultOrUuids.device?.platformName as String?;
+      } catch (_) {
+        advertisedServiceUuids = [];
+      }
+    }
+
+    // First try to match by service UUID
+    for (final profile in _profiles.values) {
+      for (final uuid in profile.serviceUuids) {
+        if (advertisedServiceUuids
+            .any((adv) => adv.toLowerCase() == uuid.toLowerCase())) {
+          return profile;
+        }
+      }
+    }
+
+    // Fallback to name matching if device name is available
+    if (deviceName != null && deviceName.isNotEmpty) {
+      return identifyByName(deviceName);
+    }
+
+    return null;
+  }
+
+  /// Try to identify a device by name pattern
+  DeviceProfile? identifyByName(String deviceName) {
+    final nameLower = deviceName.toLowerCase();
+
+    // ABM-200 Airflow Meter - advertises as "ABM-200 XXX"
+    if (nameLower.contains('abm-200') || nameLower.contains('abm200')) {
+      return _profiles['abm_200'];
+    }
+
+    // Wey-Tek HD Scale - advertises as "Scale" or contains "weytek/wey"
+    if (nameLower == 'scale' ||
+        nameLower.contains('weytek') ||
+        nameLower.contains('wey-tek') ||
+        nameLower.contains('wey')) {
+      return _profiles['weytek_scale'];
+    }
+    if (nameLower.contains('ccs')) {
+      return _profiles['ccs_airflow'];
+    }
+
+    // Testo Smart Probes - match by model number or brand
+    // T115i = temperature probe
+    // T549i, T550i = pressure/vacuum probes
+    if (nameLower.contains('testo') ||
+        nameLower.contains('t115') ||
+        nameLower.contains('t549') ||
+        nameLower.contains('t550')) {
+      // Temperature probes: T115i
+      if (nameLower.contains('t115')) {
+        return _profiles['testo_temp_probe'];
+      }
+      // Pressure probes: T549i, T550i
+      if (nameLower.contains('t549') || nameLower.contains('t550')) {
+        return _profiles['testo_pressure_probe'];
+      }
+      // Fallback checks for testo brand name
+      if (nameLower.contains('temp') || nameLower.contains('115')) {
+        return _profiles['testo_temp_probe'];
+      }
+      if (nameLower.contains('pres') ||
+          nameLower.contains('549') ||
+          nameLower.contains('550')) {
+        return _profiles['testo_pressure_probe'];
+      }
+      // Default to temp probe for unknown testo devices
+      return _profiles['testo_temp_probe'];
+    }
+
+    return null;
+  }
+
+  /// Get profile by key
+  DeviceProfile? getProfile(String key) => _profiles[key];
+
+  /// Get all profiles
+  List<DeviceProfile> getAllProfiles() => _profiles.values.toList();
+
+  /// Add a custom profile (for expandability)
+  void addCustomProfile(String key, DeviceProfile profile) {
+    _profiles[key] = profile;
+  }
+}
+
+// ============================================================================
+// PARSING FUNCTIONS
+// Actual data formats from BLE sniffing (Dec 2025)
+// ============================================================================
+
+/// Parse Weytek HD scale reading from raw BLE data
+/// Protocol reverse-engineered Dec 18, 2025
+/// Data format: aa aa aa aa [cmd] [flags] [weight 4B LE] [unit?] [chk] [?]
+/// Byte 4: Command (0x57 = weight data, 0x5A = tare response)
+/// Byte 5: Flags (0x02 = stable, 0x03 = unstable/settling)
+/// Bytes 6-9: Weight as int32 little-endian in GRAMS
+/// Byte 10: Unit indicator (0x00=lb, 0x01=lb:oz, 0x02=kg, 0x03=oz)
+double _parseWeytekScale(List<int> rawData) {
+  // Minimum packet length: 13 bytes
+  if (rawData.length < 13) return double.nan;
+
+  // Verify header: aa aa aa aa
+  if (rawData[0] != 0xaa ||
+      rawData[1] != 0xaa ||
+      rawData[2] != 0xaa ||
+      rawData[3] != 0xaa) {
+    return double.nan;
+  }
+
+  // Check command byte - 0x57 = weight data, 0x5A = tare response
+  if (rawData[4] != 0x57 && rawData[4] != 0x5A) {
+    // Not a weight packet (could be 0x4C link, 0x41 ack, 0x49 init response)
+    return double.nan;
+  }
+
+  // Extract weight (bytes 6-9, signed 32-bit little-endian)
+  final bytes = Uint8List.fromList(rawData.sublist(6, 10));
+  final byteData = ByteData.view(bytes.buffer);
+  final rawWeight = byteData.getInt32(0, Endian.little);
+
+  // Raw weight is in GRAMS - convert to ounces
+  // 1 gram = 0.035274 ounces (1 oz = 28.3495 g)
+  final ounces = rawWeight / 28.3495;
+
+  // Check stability flag (byte 5)
+  // 0x02 = stable, 0x03 = unstable/settling
+  // final isStable = rawData[5] == 0x02;
+
+  // Return ounces - can convert to lbs in UI if needed (oz / 16.0)
+  return ounces;
+}
+
+/// Parse CCS airflow meter reading from raw BLE data
+/// Placeholder - update after sniffing actual device
+double _parseCcsAirflow(List<int> rawData) {
+  if (rawData.length < 2) return 0.0;
+
+  final bytes = Uint8List.fromList(rawData);
+  final byteData = ByteData.view(bytes.buffer);
+
+  try {
+    // Airflow is typically whole CFM values
+    final rawValue = byteData.getInt16(0, Endian.little);
+    return rawValue.toDouble();
+  } catch (e) {
+    return 0.0;
+  }
+}
+
+/// Parse ABM-200 airflow meter reading from raw BLE data
+/// 14-byte packets streaming at ~10Hz
+/// Byte offsets reverse-engineered Dec 19, 2025:
+/// [0-1] Velocity  [4-5] Temp  [8-9] Humidity  [12-13] Pressure
+Abm200Reading _parseAbm200Full(List<int> rawData) {
+  if (rawData.length < 14) {
+    return Abm200Reading(
+        velocity: 0,
+        tempF: double.nan,
+        humidity: double.nan,
+        pressure: double.nan);
+  }
+
+  final bytes = Uint8List.fromList(rawData);
+  final byteData = ByteData.view(bytes.buffer);
+
+  // Bytes 0-1: Airflow velocity (uint16 LE, FPM)
+  final velocity = byteData.getUint16(0, Endian.little);
+
+  // Bytes 4-5: Temperature (uint16 LE - 132) ÷10 = °F
+  // Offset calibrated against CPS Link app Dec 19, 2025
+  final tempRaw = byteData.getUint16(4, Endian.little);
+  final tempF = (tempRaw - 132) / 10.0;
+
+  // Bytes 8-9: Humidity (uint16 LE ÷5.29 = %RH)
+  // Divisor calibrated against CPS Link app Dec 19, 2025
+  final humidityRaw = byteData.getUint16(8, Endian.little);
+  final humidity = humidityRaw / 5.29;
+
+  // Bytes 12-13: Barometric Pressure (uint16 LE × 0.0401463 = in/WC)
+  // Raw value is Pa/10, convert: Pa × 0.00401463 = in/WC
+  final pressureRaw = byteData.getUint16(12, Endian.little);
+  final pressure = pressureRaw * 0.0401463;
+
+  return Abm200Reading(
+    velocity: velocity,
+    tempF: tempF,
+    humidity: humidity,
+    pressure: pressure,
+  );
+}
+
+/// Simple parser for DeviceProfile - returns velocity only
+/// Use _parseAbm200Full() for complete readings
+double _parseAbm200(List<int> rawData) {
+  if (rawData.length < 2) return 0.0;
+
+  final bytes = Uint8List.fromList(rawData);
+  final byteData = ByteData.view(bytes.buffer);
+
+  // Bytes 0-1: Airflow velocity (uint16 LE, FPM)
+  return byteData.getUint16(0, Endian.little).toDouble();
+}
+
+/// Parse Testo temperature probe reading from raw BLE data
+/// Only parses ASCII packets containing "erature" pattern + Float32
+/// 8-byte status packets (08 00 00 00 00 00 01 53) are ignored
+double _parseTestoTemp(List<int> rawData) {
+  // Skip 8-byte status packets - they don't contain real measurements
+  // Status format: 08 00 00 00 00 00 01 53
+  if (rawData.length <= 8) return double.nan;
+
+  // Look for "erature" pattern (end of "LineTemperature" or "Temperature")
+  const eraturePattern = [0x65, 0x72, 0x61, 0x74, 0x75, 0x72, 0x65];
+
+  // Check if this packet starts with "erature" (15-byte continuation packet)
+  // Format: "erature" + Float32(4 bytes) + extras
+  // Example: 65 72 61 74 75 72 65 92 2b a0 41 01 00 3c bc
+  if (rawData.length >= 11 && _matchesPattern(rawData, 0, eraturePattern)) {
+    final bytes = Uint8List.fromList(rawData.sublist(7, 11));
+    final byteData = ByteData.view(bytes.buffer);
+    final celsius = byteData.getFloat32(0, Endian.little);
+    if (celsius.isFinite && celsius > -50 && celsius < 200) {
+      final fahrenheit = celsius * 9.0 / 5.0 + 32.0;
+      return fahrenheit;
+    }
+  }
+
+  // Check for "erature" anywhere in longer packets
+  for (int i = 0; i <= rawData.length - 11; i++) {
+    if (_matchesPattern(rawData, i, eraturePattern)) {
+      if (i + 10 < rawData.length) {
+        final bytes = Uint8List.fromList(rawData.sublist(i + 7, i + 11));
+        final byteData = ByteData.view(bytes.buffer);
+        final celsius = byteData.getFloat32(0, Endian.little);
+        if (celsius.isFinite && celsius > -50 && celsius < 200) {
+          final fahrenheit = celsius * 9.0 / 5.0 + 32.0;
+          return fahrenheit;
+        }
+      }
+    }
+  }
+
+  return double.nan;
+}
+
+/// Parse Testo pressure probe reading from raw BLE data
+/// Only parses ASCII packets containing "ressure" pattern + Float32
+/// 8-byte status packets are ignored
+/// Note: Testo reports differential pressure in mbar, converted to psig
+double _parseTestoPressure(List<int> rawData) {
+  // Skip 8-byte status packets - they don't contain real measurements
+  if (rawData.length <= 8) return double.nan;
+
+  // Look for "ressure" pattern (end of "DifferentialPressure" or "Pressure")
+  const ressurePattern = [0x72, 0x65, 0x73, 0x73, 0x75, 0x72, 0x65];
+
+  // Check if packet starts with "tialPressure" (continuation of DifferentialPressure)
+  // Format: 74 69 61 6c 50 72 65 73 73 75 72 65 [Float32 4 bytes] ...
+  //         t  i  a  l  P  r  e  s  s  u  r  e  [value at byte 12-15]
+  const tialPressurePattern = [
+    0x74,
+    0x69,
+    0x61,
+    0x6c,
+    0x50,
+    0x72,
+    0x65,
+    0x73,
+    0x73,
+    0x75,
+    0x72,
+    0x65
+  ]; // "tialPressure"
+
+  if (rawData.length >= 16 &&
+      _matchesPattern(rawData, 0, tialPressurePattern)) {
+    // Debug: dump full packet for analysis
+    debugPrint('[Pressure] Full packet: ${bytesToHex(rawData)}');
+
+    // Float32 starts after "tialPressure" + null terminator (byte 13)
+    // Try multiple interpretations to find valid pressure
+    double? validMbar;
+
+    // Try 1: Int16 at bytes 13-14 with /100 scaling (most likely format based on data analysis)
+    // This appears to be how Testo encodes differential pressure
+    if (rawData.length >= 15 && rawData[12] == 0x00) {
+      final bytes = Uint8List.fromList(rawData.sublist(13, 15));
+      final byteData = ByteData.view(bytes.buffer);
+      final rawInt16 = byteData.getInt16(0, Endian.little);
+      final mbarFromInt = rawInt16 / 100.0;
+      debugPrint(
+          '[Pressure] bytes 13-14 Int16/100: $rawInt16 -> $mbarFromInt mbar (${(mbarFromInt * 0.0145038).toStringAsFixed(2)} psi)');
+
+      // Valid range: -1100 to 50000 mbar (about -16 to 725 psi)
+      if (mbarFromInt > -1100 && mbarFromInt < 50000) {
+        validMbar = mbarFromInt;
+        debugPrint('[Pressure] Using Int16/100 interpretation');
+      }
+    }
+
+    // Try 2: bytes 13-16 as Float32 little-endian (fallback)
+    if (validMbar == null && rawData.length >= 17 && rawData[12] == 0x00) {
+      final bytes = Uint8List.fromList(rawData.sublist(13, 17));
+      final byteData = ByteData.view(bytes.buffer);
+
+      // Try little-endian
+      final mbarLE = byteData.getFloat32(0, Endian.little);
+      debugPrint(
+          '[Pressure] bytes 13-16 LE: ${bytesToHex(rawData.sublist(13, 17))}, mbar: $mbarLE');
+
+      // Try big-endian
+      final mbarBE = byteData.getFloat32(0, Endian.big);
+      debugPrint('[Pressure] bytes 13-16 BE: mbar: $mbarBE');
+
+      // Use whichever is in valid range (-1100 to 50000 mbar)
+      if (mbarLE.isFinite && mbarLE > -1100 && mbarLE < 50000) {
+        validMbar = mbarLE;
+      } else if (mbarBE.isFinite && mbarBE > -1100 && mbarBE < 50000) {
+        validMbar = mbarBE;
+        debugPrint('[Pressure] Using big-endian interpretation');
+      }
+    }
+
+    // Try 3: bytes 14-17 (skip null + possible padding byte) - Float32
+    if (validMbar == null && rawData.length >= 18) {
+      final bytes = Uint8List.fromList(rawData.sublist(14, 18));
+      final byteData = ByteData.view(bytes.buffer);
+
+      final mbarLE = byteData.getFloat32(0, Endian.little);
+      final mbarBE = byteData.getFloat32(0, Endian.big);
+
+      if (mbarLE.isFinite && mbarLE > -1100 && mbarLE < 50000) {
+        validMbar = mbarLE;
+        debugPrint('[Pressure] Using bytes 14-17 LE Float32: $mbarLE mbar');
+      } else if (mbarBE.isFinite && mbarBE > -1100 && mbarBE < 50000) {
+        validMbar = mbarBE;
+        debugPrint('[Pressure] Using bytes 14-17 BE Float32: $mbarBE mbar');
+      }
+    }
+
+    if (validMbar != null) {
+      // Convert mbar to psi (1 mbar = 0.0145038 psi)
+      final psi = validMbar * 0.0145038;
+      debugPrint(
+          '[Pressure] Result: $validMbar mbar = ${psi.toStringAsFixed(2)} psi');
+      return psi;
+    } else {
+      // Log all attempted values for debugging
+      debugPrint('[Pressure] No valid pressure found in packet');
+    }
+  } else if (rawData.length >= 16) {
+    // Debug: log first 12 bytes to see what pattern we're getting
+    debugPrint(
+        '[Pressure] Pattern mismatch. First 12 bytes: ${bytesToHex(rawData.sublist(0, 12 > rawData.length ? rawData.length : 12))}');
+  }
+
+  // Generic search for "ressure" pattern in any packet
+  for (int i = 0; i <= rawData.length - 11; i++) {
+    if (_matchesPattern(rawData, i, ressurePattern)) {
+      // After "ressure" (7 bytes), Float32 starts immediately
+      final valueStart = i + 7;
+      if (valueStart + 4 <= rawData.length) {
+        final bytes =
+            Uint8List.fromList(rawData.sublist(valueStart, valueStart + 4));
+        final byteData = ByteData.view(bytes.buffer);
+        final mbar = byteData.getFloat32(0, Endian.little);
+        if (mbar.isFinite && mbar > -1100 && mbar < 50000) {
+          // Convert mbar to psi (1 mbar = 0.0145038 psi)
+          final psi = mbar * 0.0145038;
+          return psi;
+        }
+      }
+    }
+  }
+
+  return double.nan;
+}
+
+/// Helper to match byte pattern at offset
+bool _matchesPattern(List<int> data, int offset, List<int> pattern) {
+  if (offset + pattern.length > data.length) return false;
+  for (int i = 0; i < pattern.length; i++) {
+    if (data[offset + i] != pattern[i]) return false;
+  }
+  return true;
+}
+
+/// Convert raw bytes to hex string for debugging
+String bytesToHex(List<int> bytes) {
+  return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ');
+}

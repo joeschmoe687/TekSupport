@@ -1,0 +1,75 @@
+name: hvac_support_app
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.0.0
+
+dependency_overrides:
+  async: ^2.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.4.0
+  cupertino_icons: ^1.0.8
+  firebase_core: ^4.2.1
+  firebase_auth: ^6.1.2
+  cloud_firestore: ^6.1.0
+  firebase_messaging: ^16.0.4
+  firebase_storage: ^13.0.4
+  flutter_dotenv: ^6.0.0
+  intl: ^0.20.2
+  image_picker: ^1.1.2
+  cached_network_image: ^3.4.1
+  url_launcher: ^6.2.5
+  shared_preferences: ^2.2.2
+  # Call recording and tracking
+  # Note: phone_state_listener package doesn't exist; using native platform channels instead
+  record: ^6.0.0
+  geolocator: ^11.0.0
+  flutter_local_notifications: ^16.1.0
+  
+  # TekTool - Bluetooth HVAC tools
+  flutter_blue_plus: ^1.32.12
+  flutter_foreground_task: ^8.12.0
+  
+  # TekTool - Local storage (survives app updates)
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  path_provider: ^2.1.5
+  
+  # TekTool - OCR for equipment tag scanning
+  google_mlkit_text_recognition: ^0.14.0
+  
+  # TekTool - Geocoding for job profiles
+  geocoding: ^3.0.0
+  
+  # TekTool - Share functionality for BLE sniffer
+  share_plus: ^10.0.0
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logos/tekneck_dark.jpeg
+    - assets/logos/TekNeck-Logo_v1.png
+    - assets/logos/tekneck_color.jpg
+    - assets/logos/tekneck_NOback500-500px.png
+    - .env
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/launcher_icon.png"
+  adaptive_icon_background: "#121212"
+  adaptive_icon_foreground: "assets/launcher_icon.png"
