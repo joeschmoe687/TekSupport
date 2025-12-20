@@ -423,3 +423,68 @@ Native Android SMS auto-reply for off-hours support. No Firebase or third-party 
 - ✅ Message sync verified - customer → admin messages now update in real-time
 - Verify install on SM S931U and full chat flow testing
 - Begin Phase 1: CRM separation (new Firebase project, data migration).
+
+---
+
+## 🚀 Quick Commands (Idiot Notes)
+
+### Flutter Not Found?
+```bash
+# One-liner to run app (temp fix)
+export PATH="$HOME/flutter/bin:$PATH" && flutter run
+
+# Permanent fix - add to shell config
+echo 'export PATH="$HOME/flutter/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+```
+
+### Run the App
+```bash
+cd "/Users/joeykeilbarth/Desktop/To_New_Beginnings/TekNeck/Apps/Support/hvac_support_app"
+flutter run                    # Debug on connected device
+flutter run --release          # Release build (faster)
+flutter devices                # List connected devices
+```
+
+### Build APK
+```bash
+flutter build apk --release    # Creates build/app/outputs/flutter-apk/app-release.apk
+flutter build apk --debug      # Debug APK for testing
+flutter install                # Install APK to connected device
+```
+
+### Clean Build (Fix Weird Errors)
+```bash
+flutter clean && flutter pub get && flutter run
+```
+
+### Check for Issues
+```bash
+flutter analyze                # Lint check
+flutter doctor                 # Environment check
+flutter pub outdated           # Check for package updates
+```
+
+### Git Commands
+```bash
+git status                     # See what changed
+git add -A && git commit -m "message" && git push   # Quick commit+push
+git pull                       # Get latest from GitHub
+```
+
+### ADB (Android Debug Bridge)
+```bash
+adb devices                    # List connected Android devices
+adb logcat | grep flutter      # View Flutter logs
+adb install app-release.apk   # Install APK manually
+adb shell pm clear com.tekneckjoe.hvacsupport.hvac_support_app  # Clear app data
+```
+
+### BLE Debugging
+```bash
+# Enable HCI snoop log (for protocol analysis)
+adb shell settings put global bluetooth_hci_log 1
+adb shell setprop persist.bluetooth.btsnoopenable true
+
+# Pull bugreport with BLE logs
+adb bugreport bugreport_$(date +%Y%m%d_%H%M%S).zip
+```
