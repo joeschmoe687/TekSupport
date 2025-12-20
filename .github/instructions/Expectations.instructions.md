@@ -252,4 +252,4 @@ flutter clean && flutter pub get
 
 - **GitHub:** Private repo (tekneckjoe/hvac_support_app)
 - **Firebase:** tekneck-support (shared with AirPro website)
-- **Package:** com.tekneckjoe.hvacsupport.hvac_support_app
+- **Package:** com.tekneckjoe.tektool

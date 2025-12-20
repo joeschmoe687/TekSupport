@@ -163,7 +163,7 @@ cd android && ./gradlew assembleDebug
 
 # Install and launch
 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
-adb shell am start -n com.tekneckjoe.hvacsupport.hvac_support_app/.MainActivity
+adb shell am start -n com.tekneckjoe.tektool/.MainActivity
 
 # Attach for hot reload
 flutter attach -d RFCY518ZA0Y
@@ -415,7 +415,7 @@ Native Android SMS auto-reply for off-hours support. No Firebase or third-party 
 - ✅ Password autofill support via `AutofillGroup` and `AutofillHints`
 - ✅ Pricebook categories/items drilldown navigation
 - ✅ Dark theme alignment (#1A1A1A background, #4EC7F3 accent)
-- `android/app/build.gradle`: using `dev.flutter.flutter-gradle-plugin`; namespace fixed to `com.tekneckjoe.hvacsupport.hvac_support_app`.
+- `android/app/build.gradle`: using `dev.flutter.flutter-gradle-plugin`; namespace fixed to `com.tekneckjoe.tektool`.
 - `android/app/src/main/res/values/colors.xml`: added `ic_launcher_background`.
 - `lib/screens/dispatch_screen.dart`: `DateFormat` usage, filter chips, color API updated.
 
@@ -476,7 +476,7 @@ git pull                       # Get latest from GitHub
 adb devices                    # List connected Android devices
 adb logcat | grep flutter      # View Flutter logs
 adb install app-release.apk   # Install APK manually
-adb shell pm clear com.tekneckjoe.hvacsupport.hvac_support_app  # Clear app data
+adb shell pm clear com.tekneckjoe.tektool  # Clear app data
 ```
 
 ### BLE Debugging
