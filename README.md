@@ -1,6 +1,6 @@
-# TekNeck HVAC Support App
+# TekTool - Universal HVAC Bluetooth Hub
 
-Mobile app for TekNeck contractors: dispatch, messaging, and CRM-lite.
+Mobile app for HVAC contractors: Bluetooth tool connectivity, dispatch, messaging, and CRM-lite.
 
 ## 🔗 GitHub & Firebase Integration
 
@@ -8,7 +8,7 @@ Mobile app for TekNeck contractors: dispatch, messaging, and CRM-lite.
 
 | Resource | Location |
 |----------|----------|
-| **GitHub Repo** | [joeschmoe687/hvac_support_app](https://github.com/joeschmoe687/hvac_support_app) (private) |
+| **GitHub Repo** | [joeschmoe687/hvac_support_app](https://github.com/joeschmoe687/hvac_support_app) (private - will be renamed to tektool) |
 | **Firebase Project** | `tekneck-support` |
 | **AirPro Website Repo** | `airpro-website` (same workspace) |
 | **Website URL** | [airpronwa.com](https://airpronwa.com) |

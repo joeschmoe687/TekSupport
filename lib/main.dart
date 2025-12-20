@@ -27,17 +27,17 @@ void main() async {
   // Initialize notification service
   await NotificationService().initialize();
 
-  runApp(const HVACSupportApp());
+  runApp(const TekToolApp());
 }
 
-class HVACSupportApp extends StatefulWidget {
-  const HVACSupportApp({super.key});
+class TekToolApp extends StatefulWidget {
+  const TekToolApp({super.key});
 
   @override
-  State<HVACSupportApp> createState() => _HVACSupportAppState();
+  State<TekToolApp> createState() => _TekToolAppState();
 }
 
-class _HVACSupportAppState extends State<HVACSupportApp> {
+class _TekToolAppState extends State<TekToolApp> {
   ThemeMode _themeMode = ThemeMode.dark;
 
   void _toggleTheme() {
@@ -50,7 +50,7 @@ class _HVACSupportAppState extends State<HVACSupportApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'HVAC Support',
+      title: 'TekTool',
       theme: ThemeData.light().copyWith(
         colorScheme: ColorScheme.light(
           primary: AppColors.primaryCyan,

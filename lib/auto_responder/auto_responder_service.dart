@@ -9,7 +9,7 @@ import 'dart:developer';
 /// Intercepts incoming SMS and sends auto-reply during off-hours
 class AutoResponderService {
   static const _channel =
-      MethodChannel('com.tekneckjoe.hvacsupport/sms_autoresponder');
+      MethodChannel('com.tekneckjoe.tektool/sms_autoresponder');
 
   bool _isRunning = false;
 
@@ -151,7 +151,7 @@ class AutoResponderService {
     final startHour = prefs.getInt(_startHourKey) ?? 7;
     final endHour = prefs.getInt(_endHourKey) ?? 19;
     final replyText = prefs.getString(_autoReplyTextKey) ??
-        "Hi! Thanks for messaging. I'm currently unavailable but will get back to you soon. - TekNeck HVAC Support";
+        "Hi! Thanks for messaging. I'm currently unavailable but will get back to you soon. - TekTool";
 
     await setReplyHours(startHour, endHour);
     await setReplyText(replyText);

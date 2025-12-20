@@ -1,4 +1,4 @@
-package com.tekneckjoe.hvacsupport.hvac_support_app
+package com.tekneckjoe.tektool
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -10,7 +10,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.tekneckjoe.hvacsupport/sms_autoresponder"
+    private val CHANNEL = "com.tekneckjoe.tektool/sms_autoresponder"
     private val SMS_PERMISSION_REQUEST_CODE = 101
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -54,7 +54,7 @@ class MainActivity : FlutterActivity() {
                 }
                 "sendTestSms" -> {
                     val phoneNumber = call.argument<String>("phoneNumber") ?: ""
-                    val message = call.argument<String>("message") ?: "Test from HVAC Support App"
+                    val message = call.argument<String>("message") ?: "Test from TekTool"
                     val success = SmsReceiver.sendSms(this, phoneNumber, message)
                     result.success(success)
                 }

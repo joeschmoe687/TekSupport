@@ -1,4 +1,4 @@
-/// TekNeck HVAC Support App - Comprehensive Integration Test Suite
+/// TekTool - Comprehensive Integration Test Suite
 ///
 /// This test navigates through ALL screens and tests ALL buttons/functions.
 /// Skips Bluetooth device tests since no devices are connected.
@@ -14,7 +14,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:hvac_support_app/main.dart' as app;
+import 'package:tektool/main.dart' as app;
 
 /// Test results tracker for report generation
 class TestResults {
@@ -56,7 +56,7 @@ class TestResults {
 
     buffer
         .writeln('═══════════════════════════════════════════════════════════');
-    buffer.writeln('  TekNeck HVAC Support App - Integration Test Report');
+    buffer.writeln('  TekTool - Integration Test Report');
     buffer
         .writeln('═══════════════════════════════════════════════════════════');
     buffer.writeln('');
@@ -203,7 +203,7 @@ void main() {
     return exists(target);
   }
 
-  group('TekNeck HVAC Support App - Full UI Test Suite', () {
+  group('TekTool - Full UI Test Suite', () {
     testWidgets('Complete App Navigation Test', (WidgetTester tester) async {
       results.start();
 
