@@ -340,6 +340,32 @@ class DeviceRegistry {
   void addCustomProfile(String key, DeviceProfile profile) {
     _profiles[key] = profile;
   }
+
+  /// Identify specific Fieldpiece device type from manufacturer data
+  /// Fieldpiece packet format (from HCI snoop Dec 21, 2025):
+  /// Bytes 0-1: "FP" manufacturer ID (already verified by caller)
+  /// Bytes 2-3: Device type code - "BF"=Temp, "BG"=Pressure, "BH"=Psychrometer, "CB"=SC680
+  DeviceProfile? _identifyFieldpieceDeviceType(List<int> manufacturerData) {
+    if (manufacturerData.length < 4) return null;
+    
+    // Skip manufacturer ID bytes 0-1 ("FP")
+    // Bytes 2-3 contain device type code
+    final deviceTypeCode = String.fromCharCodes(manufacturerData.sublist(2, 4));
+    
+    switch (deviceTypeCode) {
+      case 'BF':
+        return _profiles['fieldpiece_temp_clamp'];
+      case 'BG':
+        return _profiles['fieldpiece_pressure_probe'];
+      case 'BH':
+        return _profiles['fieldpiece_psychrometer'];
+      case 'CB':
+        return _profiles['fieldpiece_sc680'];
+      default:
+        // Unknown Fieldpiece device - return generic temp probe
+        return _profiles['fieldpiece_temp_clamp'];
+    }
+  }
 }
 
 // ============================================================================
@@ -633,32 +659,6 @@ double _parseTestoPressure(List<int> rawData) {
   }
 
   return double.nan;
-}
-
-/// Identify specific Fieldpiece device type from manufacturer data
-/// Fieldpiece packet format (from HCI snoop Dec 21, 2025):
-/// Bytes 0-1: "FP" manufacturer ID (already verified by caller)
-/// Bytes 2-3: Device type code - "BF"=Temp, "BG"=Pressure, "BH"=Psychrometer, "CB"=SC680
-DeviceProfile? _identifyFieldpieceDeviceType(List<int> manufacturerData) {
-  if (manufacturerData.length < 4) return null;
-  
-  // Skip manufacturer ID bytes 0-1 ("FP")
-  // Bytes 2-3 contain device type code
-  final deviceTypeCode = String.fromCharCodes(manufacturerData.sublist(2, 4));
-  
-  switch (deviceTypeCode) {
-    case 'BF':
-      return DeviceRegistry()._profiles['fieldpiece_temp_clamp'];
-    case 'BG':
-      return DeviceRegistry()._profiles['fieldpiece_pressure_probe'];
-    case 'BH':
-      return DeviceRegistry()._profiles['fieldpiece_psychrometer'];
-    case 'CB':
-      return DeviceRegistry()._profiles['fieldpiece_sc680'];
-    default:
-      // Unknown Fieldpiece device - return generic temp probe
-      return DeviceRegistry()._profiles['fieldpiece_temp_clamp'];
-  }
 }
 
 /// Parse Fieldpiece Temperature Clamp (FPBF Model 8975)
