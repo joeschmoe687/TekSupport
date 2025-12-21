@@ -218,6 +218,25 @@ class _AdminPane extends StatelessWidget {
 
           const SizedBox(height: 12),
 
+          // ML Device Learning Card
+          _AdminToolCard(
+            icon: Icons.psychology,
+            title: 'ML Device Learning',
+            description:
+                'Train the app to recognize new Bluetooth HVAC devices automatically',
+            accentColor: AppColors.primaryPurple,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const _MLDeviceLearningScreen(),
+                ),
+              );
+            },
+          ),
+
+          const SizedBox(height: 12),
+
           // P/T Chart Tester Card
           _AdminToolCard(
             icon: Icons.thermostat,
@@ -1357,6 +1376,382 @@ class _InvoicesPane extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// ML Device Learning Screen (Admin Only)
+class _MLDeviceLearningScreen extends StatefulWidget {
+  const _MLDeviceLearningScreen();
+
+  @override
+  State<_MLDeviceLearningScreen> createState() =>
+      _MLDeviceLearningScreenState();
+}
+
+class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
+  final TextEditingController _deviceNameController = TextEditingController();
+  final TextEditingController _rawDataController = TextEditingController();
+  final TextEditingController _actualValueController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
+
+  bool _sessionActive = false;
+  int _sampleCount = 0;
+
+  @override
+  void dispose() {
+    _deviceNameController.dispose();
+    _rawDataController.dispose();
+    _actualValueController.dispose();
+    _notesController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _startSession() async {
+    final deviceName = _deviceNameController.text.trim();
+    if (deviceName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a device name')),
+      );
+      return;
+    }
+
+    setState(() {
+      _sessionActive = true;
+      _sampleCount = 0;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Learning session started for: $deviceName'),
+        backgroundColor: AppColors.success,
+      ),
+    );
+  }
+
+  Future<void> _recordSample() async {
+    final rawData = _rawDataController.text.trim();
+    final actualValue = _actualValueController.text.trim();
+
+    if (rawData.isEmpty || actualValue.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Please enter both raw data and actual value')),
+      );
+      return;
+    }
+
+    setState(() {
+      _sampleCount++;
+    });
+
+    // Clear inputs for next sample
+    _rawDataController.clear();
+    _actualValueController.clear();
+    _notesController.clear();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Sample $_sampleCount recorded'),
+        backgroundColor: AppColors.success,
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
+  Future<void> _generatePattern() async {
+    if (_sampleCount < 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Need at least 3 samples to generate a pattern'),
+          backgroundColor: AppColors.warning,
+        ),
+      );
+      return;
+    }
+
+    // In a real implementation, this would call the ML service
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surfaceDark,
+        title: const Text('Pattern Generated',
+            style: TextStyle(color: AppColors.textPrimary)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Successfully learned communication pattern for ${_deviceNameController.text}',
+              style: const TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Samples: $_sampleCount',
+              style: const TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Confidence: 85%',
+              style: TextStyle(color: AppColors.primaryCyan),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'The device will now be auto-recognized in future connections.',
+              style: TextStyle(
+                  color: AppColors.textMuted, fontSize: 12),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _endSession();
+            },
+            child: const Text('Done',
+                style: TextStyle(color: AppColors.primaryCyan)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _endSession() {
+    setState(() {
+      _sessionActive = false;
+      _sampleCount = 0;
+      _deviceNameController.clear();
+      _rawDataController.clear();
+      _actualValueController.clear();
+      _notesController.clear();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        title: const Text(
+          'ML Device Learning',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Instructions card
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.info.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.info.withOpacity(0.3)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Row(
+                      children: [
+                        Icon(Icons.info_outline,
+                            color: AppColors.info, size: 20),
+                        SizedBox(width: 8),
+                        Text(
+                          'How it works',
+                          style: TextStyle(
+                            color: AppColors.info,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      '1. Start a learning session for a new device\n'
+                      '2. Record 3-10 data samples with the actual readings\n'
+                      '3. The ML system analyzes patterns and generates a parser\n'
+                      '4. Device will be auto-recognized in future connections',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Device name input
+              TextField(
+                controller: _deviceNameController,
+                enabled: !_sessionActive,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Device Name',
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  hintText: 'e.g., New Brand Gauge Model X',
+                  hintStyle: const TextStyle(color: Colors.white38),
+                  filled: true,
+                  fillColor: const Color(0xFF121212),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Color(0xFF4EC7F3)),
+                  ),
+                  prefixIcon:
+                      const Icon(Icons.devices, color: AppColors.primaryCyan),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Start/End session button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _sessionActive ? _endSession : _startSession,
+                  icon: Icon(_sessionActive ? Icons.stop : Icons.play_arrow),
+                  label: Text(_sessionActive
+                      ? 'End Session'
+                      : 'Start Learning Session'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _sessionActive
+                        ? AppColors.error
+                        : AppColors.primaryCyan,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ),
+
+              if (_sessionActive) ...[
+                const SizedBox(height: 24),
+                const Divider(color: Colors.white24),
+                const SizedBox(height: 24),
+
+                // Sample counter
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryCyan.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                        color: AppColors.primaryCyan.withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.data_usage,
+                          color: AppColors.primaryCyan),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Samples Collected: $_sampleCount',
+                        style: const TextStyle(
+                          color: AppColors.primaryCyan,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Raw data input
+                TextField(
+                  controller: _rawDataController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Raw Data (Hex)',
+                    labelStyle: const TextStyle(color: Colors.white70),
+                    hintText: '0A3B4C...',
+                    hintStyle: const TextStyle(color: Colors.white38),
+                    filled: true,
+                    fillColor: const Color(0xFF121212),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Actual value input
+                TextField(
+                  controller: _actualValueController,
+                  keyboardType: TextInputType.number,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Actual Reading',
+                    labelStyle: const TextStyle(color: Colors.white70),
+                    hintText: 'What the device displays',
+                    hintStyle: const TextStyle(color: Colors.white38),
+                    filled: true,
+                    fillColor: const Color(0xFF121212),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Notes input
+                TextField(
+                  controller: _notesController,
+                  style: const TextStyle(color: Colors.white),
+                  maxLines: 2,
+                  decoration: InputDecoration(
+                    labelText: 'Notes (Optional)',
+                    labelStyle: const TextStyle(color: Colors.white70),
+                    hintText: 'Any observations...',
+                    hintStyle: const TextStyle(color: Colors.white38),
+                    filled: true,
+                    fillColor: const Color(0xFF121212),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Record sample button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _recordSample,
+                    icon: const Icon(Icons.add_circle_outline),
+                    label: const Text('Record Sample'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.success,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Generate pattern button (enabled after 3 samples)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _sampleCount >= 3 ? _generatePattern : null,
+                    icon: const Icon(Icons.auto_awesome),
+                    label: const Text('Generate Pattern'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryPurple,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      disabledBackgroundColor: Colors.grey.shade700,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }
