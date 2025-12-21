@@ -204,6 +204,8 @@ enum Refrigerant {
   nu22, // R422D
   r32,
   r454b,
+  r404a, // Commercial refrigeration
+  r134a, // Automotive/refrigeration
 }
 
 extension RefrigerantExtension on Refrigerant {
@@ -221,6 +223,10 @@ extension RefrigerantExtension on Refrigerant {
         return 'R-32';
       case Refrigerant.r454b:
         return 'R-454B';
+      case Refrigerant.r404a:
+        return 'R-404A';
+      case Refrigerant.r134a:
+        return 'R-134A';
     }
   }
 

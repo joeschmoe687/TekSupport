@@ -10,6 +10,7 @@ import 'services/notification_service.dart';
 import 'services/payment_service.dart';
 import 'tools/services/calibration_service.dart';
 import 'tools/services/gauge_zero_service.dart';
+import 'tools/services/ml_data_service.dart';
 import 'tools/screens/devices_screen.dart';
 import 'tools/screens/device_scan_screen.dart';
 
@@ -39,6 +40,9 @@ void main() async {
 
   // Load gauge zero offsets from persistent storage
   await GaugeZeroService().loadZeroOffsets();
+
+  // Initialize ML data service
+  await MLDataService().init();
 
   runApp(const TekToolApp());
 }
