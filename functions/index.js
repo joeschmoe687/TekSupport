@@ -88,6 +88,11 @@ exports.tekmateChatProxy = functions.https.onCall(async (data, context) => {
         'invalid-argument',
         'Message is required'
       );
+    } else if (message.length > 5000) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'Message too long'
+      );
     }
 
     console.log(`TekMate request from admin ${userEmail}: "${message.substring(0, 50)}..."`);
@@ -143,7 +148,7 @@ async function generateMockTekMateResponse(message, context) {
   
   // Detect query type and provide appropriate mock response
   let response = '';
-  let confidence = 0.75; // Default confidence
+  let confidence;
   
   // BLE Device Setup queries
   if (lowerMessage.includes('bluetooth') || lowerMessage.includes('ble') || 

@@ -489,8 +489,8 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
 
       // Show TekMate response in dialog
       await showDialog(
-        context: this.context,
-        builder: (context) => AlertDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
           backgroundColor: AppColors.surfaceDark,
           title: Row(
             children: [
@@ -559,7 +559,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
                       border: Border.all(color: Colors.orange.withOpacity(0.3)),
                     ),
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(Icons.info, color: Colors.orange, size: 16),
                         SizedBox(width: 8),
                         Expanded(
@@ -580,12 +580,12 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
                 // Copy TekMate response to message field
                 _messageController.text = response.response;
               },

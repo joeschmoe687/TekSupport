@@ -27,10 +27,19 @@ service cloud.firestore {
       // Techs and admins can read all profiles (for chat display names)
       allow read: if isAuthenticated() && (request.auth.uid == userId || isTechOrAdmin());
       
-      // Users can write their own profile
-      allow write: if isAuthenticated() && request.auth.uid == userId;
+      // Users can create their own profile, but cannot set authorization fields
+      allow create: if isAuthenticated()
+                    && request.auth.uid == userId
+                    && !('role' in request.resource.data.keys())
+                    && !('isAdmin' in request.resource.data.keys());
+
+      // Users can update their own profile, but cannot modify authorization fields
+      allow update: if isAuthenticated()
+                    && request.auth.uid == userId
+                    && !('role' in request.resource.data.diff(resource.data).changedKeys())
+                    && !('isAdmin' in request.resource.data.diff(resource.data).changedKeys());
       
-      // Admins can write any profile (for role management)
+      // Admins can write any profile (for role management and other changes)
       allow write: if isAdmin();
     }
     
@@ -57,9 +66,25 @@ service cloud.firestore {
       
       // Messages subcollection
       match /messages/{messageId} {
-        allow read: if isAuthenticated();
-        allow create: if isAuthenticated();
-        allow update: if isAuthenticated();
+        // Only room participants and techs/admins can read messages
+        allow read: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportRooms/$(roomId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/supportRooms/$(roomId)).data.customerUID == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only room participants and techs/admins can create messages
+        allow create: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportRooms/$(roomId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/supportRooms/$(roomId)).data.customerUID == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only room participants and techs/admins can update messages
+        allow update: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportRooms/$(roomId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/supportRooms/$(roomId)).data.customerUID == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only admins can delete messages
         allow delete: if isAdmin();
       }
     }
@@ -74,9 +99,22 @@ service cloud.firestore {
       allow delete: if isAdmin();
       
       match /messages/{messageId} {
-        allow read: if isAuthenticated();
-        allow create: if isAuthenticated();
-        allow update: if isAuthenticated();
+        // Only session participants and techs/admins can read messages
+        allow read: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportSessions/$(sessionId)).data.userId == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only session participants and techs/admins can create messages
+        allow create: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportSessions/$(sessionId)).data.userId == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only session participants and techs/admins can update messages
+        allow update: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportSessions/$(sessionId)).data.userId == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only admins can delete messages
         allow delete: if isAdmin();
       }
     }

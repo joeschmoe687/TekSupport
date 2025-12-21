@@ -237,7 +237,13 @@ firebase deploy --only firestore:rules
 
 When ready to connect to actual TekMate AI:
 
-1. **Replace mock function in functions/index.js:**
+1. **Add axios dependency:**
+   ```bash
+   cd functions
+   npm install axios --save
+   ```
+
+2. **Replace mock function in functions/index.js:**
    ```javascript
    // Remove generateMockTekMateResponse()
    // Add actual API call:
@@ -252,18 +258,18 @@ When ready to connect to actual TekMate AI:
      },
      {
        headers: {
-         'Authorization': `Bearer ${TEKMATE_API_KEY}`,
+         'Authorization': `Bearer ${functions.config().tekmate.api_key}`,
        },
      }
    );
    ```
 
-2. **Add API key to Firebase config:**
+3. **Add API key to Firebase config:**
    ```bash
    firebase functions:config:set tekmate.api_key="YOUR_API_KEY"
    ```
 
-3. **Redeploy:**
+4. **Redeploy:**
    ```bash
    firebase deploy --only functions:tekmateChatProxy
    ```
