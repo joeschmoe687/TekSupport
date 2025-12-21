@@ -23,6 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _startHour = 7;
   int _endHour = 19;
   final _replyTextController = TextEditingController();
+  bool _isDarkTheme = true;
 
   String role = 'user';
 
@@ -32,6 +33,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadUserRole();
     _loadAutoResponderSettings();
     _checkSmsPermissions();
+    _loadThemePreference();
+  }
+
+  Future<void> _loadThemePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _isDarkTheme = prefs.getBool('isDarkTheme') ?? true;
+      });
+    }
   }
 
   Future<void> _checkSmsPermissions() async {
@@ -197,10 +208,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 border: Border.all(color: AppColors.border),
               ),
               child: SwitchListTile(
-                value: true,
-                onChanged: (_) => widget.onToggleTheme(),
+                value: _isDarkTheme,
+                onChanged: (_) async {
+                  setState(() {
+                    _isDarkTheme = !_isDarkTheme;
+                  });
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool('isDarkTheme', _isDarkTheme);
+                  widget.onToggleTheme();
+                },
                 title: Text(
-                  'Dark Theme',
+                  _isDarkTheme ? 'Dark Theme' : 'Light Theme',
                   style: TextStyle(color: AppColors.textPrimary),
                 ),
                 subtitle: Text(
