@@ -1952,7 +1952,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                       itemCount: _logEntries.length,
                       itemBuilder: (context, index) {
                         final entry = _logEntries[index];
-                        return _buildLogEntry(entry);
+                        return _buildLogEntry(entry, key: ValueKey('log_$index'));
                       },
                     ),
                   ),
@@ -2023,6 +2023,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                       final connectedDevice = session['connectedDevice'];
 
                       return Card(
+                        key: ValueKey(session['sessionId'] ?? 'session_$index'),
                         color: AppColors.surfaceLight,
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
@@ -2247,6 +2248,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         final deviceType = _guessDeviceType(name, adv.serviceUuids);
 
         return Card(
+          key: ValueKey(device.remoteId.str),
           color: isLikelyHvac
               ? AppColors.surfaceDark.withOpacity(0.9)
               : AppColors.surfaceDark,
@@ -2411,13 +2413,14 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
       itemCount: _services.length,
       itemBuilder: (context, index) {
         final service = _services[index];
-        return _buildServiceCard(service);
+        return _buildServiceCard(service, key: ValueKey(service.uuid.toString()));
       },
     );
   }
 
-  Widget _buildServiceCard(ble.BluetoothService service) {
+  Widget _buildServiceCard(ble.BluetoothService service, {Key? key}) {
     return Card(
+      key: key,
       color: AppColors.surfaceDark,
       margin: const EdgeInsets.only(bottom: 12),
       child: ExpansionTile(
@@ -2567,7 +2570,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
     );
   }
 
-  Widget _buildLogEntry(_LogEntry entry) {
+  Widget _buildLogEntry(_LogEntry entry, {Key? key}) {
     Color color;
     switch (entry.type) {
       case 'error':
@@ -2600,6 +2603,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         '${entry.timestamp.second.toString().padLeft(2, '0')}';
 
     return Padding(
+      key: key,
       padding: const EdgeInsets.only(bottom: 2),
       child: GestureDetector(
         onLongPress: () => _copyToClipboard(entry.message),

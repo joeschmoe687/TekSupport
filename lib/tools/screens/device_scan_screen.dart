@@ -263,7 +263,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
       itemCount: _scanResults.length,
       itemBuilder: (context, index) {
         final result = _scanResults[index];
-        return _buildDeviceCard(result);
+        return _buildDeviceCard(result, key: ValueKey(result.device.remoteId.str));
       },
     );
   }
@@ -334,7 +334,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
     );
   }
 
-  Widget _buildDeviceCard(ble.ScanResult result) {
+  Widget _buildDeviceCard(ble.ScanResult result, {Key? key}) {
     final isConnecting = _connectingDeviceId == result.device.remoteId.str;
     final rssi = result.rssi;
     final name = result.device.platformName.isNotEmpty
@@ -346,6 +346,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
     final isKnownDevice = profile != null;
 
     return Container(
+      key: key,
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: isKnownDevice
