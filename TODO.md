@@ -1,13 +1,56 @@
 # TekNeck HVAC Support App — To Do List
 
-## � GitHub & Firebase Integration
+## 🧠 GitHub & Firebase Integration
 
 - **Repo**: [joeschmoe687/hvac_support_app](https://github.com/joeschmoe687/hvac_support_app) (private)
-- **Firebase Project**: `tekneck-support` (shared with AirPro website)
+- **Firebase Project**: `tekneck-support` (shared with AirPro website and TekMate AI)
 - **Website Repo**: `airpro-website` (same workspace)
+- **AI Brains**: `tekmate-consolidated` - Autonomous support, technician guidance, device setup
 - See [README.md](README.md) for full integration documentation
 
 ---
+
+## 🧠 [AI] TekMate Integration - Technician Training & Device Setup (NEW)
+TekMate is the AI/ML brains providing:
+- **Technician Guidance** - Step-by-step service call walkthroughs
+- **Device Setup Wizard** - AI-guided Bluetooth tool integration
+- **HVAC Knowledge** - Real-time troubleshooting during service calls
+- **Noob Tech Training** - Adaptive difficulty for inexperienced technicians
+
+**SECURITY: Ghost Mode - Only authenticated admins can access TekMate. Non-admins get zero TekMate UI/features.**
+
+### Phase 0: Ghost Mode Security (IMMEDIATE)
+- [x] **TekMateChatService.dart** - Returns null for non-admins (no error, just silent)
+- [x] **Role-based UI loading** - TekMate UI only renders if isAdmin == true
+- [x] **Cloud Function auth** - `tekmateChatProxy` requires Firebase auth + admin role
+- [x] **No network evidence** - Non-admins never see any TekMate network calls
+- [ ] **Deploy Cloud Function** - Push to Firebase
+- [ ] **Test as non-admin** - Verify zero TekMate features visible
+- [ ] **Test as admin** - Verify full TekMate access and functionality
+- [ ] **Monitor production** - Weekly check that no TekMate leaks to customer network logs
+
+### Technician Chat Integration [APP + AI] (ADMIN ONLY)
+- [ ] **TekMate API endpoint** - Cloud Function for technician guidance queries
+- [ ] **Admin service chat** - Only admin techs see "Ask TekMate" button
+- [ ] **Confidence scoring** - Show confidence of AI guidance (helps noob techs learn)
+- [ ] **Context passing** - Send current job, customer, location to TekMate for context
+- [ ] **Fallback to human** - Low-confidence responses escalated to human tech
+- [ ] **Learning feedback** - Tech feedback on guidance improves future responses
+
+### Bluetooth Device Setup with TekMate [APP + AI]
+- [ ] **AI device wizard** - Step through adding new BLE device with AI guidance
+- [ ] **Protocol learning** - TekMate analyzes sniffed BLE data for new devices
+- [ ] **Auto-profile generation** - Generate device_registry entries from learned protocols
+- [ ] **Visual setup guide** - Show expected data format, pairing steps, expected values
+- [ ] **Validation check** - AI confirms device is properly configured before saving
+- [ ] **Share protocols** - Successful device setups populate global device learning
+
+### BLE Sniffer → TekMate Pipeline [APP + AI]
+- [ ] **Auto-upload captures** - BLE sniffer logs auto-sync to Firebase (ble_sniff_logs)
+- [ ] **TekMate analysis** - Periodic job analyzes new captures for patterns
+- [ ] **Device detection** - AI detects new device types and protocols
+- [ ] **Confidence thresholds** - Only update device_registry if confident
+- [ ] **Feedback loop** - Technicians confirm device profiles are correct
 
 ## 🚩 Current Focus: TekTool - Universal HVAC Bluetooth Hub
 

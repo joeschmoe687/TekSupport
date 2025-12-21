@@ -1,6 +1,8 @@
 # TekTool - Universal HVAC Bluetooth Hub
 
-Mobile app for HVAC contractors: Bluetooth tool connectivity, dispatch, messaging, and CRM-lite.
+Mobile app for HVAC contractors: Bluetooth tool connectivity, dispatch, messaging, technician training, and CRM-lite.
+
+**Powered by TekMate AI** - Automated technician guidance, device setup wizards, and HVAC knowledge synthesis.
 
 ## 🔗 GitHub & Firebase Integration
 
