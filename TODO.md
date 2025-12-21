@@ -24,9 +24,13 @@ TekMate is the AI/ML brains providing:
 - [x] **Role-based UI loading** - TekMate UI only renders if isAdmin == true
 - [x] **Cloud Function auth** - `tekmateChatProxy` requires Firebase auth + admin role
 - [x] **No network evidence** - Non-admins never see any TekMate network calls
-- [ ] **Deploy Cloud Function** - Push to Firebase
-- [ ] **Test as non-admin** - Verify zero TekMate features visible
-- [ ] **Test as admin** - Verify full TekMate access and functionality
+- [x] **Cloud Function implementation** - Created `functions/index.js` with tekmateChatProxy
+- [x] **Admin UI integration** - Added "Ask TekMate" button to admin_chat_detail_screen.dart
+- [x] **Firestore security rules** - Created firestore.rules with admin-only collection protection
+- [x] **Deployment documentation** - Created GHOST_MODE_DEPLOYMENT.md and TEKMATE_TESTING.md
+- [ ] **Deploy Cloud Function** - Run `./scripts/deploy-tekmate.sh` to push to Firebase
+- [ ] **Test as non-admin** - Verify zero TekMate features visible (see TEKMATE_TESTING.md)
+- [ ] **Test as admin** - Verify full TekMate access and functionality (see TEKMATE_TESTING.md)
 - [ ] **Monitor production** - Weekly check that no TekMate leaks to customer network logs
 
 ### Technician Chat Integration [APP + AI] (ADMIN ONLY)
