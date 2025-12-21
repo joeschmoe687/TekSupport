@@ -557,8 +557,15 @@ class _QuickAction extends StatelessWidget {
 
 // Removed placeholder pane after wiring real panes
 
-class _PricebookPane extends StatelessWidget {
+class _PricebookPane extends StatefulWidget {
   const _PricebookPane();
+
+  @override
+  State<_PricebookPane> createState() => _PricebookPaneState();
+}
+
+class _PricebookPaneState extends State<_PricebookPane> {
+  final Set<String> _expandedCategories = {}; // Track expanded categories
 
   @override
   Widget build(BuildContext context) {
@@ -569,6 +576,10 @@ class _PricebookPane extends StatelessWidget {
         .snapshots();
     final itemsStream =
         FirebaseFirestore.instance.collection('pricebookItems').snapshots();
+    final pricingStream = FirebaseFirestore.instance
+        .collection('settings')
+        .doc('pricing')
+        .snapshots();
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -585,69 +596,324 @@ class _PricebookPane extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Categories and items',
+            'Local jobs pricing and remote support',
             style: TextStyle(color: Colors.white70),
           ),
           const SizedBox(height: 16),
           Expanded(
-            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: categoriesStream,
-              builder: (context, catSnap) {
-                if (!catSnap.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final categories = catSnap.data!.docs;
-                return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                  stream: itemsStream,
-                  builder: (context, itemSnap) {
-                    final items = itemSnap.hasData
-                        ? itemSnap.data!.docs
-                        : const <QueryDocumentSnapshot<Map<String, dynamic>>>[];
-                    return ListView.separated(
-                      itemCount: categories.length,
-                      separatorBuilder: (_, __) =>
-                          const Divider(color: Colors.white12),
-                      itemBuilder: (context, i) {
-                        final cat = categories[i].data();
-                        final catId =
-                            (cat['id'] ?? categories[i].id).toString();
-                        final name = (cat['name'] ?? 'Category').toString();
-                        final count = items.where((d) {
-                          final data = d.data();
-                          final itemCatId =
-                              (data['categoryId'] ?? '').toString();
-                          return itemCatId == catId;
-                        }).length;
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF121212),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.white10),
-                          ),
-                          child: ListTile(
-                            title: Text(
-                              name,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            subtitle: Text(
-                              'Items: $count',
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                            trailing: const Icon(
-                              Icons.chevron_right,
-                              color: Colors.white54,
-                            ),
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => _PricebookItemsPane(
-                                    categoryId: catId,
-                                    categoryName: name,
-                                  ),
-                                ),
+            child: ListView(
+              children: [
+                // Support Chat Pricing Section
+                StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                  stream: pricingStream,
+                  builder: (context, snapshot) {
+                    final pricing = snapshot.data?.data() ?? {};
+                    return _buildSupportPricingCard(context, pricing);
+                  },
+                ),
+                const SizedBox(height: 16),
+                const Divider(color: Colors.white12),
+                const SizedBox(height: 16),
+                
+                // Local Jobs Categories
+                const Text(
+                  'Local Jobs Pricing',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: categoriesStream,
+                  builder: (context, catSnap) {
+                    if (!catSnap.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final categories = catSnap.data!.docs;
+                    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream: itemsStream,
+                      builder: (context, itemSnap) {
+                        final items = itemSnap.hasData
+                            ? itemSnap.data!.docs
+                            : const <QueryDocumentSnapshot<Map<String, dynamic>>>[];
+                        return Column(
+                          children: categories.map((catDoc) {
+                            final cat = catDoc.data();
+                            final catId = (cat['id'] ?? catDoc.id).toString();
+                            final name = (cat['name'] ?? 'Category').toString();
+                            final categoryItems = items.where((d) {
+                              final data = d.data();
+                              final itemCatId =
+                                  (data['categoryId'] ?? '').toString();
+                              return itemCatId == catId;
+                            }).toList();
+                            
+                            final isExpanded = _expandedCategories.contains(catId);
+                            
+                            return _buildCollapsibleCategory(
+                              name: name,
+                              itemCount: categoryItems.length,
+                              isExpanded: isExpanded,
+                              onToggle: () {
+                                setState(() {
+                                  if (isExpanded) {
+                                    _expandedCategories.remove(catId);
+                                  } else {
+                                    _expandedCategories.add(catId);
+                                  }
+                                });
+                              },
+                              items: categoryItems,
+                            );
+                          }).toList(),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSupportPricingCard(
+      BuildContext context, Map<String, dynamic> pricing) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF121212),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.primaryCyan.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.support_agent, color: AppColors.primaryCyan, size: 20),
+              SizedBox(width: 8),
+              Text(
+                'Remote Support Chat Pricing',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Business hours pricing
+          _buildPricingRow(
+            'Text Chat (9-5 CST)',
+            pricing['bizMessage']?.toDouble() ?? 5.0,
+            'bizMessage',
+            pricing,
+          ),
+          _buildPricingRow(
+            'Phone Call (9-5 CST)',
+            pricing['bizPhone']?.toDouble() ?? 45.0,
+            'bizPhone',
+            pricing,
+          ),
+          _buildPricingRow(
+            'Video Call (9-5 CST)',
+            pricing['bizVideo']?.toDouble() ?? 60.0,
+            'bizVideo',
+            pricing,
+          ),
+          const Divider(color: Colors.white12, height: 24),
+          // 24/7 pricing
+          _buildPricingRow(
+            'Text Chat (24/7)',
+            pricing['twentyFourMessage']?.toDouble() ?? 45.0,
+            'twentyFourMessage',
+            pricing,
+          ),
+          _buildPricingRow(
+            'Phone Call (24/7)',
+            pricing['twentyFourPhone']?.toDouble() ?? 60.0,
+            'twentyFourPhone',
+            pricing,
+          ),
+          _buildPricingRow(
+            'Video Call (24/7)',
+            pricing['twentyFourVideo']?.toDouble() ?? 80.0,
+            'twentyFourVideo',
+            pricing,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPricingRow(String label, double currentPrice, String field,
+      Map<String, dynamic> pricing) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
+            ),
+          ),
+          Text(
+            '\$${currentPrice.toStringAsFixed(2)}',
+            style: const TextStyle(
+              color: AppColors.primaryCyan,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.edit, color: Colors.white54, size: 18),
+            onPressed: () => _editPrice(label, currentPrice, field),
+            tooltip: 'Edit price',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _editPrice(
+      String label, double currentPrice, String field) async {
+    final controller =
+        TextEditingController(text: currentPrice.toStringAsFixed(2));
+    
+    final newPrice = await showDialog<double>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surfaceDark,
+        title: Text('Edit Price', style: TextStyle(color: AppColors.textPrimary)),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.numberWithOptions(decimal: true),
+          style: TextStyle(color: AppColors.textPrimary),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: TextStyle(color: AppColors.textSecondary),
+            prefixText: '\$',
+            prefixStyle: TextStyle(color: AppColors.textPrimary),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              final price = double.tryParse(controller.text);
+              if (price != null) {
+                Navigator.pop(context, price);
+              }
+            },
+            child: Text('Save', style: TextStyle(color: AppColors.primaryCyan)),
+          ),
+        ],
+      ),
+    );
+
+    if (newPrice != null) {
+      // Update in Firebase
+      await FirebaseFirestore.instance
+          .collection('settings')
+          .doc('pricing')
+          .set({field: newPrice}, SetOptions(merge: true));
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('$label updated to \$${newPrice.toStringAsFixed(2)}'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    }
+  }
+
+  Widget _buildCollapsibleCategory({
+    required String name,
+    required int itemCount,
+    required bool isExpanded,
+    required VoidCallback onToggle,
+    required List<QueryDocumentSnapshot<Map<String, dynamic>>> items,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF121212),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(
+              name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            subtitle: Text(
+              'Items: $itemCount',
+              style: const TextStyle(color: Colors.white70),
+            ),
+            trailing: Icon(
+              isExpanded ? Icons.expand_less : Icons.expand_more,
+              color: Colors.white54,
+            ),
+            onTap: onToggle,
+          ),
+          if (isExpanded) ...[
+            const Divider(color: Colors.white12, height: 1),
+            ...items.map((itemDoc) {
+              final data = itemDoc.data();
+              final itemName = (data['name'] ?? 'Item').toString();
+              final price = (data['price'] ?? '').toString();
+              final code = (data['code'] ?? '').toString();
+              return Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: Colors.white05),
+                  ),
+                ),
+                child: ListTile(
+                  dense: true,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                  title: Text(
+                    itemName,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                  trailing: Text(
+                    price.isEmpty ? '' : '\$$price',
+                    style: const TextStyle(
+                      color: AppColors.primaryCyan,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ],
+        ],
+      ),
+    );
+  }
+}
                               );
                             },
                           ),
