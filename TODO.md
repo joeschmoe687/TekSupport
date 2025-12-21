@@ -22,9 +22,12 @@
 - [x] **UI Update** - BLE Sniffer now shows "Broadcast-only" warning for Fieldpiece devices
 - [x] **Connect Button Disabled** - Grayed out for non-connectable devices
 - [x] **HCI Snoop Log Captured** - Full protocol capture from Job Link app (Dec 21) - See [FIELDPIECE_HCI_ANALYSIS_DEC21.md](docs/BLE-Sniffing/FIELDPIECE_HCI_ANALYSIS_DEC21.md)
+- [x] **Device profiles added** - 4 Fieldpiece profiles in device_registry.dart (Dec 21)
+- [x] **Manufacturer data parsing** - Parser functions for Fieldpiece advertisement data (Dec 21)
+- [x] **GlobalKey errors fixed** - Added ValueKey to ListView items in BLE screens (Dec 21)
 - [ ] **Read advertisement data** - Parse manufacturer_data from advertisements (measurement values encoded)
-- [ ] **Manufacturer data format** - See protocol analysis below for byte positions
 - [ ] **Passive monitoring mode** - Show Fieldpiece readings without GATT connection (scan-only)
+- [ ] **UI badges** - Display "Broadcast-only" badge on Fieldpiece devices in scan list
 
 ---
 
@@ -93,9 +96,10 @@ Fieldpiece devices (4 tools tested via Job Link app) are detected but not displa
 
 **Implementation Tasks:**
 
-- [ ] **Fix GlobalKey Duplication** - Search all BLE screens for `GlobalKey()` usage in list builders
-  - Replace with `ValueKey(device.remoteId.str)` or remove GlobalKey entirely
-  - Files to check: `ble_sniffer_screen.dart`, `tek_scan_screen.dart`, `tek_devices_screen.dart`
+- [x] **Fix GlobalKey Duplication** - Search all BLE screens for `GlobalKey()` usage in list builders
+  - ✅ Added `ValueKey(device.remoteId.str)` to device_scan_screen.dart ListView items
+  - ✅ Added ValueKey to ble_sniffer_screen.dart scan results, services, log entries, and sessions
+  - Files updated: `ble_sniffer_screen.dart`, `device_scan_screen.dart`
 
 - [ ] **Add Fieldpiece to BLE Scan** - Modify scan to include manufacturer data filter:
   ```dart
@@ -104,42 +108,41 @@ Fieldpiece devices (4 tools tested via Job Link app) are detected but not displa
     // OR remove withServices filter when scanning for all devices
   );
   ```
+  - ✅ Current scan already uses empty service filter `[]` which scans all devices
+  - Fieldpiece devices should already be discoverable in scan results
+  - Manufacturer data parsing implemented below
 
-- [ ] **Parse Fieldpiece Advertisement Data** - Create parser for manufacturer_data:
-  - Device type from bytes 2-3: "BF"=Temp, "BG"=Pressure, "BH"=Psychrometer, "CB"=SC680
-  - Wet bulb temp: bytes 15-16 as uint16 LE ÷ 10 = °F (CONFIRMED)
-  - Other values need more varied captures to confirm formulas
-  - Add `_parseFieldpieceAdvertisement()` to `device_registry.dart`
+- [x] **Parse Fieldpiece Advertisement Data** - Create parser for manufacturer_data:
+  - ✅ Device type from bytes 2-3: "BF"=Temp, "BG"=Pressure, "BH"=Psychrometer, "CB"=SC680
+  - ✅ Wet bulb temp: bytes 15-16 as uint16 LE ÷ 10 = °F (CONFIRMED)
+  - ✅ Added `_parseFieldpieceTemp()`, `_parseFieldpiecePressure()`, `_parseFieldpiecePsychrometer()` to `device_registry.dart`
+  - Note: Other values need more varied captures to confirm formulas
 
 - [ ] **Display Fieldpiece Readings Passively** - Since no GATT connection possible:
   - Create a "passive scan" mode that shows Fieldpiece readings from advertisements
   - Update UI when new advertisement received (devices broadcast ~1-2 Hz)
-  - Don't show "Connect" button for Fieldpiece (already done)
+  - Don't show "Connect" button for Fieldpiece (needs UI update)
 
-- [ ] **Device Registry Update** - Add Fieldpiece device profiles:
-  ```dart
-  static const fieldpiece_probe = DeviceProfile(
-    id: 'fieldpiece_probe',
-    name: 'Fieldpiece Probe',
-    manufacturer: 'Fieldpiece',
-    connectionType: ConnectionType.broadcastOnly,  // NEW field needed
-    manufacturerId: 0x5046,
-  );
-  ```
+- [x] **Device Registry Update** - Add Fieldpiece device profiles:
+  - ✅ Added `ConnectionType` enum with `gatt` and `broadcastOnly` options
+  - ✅ Added `manufacturerId` field to DeviceProfile
+  - ✅ Created 4 Fieldpiece profiles: temp clamp (FPBF), pressure probe (FPBG), psychrometer (FPBH), SC680 meter (FPCB)
+  - ✅ Updated `identifyDevice()` to check manufacturer ID 0x5046
+  - ✅ Added `getAllManufacturerIds()` method
 
 **Testing Checklist:**
-- [ ] Open BLE Sniffer → No GlobalKey errors in console
-- [ ] Fieldpiece devices appear in scan list (detected by manufacturer ID)
-- [ ] Fieldpiece readings display from advertisement data
-- [ ] "Broadcast-only" badge shows on Fieldpiece devices
-- [ ] Connect button disabled/hidden for Fieldpiece
-- [ ] Other devices (Testo, Wey-Tek, ABM-200) still connect normally
+- [x] Open BLE Sniffer → No GlobalKey errors in console (fixed with ValueKey)
+- [ ] Fieldpiece devices appear in scan list (detected by manufacturer ID) - needs real device testing
+- [ ] Fieldpiece readings display from advertisement data - needs UI implementation
+- [ ] "Broadcast-only" badge shows on Fieldpiece devices - needs UI implementation
+- [ ] Connect button disabled/hidden for Fieldpiece - needs UI implementation
+- [ ] Other devices (Testo, Wey-Tek, ABM-200) still connect normally - needs testing
 
 **Terminal Log Evidence (Dec 21):**
 ```
 I/flutter: [FBP] <startScan> args: {with_services: [...], with_msd: [], ...}
 Another exception was thrown: Multiple widgets used the same GlobalKey.
-(repeated 500+ times)
+(repeated 500+ times) ← FIXED with ValueKey additions
 ```
 
 ---
