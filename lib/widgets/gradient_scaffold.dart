@@ -1,38 +1,92 @@
 import 'package:flutter/material.dart';
 
-/// App-wide color constants matching the web UI
+/// App-wide color constants with theme support
 class AppColors {
+  // DARK THEME COLORS (original)
   // Base colors (matching web --primary-gradient)
-  static const Color background = Color(0xFF1A1A2E);
-  static const Color surfaceDark = Color(0xFF16213E);
-  static const Color surfaceLight = Color(0xFF0F3460);
-  static const Color cardBg = Color(0x1E1E2EF2); // rgba(30, 30, 46, 0.95)
+  static const Color darkBackground = Color(0xFF1A1A2E);
+  static const Color darkSurfaceDark = Color(0xFF16213E);
+  static const Color darkSurfaceLight = Color(0xFF0F3460);
+  static const Color darkCardBg = Color(0x1E1E2EF2); // rgba(30, 30, 46, 0.95)
 
-  // Accent colors (matching web)
-  static const Color primaryCyan = Color(0xFF4EC7F3); // --accent-blue
-  static const Color primaryPurple = Color(0xFF764BA2); // --accent-purple
-  static const Color accentBlue = Color(0xFF667EEA); // button gradient end
+  // Dark mode text colors
+  static const Color darkTextPrimary = Color(0xFFE0E0E0);
+  static const Color darkTextSecondary = Color(0xFF888888);
+  static const Color darkTextMuted = Color(0xFF6B7280);
 
-  // Button gradient (matching web .primary-btn)
+  // Dark mode borders
+  static const Color darkBorder = Color(0x1AFFFFFF); // rgba(255, 255, 255, 0.1)
+  static const Color darkBorderLight = Color(0xFF4B5563);
+
+  // LIGHT THEME COLORS (outdoor-friendly, rugged, modern)
+  // Clean white/light gray base with strong contrast
+  static const Color lightBackground = Color(0xFFF5F5F5); // Light gray
+  static const Color lightSurfaceDark = Color(0xFFFFFFFF); // Pure white
+  static const Color lightSurfaceLight = Color(0xFFFAFAFA); // Off-white
+  static const Color lightCardBg = Color(0xFFFFFFFF); // White cards
+
+  // Light mode text colors (dark for high contrast)
+  static const Color lightTextPrimary = Color(0xFF1A1A1A); // Near black
+  static const Color lightTextSecondary = Color(0xFF4A5568); // Dark gray
+  static const Color lightTextMuted = Color(0xFF718096); // Medium gray
+
+  // Light mode borders (subtle but visible)
+  static const Color lightBorder = Color(0xFFE2E8F0); // Light gray border
+  static const Color lightBorderLight = Color(0xFFCBD5E0); // Slightly darker
+
+  // Accent colors (same for both themes - vibrant and visible)
+  static const Color primaryCyan = Color(0xFF0891B2); // Darker cyan for light mode
+  static const Color primaryCyanLight = Color(0xFF4EC7F3); // Original for dark mode
+  static const Color primaryPurple = Color(0xFF764BA2);
+  static const Color accentBlue = Color(0xFF667EEA);
+
+  // Button gradient (same for both themes)
   static const Color buttonGradientStart = Color(0xFF764BA2);
   static const Color buttonGradientEnd = Color(0xFF667EEA);
 
-  // Text colors (matching web)
-  static const Color textPrimary = Color(0xFFE0E0E0); // --text-primary
-  static const Color textSecondary = Color(0xFF888888); // --text-secondary
-  static const Color textMuted = Color(0xFF6B7280);
-
-  // Border colors
-  static const Color border = Color(0x1AFFFFFF); // rgba(255, 255, 255, 0.1)
-  static const Color borderLight = Color(0xFF4B5563);
-
-  // Status colors
+  // Status colors (optimized for both themes)
   static const Color success = Color(0xFF10B981);
   static const Color warning = Color(0xFFF59E0B);
   static const Color error = Color(0xFFEF4444);
   static const Color info = Color(0xFF3B82F6);
 
-  // Gradient for buttons (purple to blue - matching web)
+  // Current theme colors (will be updated based on theme mode)
+  static Color background = darkBackground;
+  static Color surfaceDark = darkSurfaceDark;
+  static Color surfaceLight = darkSurfaceLight;
+  static Color cardBg = darkCardBg;
+  static Color textPrimary = darkTextPrimary;
+  static Color textSecondary = darkTextSecondary;
+  static Color textMuted = darkTextMuted;
+  static Color border = darkBorder;
+  static Color borderLight = darkBorderLight;
+
+  /// Update colors based on theme mode
+  static void updateTheme(bool isDarkMode) {
+    if (isDarkMode) {
+      background = darkBackground;
+      surfaceDark = darkSurfaceDark;
+      surfaceLight = darkSurfaceLight;
+      cardBg = darkCardBg;
+      textPrimary = darkTextPrimary;
+      textSecondary = darkTextSecondary;
+      textMuted = darkTextMuted;
+      border = darkBorder;
+      borderLight = darkBorderLight;
+    } else {
+      background = lightBackground;
+      surfaceDark = lightSurfaceDark;
+      surfaceLight = lightSurfaceLight;
+      cardBg = lightCardBg;
+      textPrimary = lightTextPrimary;
+      textSecondary = lightTextSecondary;
+      textMuted = lightTextMuted;
+      border = lightBorder;
+      borderLight = lightBorderLight;
+    }
+  }
+
+  // Gradient for buttons (same for both themes)
   static const LinearGradient buttonGradient = LinearGradient(
     colors: [buttonGradientStart, buttonGradientEnd],
     begin: Alignment.topLeft,
@@ -46,8 +100,8 @@ class AppColors {
     end: Alignment.bottomRight,
   );
 
-  // Background gradient (matching web --primary-gradient)
-  static const LinearGradient backgroundGradient = LinearGradient(
+  // Background gradient - dark mode
+  static const LinearGradient darkBackgroundGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
@@ -57,6 +111,26 @@ class AppColors {
     ],
     stops: [0.0, 0.5, 1.0],
   );
+
+  // Background gradient - light mode (subtle, clean)
+  static const LinearGradient lightBackgroundGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFFF5F5F5), // Light gray
+      Color(0xFFEDF2F7), // Slightly bluer gray
+      Color(0xFFE2E8F0), // Even lighter blue-gray
+    ],
+    stops: [0.0, 0.5, 1.0],
+  );
+
+  // Dynamic gradient based on theme
+  static LinearGradient backgroundGradient = darkBackgroundGradient;
+
+  /// Update gradient based on theme
+  static void updateGradient(bool isDarkMode) {
+    backgroundGradient = isDarkMode ? darkBackgroundGradient : lightBackgroundGradient;
+  }
 }
 
 /// A scaffold with the gradient background matching the web UI
