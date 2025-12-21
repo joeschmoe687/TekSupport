@@ -1,5 +1,44 @@
 # TekNeck HVAC Support App — To Do List
 
+## 🚨 IMMEDIATE ACTION REQUIRED - TekMate Deployment
+
+**Status:** ✅ Code Complete | ⚠️ Deployment Pending
+
+TekMate integration is fully implemented in code and ready for deployment. The following manual steps are required:
+
+### 🔴 Critical Manual Steps (Required for TekMate to work)
+
+1. **Deploy Cloud Function** (15 min)
+   ```bash
+   cd hvac_support_app
+   ./scripts/deploy_tekmate.sh
+   ```
+   OR see detailed instructions in section below.
+
+2. **Configure Firestore** (5 min)
+   - Create document: `settings/tekmate`
+   - Add fields: `apiUrl` and `apiKey`
+   - See detailed setup instructions below.
+
+3. **Deploy/Configure TekMate Backend** (Required - currently blocking)
+   - ⚠️ **BLOCKER:** TekMate consolidated backend must be running
+   - Deploy `tekmate-consolidated` repository first
+   - OR create mock endpoint for testing
+   - OR add to TODO list if backend not ready
+
+4. **Test Integration** (30 min)
+   - Test as admin user (verify 🧠 button visible)
+   - Test as non-admin (verify Ghost Mode working)
+   - Follow `docs/TEKMATE_TESTING_GUIDE.md`
+
+**📚 Documentation:**
+- [Implementation Summary](TEKMATE_IMPLEMENTATION_COMPLETE.md) - What was done
+- [Testing Guide](docs/TEKMATE_TESTING_GUIDE.md) - How to test
+- [Quick Reference](docs/TEKMATE_QUICK_REFERENCE.md) - Developer guide
+- [Architecture](docs/TEKMATE_ARCHITECTURE.md) - System design
+
+---
+
 ## 🧠 GitHub & Firebase Integration
 
 - **Repo**: [joeschmoe687/hvac_support_app](https://github.com/joeschmoe687/hvac_support_app) (private)
