@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import '../widgets/gradient_scaffold.dart';
+import 'payment_screen.dart';
 
 class SupportContactScreen extends StatefulWidget {
   const SupportContactScreen({super.key});
@@ -76,58 +77,60 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
   }
 
   Future<void> _initiateCall() async {
-    final message = Uri.encodeComponent('Hi, I need a phone call with support');
-    final waLink = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
-    try {
-      await launchUrl(Uri.parse(waLink), mode: LaunchMode.externalApplication);
-      _logSupportTransaction('phone');
-    } catch (e) {
-      print('Error launching WhatsApp: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not launch WhatsApp')),
-      );
+    // Show payment screen first
+    final phonePrice = _getPrice('Phone');
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentScreen(
+          supportType: 'phone',
+          amountCents: (phonePrice * 100).toInt(),
+          description: 'Phone Support - Live phone call with a tech',
+        ),
+      ),
+    );
+
+    // If payment successful, open WhatsApp
+    if (result == true && mounted) {
+      final message = Uri.encodeComponent('Hi, I need a phone call with support');
+      final waLink = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
+      try {
+        await launchUrl(Uri.parse(waLink), mode: LaunchMode.externalApplication);
+      } catch (e) {
+        print('Error launching WhatsApp: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not launch WhatsApp')),
+        );
+      }
     }
   }
 
   Future<void> _initiateVideo() async {
-    final message = Uri.encodeComponent('Hi, I need a video call with support');
-    final waLink = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
-    try {
-      await launchUrl(Uri.parse(waLink), mode: LaunchMode.externalApplication);
-      _logSupportTransaction('video');
-    } catch (e) {
-      print('Error launching WhatsApp: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not launch WhatsApp')),
-      );
-    }
-  }
+    // Show payment screen first
+    final videoPrice = _getPrice('Video');
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentScreen(
+          supportType: 'video',
+          amountCents: (videoPrice * 100).toInt(),
+          description: 'Video Call Support - Face-to-face video support',
+        ),
+      ),
+    );
 
-  Future<void> _logSupportTransaction(String type) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
-
-      final typeKey = type == 'phone'
-          ? 'Phone'
-          : type == 'video'
-              ? 'Video'
-              : 'Message';
-      final price = _getPrice(typeKey);
-
-      await FirebaseFirestore.instance.collection('supportTransactions').add({
-        'userId': user.uid,
-        'email': user.email,
-        'type': type,
-        'amount': price,
-        'timestamp': FieldValue.serverTimestamp(),
-        'status': 'initiated',
-        'platform': 'flutter_app'
-      });
-
-      print('✅ Support transaction logged for $type - Price: \$$price');
-    } catch (error) {
-      print('Error logging transaction: $error');
+    // If payment successful, open WhatsApp
+    if (result == true && mounted) {
+      final message = Uri.encodeComponent('Hi, I need a video call with support');
+      final waLink = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
+      try {
+        await launchUrl(Uri.parse(waLink), mode: LaunchMode.externalApplication);
+      } catch (e) {
+        print('Error launching WhatsApp: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not launch WhatsApp')),
+        );
+      }
     }
   }
 

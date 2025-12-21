@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../widgets/gradient_scaffold.dart';
 import 'chat_detail_screen.dart';
 import 'support_contact_screen.dart';
+import 'payment_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -333,25 +334,50 @@ class _ChatScreenState extends State<ChatScreen> {
     int amountCents,
     int? monthlyCents,
   ) async {
-    String url =
-        'https://airpronwa.com/USERS/pages/checkout.html?amount=$amountCents&type=$type&plan=$type';
-    if (monthlyCents != null) {
-      url += '&monthly=$monthlyCents';
-    }
+    // Navigate to new payment screen instead of external URL
+    final String description = _getDescriptionForType(type);
+    
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentScreen(
+          supportType: type,
+          amountCents: amountCents,
+          description: description,
+        ),
+      ),
+    );
 
-    final checkoutUrl = Uri.parse(url);
-
-    if (await canLaunchUrl(checkoutUrl)) {
-      await launchUrl(checkoutUrl, mode: LaunchMode.externalApplication);
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Could not open checkout page'),
-            backgroundColor: Colors.red,
+    // If payment was successful, show confirmation
+    if (result == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Payment successful! A tech will contact you soon.'),
+            ],
           ),
-        );
-      }
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
+  }
+
+  String _getDescriptionForType(String type) {
+    switch (type) {
+      case 'text':
+        return 'Text Chat Support - Chat with HVAC techs anytime';
+      case 'phone':
+        return 'Phone Support - Live phone call with a tech';
+      case 'video':
+        return 'Video Call Support - Face-to-face video support';
+      case 'emergency':
+        return 'Emergency Support - Priority response for urgent issues';
+      default:
+        return 'TekNeck Support Service';
     }
   }
 

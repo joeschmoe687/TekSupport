@@ -50,6 +50,11 @@ dependencies:
   # TekTool - Share functionality for BLE sniffer
   share_plus: ^10.0.0
   
+  # Payment integration
+  flutter_stripe: ^11.1.0
+  pay: ^2.0.0
+  card_scanner: ^1.0.3
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
