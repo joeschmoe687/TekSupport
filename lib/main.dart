@@ -69,18 +69,26 @@ class _TekToolAppState extends State<TekToolApp> {
     setState(() {
       _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     });
+    // Update AppColors based on theme
+    AppColors.updateTheme(isDark);
+    AppColors.updateGradient(isDark);
   }
 
   Future<void> _toggleTheme() async {
     final newMode =
         _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    final isDark = newMode == ThemeMode.dark;
     setState(() {
       _themeMode = newMode;
     });
     
+    // Update AppColors based on theme
+    AppColors.updateTheme(isDark);
+    AppColors.updateGradient(isDark);
+    
     // Persist the preference
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkTheme', newMode == ThemeMode.dark);
+    await prefs.setBool('isDarkTheme', isDark);
   }
 
   @override
