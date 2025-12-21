@@ -40,6 +40,7 @@ TekMate is the AI/ML brains providing:
 - [ ] **Context passing** - Send current job, customer, location to TekMate for context
 - [ ] **Fallback to human** - Low-confidence responses escalated to human tech
 - [ ] **Learning feedback** - Tech feedback on guidance improves future responses
+- [ ] **Axios dependency** - Install `axios` package when integrating real TekMate API (see GHOST_MODE_DEPLOYMENT.md line 240-244 for instructions)
 
 ### Bluetooth Device Setup with TekMate [APP + AI]
 - [ ] **AI device wizard** - Step through adding new BLE device with AI guidance
