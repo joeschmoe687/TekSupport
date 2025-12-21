@@ -171,7 +171,7 @@ class DeviceRegistry {
       unit: '°F',
       isBroadcastOnly: true,
       manufacturerId: 0x5046,
-      parseReading: _parseFieldpieceTemp,
+      parseReading: parseFieldpieceTemp,
     ),
 
     // Fieldpiece Pressure Probe (FPBG) - Model 2975/2976
@@ -183,7 +183,7 @@ class DeviceRegistry {
       unit: 'psig',
       isBroadcastOnly: true,
       manufacturerId: 0x5046,
-      parseReading: _parseFieldpiecePressure,
+      parseReading: parseFieldpiecePressure,
     ),
 
     // Fieldpiece Psychrometer (FPBH) - Model 5699
@@ -196,7 +196,7 @@ class DeviceRegistry {
       unit: '°F',
       isBroadcastOnly: true,
       manufacturerId: 0x5046,
-      parseReading: _parseFieldpiecePsychrometer,
+      parseReading: parseFieldpiecePsychrometer,
     ),
 
     // Fieldpiece SC680 Meter (FPCB)
@@ -208,7 +208,7 @@ class DeviceRegistry {
       unit: 'A',
       isBroadcastOnly: true,
       manufacturerId: 0x5046,
-      parseReading: _parseFieldpieceSC680,
+      parseReading: parseFieldpieceSC680,
     ),
   };
 
@@ -697,7 +697,7 @@ double _parseTestoPressure(List<int> rawData) {
 /// Byte 9: Battery level (0x20 = good, needs more data to decode scale)
 /// Bytes 12-13: Temperature (uint16 LE, needs divisor confirmation)
 /// Example: 0xa828 = 43048 → possible °C*1000 or °F*100
-double _parseFieldpieceTemp(List<int> rawData) {
+double parseFieldpieceTemp(List<int> rawData) {
   if (rawData.length < 14) return double.nan;
 
   final bytes = Uint8List.fromList(rawData);
@@ -746,7 +746,7 @@ double _parseFieldpieceTemp(List<int> rawData) {
 /// Bytes 12-13: Pressure data
 /// Example: 0x2877 = 10359 when pressure is 0.0 psig (zero offset)
 /// Note: Need readings with actual pressure to determine offset and scale
-double _parseFieldpiecePressure(List<int> rawData) {
+double parseFieldpiecePressure(List<int> rawData) {
   if (rawData.length < 14) return double.nan;
 
   final bytes = Uint8List.fromList(rawData);
@@ -790,7 +790,7 @@ double _parseFieldpiecePressure(List<int> rawData) {
 /// Example: 0x022d = 557 ÷ 10 = 55.7°F ✓ matches screenshot
 /// Bytes 12-13: Dry bulb temp (needs more data to confirm formula)
 /// Bytes 20-21: Humidity % (needs more data to confirm formula)
-double _parseFieldpiecePsychrometer(List<int> rawData) {
+double parseFieldpiecePsychrometer(List<int> rawData) {
   if (rawData.length < 17) return double.nan;
 
   final bytes = Uint8List.fromList(rawData);
@@ -897,7 +897,7 @@ Map<String, double> parseFieldpiecePsychrometerFull(List<int> rawData) {
 /// Parse Fieldpiece SC680 Meter (FPCB)
 /// Packet size: 30 bytes
 /// This is a multi-function meter - value type depends on mode
-double _parseFieldpieceSC680(List<int> rawData) {
+double parseFieldpieceSC680(List<int> rawData) {
   if (rawData.length < 20) return double.nan;
 
   // Placeholder - SC680 is a multi-meter (amps, volts, ohms, etc.)

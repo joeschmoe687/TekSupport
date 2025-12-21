@@ -534,14 +534,14 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
     try {
       switch (deviceTypeCode) {
         case 'BF': // Temperature Clamp
-          final temp = _parseFieldpieceTemp(manufacturerData);
+          final temp = parseFieldpieceTemp(manufacturerData);
           if (!temp.isNaN) {
             reading = '${temp.toStringAsFixed(1)}°F';
           }
           break;
 
         case 'BG': // Pressure Probe
-          final pressure = _parseFieldpiecePressure(manufacturerData);
+          final pressure = parseFieldpiecePressure(manufacturerData);
           if (!pressure.isNaN) {
             reading = '${pressure.toStringAsFixed(1)} psig';
           }
@@ -566,7 +566,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
           break;
 
         case 'CB': // SC680 Meter
-          final value = _parseFieldpieceSC680(manufacturerData);
+          final value = parseFieldpieceSC680(manufacturerData);
           if (!value.isNaN) {
             reading = '${value.toStringAsFixed(1)}A';
           }

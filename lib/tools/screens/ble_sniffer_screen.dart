@@ -1408,14 +1408,14 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
     // Identify device type and parse reading using device_registry parsers
     switch (deviceTypeCode) {
       case 'BF': // Temperature Clamp (Model 8975)
-        final tempF = _parseFieldpieceTemp(data);
+        final tempF = parseFieldpieceTemp(data);
         if (!tempF.isNaN) {
           reading = '${tempF.toStringAsFixed(1)}°F';
         }
         break;
 
       case 'BG': // Pressure Probe (Model 2975/2976)
-        final psig = _parseFieldpiecePressure(data);
+        final psig = parseFieldpiecePressure(data);
         if (!psig.isNaN) {
           reading = '${psig.toStringAsFixed(1)} psig';
         }
@@ -1445,7 +1445,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         break;
 
       case 'CB': // SC680 Meter
-        final value = _parseFieldpieceSC680(data);
+        final value = parseFieldpieceSC680(data);
         if (!value.isNaN) {
           reading = '${value.toStringAsFixed(1)}A';
         }
