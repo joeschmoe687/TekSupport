@@ -1,51 +1,65 @@
 /**
- * TekNeck HVAC Support App - Cloud Functions
+ * Firebase Cloud Functions for TekNeck HVAC Support App
  * 
- * This file contains Firebase Cloud Functions for the app.
- * CRITICAL: TekMate functions are ADMIN ONLY (Ghost Mode)
+ * This file contains all Cloud Functions including:
+ * - Payment processing (Stripe)
+ * - TekMate AI chat proxy (admin only)
+ * - Push notifications
  */
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
-// Initialize Firebase Admin if not already initialized
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
+// Initialize Firebase Admin
+admin.initializeApp();
 
-const db = admin.firestore();
+// Import payment functions
+const stripe = require('stripe')(functions.config().stripe?.secret_key || '');
 
 /**
- * ============================================================================
- * TEKMATE CHAT PROXY - ADMIN ONLY (GHOST MODE)
- * ============================================================================
+ * TekMate Chat Proxy - ADMIN ONLY (Ghost Mode)
  * 
- * This function proxies chat queries to the TekMate AI service.
+ * This function acts as a secure proxy between the Flutter app and TekMate AI.
+ * It enforces admin-only access and adds authentication context.
  * 
- * SECURITY (CRITICAL):
- * - Only authenticated users can call this function
- * - Only users with role='admin' or isAdmin=true can access TekMate
- * - Non-admins get 403 Forbidden (function doesn't reveal TekMate exists)
- * - All requests are logged to admin-only collection for audit
+ * SECURITY:
+ * - Requires valid Firebase Authentication token
+ * - Verifies user has admin role in Firestore
+ * - Non-admins get 403 Forbidden (no hint that TekMate exists)
  * 
  * REQUEST:
  * {
- *   message: string,      // User's question/prompt
- *   context: object,      // Optional job/customer/device context
- *   platform: string      // 'app' or 'web'
+ *   "message": "How do I troubleshoot low superheat?",
+ *   "context": {
+ *     "jobId": "job_123",
+ *     "refrigerant": "R410A",
+ *     "systemType": "AC"
+ *   },
+ *   "platform": "app"
  * }
  * 
  * RESPONSE:
  * {
- *   response: string,     // TekMate's response text
- *   confidence: number,   // 0.0-1.0 confidence score
- *   autoRespond: boolean  // Whether to auto-send (high confidence)
+ *   "response": "Low superheat usually indicates...",
+ *   "confidence": 0.92,
+ *   "autoRespond": false
  * }
+ * 
+ * SETUP:
+ * 1. Deploy: firebase deploy --only functions:tekmateChatProxy
+ * 2. Configure TekMate API endpoint in Firestore:
+ *    Collection: settings
+ *    Document: tekmate
+ *    Fields:
+ *      - apiUrl: "https://YOUR_TEKMATE_API_URL"
+ *      - apiKey: "your_api_key"
+ * 3. Test with admin user
  */
 exports.tekmateChatProxy = functions.https.onCall(async (data, context) => {
   // SECURITY: Require authentication
   if (!context.auth) {
     console.warn('Unauthenticated TekMate access attempt');
+    console.log('tekmateChatProxy: Unauthorized - no auth token');
     throw new functions.https.HttpsError(
       'unauthenticated',
       'Authentication required'
@@ -64,6 +78,20 @@ exports.tekmateChatProxy = functions.https.onCall(async (data, context) => {
       throw new functions.https.HttpsError(
         'permission-denied',
         'User not found'
+  console.log(`tekmateChatProxy: Request from user ${userId}`);
+
+  try {
+    // SECURITY: Verify admin role
+    const userDoc = await admin.firestore()
+      .collection('users')
+      .doc(userId)
+      .get();
+
+    if (!userDoc.exists) {
+      console.log(`tekmateChatProxy: User ${userId} not found`);
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        'Access denied'
       );
     }
 
@@ -73,6 +101,9 @@ exports.tekmateChatProxy = functions.https.onCall(async (data, context) => {
     // SECURITY: Only admins can access TekMate
     if (!isAdmin) {
       console.warn(`TekMate access denied for non-admin user: ${userEmail} (${userId})`);
+    if (!isAdmin) {
+      console.log(`tekmateChatProxy: User ${userId} is not admin`);
+      // Return generic "access denied" - don't reveal TekMate exists
       throw new functions.https.HttpsError(
         'permission-denied',
         'Access denied'
@@ -83,6 +114,8 @@ exports.tekmateChatProxy = functions.https.onCall(async (data, context) => {
     const { message, context: userContext, platform } = data;
 
     // Validate input
+    const { message, context: requestContext, platform } = data;
+
     if (!message || typeof message !== 'string') {
       throw new functions.https.HttpsError(
         'invalid-argument',
@@ -128,6 +161,102 @@ exports.tekmateChatProxy = functions.https.onCall(async (data, context) => {
       throw error;
     }
     
+    }
+
+    console.log(`tekmateChatProxy: Admin ${userId} querying TekMate`);
+    console.log(`Message: ${message.substring(0, 100)}...`);
+
+    // Get TekMate configuration from Firestore
+    const tekmateConfig = await admin.firestore()
+      .collection('settings')
+      .doc('tekmate')
+      .get();
+
+    if (!tekmateConfig.exists) {
+      console.error('TekMate configuration not found in Firestore');
+      throw new functions.https.HttpsError(
+        'failed-precondition',
+        'Service configuration error'
+      );
+    }
+
+    const config = tekmateConfig.data();
+    const tekmateApiUrl = config.apiUrl;
+    const tekmateApiKey = config.apiKey;
+
+    if (!tekmateApiUrl) {
+      console.error('TekMate API URL not configured');
+      throw new functions.https.HttpsError(
+        'failed-precondition',
+        'Service not configured'
+      );
+    }
+
+    // Call TekMate API
+    // NOTE: This is a placeholder - you'll need to implement actual API call
+    // based on your TekMate consolidated backend
+    const fetch = require('node-fetch');
+    
+    const tekmateResponse = await fetch(tekmateApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${tekmateApiKey || ''}`,
+      },
+      body: JSON.stringify({
+        message: message,
+        context: {
+          ...requestContext,
+          userId: userId,
+          platform: platform || 'app',
+          timestamp: new Date().toISOString(),
+        },
+      }),
+    });
+
+    if (!tekmateResponse.ok) {
+      console.error(`TekMate API error: ${tekmateResponse.status}`);
+      throw new functions.https.HttpsError(
+        'internal',
+        'AI service temporarily unavailable'
+      );
+    }
+
+    const tekmateData = await tekmateResponse.json();
+
+    // Log interaction to Firestore (admin only collection)
+    await admin.firestore()
+      .collection('admin')
+      .doc('tekmate_interactions')
+      .collection('logs')
+      .add({
+        userId: userId,
+        message: message,
+        context: requestContext || {},
+        response: tekmateData.response || '',
+        confidence: tekmateData.confidence || 0,
+        platform: platform || 'app',
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+    console.log(`tekmateChatProxy: Response sent to ${userId}`);
+
+    // Return TekMate response
+    return {
+      response: tekmateData.response || '',
+      confidence: tekmateData.confidence || 0.0,
+      autoRespond: tekmateData.autoRespond || false,
+    };
+
+  } catch (error) {
+    console.error('tekmateChatProxy error:', error);
+    
+    // Re-throw HttpsError as-is
+    if (error.code && error.code.includes('https/')) {
+      throw error;
+    }
+
+    // Wrap other errors
     throw new functions.https.HttpsError(
       'internal',
       'An error occurred processing your request'
@@ -258,6 +387,13 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   
   // Handle preflight OPTIONS request
+ * Payment Intent Creation - Stripe
+ * (Existing payment function)
+ */
+exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
+  // Enable CORS
+  res.set('Access-Control-Allow-Origin', '*');
+  
   if (req.method === 'OPTIONS') {
     res.set('Access-Control-Allow-Methods', 'POST');
     res.set('Access-Control-Allow-Headers', 'Content-Type');
@@ -294,6 +430,8 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
     // Create payment intent with Stripe
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount, // Amount in cents
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount,
       currency: currency.toLowerCase(),
       description: description || 'TekNeck Support Service',
       metadata: {
@@ -428,3 +566,143 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
 
   res.status(200).send({ received: true });
 });
+ * Push Notification - New Customer Message
+ */
+exports.sendPushNotificationOnNewMessage = functions.firestore
+  .document('supportRooms/{roomId}/messages/{messageId}')
+  .onCreate(async (snap, context) => {
+    const message = snap.data();
+    const roomId = context.params.roomId;
+
+    // Only send notification for customer messages
+    if (message.senderType !== 'customer' && message.from !== 'customer') {
+      return null;
+    }
+
+    try {
+      // Get room data
+      const roomDoc = await admin.firestore()
+        .collection('supportRooms')
+        .doc(roomId)
+        .get();
+
+      if (!roomDoc.exists) return null;
+
+      const roomData = roomDoc.data();
+      const assignedTo = roomData.claimedBy || roomData.assignedTo;
+
+      if (!assignedTo) {
+        console.log('No assigned tech/admin for notification');
+        return null;
+      }
+
+      // Get admin's FCM token
+      const adminDoc = await admin.firestore()
+        .collection('users')
+        .doc(assignedTo)
+        .get();
+
+      if (!adminDoc.exists) return null;
+
+      const adminData = adminDoc.data();
+      const fcmToken = adminData.fcmToken;
+
+      if (!fcmToken) {
+        console.log('Admin has no FCM token');
+        return null;
+      }
+
+      // Send notification
+      const payload = {
+        notification: {
+          title: 'New Message',
+          body: message.text || 'New message received',
+        },
+        data: {
+          type: 'new_message',
+          roomId: roomId,
+          click_action: 'FLUTTER_NOTIFICATION_CLICK',
+        },
+        token: fcmToken,
+      };
+
+      await admin.messaging().send(payload);
+      console.log(`Notification sent to admin ${assignedTo}`);
+
+      return null;
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      return null;
+    }
+  });
+
+/**
+ * Push Notification - Admin Reply
+ */
+exports.sendPushNotificationOnAdminReply = functions.firestore
+  .document('supportRooms/{roomId}/messages/{messageId}')
+  .onCreate(async (snap, context) => {
+    const message = snap.data();
+    const roomId = context.params.roomId;
+
+    // Only send notification for tech/admin messages
+    if (message.senderType !== 'tech' && message.from !== 'tech') {
+      return null;
+    }
+
+    try {
+      // Get room data
+      const roomDoc = await admin.firestore()
+        .collection('supportRooms')
+        .doc(roomId)
+        .get();
+
+      if (!roomDoc.exists) return null;
+
+      const roomData = roomDoc.data();
+      const customerId = roomData.userId || roomData.customerUID;
+
+      if (!customerId) {
+        console.log('No customer ID for notification');
+        return null;
+      }
+
+      // Get customer's FCM token
+      const customerDoc = await admin.firestore()
+        .collection('users')
+        .doc(customerId)
+        .get();
+
+      if (!customerDoc.exists) return null;
+
+      const customerData = customerDoc.data();
+      const fcmToken = customerData.fcmToken;
+
+      if (!fcmToken) {
+        console.log('Customer has no FCM token');
+        return null;
+      }
+
+      // Send notification
+      const payload = {
+        notification: {
+          title: 'Support Reply',
+          body: message.text || 'You have a new reply',
+        },
+        data: {
+          type: 'admin_reply',
+          roomId: roomId,
+          click_action: 'FLUTTER_NOTIFICATION_CLICK',
+        },
+        token: fcmToken,
+      };
+
+      await admin.messaging().send(payload);
+      console.log(`Notification sent to customer ${customerId}`);
+
+      return null;
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      return null;
+    }
+  });

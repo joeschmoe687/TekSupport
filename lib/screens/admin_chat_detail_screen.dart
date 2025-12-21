@@ -28,6 +28,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
   final ScrollController _scrollController = ScrollController();
   final ImagePicker _picker = ImagePicker();
   final TekMateChatService _tekMateService = TekMateChatService();
+  final TekMateChatService _tekmateService = TekMateChatService();
 
   Map<String, dynamic>? _roomData;
   Map<String, dynamic>? _userData;
@@ -36,6 +37,8 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
   bool _isUploading = false;
   bool _isTekMateAvailable = false;
   bool _isTekMateLoading = false;
+  bool _isTekmateAvailable = false;
+  bool _isTekmateLoading = false;
 
   @override
   void initState() {
@@ -50,6 +53,10 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     if (mounted) {
       setState(() {
         _isTekMateAvailable = isAvailable;
+    final isAvailable = await _tekmateService.init();
+    if (mounted) {
+      setState(() {
+        _isTekmateAvailable = isAvailable;
       });
     }
   }
@@ -331,6 +338,233 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
             ),
           ),
     );
+  }
+
+  /// Get TekMate AI guidance for current conversation
+  Future<void> _getTekmateGuidance() async {
+    if (!_isTekmateAvailable) return;
+
+    // Get recent messages for context
+    final recentMessages = await _getRecentMessages();
+    
+    // Build context from room data
+    final context = <String, dynamic>{
+      'roomId': widget.roomId,
+      'recentMessages': recentMessages,
+    };
+
+    if (_roomData != null) {
+      if (_roomData!['jobId'] != null) {
+        context['jobId'] = _roomData!['jobId'];
+      }
+      if (_roomData!['systemType'] != null) {
+        context['systemType'] = _roomData!['systemType'];
+      }
+    }
+
+    setState(() => _isTekmateLoading = true);
+
+    try {
+      // Get the last customer message as the query
+      String query = 'Provide guidance for this support conversation';
+      if (recentMessages.isNotEmpty) {
+        final lastCustomerMsg = recentMessages.firstWhere(
+          (msg) => msg['senderType'] == 'customer',
+          orElse: () => {},
+        );
+        if (lastCustomerMsg.isNotEmpty && lastCustomerMsg['text'] != null) {
+          query = lastCustomerMsg['text'];
+        }
+      }
+
+      final response = await _tekmateService.getResponse(
+        query,
+        context: context,
+        platform: 'app',
+      );
+
+      if (mounted) {
+        setState(() => _isTekmateLoading = false);
+      }
+
+      if (response == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('TekMate is temporarily unavailable')),
+          );
+        }
+        return;
+      }
+
+      // Show TekMate suggestion dialog
+      if (mounted) {
+        _showTekmateSuggestionDialog(response);
+      }
+    } catch (e) {
+      debugPrint('TekMate error: $e');
+      if (mounted) {
+        setState(() => _isTekmateLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error getting AI guidance: $e')),
+        );
+      }
+    }
+  }
+
+  /// Get recent messages for context
+  Future<List<Map<String, dynamic>>> _getRecentMessages() async {
+    try {
+      final messagesSnapshot = await FirebaseFirestore.instance
+          .collection('supportRooms')
+          .doc(widget.roomId)
+          .collection('messages')
+          .orderBy('createdAt', descending: true)
+          .limit(10)
+          .get();
+
+      return messagesSnapshot.docs.map((doc) {
+        final data = doc.data();
+        return {
+          'text': data['text'] ?? data['messageText'] ?? '',
+          'senderType': data['senderType'] ?? data['from'] ?? 'unknown',
+          'timestamp': data['createdAt']?.toDate()?.toIso8601String() ?? '',
+        };
+      }).toList();
+    } catch (e) {
+      debugPrint('Error fetching messages: $e');
+      return [];
+    }
+  }
+
+  /// Show TekMate suggestion dialog with confidence score
+  void _showTekmateSuggestionDialog(TekMateResponse response) {
+    final suggestionController = TextEditingController(text: response.response);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surfaceDark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Icons.psychology, color: AppColors.primaryPurple),
+            const SizedBox(width: 8),
+            const Text(
+              'TekMate Suggestion',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Confidence indicator
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: _getConfidenceColor(response.confidence),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _getConfidenceIcon(response.confidence),
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Confidence: ${response.confidencePercent}%',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Editable suggestion
+              TextField(
+                controller: suggestionController,
+                maxLines: null,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'AI suggestion',
+                  hintStyle: const TextStyle(color: Colors.white38),
+                  filled: true,
+                  fillColor: AppColors.background,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Confidence explanation
+              Text(
+                response.isHighConfidence
+                    ? '✓ High confidence - Review and send'
+                    : '⚠ Lower confidence - Verify carefully',
+                style: TextStyle(
+                  color: response.isHighConfidence
+                      ? Colors.green
+                      : Colors.orange,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white70)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryCyan,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              // Insert suggestion into message field
+              _messageController.text = suggestionController.text;
+            },
+            child: const Text('Use Suggestion'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryPurple,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              // Insert and send
+              _messageController.text = suggestionController.text;
+              _sendMessage();
+            },
+            child: const Text('Send Now'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getConfidenceColor(double confidence) {
+    if (confidence >= 0.85) return Colors.green;
+    if (confidence >= 0.70) return Colors.orange;
+    return Colors.red;
+  }
+
+  IconData _getConfidenceIcon(double confidence) {
+    if (confidence >= 0.85) return Icons.check_circle;
+    if (confidence >= 0.70) return Icons.info;
+    return Icons.warning;
   }
 
   void _showFullImage(BuildContext context, String imageUrl) {
@@ -1180,6 +1414,40 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
                   ),
                 ),
               ],
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
+              ),
+            ),
+            const SizedBox(width: 12),
+            // TekMate AI button (admin only)
+            if (_isTekmateAvailable) ...[
+              _isTekmateLoading
+                  ? Container(
+                      width: 40,
+                      height: 40,
+                      padding: const EdgeInsets.all(8),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.primaryPurple,
+                      ),
+                    )
+                  : IconButton(
+                      icon: Icon(Icons.psychology, color: AppColors.primaryPurple),
+                      onPressed: _getTekmateGuidance,
+                      tooltip: 'Ask TekMate AI',
+                    ),
+              const SizedBox(width: 8),
+            ],
+            Container(
+              decoration: const BoxDecoration(
+                color: AppColors.primaryCyan,
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.send, color: Colors.white),
+                onPressed: _sendMessage,
+                tooltip: 'Send',
+              ),
             ),
           ],
         ),

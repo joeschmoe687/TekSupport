@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' show Guid;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/gradient_scaffold.dart';
 import '../../bluetooth/bluetooth_service.dart';
 import '../services/refrigerant_detector.dart';
@@ -16,6 +17,7 @@ import '../widgets/calibration_popup.dart';
 import '../widgets/diagnostic_card.dart';
 import '../widgets/troubleshooting_sheet.dart';
 import '../utils/pt_chart.dart';
+import 'dart:math' as math;
 
 /// Gauge slot types for sensor assignment
 enum GaugeSlot {
@@ -25,6 +27,12 @@ enum GaugeSlot {
   liquidLineTemp,
   supplyAirTemp,
   returnAirTemp,
+}
+
+/// Gauge display mode
+enum GaugeDisplayMode {
+  digital, // Default: Digital box layout
+  analog,  // Classic round analog gauge
 }
 
 /// Job types for gauge configuration
@@ -135,6 +143,17 @@ class _GaugeScreenState extends State<GaugeScreen> {
   // Current job type selection
   JobType _currentJobType = JobType.airConditioning;
 
+  // Gauge display mode (digital or analog)
+  GaugeDisplayMode _gaugeDisplayMode = GaugeDisplayMode.digital;
+
+  // Scale connection state for auto-display
+  bool _isScaleConnected = false;
+  double _scaleWeight = 0.0;
+  String? _scaleDeviceId;
+  String? _scaleDeviceName;
+  int? _scaleBatteryLevel;
+  double? _lastKnownScaleWeight; // Preserved when disconnected
+
   // Diagnostic result (updated when readings change)
   DiagnosticResult? _diagnosticResult;
 
@@ -156,7 +175,30 @@ class _GaugeScreenState extends State<GaugeScreen> {
     await _mlDataService.init();
     await _loadDeviceNames();
     await _loadBatteryLevels();
+    await _loadGaugeDisplayMode();
     _listenForDeviceUpdates();
+  }
+
+  Future<void> _loadGaugeDisplayMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final modeStr = prefs.getString('gaugeDisplayMode') ?? 'digital';
+    if (mounted) {
+      setState(() {
+        _gaugeDisplayMode = modeStr == 'analog' 
+            ? GaugeDisplayMode.analog 
+            : GaugeDisplayMode.digital;
+      });
+    }
+  }
+
+  Future<void> _saveGaugeDisplayMode(GaugeDisplayMode mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('gaugeDisplayMode', mode == GaugeDisplayMode.analog ? 'analog' : 'digital');
+    if (mounted) {
+      setState(() {
+        _gaugeDisplayMode = mode;
+      });
+    }
   }
 
   Future<void> _loadDeviceNames() async {
@@ -182,6 +224,16 @@ class _GaugeScreenState extends State<GaugeScreen> {
           status.deviceId != null) {
         // Get device name before removing
         final deviceName = _deviceNames[status.deviceId] ?? 'Device';
+
+        // Check if this is a scale
+        final profile = _registry.identifyByName(deviceName);
+        if (profile?.type == HvacDeviceType.refrigerantScale && 
+            status.deviceId == _scaleDeviceId) {
+          setState(() {
+            _isScaleConnected = false;
+            _lastKnownScaleWeight = _scaleWeight; // Preserve weight
+          });
+        }
 
         setState(() {
           // Reset values for slots assigned to this device before removing
@@ -241,6 +293,17 @@ class _GaugeScreenState extends State<GaugeScreen> {
           status.deviceId != null) {
         // Show reconnect notification
         final deviceName = _deviceNames[status.deviceId] ?? 'Device';
+        
+        // Check if this is a scale reconnecting
+        final profile = _registry.identifyByName(deviceName);
+        if (profile?.type == HvacDeviceType.refrigerantScale) {
+          setState(() {
+            _isScaleConnected = true;
+            _scaleDeviceId = status.deviceId;
+            _scaleDeviceName = deviceName;
+          });
+        }
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -275,6 +338,18 @@ class _GaugeScreenState extends State<GaugeScreen> {
 
       // Track that we've received real data
       _hasReceivedData = true;
+
+      // Handle scale readings separately
+      if (reading.type == HvacDeviceType.refrigerantScale) {
+        setState(() {
+          _isScaleConnected = true;
+          _scaleWeight = reading.value;
+          _scaleDeviceId = reading.deviceId;
+          _scaleDeviceName = reading.deviceName;
+          _lastKnownScaleWeight = reading.value; // Update last known weight
+        });
+        return; // Don't process scale readings as gauge data
+      }
 
       // Apply zero offset for pressure readings (hardware zeroing)
       double adjustedValue = reading.value;
@@ -372,6 +447,10 @@ class _GaugeScreenState extends State<GaugeScreen> {
       if (!mounted) return;
       setState(() {
         _batteryLevels[battery.deviceId] = battery.level;
+        // Update scale battery if it's the scale device
+        if (battery.deviceId == _scaleDeviceId) {
+          _scaleBatteryLevel = battery.level;
+        }
       });
     });
   }
@@ -939,6 +1018,13 @@ class _GaugeScreenState extends State<GaugeScreen> {
     return _batteryLevels[deviceId];
   }
 
+  void _toggleGaugeDisplayMode() {
+    final newMode = _gaugeDisplayMode == GaugeDisplayMode.digital
+        ? GaugeDisplayMode.analog
+        : GaugeDisplayMode.digital;
+    _saveGaugeDisplayMode(newMode);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -958,6 +1044,19 @@ class _GaugeScreenState extends State<GaugeScreen> {
           ),
         ),
         actions: [
+          // Display mode toggle
+          IconButton(
+            icon: Icon(
+              _gaugeDisplayMode == GaugeDisplayMode.digital
+                  ? Icons.speed
+                  : Icons.grid_view,
+              color: AppColors.textSecondary,
+            ),
+            onPressed: _toggleGaugeDisplayMode,
+            tooltip: _gaugeDisplayMode == GaugeDisplayMode.digital
+                ? 'Switch to Analog'
+                : 'Switch to Digital',
+          ),
           // Settings gear for job type
           IconButton(
             icon: const Icon(Icons.settings, color: AppColors.textSecondary),
@@ -993,37 +1092,48 @@ class _GaugeScreenState extends State<GaugeScreen> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              // Show tip if devices connected but no data received
-              if (!_hasReceivedData && _sensorAssignments.isNotEmpty)
-                _buildNoDataTip(),
-              // Diagnostic Card - Show AI insights
-              if (_diagnosticResult != null)
-                DiagnosticCard(
-                  diagnostic: _diagnosticResult!,
-                  onTroubleshootTap: () {
-                    TroubleshootingSheet.show(context, _diagnosticResult!);
-                  },
-                ),
-              if (_diagnosticResult != null) const SizedBox(height: 16),
-              // Pressure Gauges
-              _buildPressureGauges(),
-              const SizedBox(height: 24),
-              // Calculations Card
-              _buildCalculationsCard(),
-              const SizedBox(height: 24),
-              // Line Temp Probes
-              _buildLineTemperatureProbes(),
-              const SizedBox(height: 24),
-              // Air Temp Probes
-              _buildAirTemperatureProbes(),
-            ],
+      body: Stack(
+        children: [
+          // Main content
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Show tip if devices connected but no data received
+                  if (!_hasReceivedData && _sensorAssignments.isNotEmpty)
+                    _buildNoDataTip(),
+                  // Diagnostic Card - Show AI insights
+                  if (_diagnosticResult != null)
+                    DiagnosticCard(
+                      diagnostic: _diagnosticResult!,
+                      onTroubleshootTap: () {
+                        TroubleshootingSheet.show(context, _diagnosticResult!);
+                      },
+                    ),
+                  if (_diagnosticResult != null) const SizedBox(height: 16),
+                  // Pressure Gauges
+                  _buildPressureGauges(),
+                  const SizedBox(height: 24),
+                  // Calculations Card
+                  _buildCalculationsCard(),
+                  const SizedBox(height: 24),
+                  // Line Temp Probes
+                  _buildLineTemperatureProbes(),
+                  const SizedBox(height: 24),
+                  // Air Temp Probes
+                  _buildAirTemperatureProbes(),
+                  // Extra padding at bottom for scale overlay
+                  if (_isScaleConnected || _lastKnownScaleWeight != null)
+                    const SizedBox(height: 100),
+                ],
+              ),
+            ),
           ),
-        ),
+          // Scale overlay (auto-shows when scale is connected)
+          if (_isScaleConnected || _lastKnownScaleWeight != null)
+            _buildScaleOverlay(),
+        ],
       ),
       floatingActionButton: _hasReceivedData
           ? FloatingActionButton.extended(
@@ -1169,6 +1279,37 @@ class _GaugeScreenState extends State<GaugeScreen> {
     final lowPsig = _lowSidePressure * 0.0145038;
     final highPsig = _highSidePressure * 0.0145038;
 
+    if (_gaugeDisplayMode == GaugeDisplayMode.analog) {
+      return Row(
+        children: [
+          Expanded(
+            child: _buildAnalogGauge(
+              slot: GaugeSlot.lowSidePressure,
+              label: 'Low Side',
+              value: lowSide.$1,
+              unit: lowSide.$2,
+              color: AppColors.primaryCyanLight,
+              minValue: -30,
+              maxValue: 150,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildAnalogGauge(
+              slot: GaugeSlot.highSidePressure,
+              label: 'High Side',
+              value: highSide.$1,
+              unit: highSide.$2,
+              color: AppColors.error,
+              minValue: 0,
+              maxValue: 500,
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Digital mode (default)
     return Row(
       children: [
         Expanded(
@@ -1178,7 +1319,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
             value: lowSide.$1,
             unit: lowSide.$2,
             formattedValue: lowSide.$3,
-            color: AppColors.primaryCyan,
+            color: AppColors.primaryCyanLight,
             satTemp: lowPsig > 0
                 ? _ptChart.getSaturationTemp(_currentRefrigerant, lowPsig)
                 : null,
@@ -2187,6 +2328,269 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
     );
   }
 
+  /// Build analog gauge (classic round dial)
+  Widget _buildAnalogGauge({
+    required GaugeSlot slot,
+    required String label,
+    required double value,
+    required String unit,
+    required Color color,
+    required double minValue,
+    required double maxValue,
+  }) {
+    final assignedDevice = _getAssignedDeviceName(slot);
+    final batteryLevel = _getAssignedBatteryLevel(slot);
+    final hasReading = value != 0;
+
+    // Normalize value to 0-1 range for gauge
+    double normalizedValue = 0;
+    if (hasReading) {
+      normalizedValue = ((value - minValue) / (maxValue - minValue)).clamp(0.0, 1.0);
+    }
+
+    return GestureDetector(
+      onTap: () => _showSensorPicker(slot),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceDark,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withOpacity(0.3)),
+        ),
+        child: Column(
+          children: [
+            // Label and battery
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  assignedDevice != null
+                      ? Icons.sensors
+                      : Icons.add_circle_outline,
+                  color: assignedDevice != null
+                      ? AppColors.success
+                      : AppColors.textMuted,
+                  size: 16,
+                ),
+                if (batteryLevel != null) ...[
+                  const SizedBox(width: 6),
+                  Icon(
+                    batteryLevel >= 60
+                        ? Icons.battery_full
+                        : batteryLevel >= 20
+                            ? Icons.battery_4_bar
+                            : Icons.battery_alert,
+                    color: batteryLevel >= 60
+                        ? AppColors.success
+                        : batteryLevel >= 20
+                            ? AppColors.warning
+                            : AppColors.error,
+                    size: 14,
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Analog dial
+            SizedBox(
+              width: 140,
+              height: 140,
+              child: CustomPaint(
+                painter: _AnalogGaugePainter(
+                  value: normalizedValue,
+                  color: color,
+                  isDarkMode: Theme.of(context).brightness == Brightness.dark,
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      Text(
+                        hasReading ? value.toStringAsFixed(1) : '--',
+                        style: TextStyle(
+                          color: color,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        unit,
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            if (assignedDevice != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                assignedDevice,
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 10,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build scale overlay that auto-appears when scale is connected
+  Widget _buildScaleOverlay() {
+    final isConnected = _isScaleConnected;
+    final weight = isConnected ? _scaleWeight : (_lastKnownScaleWeight ?? 0.0);
+    
+    return Positioned(
+      bottom: 16,
+      left: 16,
+      right: 16,
+      child: AnimatedOpacity(
+        opacity: isConnected ? 1.0 : 0.6,
+        duration: const Duration(milliseconds: 300),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: isConnected
+                  ? [AppColors.primaryPurple, AppColors.accentBlue]
+                  : [AppColors.textMuted, AppColors.textSecondary],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: isConnected
+                    ? AppColors.primaryPurple.withOpacity(0.3)
+                    : Colors.black.withOpacity(0.2),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Scale icon
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.scale,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Weight and info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _scaleDeviceName ?? 'Scale',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Text(
+                          weight.toStringAsFixed(2),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        const Text(
+                          'oz',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (!isConnected)
+                      const Text(
+                        'Last known weight',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 10,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              // Connection status and battery
+              Column(
+                children: [
+                  // Connection strength (simulated from RSSI if available)
+                  Icon(
+                    isConnected
+                        ? Icons.signal_cellular_4_bar
+                        : Icons.signal_cellular_off,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  if (_scaleBatteryLevel != null) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                          _scaleBatteryLevel! >= 60
+                              ? Icons.battery_full
+                              : _scaleBatteryLevel! >= 20
+                                  ? Icons.battery_4_bar
+                                  : Icons.battery_alert,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${_scaleBatteryLevel}%',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildEmptyState(String supportedDevicesHint) {
     return Center(
       child: SingleChildScrollView(
@@ -2263,7 +2667,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                   backgroundColor: AppColors.primaryCyan,
                   foregroundColor: Colors.white,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
               ),
             ],
@@ -2271,5 +2675,116 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
         ),
       ),
     );
+  }
+}
+
+/// Custom painter for analog gauge dial
+class _AnalogGaugePainter extends CustomPainter {
+  final double value; // 0.0 to 1.0
+  final Color color;
+  final bool isDarkMode;
+
+  _AnalogGaugePainter({
+    required this.value,
+    required this.color,
+    required this.isDarkMode,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = math.min(size.width, size.height) / 2 - 10;
+
+    // Draw outer ring
+    final outerRingPaint = Paint()
+      ..color = isDarkMode ? AppColors.darkBorder : AppColors.lightBorder
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8;
+
+    canvas.drawCircle(center, radius, outerRingPaint);
+
+    // Draw colored arc (gauge fill)
+    final arcPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8
+      ..strokeCap = StrokeCap.round;
+
+    // Arc goes from -150° to +150° (240° total range)
+    const startAngle = -150 * math.pi / 180;
+    const totalAngle = 240 * math.pi / 180;
+    final sweepAngle = totalAngle * value;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      startAngle,
+      sweepAngle,
+      false,
+      arcPaint,
+    );
+
+    // Draw tick marks
+    final tickPaint = Paint()
+      ..color = isDarkMode ? AppColors.darkTextMuted : AppColors.lightTextMuted
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    for (int i = 0; i <= 10; i++) {
+      final angle = startAngle + (totalAngle * i / 10);
+      final isMajorTick = i % 2 == 0;
+      final tickLength = isMajorTick ? 12.0 : 6.0;
+
+      final startPoint = Offset(
+        center.dx + (radius - tickLength) * math.cos(angle),
+        center.dy + (radius - tickLength) * math.sin(angle),
+      );
+      final endPoint = Offset(
+        center.dx + radius * math.cos(angle),
+        center.dy + radius * math.sin(angle),
+      );
+
+      canvas.drawLine(startPoint, endPoint, tickPaint);
+    }
+
+    // Draw needle
+    final needleAngle = startAngle + (totalAngle * value);
+    final needlePaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 3;
+
+    final needleLength = radius - 20;
+    final needleEnd = Offset(
+      center.dx + needleLength * math.cos(needleAngle),
+      center.dy + needleLength * math.sin(needleAngle),
+    );
+
+    // Draw needle as a triangle
+    final needlePath = Path();
+    needlePath.moveTo(center.dx, center.dy);
+    needlePath.lineTo(
+      center.dx + 6 * math.cos(needleAngle + math.pi / 2),
+      center.dy + 6 * math.sin(needleAngle + math.pi / 2),
+    );
+    needlePath.lineTo(needleEnd.dx, needleEnd.dy);
+    needlePath.lineTo(
+      center.dx + 6 * math.cos(needleAngle - math.pi / 2),
+      center.dy + 6 * math.sin(needleAngle - math.pi / 2),
+    );
+    needlePath.close();
+
+    canvas.drawPath(needlePath, needlePaint);
+
+    // Draw center circle
+    final centerCirclePaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(center, 8, centerCirclePaint);
+  }
+
+  @override
+  bool shouldRepaint(_AnalogGaugePainter oldDelegate) {
+    return oldDelegate.value != value || oldDelegate.color != color;
   }
 }
