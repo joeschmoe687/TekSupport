@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/gradient_scaffold.dart';
 import '../tools/screens/storage_screen.dart';
 import '../auto_responder/auto_responder_service.dart';
-import '../tools/services/scale_settings.dart';
 
 class SettingsScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -24,7 +23,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _startHour = 7;
   int _endHour = 19;
   final _replyTextController = TextEditingController();
-  ScaleUnit _scaleUnit = ScaleUnit.oz;
 
   String role = 'user';
 
@@ -34,16 +32,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadUserRole();
     _loadAutoResponderSettings();
     _checkSmsPermissions();
-    _loadScaleSettings();
-  }
-
-  Future<void> _loadScaleSettings() async {
-    await ScaleSettings.instance.init();
-    if (mounted) {
-      setState(() {
-        _scaleUnit = ScaleSettings.instance.unit;
-      });
-    }
   }
 
   Future<void> _checkSmsPermissions() async {
@@ -250,76 +238,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            // Scale unit selection
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceDark.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.scale, color: AppColors.primaryCyan, size: 20),
-                      const SizedBox(width: 12),
-                      Text(
-                        'Scale Display Unit',
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: ScaleUnit.values.map((unit) {
-                      final isSelected = _scaleUnit == unit;
-                      return GestureDetector(
-                        onTap: () async {
-                          setState(() => _scaleUnit = unit);
-                          await ScaleSettings.instance.setUnit(unit);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppColors.primaryCyan.withOpacity(0.2)
-                                : AppColors.surfaceLight.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: isSelected
-                                  ? AppColors.primaryCyan
-                                  : AppColors.border,
-                              width: isSelected ? 2 : 1,
-                            ),
-                          ),
-                          child: Text(
-                            ScaleSettings.getUnitLabel(unit),
-                            style: TextStyle(
-                              color: isSelected
-                                  ? AppColors.primaryCyan
-                                  : AppColors.textSecondary,
-                              fontWeight: isSelected
-                                  ? FontWeight.w600
-                                  : FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
             // Auto-responder section - only for admin/tech
             if (role == 'admin' || role == 'tech') ...[
               const SizedBox(height: 12),
