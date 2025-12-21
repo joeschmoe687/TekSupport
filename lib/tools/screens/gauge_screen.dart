@@ -8,6 +8,8 @@ import '../services/device_data_service.dart';
 import '../services/device_registry.dart';
 import '../services/auto_reconnect_service.dart';
 import '../services/device_storage_service.dart';
+import '../services/calibration_service.dart';
+import '../widgets/calibration_popup.dart';
 import '../utils/pt_chart.dart';
 
 /// Gauge slot types for sensor assignment
@@ -84,11 +86,18 @@ class _GaugeScreenState extends State<GaugeScreen> {
   final DeviceStorageService _storageService = DeviceStorageService();
   final DeviceRegistry _registry = DeviceRegistry();
   final PTChart _ptChart = PTChart();
+  final CalibrationService _calibrationService = CalibrationService();
+
+  // Global keys for calibration popup positioning
+  final GlobalKey _highSidePressureKey = GlobalKey();
+  final GlobalKey _lowSidePressureKey = GlobalKey();
+  final GlobalKey _suctionLineTempKey = GlobalKey();
+  final GlobalKey _liquidLineTempKey = GlobalKey();
 
   // Current refrigerant selection
   Refrigerant _currentRefrigerant = Refrigerant.r410a;
 
-  // Current readings
+  // Current readings (raw values before calibration)
   double _highSidePressure = 0.0;
   double _lowSidePressure = 0.0;
   double _liquidLineTemp = 0.0;
@@ -256,11 +265,33 @@ class _GaugeScreenState extends State<GaugeScreen> {
       // Track that we've received real data
       _hasReceivedData = true;
 
-      // Apply zero offset for pressure readings
+      // Apply zero offset for pressure readings (hardware zeroing)
       double adjustedValue = reading.value;
       if (reading.type == HvacDeviceType.pressureProbe) {
-        final offset = _zeroOffsets[reading.deviceId] ?? 0.0;
-        adjustedValue = reading.value - offset;
+        final zeroOffset = _zeroOffsets[reading.deviceId] ?? 0.0;
+        adjustedValue = reading.value - zeroOffset;
+      }
+
+      // Apply calibration offset (user adjustments)
+      // Check if this device is assigned to a slot to determine calibration key
+      for (final entry in _sensorAssignments.entries) {
+        if (entry.value == reading.deviceId) {
+          final isPressure = entry.key == GaugeSlot.lowSidePressure || 
+                             entry.key == GaugeSlot.highSidePressure;
+          if (isPressure) {
+            final calibOffset = _calibrationService.getOffset(
+              TestoCalibrationKeys.pressure(reading.deviceId)
+            );
+            adjustedValue += calibOffset;
+          } else {
+            // Temperature calibration
+            final calibOffset = _calibrationService.getOffset(
+              TestoCalibrationKeys.temperature(reading.deviceId)
+            );
+            adjustedValue += calibOffset;
+          }
+          break;
+        }
       }
 
       setState(() {
@@ -421,6 +452,82 @@ class _GaugeScreenState extends State<GaugeScreen> {
         '[Gauge] Zeroed ${_slotDisplayName(slot)}: offset = $currentRaw mbar');
   }
 
+  /// Get calibrated pressure reading for a device
+  double _getCalibratedPressure(String deviceId, double rawPressure) {
+    final offset = _calibrationService.getOffset(TestoCalibrationKeys.pressure(deviceId));
+    return rawPressure + offset;
+  }
+
+  /// Get calibrated temperature reading for a device
+  double _getCalibratedTemperature(String deviceId, double rawTemp) {
+    final offset = _calibrationService.getOffset(TestoCalibrationKeys.temperature(deviceId));
+    return rawTemp + offset;
+  }
+
+  /// Show calibration popup for a sensor
+  void _showCalibrationPopup({
+    required GaugeSlot slot,
+    required GlobalKey targetKey,
+  }) {
+    final deviceId = _sensorAssignments[slot];
+    if (deviceId == null) return;
+
+    final isPressure = slot == GaugeSlot.lowSidePressure || slot == GaugeSlot.highSidePressure;
+    final sensorKey = isPressure
+        ? TestoCalibrationKeys.pressure(deviceId)
+        : TestoCalibrationKeys.temperature(deviceId);
+
+    double currentValue;
+    String label;
+    String unit;
+    double step;
+
+    switch (slot) {
+      case GaugeSlot.highSidePressure:
+        currentValue = _highSidePressure;
+        label = 'High Side';
+        unit = 'PSI';
+        step = 0.5;
+        break;
+      case GaugeSlot.lowSidePressure:
+        currentValue = _lowSidePressure;
+        label = 'Low Side';
+        unit = 'PSI';
+        step = 0.5;
+        break;
+      case GaugeSlot.suctionLineTemp:
+        currentValue = _suctionLineTemp;
+        label = 'Suction Temp';
+        unit = '°F';
+        step = 0.5;
+        break;
+      case GaugeSlot.liquidLineTemp:
+        currentValue = _liquidLineTemp;
+        label = 'Liquid Temp';
+        unit = '°F';
+        step = 0.5;
+        break;
+      default:
+        return;
+    }
+
+    showCalibrationPopup(
+      context: context,
+      targetKey: targetKey,
+      sensorKey: sensorKey,
+      label: label,
+      currentValue: currentValue,
+      step: step,
+      unit: unit,
+      accentColor: AppColors.primaryCyan,
+      onSave: () {
+        setState(() {
+          // Refresh UI to show calibrated values
+        });
+      },
+    );
+  }
+
   void _showRefrigerantPicker() {
     showModalBottomSheet(
       context: context,
@@ -456,12 +563,24 @@ class _GaugeScreenState extends State<GaugeScreen> {
             children: refrigerants.map((r) {
               final isSelected = r == _currentRefrigerant;
               return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _currentRefrigerant = r;
-                  });
-                  _updateCalculations();
-                  Navigator.pop(context);
+                onTap: () async {
+                  // Check if this is R22 or a drop-in that requires confirmation
+                  if (r.isR22DropIn && r != _currentRefrigerant) {
+                    Navigator.pop(context);
+                    final confirmed = await _showR22ConfirmationDialog(r);
+                    if (confirmed && mounted) {
+                      setState(() {
+                        _currentRefrigerant = r;
+                      });
+                      _updateCalculations();
+                    }
+                  } else {
+                    setState(() {
+                      _currentRefrigerant = r;
+                    });
+                    _updateCalculations();
+                    Navigator.pop(context);
+                  }
                 },
                 child: Container(
                   padding:
@@ -492,6 +611,62 @@ class _GaugeScreenState extends State<GaugeScreen> {
         ],
       ),
     );
+  }
+
+  /// Show confirmation dialog for R22 and drop-in refrigerants
+  /// Returns true if user confirms selection
+  Future<bool> _showR22ConfirmationDialog(Refrigerant refrigerant) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surfaceDark,
+        title: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 28),
+            const SizedBox(width: 8),
+            Text(
+              'Confirm ${refrigerant.displayName}',
+              style: const TextStyle(color: AppColors.textPrimary),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              refrigerant == Refrigerant.r22
+                  ? 'R-22 systems may have been converted to drop-in refrigerants like R-407C or Nu-22.'
+                  : '${refrigerant.displayName} is a drop-in replacement for R-22. Verify this is the correct refrigerant for this system.',
+              style: const TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Check the nameplate or service stickers to confirm the current refrigerant type.',
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryCyan,
+              foregroundColor: Colors.black,
+            ),
+            child: Text('Confirm ${refrigerant.displayName}'),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
   }
 
   /// Show sensor picker for a gauge slot with live Bluetooth discovery
@@ -945,8 +1120,17 @@ class _GaugeScreenState extends State<GaugeScreen> {
     final displayValue =
         formattedValue ?? (hasReading ? value.toStringAsFixed(1) : '--');
 
+    // Determine which global key to use for calibration popup positioning
+    final key = slot == GaugeSlot.highSidePressure 
+        ? _highSidePressureKey 
+        : _lowSidePressureKey;
+
     return GestureDetector(
+      key: key,
       onTap: () => _showSensorPicker(slot),
+      onLongPress: assignedDevice != null && hasReading
+          ? () => _showCalibrationPopup(slot: slot, targetKey: key)
+          : null,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -1195,9 +1379,20 @@ class _GaugeScreenState extends State<GaugeScreen> {
   }) {
     final assignedDevice = _getAssignedDeviceName(slot);
     final batteryLevel = _getAssignedBatteryLevel(slot);
+    
+    // Determine which global key to use for calibration popup positioning
+    final key = slot == GaugeSlot.suctionLineTemp 
+        ? _suctionLineTempKey 
+        : _liquidLineTempKey;
+    
+    final hasReading = value != 0;
 
     return GestureDetector(
+      key: key,
       onTap: () => _showSensorPicker(slot),
+      onLongPress: assignedDevice != null && hasReading
+          ? () => _showCalibrationPopup(slot: slot, targetKey: key)
+          : null,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
         decoration: BoxDecoration(

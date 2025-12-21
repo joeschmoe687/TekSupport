@@ -171,8 +171,8 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
   - CalibrationPopup widget with up/down arrows and save/reset buttons
   - Implemented on Airflow Screen: velocity, temperature, humidity (NOT pressure - barometric)
   - NOT on scales/pressure gauges - they have hardware zero that works correctly
-- [ ] **Test zero offset persistence** - Verify offsets survive app restart (currently in-memory only)
-- [ ] **Add calibration to Gauge Screen** - Extend tap-to-calibrate to Testo pressure/temp probes
+- [x] **Test zero offset persistence** - Verified offsets survive app restart (CalibrationService initialized in main.dart)
+- [x] **Add calibration to Gauge Screen** - Long-press on pressure/temp readings to adjust calibration offsets (Dec 21) ✅
 - [ ] **High-pressure probe support** - T549i can be ±60 bar for high-side manifold use
 - [ ] **Connection stability** - LINK_SUPERVISION_TIMEOUT causing T549i disconnects during extended use
 - [ ] **Fix RenderFlex overflow** - Varies by orientation: 15px bottom (landscape), 57px bottom (portrait gauge), 2.5px right (scan)
@@ -333,7 +333,7 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
   - [x] Store connection history
   - [x] Store ML learned patterns
   - [x] Store custom device profiles
-- [ ] **Persist Zero Offsets** - Save pressure zeroing to SharedPreferences
+- [x] **Persist Zero Offsets** - Save pressure zeroing to SharedPreferences (Already implemented - GaugeZeroService persists to SharedPreferences, loaded at startup in main.dart)
 - [ ] **Foreground Service** - Persistent BLE when app backgrounded
   - [ ] Live readings in Android notification
   - [ ] Keep connections alive during multitasking
@@ -346,8 +346,47 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
   - [ ] Equipment name auto-suggest
   - [ ] Save readings per unit
 - [x] **Zero Prompt Integration** - Zero button in sensor picker ✅
-- [ ] **R22 Confirmation** - Show RefrigerantConfirmDialog when R22 range detected
+- [x] **R22 Confirmation** - Show RefrigerantConfirmDialog when R22 or drop-in refrigerant selected (Dec 21) ✅
 - [ ] **Device Detail Screen** - Expanded device info + calibration
+
+---
+
+## ✅ Payment System Implementation (Dec 21, 2025)
+- [x] **Native Stripe Integration** - Replaced external web checkout with Flutter Stripe SDK
+- [x] **Google Pay Integration** - One-tap checkout with Google Wallet/Google Pay
+- [x] **Camera Card Scanning** - Secure ML-based card scanning using device camera
+- [x] **PaymentService** - Centralized payment logic with proper error handling
+- [x] **PaymentScreen** - Native payment UI with multiple payment methods
+- [x] **Cloud Functions** - Server-side payment intent creation for security
+- [x] **Transaction Logging** - All payments logged to Firestore with audit trail
+- [x] **PCI Compliance** - Card data handled exclusively by Stripe SDK
+- [x] **Test Mode Support** - Automatic test/live mode detection
+- [x] **Documentation** - Complete setup guide and technical docs (PAYMENT_SETUP.md, QUICKSTART.md)
+- [x] **Unit Tests** - PaymentService test coverage
+- [x] **PaymentVerificationScreen** - Developer utility for testing setup
+
+---
+
+## ✅ Guided Job Workflow Implementation (Dec 21, 2025)
+- [x] **Job Data Models** - Job, Equipment, JobStep models with Firestore integration
+- [x] **JobService** - Complete CRUD operations and workflow management
+- [x] **LocationService** - GPS location detection, geocoding, and address lookup
+- [x] **JobLaunchScreen** - Entry point with Commissioning/Service Call selection
+- [x] **JobWorkflowScreen** - Step-by-step orchestration with progress tracking
+- [x] **Location Step** - GPS auto-detect with manual entry fallback
+- [x] **Customer Info Step** - Customer name entry with validation
+- [x] **System Type Step** - AC/Heat Pump selection
+- [x] **Nameplate Scan Step** - Camera integration with manual entry fallback
+- [x] **Mode Selection Step** - AC/Heat mode selection
+- [x] **Gauge Connection Step** - Instructions and device manager integration
+- [x] **Stabilization Timer** - 20-minute countdown with skip option and tips
+- [x] **Amp Draw Step** - Motor amperage measurements with skip options
+- [x] **Diagnostics Step** - TekTool integration for live gauge readings
+- [x] **Completion Step** - Final notes and job completion
+- [x] **Floating Action Button** - Quick job launch from main navigation
+- [x] **Firestore Sync** - Real-time job persistence
+- [x] **Camera Permissions** - Permission handling with user prompts
+- [x] **Location Permissions** - GPS permission requests on first use
 
 ---
 
