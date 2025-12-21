@@ -174,22 +174,23 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
             );
           }
 
-          _steps = steps;
-
           // Find current step (first incomplete step)
-          _currentStepIndex = steps.indexWhere(
-            (s) => s.status != StepStatus.completed && s.status != StepStatus.skipped,
-          );
-          if (_currentStepIndex == -1) {
-            _currentStepIndex = steps.length - 1; // All done, show last step
-          }
+          final currentStepIndex = () {
+            final index = steps.indexWhere(
+              (s) => s.status != StepStatus.completed && s.status != StepStatus.skipped,
+            );
+            if (index == -1) {
+              return steps.length - 1; // All done, show last step
+            }
+            return index;
+          }();
 
-          final currentStep = steps[_currentStepIndex];
+          final currentStep = steps[currentStepIndex];
 
           return Column(
             children: [
               // Progress indicator
-              _buildProgressIndicator(steps, _currentStepIndex),
+              _buildProgressIndicator(steps, currentStepIndex),
               
               // Current step content
               Expanded(
