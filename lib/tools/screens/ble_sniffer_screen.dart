@@ -10,6 +10,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../widgets/gradient_scaffold.dart';
 import '../../bluetooth/bluetooth_service.dart';
+import '../services/device_registry.dart';
 
 /// Admin-only BLE Sniffer screen for debugging HVAC tool protocols.
 /// Allows scanning, connecting, and viewing raw GATT data.
