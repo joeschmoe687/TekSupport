@@ -456,12 +456,24 @@ class _GaugeScreenState extends State<GaugeScreen> {
             children: refrigerants.map((r) {
               final isSelected = r == _currentRefrigerant;
               return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _currentRefrigerant = r;
-                  });
-                  _updateCalculations();
-                  Navigator.pop(context);
+                onTap: () async {
+                  // Check if this is R22 or a drop-in that requires confirmation
+                  if (r.isR22DropIn && r != _currentRefrigerant) {
+                    Navigator.pop(context);
+                    final confirmed = await _showR22ConfirmationDialog(r);
+                    if (confirmed && mounted) {
+                      setState(() {
+                        _currentRefrigerant = r;
+                      });
+                      _updateCalculations();
+                    }
+                  } else {
+                    setState(() {
+                      _currentRefrigerant = r;
+                    });
+                    _updateCalculations();
+                    Navigator.pop(context);
+                  }
                 },
                 child: Container(
                   padding:
@@ -492,6 +504,62 @@ class _GaugeScreenState extends State<GaugeScreen> {
         ],
       ),
     );
+  }
+
+  /// Show confirmation dialog for R22 and drop-in refrigerants
+  /// Returns true if user confirms selection
+  Future<bool> _showR22ConfirmationDialog(Refrigerant refrigerant) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surfaceDark,
+        title: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 28),
+            const SizedBox(width: 8),
+            Text(
+              'Confirm ${refrigerant.displayName}',
+              style: const TextStyle(color: AppColors.textPrimary),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              refrigerant == Refrigerant.r22
+                  ? 'R-22 systems may have been converted to drop-in refrigerants like R-407C or Nu-22.'
+                  : '${refrigerant.displayName} is a drop-in replacement for R-22. Verify this is the correct refrigerant for this system.',
+              style: const TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Check the nameplate or service stickers to confirm the current refrigerant type.',
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryCyan,
+              foregroundColor: Colors.black,
+            ),
+            child: Text('Confirm ${refrigerant.displayName}'),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
   }
 
   /// Show sensor picker for a gauge slot with live Bluetooth discovery
