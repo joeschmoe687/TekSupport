@@ -9,16 +9,16 @@ service cloud.firestore {
     
     // Helper function to check if user is admin
     function isAdmin() {
-      return isAuthenticated() && 
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true);
+      return isAuthenticated() &&
+        (request.auth.token.role == 'admin' ||
+         request.auth.token.isAdmin == true);
     }
     
     // Helper function to check if user is tech or admin
     function isTechOrAdmin() {
-      return isAuthenticated() && 
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'tech'] ||
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true);
+      return isAuthenticated() &&
+        (request.auth.token.role in ['admin', 'tech'] ||
+         request.auth.token.isAdmin == true);
     }
     
     // Users collection
