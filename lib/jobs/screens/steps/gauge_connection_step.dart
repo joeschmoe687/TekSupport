@@ -7,12 +7,14 @@ class GaugeConnectionStep extends StatefulWidget {
   final String jobId;
   final JobStep step;
   final Function(Map<String, dynamic>) onComplete;
+  final VoidCallback onToggleTheme;
 
   const GaugeConnectionStep({
     super.key,
     required this.jobId,
     required this.step,
     required this.onComplete,
+    required this.onToggleTheme,
   });
 
   @override
@@ -24,7 +26,7 @@ class _GaugeConnectionStepState extends State<GaugeConnectionStep> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DevicesScreen(onToggleTheme: () {}),
+        builder: (context) => DevicesScreen(onToggleTheme: widget.onToggleTheme),
       ),
     ).then((_) {
       // User returned from devices screen
@@ -110,14 +112,9 @@ class _GaugeConnectionStepState extends State<GaugeConnectionStep> {
             label: const Text('Connect Devices'),
           ),
           const Spacer(),
-          OutlinedButton(
-            onPressed: _continue,
-            child: const Text('Continue Without Devices'),
-          ),
-          const SizedBox(height: 12),
           ElevatedButton(
             onPressed: _continue,
-            child: const Text('Devices Connected - Continue'),
+            child: const Text('Continue'),
           ),
         ],
       ),

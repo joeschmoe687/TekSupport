@@ -38,6 +38,27 @@ class _AmpDrawStepState extends State<AmpDrawStep> {
       return;
     }
 
+    // Validate for realistic values (positive and within typical HVAC ranges)
+    if (blowerAmps < 0 || fanAmps < 0 || compressorAmps < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Amp draw values must be positive'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (blowerAmps > 50 || fanAmps > 50 || compressorAmps > 100) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Amp draw values seem unusually high. Please verify.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     widget.onComplete({
       'blowerAmps': blowerAmps,
       'fanAmps': fanAmps,

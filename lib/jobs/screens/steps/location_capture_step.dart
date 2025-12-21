@@ -70,6 +70,11 @@ class _LocationCaptureStepState extends State<LocationCaptureStep> {
           ),
         );
       }
+    } finally {
+      // Ensure loading is always cleared
+      if (mounted && _isLoading) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 

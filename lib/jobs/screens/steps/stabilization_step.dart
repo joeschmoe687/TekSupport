@@ -28,6 +28,8 @@ class _StabilizationStepState extends State<StabilizationStep> {
   @override
   void initState() {
     super.initState();
+    // TODO: Persist stabilization start time to job metadata for app restart recovery
+    // For now, timer restarts if user navigates away
     _endTime = DateTime.now().add(const Duration(minutes: stabilizationMinutes));
     _startTimer();
   }
@@ -204,7 +206,9 @@ class _StabilizationStepState extends State<StabilizationStep> {
 
   @override
   void dispose() {
-    _timer?.cancel();
+    if (_timer?.isActive ?? false) {
+      _timer!.cancel();
+    }
     super.dispose();
   }
 }

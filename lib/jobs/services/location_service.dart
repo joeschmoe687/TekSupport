@@ -99,7 +99,7 @@ class LocationService {
           latitude: location.latitude,
           longitude: location.longitude,
           timestamp: DateTime.now(),
-          accuracy: 0,
+          accuracy: 100.0, // Typical accuracy for geocoded addresses
           altitude: 0,
           altitudeAccuracy: 0,
           heading: 0,

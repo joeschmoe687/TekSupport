@@ -26,12 +26,16 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
   final TextEditingController _serialController = TextEditingController();
   
   bool _hasScanned = false;
+  String? _capturedImagePath;
 
   Future<void> _scanNameplate() async {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
       if (image != null) {
-        setState(() => _hasScanned = true);
+        setState(() {
+          _hasScanned = true;
+          _capturedImagePath = image.path;
+        });
         // TODO: Implement OCR with google_mlkit_text_recognition
         // For now, prompt manual entry
         if (mounted) {
@@ -73,6 +77,7 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
       'equipmentBrand': brand,
       'equipmentModel': model,
       'equipmentSerial': _serialController.text.trim(),
+      'nameplateImagePath': _capturedImagePath,
     });
   }
 

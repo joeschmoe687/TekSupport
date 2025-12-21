@@ -9,6 +9,7 @@ class DiagnosticsStep extends StatefulWidget {
   final JobStep step;
   final Job? job;
   final Function(Map<String, dynamic>) onComplete;
+  final VoidCallback onToggleTheme;
 
   const DiagnosticsStep({
     super.key,
@@ -16,6 +17,7 @@ class DiagnosticsStep extends StatefulWidget {
     required this.step,
     this.job,
     required this.onComplete,
+    required this.onToggleTheme,
   });
 
   @override
@@ -27,7 +29,7 @@ class _DiagnosticsStepState extends State<DiagnosticsStep> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ToolsHubScreen(onToggleTheme: () {}),
+        builder: (context) => ToolsHubScreen(onToggleTheme: widget.onToggleTheme),
       ),
     );
   }

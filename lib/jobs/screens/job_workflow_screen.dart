@@ -31,8 +31,6 @@ class JobWorkflowScreen extends StatefulWidget {
 class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
   final JobService _jobService = JobService();
   Job? _job;
-  List<JobStep> _steps = [];
-  int _currentStepIndex = 0;
 
   @override
   void initState() {
@@ -47,7 +45,7 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
     }
   }
 
-  void _onStepComplete(JobStep step, Map<String, dynamic>? data) async {
+  Future<void> _onStepComplete(JobStep step, Map<String, dynamic>? data) async {
     // Update step status
     await _jobService.completeJobStep(step.id);
 
@@ -57,12 +55,9 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
       updatedMetadata.addAll(data);
       final updatedJob = _job!.copyWith(metadata: updatedMetadata);
       await _jobService.updateJob(updatedJob);
-      setState(() => _job = updatedJob);
-    }
-
-    // Move to next step
-    if (_currentStepIndex < _steps.length - 1) {
-      setState(() => _currentStepIndex++);
+      if (mounted) {
+        setState(() => _job = updatedJob);
+      }
     }
   }
 
@@ -103,6 +98,7 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
           jobId: widget.jobId,
           step: step,
           onComplete: (data) => _onStepComplete(step, data),
+          onToggleTheme: widget.onToggleTheme,
         );
       case StepType.stabilization:
         return StabilizationStep(
@@ -122,15 +118,24 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
           step: step,
           job: _job,
           onComplete: (data) => _onStepComplete(step, data),
+          onToggleTheme: widget.onToggleTheme,
         );
       case StepType.completion:
         return CompletionStep(
           jobId: widget.jobId,
           step: step,
           onComplete: (data) async {
+            // Save completion notes if provided
+            if (data != null && _job != null) {
+              final updatedMetadata = Map<String, dynamic>.from(_job!.metadata ?? {});
+              updatedMetadata.addAll(data);
+              final updatedJob = _job!.copyWith(metadata: updatedMetadata);
+              await _jobService.updateJob(updatedJob);
+            }
+            
             await _jobService.completeJob(widget.jobId);
             if (mounted) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).pop();
             }
           },
         );

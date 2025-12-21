@@ -169,7 +169,14 @@ class JobService {
   Future<Job?> getJob(String jobId) async {
     final doc = await _firestore.collection('jobs').doc(jobId).get();
     if (!doc.exists) return null;
-    return Job.fromFirestore(doc);
+    
+    final job = Job.fromFirestore(doc);
+    final user = _auth.currentUser;
+    if (user == null || job.userId != user.uid) {
+      throw Exception('Unauthorized: Cannot access job owned by another user');
+    }
+    
+    return job;
   }
 
   // Get user's jobs
@@ -199,6 +206,15 @@ class JobService {
 
   // Update job
   Future<void> updateJob(Job job) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User not authenticated');
+    }
+
+    if (job.userId != user.uid) {
+      throw Exception('Unauthorized: Cannot update job owned by another user');
+    }
+
     await _firestore.collection('jobs').doc(job.id).update(
           job.copyWith(updatedAt: DateTime.now()).toFirestore(),
         );
@@ -235,6 +251,17 @@ class JobService {
 
   // Update equipment
   Future<void> updateEquipment(Equipment equipment) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User not authenticated');
+    }
+
+    // Verify the equipment's job belongs to the current user
+    final job = await getJob(equipment.jobId);
+    if (job == null || job.userId != user.uid) {
+      throw Exception('Unauthorized: Cannot update equipment for job owned by another user');
+    }
+
     await _firestore.collection('equipment').doc(equipment.id).update(
           equipment.copyWith(updatedAt: DateTime.now()).toFirestore(),
         );
@@ -242,10 +269,31 @@ class JobService {
 
   // Complete job
   Future<void> completeJob(String jobId) async {
-    await _firestore.collection('jobs').doc(jobId).update({
-      'status': JobStatus.completed.name,
-      'completedAt': Timestamp.now(),
-      'updatedAt': Timestamp.now(),
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User not authenticated');
+    }
+
+    await _firestore.runTransaction((transaction) async {
+      final jobRef = _firestore.collection('jobs').doc(jobId);
+      final snapshot = await transaction.get(jobRef);
+
+      if (!snapshot.exists) {
+        throw Exception('Job not found');
+      }
+
+      final data = snapshot.data() as Map<String, dynamic>?;
+      final jobUserId = data?['userId'] as String?;
+
+      if (jobUserId == null || jobUserId != user.uid) {
+        throw Exception('Unauthorized: Cannot complete job owned by another user');
+      }
+
+      transaction.update(jobRef, {
+        'status': JobStatus.completed.name,
+        'completedAt': Timestamp.now(),
+        'updatedAt': Timestamp.now(),
+      });
     });
   }
 }
