@@ -24,18 +24,103 @@ TekMate is the AI/ML brains providing:
 - [x] **Role-based UI loading** - TekMate UI only renders if isAdmin == true
 - [x] **Cloud Function auth** - `tekmateChatProxy` requires Firebase auth + admin role
 - [x] **No network evidence** - Non-admins never see any TekMate network calls
-- [ ] **Deploy Cloud Function** - Push to Firebase
+- [x] **Cloud Function Implementation** - Created functions/index.js with tekmateChatProxy
+- [x] **UI Integration** - Added TekMate button to admin chat screen with confidence scoring
+- [ ] **Deploy Cloud Function** - Push to Firebase (See deployment instructions below)
+- [ ] **Configure TekMate API** - Set up Firestore settings (See setup instructions below)
 - [ ] **Test as non-admin** - Verify zero TekMate features visible
 - [ ] **Test as admin** - Verify full TekMate access and functionality
 - [ ] **Monitor production** - Weekly check that no TekMate leaks to customer network logs
 
+### 🚀 TekMate Deployment Instructions (MANUAL STEPS REQUIRED)
+
+#### Step 1: Install Firebase CLI (if not already installed)
+```bash
+npm install -g firebase-tools
+firebase login
+```
+
+#### Step 2: Initialize Firebase in the project (if not already done)
+```bash
+cd /path/to/hvac_support_app
+firebase init functions
+# Select your project: tekneck-support
+# Choose JavaScript
+# Install dependencies? Yes
+```
+
+#### Step 3: Install Cloud Function dependencies
+```bash
+cd functions
+npm install
+```
+
+#### Step 4: Configure Firebase secrets
+```bash
+# Set Stripe secret key (already done for payment functions)
+firebase functions:config:set stripe.secret_key="sk_test_YOUR_TEST_KEY"
+
+# Set TekMate webhook secret (if using webhooks)
+firebase functions:config:set stripe.webhook_secret="whsec_YOUR_SECRET"
+```
+
+#### Step 5: Deploy Cloud Functions
+```bash
+# Deploy all functions
+firebase deploy --only functions
+
+# Or deploy just TekMate function
+firebase deploy --only functions:tekmateChatProxy
+
+# Note the deployed function URL (e.g., https://us-central1-tekneck-support.cloudfunctions.net/tekmateChatProxy)
+```
+
+#### Step 6: Configure TekMate API in Firestore
+In Firebase Console, create the following document:
+- **Collection:** `settings`
+- **Document ID:** `tekmate`
+- **Fields:**
+  - `apiUrl` (string): "https://YOUR_TEKMATE_API_ENDPOINT" 
+    * This should be the TekMate consolidated backend URL
+    * Example: "https://tekmate.yourdomain.com/api/chat"
+  - `apiKey` (string): "your_tekmate_api_key_here"
+    * API key for authenticating with TekMate backend
+    * Keep this secure!
+
+**IMPORTANT:** If you don't have a TekMate backend yet:
+1. The function will return an error until configured
+2. You need to deploy the `tekmate-consolidated` repository first
+3. Or create a simple test endpoint that returns mock data
+
+#### Step 7: Test TekMate Integration
+1. **As Admin User:**
+   - Open a support chat
+   - Look for the purple "psychology" icon (🧠) next to the send button
+   - Tap it to get AI guidance
+   - Verify confidence score displays
+   - Test "Use Suggestion" and "Send Now" buttons
+
+2. **As Non-Admin User:**
+   - Open a support chat
+   - Verify NO TekMate button appears
+   - Verify NO network calls to tekmateChatProxy in logs
+   - Ghost mode working ✓
+
+#### Step 8: Cloudflare/Server Setup (if applicable)
+If your TekMate backend is behind Cloudflare or requires special setup:
+- [ ] Configure CORS headers to allow Firebase Cloud Functions domain
+- [ ] Whitelist Cloud Function IP ranges in firewall
+- [ ] Set up API rate limiting (recommended: 100 requests/min per user)
+- [ ] Enable request logging for monitoring
+- [ ] Set up SSL certificate for TekMate API endpoint
+
 ### Technician Chat Integration [APP + AI] (ADMIN ONLY)
-- [ ] **TekMate API endpoint** - Cloud Function for technician guidance queries
-- [ ] **Admin service chat** - Only admin techs see "Ask TekMate" button
-- [ ] **Confidence scoring** - Show confidence of AI guidance (helps noob techs learn)
-- [ ] **Context passing** - Send current job, customer, location to TekMate for context
-- [ ] **Fallback to human** - Low-confidence responses escalated to human tech
-- [ ] **Learning feedback** - Tech feedback on guidance improves future responses
+- [x] **TekMate API endpoint** - Cloud Function for technician guidance queries
+- [x] **Admin service chat** - Only admin techs see "Ask TekMate" button
+- [x] **Confidence scoring** - Show confidence of AI guidance (helps noob techs learn)
+- [x] **Context passing** - Send current job, customer, location to TekMate for context
+- [x] **Fallback to human** - Low-confidence responses escalated to human tech
+- [x] **Learning feedback** - Tech feedback on guidance improves future responses
 
 ### Bluetooth Device Setup with TekMate [APP + AI]
 - [ ] **AI device wizard** - Step through adding new BLE device with AI guidance
