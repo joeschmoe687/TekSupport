@@ -140,7 +140,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: const [
+                children: [
                   Icon(Icons.videocam, color: AppColors.primaryCyan, size: 24),
                   SizedBox(width: 12),
                   Text(
@@ -256,15 +256,17 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
         url = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
         break;
       case 'zoom':
-        // In production, this would be a real Zoom meeting link
+        // TODO: In production, replace with dynamic Zoom meeting generation
+        // This should create a new meeting room via Zoom API and return the link
         url = 'https://zoom.us/j/your_meeting_id';
         break;
       case 'meet':
-        // In production, this would be a real Google Meet link
+        // TODO: In production, replace with dynamic Google Meet room generation
+        // This should create a new meeting room via Google Meet API and return the link
         url = 'https://meet.google.com/your-meeting-code';
         break;
       case 'facetime':
-        // FaceTime link format
+        // FaceTime link format - this will prompt to call support
         url = 'facetime://support@airpronwa.com';
         break;
       default:

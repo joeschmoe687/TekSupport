@@ -694,7 +694,7 @@ class _PricebookPaneState extends State<_PricebookPane> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
+            children: [
               Icon(Icons.support_agent, color: AppColors.primaryCyan, size: 20),
               SizedBox(width: 8),
               Text(
@@ -1824,7 +1824,7 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Row(
                       children: [
                         Icon(Icons.info_outline,
