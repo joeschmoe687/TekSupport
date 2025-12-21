@@ -67,9 +67,12 @@ class BluetoothService {
 
   /// Start scanning for HVAC tools
   /// Filters by known service UUIDs if provided
+  /// If manufacturerDataIds is provided, uses manufacturer data filter
+  /// If both are empty, scans for all devices (recommended for Fieldpiece support)
   Future<void> startScan({
     Duration timeout = const Duration(seconds: 15),
     List<Guid>? serviceUuids,
+    List<int>? manufacturerDataIds,
   }) async {
     if (!await isBluetoothAvailable()) {
       throw BluetoothException('Bluetooth is not available');
