@@ -144,6 +144,11 @@ The connection chain MUST remain intact for probes to receive data:
 - ✅ **Testo T115i** - Pipe clamp temperature probe (BLE protocol complete)
 - ✅ **Testo T549i** - Differential pressure probe (BLE protocol complete)
 - ✅ **ABM-200 Airflow Meter** - WeatherFlow/AAB/CPS (BLE protocol captured Dec 19, 2025)
+- 🔧 **Fieldpiece Tools** - Broadcast-only devices (profiles added Dec 21, 2025)
+  - Temp Clamp (FPBF, 8975) - partial parsing
+  - Pressure Probe (FPBG, 2975/2976) - partial parsing
+  - Psychrometer (FPBH, 5699) - wet bulb confirmed
+  - SC680 Meter (FPCB) - detection only
 - 🔧 CCS Airflow Meter (needs BLE sniffing)
 - More devices added via BLE sniffing
 
