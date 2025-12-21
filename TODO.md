@@ -183,82 +183,63 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
 
 > **Goal:** Walk any technician (even beginners) through proper HVAC troubleshooting and commissioning with step-by-step prompts, automated data collection, and AI-assisted guidance.
 
+### ✅ Foundation (Dec 21, 2025)
+- [x] **Job Data Models** - Job, Equipment, JobStep models with Firestore integration
+- [x] **Job Service** - Create, update, complete jobs and manage workflow steps
+- [x] **Location Service** - GPS location and geocoding for job sites
+- [x] **Workflow Screen** - Step-by-step progress indicator and navigation
+- [x] **Floating Action Button** - "Start Job" button for techs and admins
+
 ### Phase 1: Job Launch Flow
-- [ ] **Post-Login Job Prompt** - After login + legal disclaimer, clean modal asks: "Commissioning" or "Service Call"
-- [ ] **Location Permission on First Login** - Request precise location permission immediately on first login
-- [ ] **Auto-Detect Job Location** - Use GPS to find address, let tech verify/edit if house number is off
-- [ ] **Customer/Location Name** - Prompt for customer or business name after address verified
-- [ ] **Job Type Branch:**
-  - Service Call → Goes straight to TekTool for now (build better flow later)
-  - Commissioning → Continues to equipment discovery
+- [x] **Post-Login Job Prompt** - Job launch screen with "Commissioning" or "Service Call" selection
+- [x] **Location Permission on First Login** - Location service requests permission on first use
+- [x] **Auto-Detect Job Location** - GPS-based location capture with manual edit option
+- [x] **Customer/Location Name** - Customer info step prompts for name after location
+- [x] **Job Type Branch:**
+  - Service Call → Simplified flow to diagnostics with TekTool
+  - Commissioning → Full workflow with equipment discovery
 
 ### Phase 2: Equipment Discovery (Commissioning)
-- [ ] **System Type Selection** - AC or Heat Pump in heat mode?
-- [ ] **Camera Permission Request** - Need camera for nameplate scanning
-- [ ] **Nameplate OCR Scanning** - Photograph unit nameplate tag:
-  - Auto-extract: Brand, Model, Serial, Voltage, MCA, MOP, RLA, FLA
-  - Parse outdoor fan motor specs, compressor data
-  - Auto-fill job record with extracted data
-- [ ] **Split System Detection** - Ask if split system, then prompt to scan:
-  - Evaporator coil nameplate
-  - Air handler / Furnace nameplate
-  - Condenser nameplate
-- [ ] **AHRI Lookup** - Match equipment combination to AHRI database:
-  - Auto-fetch SEER2, EER2, HSPF2 ratings
-  - Show rated capacity and efficiency for the matched system
-- [ ] **Install Manual Fetching** - Find and parse manufacturer install docs for model:
-  - Extract charging charts, wiring diagrams, troubleshooting guides
-  - AI-interpret for context-sensitive guidance during job
+- [x] **System Type Selection** - AC or Heat Pump selection step
+- [x] **Camera Permission Request** - Camera permission requested in nameplate scan step
+- [x] **Nameplate OCR Scanning** - Camera integration with manual entry fallback
+  - Manual entry: Brand, Model, Serial
+  - OCR integration placeholder (needs google_mlkit_text_recognition implementation)
+- [x] **Split System Detection** - Equipment model supports multiple unit types (condenser, evaporator, air handler, furnace)
+- [ ] **AHRI Lookup** - Match equipment combination to AHRI database (future enhancement)
+- [ ] **Install Manual Fetching** - Find and parse manufacturer install docs (future enhancement)
 
 ### Phase 3: System Startup & Diagnostics
-- [ ] **Mode Selection** - Prompt to start system in AC or Heat mode
-- [ ] **Gauge/Probe Connection** - Prompt to connect gauges and temp clamps
-- [ ] **Stabilization Timer** - 20-minute background timer for TXV stabilization:
-  - Discreet visual indicator showing mode and time remaining
-  - Allow early override with warning
-- [ ] **Manual Temperature Entry** - If no indoor probe connected:
-  - Prompt for indoor conditioned space temp
-  - Request outdoor temp if phone weather unavailable
-- [ ] **Amp Draw Prompts:**
+- [x] **Mode Selection** - AC or Heat mode selection step
+- [x] **Gauge/Probe Connection** - Gauge connection step with instructions and device manager integration
+- [x] **Stabilization Timer** - 20-minute countdown timer with visual indicator
+  - Skip with warning option
+  - Tips displayed during wait time
+- [x] **Amp Draw Prompts:**
   - Blower motor amp draw (measured)
   - Condenser fan motor amp draw (measured)
   - Compressor amp draw (measured)
-  - Compare to nameplate FLA/RLA with warnings if out of spec
+  - Skip option available
+- [x] **Diagnostics Step** - Integration with TekTool for live gauge readings
 
 ### Phase 4: Interactive Gauge Guidance
-- [ ] **Target Pressures Display** - Show calculated target pressures based on:
-  - Equipment AHRI matchup
-  - Current ambient and indoor temps
-  - Refrigerant type from equipment data
-- [ ] **Superheat/Subcool Targets** - Interactive display showing:
-  - Current values vs target values
-  - Visual indicators (green = good, yellow = adjust, red = problem)
-- [ ] **Refrigerant Guidance** - After 20-min stabilization:
-  - Interactive prompts: "Add refrigerant" / "Remove refrigerant"
-  - Real-time updates as values change
-  - Confirmation when within target range
-- [ ] **AI Troubleshooting** - Context-aware suggestions based on readings:
-  - "Low subcool + normal superheat = low charge"
-  - "High head pressure + high subcool = dirty condenser"
-  - Pull from equipment-specific install manual if available
+- [x] **TekTool Integration** - Diagnostics step links to existing Tools Hub
+- [ ] **Target Pressures Display** - Calculate and show target pressures (future enhancement)
+- [ ] **Superheat/Subcool Targets** - Enhanced display with target comparison (future enhancement)
+- [ ] **Refrigerant Guidance** - Real-time adjustment prompts (future enhancement)
+- [ ] **AI Troubleshooting** - Context-aware diagnostic suggestions (future enhancement)
 
 ### Phase 5: Beginner Mode (AI Hand-Holding)
-- [ ] **Zero-Knowledge Friendly** - Walk through every step assuming no HVAC knowledge
-- [ ] **Aggressive Image Analysis** - Use AI to verify:
-  - Correct gauge connection (photo of manifold hookup)
-  - Proper probe placement (photo of line temps)
-  - Equipment matches what was scanned
-- [ ] **Plain English Explanations** - Explain WHY each step matters
-- [ ] **Error Prevention** - Warn before potentially damaging actions
+- [ ] **Zero-Knowledge Friendly** - Enhanced explanations and help text (future enhancement)
+- [ ] **Aggressive Image Analysis** - AI verification of photos (future enhancement)
+- [ ] **Plain English Explanations** - Tooltips and expanded descriptions (future enhancement)
+- [ ] **Error Prevention** - Smart warnings and validations (future enhancement)
 
 ### Phase 6: Admin Customization
-- [ ] **Web UI Config** - admin_dashboard.html Settings tab:
-  - Enable/disable commissioning steps
-  - Customize prompts and thresholds
-  - Set company-specific procedures
-- [ ] **Mobile Admin Config** - Same settings accessible in app admin screen
-- [ ] **Step Templates** - Create reusable commissioning checklists
-- [ ] **Per-Equipment Overrides** - Custom steps for specific brands/models
+- [ ] **Web UI Config** - admin_dashboard.html Settings tab (future enhancement)
+- [ ] **Mobile Admin Config** - App-based workflow configuration (future enhancement)
+- [ ] **Step Templates** - Reusable commissioning checklists (future enhancement)
+- [ ] **Per-Equipment Overrides** - Custom steps for specific brands/models (future enhancement)
 
 ### ✅ TekTool Core Infrastructure (Dec 18, 2025)
 - [x] **BluetoothService** - Singleton BLE manager (`lib/bluetooth/bluetooth_service.dart`)
