@@ -11,6 +11,7 @@ import '../services/device_storage_service.dart';
 import '../services/calibration_service.dart';
 import '../services/diagnostic_engine.dart';
 import '../services/ml_data_service.dart';
+import '../models/hvac_reading.dart';
 import '../widgets/calibration_popup.dart';
 import '../widgets/diagnostic_card.dart';
 import '../widgets/troubleshooting_sheet.dart';
@@ -1026,7 +1027,68 @@ class _GaugeScreenState extends State<GaugeScreen> {
           ),
         ),
       ),
+      floatingActionButton: _hasReceivedData
+          ? FloatingActionButton.extended(
+              onPressed: _captureReadingForML,
+              backgroundColor: AppColors.primaryCyan,
+              icon: const Icon(Icons.save, color: Colors.black),
+              label: const Text(
+                'Capture',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          : null,
     );
+  }
+
+  /// Capture current readings for ML training
+  Future<void> _captureReadingForML() async {
+    if (!_hasReceivedData) return;
+
+    // Convert mbar to PSI for storage
+    final lowPsig = _lowSidePressure * 0.0145038;
+    final highPsig = _highSidePressure * 0.0145038;
+
+    final reading = _mlDataService.captureReading(
+      systemType: _currentJobType,
+      refrigerant: _currentRefrigerant,
+      suctionPressure: lowPsig > 0 ? lowPsig : null,
+      dischargePressure: highPsig > 0 ? highPsig : null,
+      suctionLineTemp: _suctionLineTemp > 0 ? _suctionLineTemp : null,
+      liquidLineTemp: _liquidLineTemp > 0 ? _liquidLineTemp : null,
+      supplyAirTemp: _supplyAirTemp > 0 ? _supplyAirTemp : null,
+      returnAirTemp: _returnAirTemp > 0 ? _returnAirTemp : null,
+      superheat: _superheat,
+      subcool: _subcool,
+      outcome: ReadingOutcome.unknown,
+    );
+
+    // Upload immediately (could also batch for job completion)
+    await _mlDataService.uploadReading(reading);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.cloud_upload, color: Colors.white, size: 20),
+              const SizedBox(width: 12),
+              Text(
+                _mlDataService.isMLDataSharingEnabled
+                    ? 'Reading captured for ML training'
+                    : 'Reading saved locally (sharing disabled)',
+              ),
+            ],
+          ),
+          backgroundColor: AppColors.success,
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   /// Build a tip widget when connected but no data is being received
