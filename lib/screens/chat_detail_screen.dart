@@ -37,6 +37,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             'messageText': text,
             'createdAt': FieldValue.serverTimestamp(),
             'timestamp': FieldValue.serverTimestamp(),
+            'status': 'sent', // Message status: sent, delivered, read
+            'readBy': [], // Array of user IDs who have read this message
           });
 
       // Update room
@@ -46,6 +48,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           .update({
             'lastMessage': text,
             'updatedAt': FieldValue.serverTimestamp(),
+            'unreadByTech': FieldValue.increment(1),
           });
 
       _controller.clear();
@@ -331,6 +334,28 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                                     color: AppColors.textPrimary,
                                   ),
                                 ),
+                              // Read receipt indicator for customer messages
+                              if (isCustomer) ...[
+                                const SizedBox(height: 4),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      _getReceiptIcon(data),
+                                      size: 14,
+                                      color: _getReceiptColor(data),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      _getReceiptText(data),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: _getReceiptColor(data),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ],
                           ),
                         ),
@@ -617,6 +642,41 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
         );
       }
+    }
+  }
+
+  // Helper methods for read receipts
+  IconData _getReceiptIcon(Map<String, dynamic> data) {
+    final status = data['status']?.toString() ?? 'sent';
+    final readBy = data['readBy'] as List<dynamic>? ?? [];
+    
+    if (readBy.isNotEmpty) {
+      return Icons.done_all; // Read (double check)
+    } else if (status == 'delivered') {
+      return Icons.done_all; // Delivered (double check, grey)
+    } else {
+      return Icons.done; // Sent (single check)
+    }
+  }
+
+  Color _getReceiptColor(Map<String, dynamic> data) {
+    final readBy = data['readBy'] as List<dynamic>? ?? [];
+    
+    if (readBy.isNotEmpty) {
+      return AppColors.primaryCyan; // Read - cyan
+    } else {
+      return AppColors.textMuted; // Sent/Delivered - grey
+    }
+  }
+
+  String _getReceiptText(Map<String, dynamic> data) {
+    final readBy = data['readBy'] as List<dynamic>? ?? [];
+    
+    if (readBy.isNotEmpty) {
+      return 'Read';
+    } else {
+      final status = data['status']?.toString() ?? 'sent';
+      return status == 'delivered' ? 'Delivered' : 'Sent';
     }
   }
 }

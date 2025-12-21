@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'screens/welcome_screen.dart';
 import 'widgets/gradient_scaffold.dart';
 import 'services/notification_service.dart';
+import 'services/payment_service.dart';
 import 'tools/screens/devices_screen.dart';
 import 'tools/screens/device_scan_screen.dart';
 
@@ -27,6 +29,9 @@ void main() async {
   // Initialize notification service
   await NotificationService().initialize();
 
+  // Initialize payment service
+  await PaymentService().initialize();
+
   runApp(const TekToolApp());
 }
 
@@ -40,11 +45,30 @@ class TekToolApp extends StatefulWidget {
 class _TekToolAppState extends State<TekToolApp> {
   ThemeMode _themeMode = ThemeMode.dark;
 
-  void _toggleTheme() {
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
+  }
+
+  Future<void> _loadThemePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isDark = prefs.getBool('isDarkTheme') ?? true; // Default to dark
     setState(() {
-      _themeMode =
-          _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     });
+  }
+
+  Future<void> _toggleTheme() async {
+    final newMode =
+        _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    setState(() {
+      _themeMode = newMode;
+    });
+    
+    // Persist the preference
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkTheme', newMode == ThemeMode.dark);
   }
 
   @override

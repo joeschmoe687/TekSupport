@@ -384,6 +384,25 @@ class _ScaleScreenState extends State<ScaleScreen> {
     );
   }
 
+  void _showScaleSettings() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surfaceDark,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => _ScaleSettingsSheet(
+        currentUnit: _scaleSettings.unit,
+        onUnitChanged: (unit) async {
+          await _scaleSettings.setUnit(unit);
+          if (mounted) {
+            setState(() {});
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GradientScaffold(
@@ -392,6 +411,11 @@ class _ScaleScreenState extends State<ScaleScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: AppColors.textSecondary),
+            onPressed: _showScaleSettings,
+            tooltip: 'Scale Settings',
+          ),
           IconButton(
             icon: _isScanning
                 ? const SizedBox(
@@ -758,6 +782,96 @@ class _ScaleScreenState extends State<ScaleScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Bottom sheet for scale settings
+class _ScaleSettingsSheet extends StatelessWidget {
+  final ScaleUnit currentUnit;
+  final Function(ScaleUnit) onUnitChanged;
+
+  const _ScaleSettingsSheet({
+    required this.currentUnit,
+    required this.onUnitChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.settings, color: AppColors.primaryCyan, size: 24),
+              const SizedBox(width: 12),
+              Text(
+                'Scale Settings',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'Display Unit',
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: ScaleUnit.values.map((unit) {
+              final isSelected = currentUnit == unit;
+              return GestureDetector(
+                onTap: () {
+                  onUnitChanged(unit);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? AppColors.primaryCyan.withOpacity(0.2)
+                        : AppColors.surfaceLight.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: isSelected
+                          ? AppColors.primaryCyan
+                          : AppColors.border,
+                      width: isSelected ? 2 : 1,
+                    ),
+                  ),
+                  child: Text(
+                    ScaleSettings.getUnitLabel(unit),
+                    style: TextStyle(
+                      color: isSelected
+                          ? AppColors.primaryCyan
+                          : AppColors.textSecondary,
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.normal,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }

@@ -60,9 +60,9 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>TekTool uses your location to automatically detect job sites even when the app is in the background.</string>
 	
-	<!-- Camera permissions for equipment tag scanning -->
+	<!-- Camera permissions for equipment tag scanning and payment card scanning -->
 	<key>NSCameraUsageDescription</key>
-	<string>TekTool uses the camera to scan equipment nameplates and automatically fill in brand, model, and serial number.</string>
+	<string>TekTool uses the camera to scan equipment nameplates and payment cards for secure checkout.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>TekTool needs photo library access to save equipment tag photos with job records.</string>
 </dict>
