@@ -44,6 +44,12 @@ class Abm200Reading {
       'ABM-200: ${velocity}FPM, ${tempF.toStringAsFixed(1)}°F, ${humidity.toStringAsFixed(1)}%RH, ${pressure.toStringAsFixed(1)}P';
 }
 
+/// Device connection type
+enum ConnectionType {
+  gatt, // Standard GATT connection (most devices)
+  broadcastOnly, // Broadcast-only devices (no GATT connection possible)
+}
+
 /// Device profile containing BLE UUIDs and parsing logic
 class DeviceProfile {
   final String name;
@@ -54,6 +60,8 @@ class DeviceProfile {
   final String? batteryCharacteristicUuid;
   final double Function(List<int> rawData)? parseReading;
   final String unit;
+  final ConnectionType connectionType;
+  final int? manufacturerId; // For broadcast-only devices (e.g., Fieldpiece = 0x5046)
 
   const DeviceProfile({
     required this.name,
@@ -64,6 +72,8 @@ class DeviceProfile {
     this.batteryCharacteristicUuid,
     this.parseReading,
     required this.unit,
+    this.connectionType = ConnectionType.gatt,
+    this.manufacturerId,
   });
 }
 
@@ -143,6 +153,64 @@ class DeviceRegistry {
       unit: 'psig',
       parseReading: _parseTestoPressure,
     ),
+
+    // Fieldpiece Temperature Clamp (FPBF, 8975)
+    // Protocol analyzed Dec 21, 2025 via HCI snoop log
+    // Broadcast-only device (ADV_NONCONN_IND) - no GATT connection possible
+    // Manufacturer ID: 0x5046 (ASCII "FP")
+    // Device type: bytes 2-3 = "BF" (0x42 0x46)
+    'fieldpiece_temp': DeviceProfile(
+      name: 'Fieldpiece Temp Clamp',
+      manufacturer: HvacManufacturer.fieldpiece,
+      type: HvacDeviceType.temperatureProbe,
+      serviceUuids: [], // No service UUIDs - broadcast only
+      unit: '°F',
+      connectionType: ConnectionType.broadcastOnly,
+      manufacturerId: 0x5046,
+      parseReading: _parseFieldpieceTemp,
+    ),
+
+    // Fieldpiece Pressure Probe (FPBG, 2975/2976)
+    // Broadcast-only device - measurements in advertisement data
+    // Device type: bytes 2-3 = "BG" (0x42 0x47)
+    'fieldpiece_pressure': DeviceProfile(
+      name: 'Fieldpiece Pressure Probe',
+      manufacturer: HvacManufacturer.fieldpiece,
+      type: HvacDeviceType.pressureProbe,
+      serviceUuids: [], // No service UUIDs - broadcast only
+      unit: 'psig',
+      connectionType: ConnectionType.broadcastOnly,
+      manufacturerId: 0x5046,
+      parseReading: _parseFieldpiecePressure,
+    ),
+
+    // Fieldpiece Psychrometer (FPBH, 5699)
+    // Broadcast-only device - dry bulb, wet bulb, humidity in advertisement
+    // Device type: bytes 2-3 = "BH" (0x42 0x48)
+    // Confirmed formula (Dec 21): Wet bulb = uint16_le(bytes 15-16) / 10.0 °F
+    'fieldpiece_psychrometer': DeviceProfile(
+      name: 'Fieldpiece Psychrometer',
+      manufacturer: HvacManufacturer.fieldpiece,
+      type: HvacDeviceType.temperatureProbe, // Measures temps + humidity
+      serviceUuids: [], // No service UUIDs - broadcast only
+      unit: '°F',
+      connectionType: ConnectionType.broadcastOnly,
+      manufacturerId: 0x5046,
+      parseReading: _parseFieldpiecePsychrometer,
+    ),
+
+    // Fieldpiece SC680 Meter (FPCB)
+    // Broadcast-only hub display unit
+    // Device type: bytes 2-3 = "CB" (0x43 0x42)
+    'fieldpiece_meter': DeviceProfile(
+      name: 'Fieldpiece SC680 Meter',
+      manufacturer: HvacManufacturer.fieldpiece,
+      type: HvacDeviceType.clampMeter,
+      serviceUuids: [], // No service UUIDs - broadcast only
+      unit: '',
+      connectionType: ConnectionType.broadcastOnly,
+      manufacturerId: 0x5046,
+    ),
   };
 
   /// Get all known service UUIDs for scanning
@@ -154,8 +222,20 @@ class DeviceRegistry {
     return uuids.toList();
   }
 
-  /// Try to identify a device by its advertised service UUIDs
-  DeviceProfile? identifyDevice(dynamic scanResultOrUuids) {
+  /// Get all known manufacturer IDs for scanning (broadcast-only devices)
+  List<int> getAllManufacturerIds() {
+    final ids = <int>{};
+    for (final profile in _profiles.values) {
+      if (profile.manufacturerId != null) {
+        ids.add(profile.manufacturerId!);
+      }
+    }
+    return ids.toList();
+  }
+
+  /// Try to identify a device by its advertised service UUIDs or manufacturer data
+  DeviceProfile? identifyDevice(dynamic scanResultOrUuids,
+      {Map<int, List<int>>? manufacturerData}) {
     List<String> advertisedServiceUuids;
     String? deviceName;
 
@@ -169,12 +249,51 @@ class DeviceRegistry {
         advertisedServiceUuids =
             (serviceUuids as List?)?.map((e) => e.toString()).toList() ?? [];
         deviceName = scanResultOrUuids.device?.platformName as String?;
+        // Try to extract manufacturer data from scan result
+        if (manufacturerData == null) {
+          try {
+            manufacturerData =
+                scanResultOrUuids.advertisementData?.manufacturerData
+                    as Map<int, List<int>>?;
+          } catch (_) {}
+        }
       } catch (_) {
         advertisedServiceUuids = [];
       }
     }
 
-    // First try to match by service UUID
+    // First try to match by manufacturer ID (for broadcast-only devices like Fieldpiece)
+    if (manufacturerData != null && manufacturerData.isNotEmpty) {
+      for (final profile in _profiles.values) {
+        if (profile.manufacturerId != null &&
+            manufacturerData.containsKey(profile.manufacturerId)) {
+          // For Fieldpiece, check device type in bytes 2-3 of manufacturer data
+          if (profile.manufacturerId == 0x5046) {
+            final msd = manufacturerData[0x5046];
+            if (msd != null && msd.length >= 4) {
+              final deviceType = String.fromCharCodes([msd[2], msd[3]]);
+              if (deviceType == 'BF' && profile.name.contains('Temp')) {
+                return profile;
+              } else if (deviceType == 'BG' &&
+                  profile.name.contains('Pressure')) {
+                return profile;
+              } else if (deviceType == 'BH' &&
+                  profile.name.contains('Psychrometer')) {
+                return profile;
+              } else if (deviceType == 'CB' && profile.name.contains('SC680')) {
+                return profile;
+              }
+            }
+          }
+          // For other broadcast-only devices, return first match
+          else {
+            return profile;
+          }
+        }
+      }
+    }
+
+    // Then try to match by service UUID
     for (final profile in _profiles.values) {
       for (final uuid in profile.serviceUuids) {
         if (advertisedServiceUuids
@@ -195,6 +314,15 @@ class DeviceRegistry {
   /// Try to identify a device by name pattern
   DeviceProfile? identifyByName(String deviceName) {
     final nameLower = deviceName.toLowerCase();
+
+    // Fieldpiece devices - usually advertise as "SC..." or "JL3..." 
+    // But since they're broadcast-only, should be identified by manufacturer ID instead
+    if (nameLower.contains('fieldpiece') ||
+        nameLower.startsWith('sc') ||
+        nameLower.startsWith('jl')) {
+      // Return a generic Fieldpiece profile - actual type determined by manufacturer data
+      return _profiles['fieldpiece_temp'];
+    }
 
     // ABM-200 Airflow Meter - advertises as "ABM-200 XXX"
     if (nameLower.contains('abm-200') || nameLower.contains('abm200')) {
@@ -546,6 +674,82 @@ double _parseTestoPressure(List<int> rawData) {
   }
 
   return double.nan;
+}
+
+// ============================================================================
+// FIELDPIECE PARSING FUNCTIONS
+// Broadcast-only devices - parse manufacturer data from advertisements
+// Protocol analyzed Dec 21, 2025 via HCI snoop log
+// ============================================================================
+
+/// Parse Fieldpiece temperature clamp reading (FPBF, 8975)
+/// Manufacturer data format (22 bytes):
+/// Offset  Meaning
+/// 0-1     "FP" (0x46 0x50) - Manufacturer ID
+/// 2-3     "BF" (0x42 0x46) - Device type (temp clamp)
+/// 4-21    Data payload (temperature encoding TBD from more captures)
+double _parseFieldpieceTemp(List<int> rawData) {
+  // This parser receives manufacturer data from advertisement
+  // rawData = manufacturer_data[0x5046] = [0x46, 0x50, 0x42, 0x46, ...]
+  if (rawData.length < 22) return double.nan;
+
+  // Verify manufacturer ID "FP" (0x46 0x50)
+  if (rawData[0] != 0x46 || rawData[1] != 0x50) return double.nan;
+
+  // Verify device type "BF" (0x42 0x46)
+  if (rawData[2] != 0x42 || rawData[3] != 0x46) return double.nan;
+
+  // Temperature encoding needs more varied captures to confirm formula
+  // Placeholder: return NaN until we have confirmed byte positions
+  // TODO: Capture varied temperature readings to determine encoding
+  return double.nan;
+}
+
+/// Parse Fieldpiece pressure probe reading (FPBG, 2975/2976)
+/// Manufacturer data format (28 bytes):
+/// Device type: bytes 2-3 = "BG" (0x42 0x47)
+double _parseFieldpiecePressure(List<int> rawData) {
+  // This parser receives manufacturer data from advertisement
+  if (rawData.length < 28) return double.nan;
+
+  // Verify manufacturer ID "FP" (0x46 0x50)
+  if (rawData[0] != 0x46 || rawData[1] != 0x50) return double.nan;
+
+  // Verify device type "BG" (0x42 0x47)
+  if (rawData[2] != 0x42 || rawData[3] != 0x47) return double.nan;
+
+  // Pressure encoding needs more varied captures to confirm formula
+  // TODO: Capture varied pressure readings to determine encoding
+  return double.nan;
+}
+
+/// Parse Fieldpiece psychrometer reading (FPBH, 5699)
+/// Manufacturer data format (30 bytes):
+/// Device type: bytes 2-3 = "BH" (0x42 0x48)
+/// CONFIRMED: Wet bulb = uint16_le(bytes 15-16) / 10.0 °F
+/// Byte offsets from HCI analysis Dec 21, 2025:
+/// 12-13: Dry Bulb (needs formula)
+/// 15-16: Wet Bulb = 0x022d = 557 ÷ 10 = 55.7°F ✓ MATCHES SCREENSHOT
+/// 20-21: Humidity (needs formula)
+double _parseFieldpiecePsychrometer(List<int> rawData) {
+  // This parser receives manufacturer data from advertisement
+  if (rawData.length < 30) return double.nan;
+
+  // Verify manufacturer ID "FP" (0x46 0x50)
+  if (rawData[0] != 0x46 || rawData[1] != 0x50) return double.nan;
+
+  // Verify device type "BH" (0x42 0x48)
+  if (rawData[2] != 0x42 || rawData[3] != 0x48) return double.nan;
+
+  // Extract wet bulb temperature (bytes 15-16, uint16 LE)
+  final bytes = Uint8List.fromList([rawData[15], rawData[16]]);
+  final byteData = ByteData.view(bytes.buffer);
+  final wetBulbRaw = byteData.getUint16(0, Endian.little);
+  final wetBulbF = wetBulbRaw / 10.0;
+
+  // Return wet bulb temperature (confirmed accurate Dec 21)
+  // TODO: Also parse dry bulb (bytes 12-13) and humidity (bytes 20-21)
+  return wetBulbF;
 }
 
 /// Helper to match byte pattern at offset
