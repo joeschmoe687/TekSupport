@@ -287,18 +287,16 @@ class _GaugeScreenState extends State<GaugeScreen> {
       // Check if this device is assigned to a slot to determine calibration key
       for (final entry in _sensorAssignments.entries) {
         if (entry.value == reading.deviceId) {
-          final isPressure = entry.key == GaugeSlot.lowSidePressure || 
-                             entry.key == GaugeSlot.highSidePressure;
+          final isPressure = entry.key == GaugeSlot.lowSidePressure ||
+              entry.key == GaugeSlot.highSidePressure;
           if (isPressure) {
-            final calibOffset = _calibrationService.getOffset(
-              TestoCalibrationKeys.pressure(reading.deviceId)
-            );
+            final calibOffset = _calibrationService
+                .getOffset(TestoCalibrationKeys.pressure(reading.deviceId));
             adjustedValue += calibOffset;
           } else {
             // Temperature calibration
-            final calibOffset = _calibrationService.getOffset(
-              TestoCalibrationKeys.temperature(reading.deviceId)
-            );
+            final calibOffset = _calibrationService
+                .getOffset(TestoCalibrationKeys.temperature(reading.deviceId));
             adjustedValue += calibOffset;
           }
           break;
@@ -427,11 +425,6 @@ class _GaugeScreenState extends State<GaugeScreen> {
 
     setState(() {});
   }
-      _subcool = null;
-    }
-
-    setState(() {});
-  }
 
   /// Zero the pressure sensor assigned to the given slot
   void _zeroSensor(GaugeSlot slot) {
@@ -483,13 +476,15 @@ class _GaugeScreenState extends State<GaugeScreen> {
 
   /// Get calibrated pressure reading for a device
   double _getCalibratedPressure(String deviceId, double rawPressure) {
-    final offset = _calibrationService.getOffset(TestoCalibrationKeys.pressure(deviceId));
+    final offset =
+        _calibrationService.getOffset(TestoCalibrationKeys.pressure(deviceId));
     return rawPressure + offset;
   }
 
   /// Get calibrated temperature reading for a device
   double _getCalibratedTemperature(String deviceId, double rawTemp) {
-    final offset = _calibrationService.getOffset(TestoCalibrationKeys.temperature(deviceId));
+    final offset = _calibrationService
+        .getOffset(TestoCalibrationKeys.temperature(deviceId));
     return rawTemp + offset;
   }
 
@@ -501,7 +496,8 @@ class _GaugeScreenState extends State<GaugeScreen> {
     final deviceId = _sensorAssignments[slot];
     if (deviceId == null) return;
 
-    final isPressure = slot == GaugeSlot.lowSidePressure || slot == GaugeSlot.highSidePressure;
+    final isPressure =
+        slot == GaugeSlot.lowSidePressure || slot == GaugeSlot.highSidePressure;
     final sensorKey = isPressure
         ? TestoCalibrationKeys.pressure(deviceId)
         : TestoCalibrationKeys.temperature(deviceId);
@@ -651,7 +647,8 @@ class _GaugeScreenState extends State<GaugeScreen> {
         backgroundColor: AppColors.surfaceDark,
         title: Row(
           children: [
-            const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 28),
+            const Icon(Icons.warning_amber_rounded,
+                color: Colors.amber, size: 28),
             const SizedBox(width: 8),
             Text(
               'Confirm ${refrigerant.displayName}',
@@ -682,7 +679,8 @@ class _GaugeScreenState extends State<GaugeScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+            child: const Text('Cancel',
+                style: TextStyle(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -1029,6 +1027,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
       ),
       floatingActionButton: _hasReceivedData
           ? FloatingActionButton.extended(
+              heroTag: 'gauge_screen_fab',
               onPressed: _captureReadingForML,
               backgroundColor: AppColors.primaryCyan,
               icon: const Icon(Icons.save, color: Colors.black),
@@ -1220,8 +1219,8 @@ class _GaugeScreenState extends State<GaugeScreen> {
         formattedValue ?? (hasReading ? value.toStringAsFixed(1) : '--');
 
     // Determine which global key to use for calibration popup positioning
-    final key = slot == GaugeSlot.highSidePressure 
-        ? _highSidePressureKey 
+    final key = slot == GaugeSlot.highSidePressure
+        ? _highSidePressureKey
         : _lowSidePressureKey;
 
     return GestureDetector(
@@ -1478,12 +1477,12 @@ class _GaugeScreenState extends State<GaugeScreen> {
   }) {
     final assignedDevice = _getAssignedDeviceName(slot);
     final batteryLevel = _getAssignedBatteryLevel(slot);
-    
+
     // Determine which global key to use for calibration popup positioning
-    final key = slot == GaugeSlot.suctionLineTemp 
-        ? _suctionLineTempKey 
+    final key = slot == GaugeSlot.suctionLineTemp
+        ? _suctionLineTempKey
         : _liquidLineTempKey;
-    
+
     final hasReading = value != 0;
 
     return GestureDetector(

@@ -263,7 +263,8 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
       itemCount: _scanResults.length,
       itemBuilder: (context, index) {
         final result = _scanResults[index];
-        return _buildDeviceCard(result, key: ValueKey(result.device.remoteId.str));
+        return _buildDeviceCard(result,
+            key: ValueKey(result.device.remoteId.str));
       },
     );
   }
@@ -347,8 +348,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
     final isBroadcastOnly = profile?.isBroadcastOnly ?? false;
 
     return Container(
-      key: ValueKey(result.device.remoteId.str), // Unique key to prevent duplicate widget issues
-      key: key,
+      key: key ?? ValueKey(result.device.remoteId.str),
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: isKnownDevice
@@ -437,9 +437,8 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  Icon(Icons.broadcast_on_personal, 
-                       size: 12, 
-                       color: AppColors.warning),
+                  Icon(Icons.broadcast_on_personal,
+                      size: 12, color: AppColors.warning),
                   const SizedBox(width: 4),
                   Text(
                     'Broadcast-only (reads from advertisement)',
@@ -466,12 +465,14 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
             : isBroadcastOnly
                 ? const Icon(Icons.sensors, color: AppColors.warning, size: 24)
                 : IconButton(
-                    icon:
-                        const Icon(Icons.add_circle, color: AppColors.primaryCyan),
+                    icon: const Icon(Icons.add_circle,
+                        color: AppColors.primaryCyan),
                     onPressed: () => _connectToDevice(result),
                     tooltip: 'Connect',
                   ),
-        onTap: (isConnecting || isBroadcastOnly) ? null : () => _connectToDevice(result),
+        onTap: (isConnecting || isBroadcastOnly)
+            ? null
+            : () => _connectToDevice(result),
       ),
     );
   }

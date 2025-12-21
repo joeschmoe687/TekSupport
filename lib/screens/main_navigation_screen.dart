@@ -143,6 +143,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             )
           : _screens[_selectedIndex],
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'main_nav_fab',
         onPressed: _launchJob,
         icon: const Icon(Icons.work_outline),
         label: const Text('Start Job'),

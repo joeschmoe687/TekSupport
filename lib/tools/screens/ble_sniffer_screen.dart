@@ -1396,7 +1396,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
     final deviceTypeCode = String.fromCharCodes(data.sublist(2, 4));
     String deviceTypeName = 'Unknown';
     String reading = 'N/A';
-    
+
     // Identify device type and parse reading
     switch (deviceTypeCode) {
       case 'BF': // Temperature Clamp
@@ -1413,7 +1413,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
           } catch (_) {}
         }
         break;
-        
+
       case 'BG': // Pressure Probe
         deviceTypeName = 'Pressure';
         if (data.length >= 17) {
@@ -1428,7 +1428,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
           } catch (_) {}
         }
         break;
-        
+
       case 'BH': // Psychrometer
         deviceTypeName = 'Psychrometer';
         if (data.length >= 17) {
@@ -1440,20 +1440,21 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             final wetBulbF = wetBulbRaw / 10.0;
             if (wetBulbF >= 0 && wetBulbF <= 120) {
               reading = 'WB: ${wetBulbF.toStringAsFixed(1)}°F';
-              
+
               // Try to also show dry bulb if available
               if (data.length >= 14) {
                 final dryBulbRaw = byteData.getUint16(12, Endian.little);
                 final dryBulbF = dryBulbRaw / 10.0;
                 if (dryBulbF >= 0 && dryBulbF <= 150) {
-                  reading = 'DB: ${dryBulbF.toStringAsFixed(1)}°F, WB: ${wetBulbF.toStringAsFixed(1)}°F';
+                  reading =
+                      'DB: ${dryBulbF.toStringAsFixed(1)}°F, WB: ${wetBulbF.toStringAsFixed(1)}°F';
                 }
               }
             }
           } catch (_) {}
         }
         break;
-        
+
       case 'CB': // SC680 Meter
         deviceTypeName = 'SC680';
         if (data.length >= 17) {
@@ -2018,7 +2019,8 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                       itemCount: _logEntries.length,
                       itemBuilder: (context, index) {
                         final entry = _logEntries[index];
-                        return _buildLogEntry(entry, key: ValueKey('log_$index'));
+                        return _buildLogEntry(entry,
+                            key: ValueKey('log_$index'));
                       },
                     ),
                   ),
@@ -2314,7 +2316,6 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         final deviceType = _guessDeviceType(name, adv.serviceUuids);
 
         return Card(
-          key: ValueKey(device.remoteId.str), // Unique key to prevent duplicate widget issues
           key: ValueKey(device.remoteId.str),
           color: isLikelyHvac
               ? AppColors.surfaceDark.withOpacity(0.9)
@@ -2480,7 +2481,8 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
       itemCount: _services.length,
       itemBuilder: (context, index) {
         final service = _services[index];
-        return _buildServiceCard(service, key: ValueKey(service.uuid.toString()));
+        return _buildServiceCard(service,
+            key: ValueKey(service.uuid.toString()));
       },
     );
   }

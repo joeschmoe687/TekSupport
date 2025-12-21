@@ -234,6 +234,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'chat_screen_fab',
         onPressed: _showSupportOptions,
         backgroundColor: AppColors.primaryCyan,
         icon: const Icon(Icons.add, color: Colors.white),
@@ -336,7 +337,7 @@ class _ChatScreenState extends State<ChatScreen> {
   ) async {
     // Navigate to new payment screen instead of external URL
     final String description = _getDescriptionForType(type);
-    
+
     final result = await Navigator.push<bool>(
       context,
       MaterialPageRoute(

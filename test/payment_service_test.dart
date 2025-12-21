@@ -1,29 +1,26 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tektool/services/payment_service.dart';
-import 'package:mockito/mockito.dart';
 
 /// Unit tests for PaymentService
-/// 
+///
 /// Note: These tests require Firebase to be initialized in the test environment.
 /// For full integration testing, use the PaymentVerificationScreen.
 void main() {
   group('PaymentService', () {
-    late PaymentService paymentService;
-
     setUp(() {
-      paymentService = PaymentService();
+      // PaymentService is a singleton, no need to store in variable
     });
 
     test('PaymentService is a singleton', () {
       final instance1 = PaymentService();
       final instance2 = PaymentService();
-      
+
       expect(instance1, same(instance2));
     });
 
     test('PaymentResult success state', () {
       final result = PaymentResult(success: true);
-      
+
       expect(result.success, isTrue);
       expect(result.error, isNull);
       expect(result.cancelled, isFalse);
@@ -34,7 +31,7 @@ void main() {
         success: false,
         error: 'Payment declined',
       );
-      
+
       expect(result.success, isFalse);
       expect(result.error, equals('Payment declined'));
       expect(result.cancelled, isFalse);
@@ -46,7 +43,7 @@ void main() {
         error: 'User cancelled',
         cancelled: true,
       );
-      
+
       expect(result.success, isFalse);
       expect(result.cancelled, isTrue);
     });
@@ -56,28 +53,28 @@ void main() {
     test('Text chat amount is correct', () {
       const amountCents = 500;
       const expectedDollars = 5.00;
-      
+
       expect(amountCents / 100, equals(expectedDollars));
     });
 
     test('Phone support amount is correct', () {
       const amountCents = 4500;
       const expectedDollars = 45.00;
-      
+
       expect(amountCents / 100, equals(expectedDollars));
     });
 
     test('Video call amount is correct', () {
       const amountCents = 6000;
       const expectedDollars = 60.00;
-      
+
       expect(amountCents / 100, equals(expectedDollars));
     });
 
     test('Emergency support amount is correct', () {
       const amountCents = 7000;
       const expectedDollars = 70.00;
-      
+
       expect(amountCents / 100, equals(expectedDollars));
     });
   });

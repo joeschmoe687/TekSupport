@@ -60,8 +60,10 @@ class DeviceProfile {
   final String? batteryCharacteristicUuid;
   final double Function(List<int> rawData)? parseReading;
   final String unit;
+  final bool isBroadcastOnly;
   final ConnectionType connectionType;
-  final int? manufacturerId; // For broadcast-only devices (e.g., Fieldpiece = 0x5046)
+  final int?
+      manufacturerId; // For broadcast-only devices (e.g., Fieldpiece = 0x5046)
 
   const DeviceProfile({
     required this.name,
@@ -159,7 +161,7 @@ class DeviceRegistry {
     // HCI Snoop captured Dec 21, 2025 - 4 devices tested via Job Link app
     // Manufacturer ID: 0x5046 (ASCII "FP" = Fieldpiece)
     // Data is encoded in manufacturer_data field of advertisements
-    
+
     // Fieldpiece Temperature Clamp (FPBF) - Model 8975
     'fieldpiece_temp_clamp': DeviceProfile(
       name: 'Fieldpiece Temp Clamp',
@@ -235,13 +237,13 @@ class DeviceRegistry {
         advertisedServiceUuids =
             (serviceUuids as List?)?.map((e) => e.toString()).toList() ?? [];
         deviceName = scanResultOrUuids.device?.platformName as String?;
-        manufacturerData = scanResultOrUuids.advertisementData?.manufacturerData as Map<int, List<int>>?;
+        manufacturerData = scanResultOrUuids.advertisementData?.manufacturerData
+            as Map<int, List<int>>?;
         // Try to extract manufacturer data from scan result
         if (manufacturerData == null) {
           try {
-            manufacturerData =
-                scanResultOrUuids.advertisementData?.manufacturerData
-                    as Map<int, List<int>>?;
+            manufacturerData = scanResultOrUuids
+                .advertisementData?.manufacturerData as Map<int, List<int>>?;
           } catch (_) {}
         }
       } catch (_) {
@@ -252,37 +254,11 @@ class DeviceRegistry {
     // First check manufacturer data for broadcast-only devices (like Fieldpiece)
     if (manufacturerData != null && manufacturerData.isNotEmpty) {
       for (final profile in _profiles.values) {
-        if (profile.manufacturerId != null && 
-            manufacturerData.containsKey(profile.manufacturerId)) {
-          // Found a match by manufacturer ID - now identify specific device type
-          return _identifyFieldpieceDeviceType(manufacturerData[profile.manufacturerId]!);
-    // First try to match by manufacturer ID (for broadcast-only devices like Fieldpiece)
-    if (manufacturerData != null && manufacturerData.isNotEmpty) {
-      for (final profile in _profiles.values) {
         if (profile.manufacturerId != null &&
             manufacturerData.containsKey(profile.manufacturerId)) {
-          // For Fieldpiece, check device type in bytes 2-3 of manufacturer data
-          if (profile.manufacturerId == 0x5046) {
-            final msd = manufacturerData[0x5046];
-            if (msd != null && msd.length >= 4) {
-              final deviceType = String.fromCharCodes([msd[2], msd[3]]);
-              if (deviceType == 'BF' && profile.name.contains('Temp')) {
-                return profile;
-              } else if (deviceType == 'BG' &&
-                  profile.name.contains('Pressure')) {
-                return profile;
-              } else if (deviceType == 'BH' &&
-                  profile.name.contains('Psychrometer')) {
-                return profile;
-              } else if (deviceType == 'CB' && profile.name.contains('SC680')) {
-                return profile;
-              }
-            }
-          }
-          // For other broadcast-only devices, return first match
-          else {
-            return profile;
-          }
+          // Found a match by manufacturer ID - now identify specific device type
+          return _identifyFieldpieceDeviceType(
+              manufacturerData[profile.manufacturerId]!);
         }
       }
     }
@@ -309,7 +285,7 @@ class DeviceRegistry {
   DeviceProfile? identifyByName(String deviceName) {
     final nameLower = deviceName.toLowerCase();
 
-    // Fieldpiece devices - usually advertise as "SC..." or "JL3..." 
+    // Fieldpiece devices - usually advertise as "SC..." or "JL3..."
     // But since they're broadcast-only, should be identified by manufacturer ID instead
     if (nameLower.contains('fieldpiece') ||
         nameLower.startsWith('sc') ||
@@ -371,8 +347,8 @@ class DeviceRegistry {
   /// Get profile by service UUID (for backward compatibility with tests)
   DeviceProfile? getProfileByServiceUuid(String serviceUuid) {
     for (final profile in _profiles.values) {
-      if (profile.serviceUuids.any((uuid) => 
-          uuid.toLowerCase() == serviceUuid.toLowerCase())) {
+      if (profile.serviceUuids
+          .any((uuid) => uuid.toLowerCase() == serviceUuid.toLowerCase())) {
         return profile;
       }
     }
@@ -398,11 +374,11 @@ class DeviceRegistry {
   /// Bytes 2-3: Device type code - "BF"=Temp, "BG"=Pressure, "BH"=Psychrometer, "CB"=SC680
   DeviceProfile? _identifyFieldpieceDeviceType(List<int> manufacturerData) {
     if (manufacturerData.length < 4) return null;
-    
+
     // Skip manufacturer ID bytes 0-1 ("FP")
     // Bytes 2-3 contain device type code
     final deviceTypeCode = String.fromCharCodes(manufacturerData.sublist(2, 4));
-    
+
     switch (deviceTypeCode) {
       case 'BF':
         return _profiles['fieldpiece_temp_clamp'];
@@ -717,12 +693,12 @@ double _parseTestoPressure(List<int> rawData) {
 /// Temperature value needs more capture data to confirm format
 double _parseFieldpieceTemp(List<int> rawData) {
   if (rawData.length < 16) return double.nan;
-  
+
   // Placeholder - need more capture data to decode exact temperature position
   // Based on psychrometer pattern, temp might be at bytes 15-16
   final bytes = Uint8List.fromList(rawData);
   final byteData = ByteData.view(bytes.buffer);
-  
+
   try {
     // Try uint16 LE at bytes 15-16 divided by 10
     if (rawData.length >= 17) {
@@ -734,7 +710,7 @@ double _parseFieldpieceTemp(List<int> rawData) {
       }
     }
   } catch (_) {}
-  
+
   return double.nan;
 }
 
@@ -743,12 +719,12 @@ double _parseFieldpieceTemp(List<int> rawData) {
 /// Pressure value position needs more capture data
 double _parseFieldpiecePressure(List<int> rawData) {
   if (rawData.length < 20) return double.nan;
-  
+
   // Placeholder - need varied pressure readings to identify format
   // Pressure probes typically send psig or psia values
   final bytes = Uint8List.fromList(rawData);
   final byteData = ByteData.view(bytes.buffer);
-  
+
   try {
     // Try int16 LE at various positions divided by 10 (common for pressure)
     if (rawData.length >= 17) {
@@ -760,7 +736,7 @@ double _parseFieldpiecePressure(List<int> rawData) {
       }
     }
   } catch (_) {}
-  
+
   return double.nan;
 }
 
@@ -773,21 +749,21 @@ double _parseFieldpiecePressure(List<int> rawData) {
 /// Bytes 20-21: Humidity % (needs more data to confirm formula)
 double _parseFieldpiecePsychrometer(List<int> rawData) {
   if (rawData.length < 17) return double.nan;
-  
+
   final bytes = Uint8List.fromList(rawData);
   final byteData = ByteData.view(bytes.buffer);
-  
+
   try {
     // Wet bulb temperature at bytes 15-16 (CONFIRMED via HCI snoop)
     final wetBulbRaw = byteData.getUint16(15, Endian.little);
     final wetBulbF = wetBulbRaw / 10.0;
-    
+
     // Sanity check: valid wet bulb temps are 0-120°F
     if (wetBulbF >= 0 && wetBulbF <= 120) {
       return wetBulbF;
     }
   } catch (_) {}
-  
+
   return double.nan;
 }
 
@@ -795,27 +771,31 @@ double _parseFieldpiecePsychrometer(List<int> rawData) {
 /// Call this for full data display
 Map<String, double> parseFieldpiecePsychrometerFull(List<int> rawData) {
   if (rawData.length < 22) {
-    return {'wetBulb': double.nan, 'dryBulb': double.nan, 'humidity': double.nan};
+    return {
+      'wetBulb': double.nan,
+      'dryBulb': double.nan,
+      'humidity': double.nan
+    };
   }
-  
+
   final bytes = Uint8List.fromList(rawData);
   final byteData = ByteData.view(bytes.buffer);
-  
+
   double wetBulbF = double.nan;
   double dryBulbF = double.nan;
   double humidity = double.nan;
-  
+
   try {
     // Wet bulb at bytes 15-16 (CONFIRMED)
     final wetBulbRaw = byteData.getUint16(15, Endian.little);
     wetBulbF = wetBulbRaw / 10.0;
-    
+
     // Dry bulb likely at bytes 12-13 (needs confirmation with varied data)
     if (rawData.length >= 14) {
       final dryBulbRaw = byteData.getUint16(12, Endian.little);
       dryBulbF = dryBulbRaw / 10.0;
     }
-    
+
     // Humidity likely at bytes 20-21 (needs confirmation)
     if (rawData.length >= 22) {
       final humidityRaw = byteData.getUint16(20, Endian.little);
@@ -827,7 +807,7 @@ Map<String, double> parseFieldpiecePsychrometerFull(List<int> rawData) {
       }
     }
   } catch (_) {}
-  
+
   return {
     'wetBulb': wetBulbF,
     'dryBulb': dryBulbF,
@@ -840,12 +820,12 @@ Map<String, double> parseFieldpiecePsychrometerFull(List<int> rawData) {
 /// This is a multi-function meter - value type depends on mode
 double _parseFieldpieceSC680(List<int> rawData) {
   if (rawData.length < 20) return double.nan;
-  
+
   // Placeholder - SC680 is a multi-meter (amps, volts, ohms, etc.)
   // Need capture data showing different modes to decode
   final bytes = Uint8List.fromList(rawData);
   final byteData = ByteData.view(bytes.buffer);
-  
+
   try {
     // Try int16 LE at bytes 15-16 divided by 10 (common for amp readings)
     if (rawData.length >= 17) {
@@ -857,82 +837,8 @@ double _parseFieldpieceSC680(List<int> rawData) {
       }
     }
   } catch (_) {}
-  
+
   return double.nan;
-// ============================================================================
-// FIELDPIECE PARSING FUNCTIONS
-// Broadcast-only devices - parse manufacturer data from advertisements
-// Protocol analyzed Dec 21, 2025 via HCI snoop log
-// ============================================================================
-
-/// Parse Fieldpiece temperature clamp reading (FPBF, 8975)
-/// Manufacturer data format (22 bytes):
-/// Offset  Meaning
-/// 0-1     "FP" (0x46 0x50) - Manufacturer ID
-/// 2-3     "BF" (0x42 0x46) - Device type (temp clamp)
-/// 4-21    Data payload (temperature encoding TBD from more captures)
-double _parseFieldpieceTemp(List<int> rawData) {
-  // This parser receives manufacturer data from advertisement
-  // rawData = manufacturer_data[0x5046] = [0x46, 0x50, 0x42, 0x46, ...]
-  if (rawData.length < 22) return double.nan;
-
-  // Verify manufacturer ID "FP" (0x46 0x50)
-  if (rawData[0] != 0x46 || rawData[1] != 0x50) return double.nan;
-
-  // Verify device type "BF" (0x42 0x46)
-  if (rawData[2] != 0x42 || rawData[3] != 0x46) return double.nan;
-
-  // Temperature encoding needs more varied captures to confirm formula
-  // Placeholder: return NaN until we have confirmed byte positions
-  // TODO: Capture varied temperature readings to determine encoding
-  return double.nan;
-}
-
-/// Parse Fieldpiece pressure probe reading (FPBG, 2975/2976)
-/// Manufacturer data format (28 bytes):
-/// Device type: bytes 2-3 = "BG" (0x42 0x47)
-double _parseFieldpiecePressure(List<int> rawData) {
-  // This parser receives manufacturer data from advertisement
-  if (rawData.length < 28) return double.nan;
-
-  // Verify manufacturer ID "FP" (0x46 0x50)
-  if (rawData[0] != 0x46 || rawData[1] != 0x50) return double.nan;
-
-  // Verify device type "BG" (0x42 0x47)
-  if (rawData[2] != 0x42 || rawData[3] != 0x47) return double.nan;
-
-  // Pressure encoding needs more varied captures to confirm formula
-  // TODO: Capture varied pressure readings to determine encoding
-  return double.nan;
-}
-
-/// Parse Fieldpiece psychrometer reading (FPBH, 5699)
-/// Manufacturer data format (30 bytes):
-/// Device type: bytes 2-3 = "BH" (0x42 0x48)
-/// CONFIRMED: Wet bulb = uint16_le(bytes 15-16) / 10.0 °F
-/// Byte offsets from HCI analysis Dec 21, 2025:
-/// 12-13: Dry Bulb (needs formula)
-/// 15-16: Wet Bulb = 0x022d = 557 ÷ 10 = 55.7°F ✓ MATCHES SCREENSHOT
-/// 20-21: Humidity (needs formula)
-double _parseFieldpiecePsychrometer(List<int> rawData) {
-  // This parser receives manufacturer data from advertisement
-  if (rawData.length < 30) return double.nan;
-
-  // Verify manufacturer ID "FP" (0x46 0x50)
-  if (rawData[0] != 0x46 || rawData[1] != 0x50) return double.nan;
-
-  // Verify device type "BH" (0x42 0x48)
-  if (rawData[2] != 0x42 || rawData[3] != 0x48) return double.nan;
-
-  // Extract wet bulb temperature (bytes 15-16, uint16 LE)
-  final bytes = Uint8List.fromList([rawData[15], rawData[16]]);
-  final byteData = ByteData.view(bytes.buffer);
-  final wetBulbRaw = byteData.getUint16(0, Endian.little);
-  final wetBulbF = wetBulbRaw / 10.0;
-
-  // Return wet bulb temperature (confirmed accurate Dec 21)
-  // TODO: Also parse dry bulb (bytes 12-13) and humidity (bytes 20-21)
-  return wetBulbF;
 }
 
 /// Helper to match byte pattern at offset

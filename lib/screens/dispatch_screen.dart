@@ -103,33 +103,32 @@ class _DispatchScreenState extends State<DispatchScreen> {
       ),
       body: Container(
         decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
-        child:
-            _isLoading
-                ? Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryCyan,
-                  ),
-                )
-                : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Date Navigation
-                        _buildDateNavigation(),
-                        const SizedBox(height: 20),
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primaryCyan,
+                ),
+              )
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Date Navigation
+                      _buildDateNavigation(),
+                      const SizedBox(height: 20),
 
-                        // Filter Buttons
-                        _buildFilterButtons(),
-                        const SizedBox(height: 20),
+                      // Filter Buttons
+                      _buildFilterButtons(),
+                      const SizedBox(height: 20),
 
-                        // Jobs List
-                        _buildJobsList(),
-                      ],
-                    ),
+                      // Jobs List
+                      _buildJobsList(),
+                    ],
                   ),
                 ),
+              ),
       ),
       floatingActionButton: Container(
         decoration: BoxDecoration(
@@ -144,6 +143,7 @@ class _DispatchScreenState extends State<DispatchScreen> {
           ],
         ),
         child: FloatingActionButton(
+          heroTag: 'dispatch_screen_fab',
           onPressed: () => _showCreateJobModal(context),
           tooltip: 'New Job',
           backgroundColor: Colors.transparent,
@@ -198,11 +198,10 @@ class _DispatchScreenState extends State<DispatchScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed:
-                    () => setState(() {
-                      _selectedDate = DateTime.now();
-                      _loadJobs();
-                    }),
+                onPressed: () => setState(() {
+                  _selectedDate = DateTime.now();
+                  _loadJobs();
+                }),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white24,
                   foregroundColor: Colors.white,
@@ -227,26 +226,25 @@ class _DispatchScreenState extends State<DispatchScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children:
-            filters.map((filter) {
-              final isActive = _filterStatus == filter['value'];
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: FilterChip(
-                  label: Text(filter['label'] as String),
-                  selected: isActive,
-                  onSelected: (_) {
-                    setState(() => _filterStatus = filter['value'] as String);
-                    _loadJobs();
-                  },
-                  backgroundColor: Colors.transparent,
-                  selectedColor: const Color(0xFF667eea),
-                  side: BorderSide(
-                    color: isActive ? const Color(0xFF667eea) : Colors.grey,
-                  ),
-                ),
-              );
-            }).toList(),
+        children: filters.map((filter) {
+          final isActive = _filterStatus == filter['value'];
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: FilterChip(
+              label: Text(filter['label'] as String),
+              selected: isActive,
+              onSelected: (_) {
+                setState(() => _filterStatus = filter['value'] as String);
+                _loadJobs();
+              },
+              backgroundColor: Colors.transparent,
+              selectedColor: const Color(0xFF667eea),
+              side: BorderSide(
+                color: isActive ? const Color(0xFF667eea) : Colors.grey,
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -271,10 +269,9 @@ class _DispatchScreenState extends State<DispatchScreen> {
     }
 
     return Column(
-      children:
-          _jobs.map((job) {
-            return _buildJobCard(job);
-          }).toList(),
+      children: _jobs.map((job) {
+        return _buildJobCard(job);
+      }).toList(),
     );
   }
 
@@ -339,8 +336,8 @@ class _DispatchScreenState extends State<DispatchScreen> {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed:
-                            () => _updateJobStatus(job['id'], 'assigned'),
+                        onPressed: () =>
+                            _updateJobStatus(job['id'], 'assigned'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF667eea),
                         ),
@@ -350,8 +347,8 @@ class _DispatchScreenState extends State<DispatchScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed:
-                            () => _updateJobStatus(job['id'], 'completed'),
+                        onPressed: () =>
+                            _updateJobStatus(job['id'], 'completed'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                         ),
@@ -427,17 +424,16 @@ class _DispatchScreenState extends State<DispatchScreen> {
   void _showCreateJobModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder:
-          (context) => const Center(
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                '✏️ Job creation coming soon!\n\nCreate jobs from the admin dashboard.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
+      builder: (context) => const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Text(
+            '✏️ Job creation coming soon!\n\nCreate jobs from the admin dashboard.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
           ),
+        ),
+      ),
     );
   }
 }

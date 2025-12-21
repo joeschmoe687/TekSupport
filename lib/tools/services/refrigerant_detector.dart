@@ -174,6 +174,12 @@ class RefrigerantDetector {
       case Refrigerant.r454b:
         // R454B similar to R410A
         return 0.072 * tempF * tempF + 1.1 * tempF - 14.5;
+      case Refrigerant.r404a:
+        // R404A - commercial refrigeration, similar to R410A
+        return 0.07 * tempF * tempF + 1.0 * tempF - 13.0;
+      case Refrigerant.r134a:
+        // R134A - automotive/light commercial, lower pressure
+        return 0.035 * tempF * tempF + 0.55 * tempF - 7.0;
     }
   }
 

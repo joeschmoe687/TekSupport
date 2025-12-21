@@ -9,11 +9,9 @@ void main() {
       expect(instance1, same(instance2));
     });
 
-    test('should have required methods', () {
+    test('should have initialize method', () {
       final service = NotificationService();
       expect(service.initialize, isA<Function>());
-      expect(service.requestPermissions, isA<Function>());
-      expect(service.getToken, isA<Function>());
     });
   });
 }

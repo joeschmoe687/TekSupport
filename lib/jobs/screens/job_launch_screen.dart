@@ -22,7 +22,7 @@ class _JobLaunchScreenState extends State<JobLaunchScreen> {
 
     try {
       final job = await _jobService.createJob(type);
-      
+
       if (!mounted) return;
 
       // Navigate to workflow screen
@@ -37,7 +37,7 @@ class _JobLaunchScreenState extends State<JobLaunchScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error creating job: $e'),
@@ -60,7 +60,7 @@ class _JobLaunchScreenState extends State<JobLaunchScreen> {
         elevation: 0,
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -84,10 +84,13 @@ class _JobLaunchScreenState extends State<JobLaunchScreen> {
               const SizedBox(height: 48),
               _JobTypeCard(
                 title: 'Commissioning',
-                description: 'New system installation with full startup procedure',
+                description:
+                    'New system installation with full startup procedure',
                 icon: Icons.settings_suggest,
                 color: AppColors.primaryPurple,
-                onTap: _isCreating ? null : () => _launchJob(JobType.commissioning),
+                onTap: _isCreating
+                    ? null
+                    : () => _launchJob(JobType.commissioning),
               ),
               const SizedBox(height: 16),
               _JobTypeCard(
@@ -95,7 +98,8 @@ class _JobLaunchScreenState extends State<JobLaunchScreen> {
                 description: 'Diagnostic and repair on existing system',
                 icon: Icons.build_circle,
                 color: AppColors.primaryCyan,
-                onTap: _isCreating ? null : () => _launchJob(JobType.serviceCall),
+                onTap:
+                    _isCreating ? null : () => _launchJob(JobType.serviceCall),
               ),
               if (_isCreating) ...[
                 const SizedBox(height: 32),
@@ -135,7 +139,9 @@ class _JobTypeCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: onTap == null ? AppColors.border.withOpacity(0.3) : color.withOpacity(0.5),
+          color: onTap == null
+              ? AppColors.border.withOpacity(0.3)
+              : color.withOpacity(0.5),
           width: 2,
         ),
       ),

@@ -295,7 +295,7 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
 - [x] **Add calibration to Gauge Screen** - Long-press on pressure/temp readings to adjust calibration offsets (Dec 21) ✅
 - [ ] **High-pressure probe support** - T549i can be ±60 bar for high-side manifold use
 - [ ] **Connection stability** - LINK_SUPERVISION_TIMEOUT causing T549i disconnects during extended use
-- [ ] **Fix RenderFlex overflow** - Varies by orientation: 15px bottom (landscape), 57px bottom (portrait gauge), 2.5px right (scan)
+- [x] **Fix RenderFlex overflow** - Fixed job_launch_screen Column overflow by wrapping in SingleChildScrollView (Dec 21) ✅
 
 ---
 

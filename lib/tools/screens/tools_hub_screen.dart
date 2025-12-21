@@ -410,6 +410,7 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
     return Align(
       alignment: Alignment.centerRight,
       child: FloatingActionButton.extended(
+        heroTag: 'tools_hub_fab',
         onPressed: () {
           // Navigate to support contact screen
           Navigator.push(

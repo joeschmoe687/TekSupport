@@ -73,7 +73,7 @@ void main() {
         final superheat = ptChart.calculateSuperheat(
           refrigerant: Refrigerant.r410a,
           suctionLineTemp: 50.0,
-          lowSidePressure: 118.0,
+          suctionPressure: 118.0,
         );
         expect(superheat, greaterThan(0.0));
         expect(superheat, lessThan(20.0));
@@ -84,7 +84,7 @@ void main() {
         final superheat = ptChart.calculateSuperheat(
           refrigerant: Refrigerant.r410a,
           suctionLineTemp: 40.0,
-          lowSidePressure: 118.0,
+          suctionPressure: 118.0,
         );
         expect(superheat, lessThanOrEqualTo(5.0));
         expect(superheat, greaterThanOrEqualTo(-5.0));
@@ -98,7 +98,7 @@ void main() {
         final subcool = ptChart.calculateSubcool(
           refrigerant: Refrigerant.r410a,
           liquidLineTemp: 100.0,
-          highSidePressure: 300.0,
+          liquidPressure: 300.0,
         );
         expect(subcool, greaterThan(0.0));
         expect(subcool, lessThan(30.0));
@@ -108,7 +108,7 @@ void main() {
         final subcool = ptChart.calculateSubcool(
           refrigerant: Refrigerant.r410a,
           liquidLineTemp: 110.0,
-          highSidePressure: 300.0,
+          liquidPressure: 300.0,
         );
         expect(subcool, isA<double>());
       });
@@ -117,7 +117,7 @@ void main() {
     group('getTargetSuperheat', () {
       test('should return target superheat for fixed orifice', () {
         final target = ptChart.getTargetSuperheat(
-          outdoorTemp: 75.0,
+          outdoorDryBulb: 75.0,
           indoorWetBulb: 63.0,
         );
         expect(target, greaterThan(0.0));
@@ -126,7 +126,7 @@ void main() {
 
       test('should handle extreme temperatures', () {
         final target = ptChart.getTargetSuperheat(
-          outdoorTemp: 115.0,
+          outdoorDryBulb: 115.0,
           indoorWetBulb: 80.0,
         );
         expect(target, greaterThan(0.0));
