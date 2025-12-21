@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:card_scanner/card_scanner.dart';
 import '../services/payment_service.dart';
 import '../widgets/gradient_scaffold.dart';
 
@@ -24,7 +23,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final PaymentService _paymentService = PaymentService();
   bool _isProcessing = false;
   bool _isGooglePayAvailable = false;
-  CardDetails? _scannedCard;
 
   @override
   void initState() {
@@ -100,60 +98,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-  Future<void> _scanCard() async {
-    try {
-      final cardDetails = await CardScanner.scanCard(
-        scanOptions: const CardScanOptions(
-          scanCardHolderName: true,
-          scanExpiryDate: true,
-          considerPastDatesInExpiryDateScan: false,
-        ),
-      );
-
-      if (cardDetails != null) {
-        setState(() {
-          _scannedCard = cardDetails;
-        });
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Text('Card scanned: ****${cardDetails.cardNumber.length >= 4 ? cardDetails.cardNumber.substring(cardDetails.cardNumber.length - 4) : cardDetails.cardNumber}'),
-                ],
-              ),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        }
-
-        // After scanning, proceed with card payment
-        await _processCardPayment();
-      }
-    } catch (e) {
-      debugPrint('❌ Card scan error: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.error, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Failed to scan card'),
-              ],
-            ),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    }
-  }
-
   void _showSuccessDialog() {
     showDialog(
       context: context,
@@ -196,7 +140,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context); // Close dialog
-              Navigator.pop(context, true); // Return to previous screen with success
+              Navigator.pop(
+                  context, true); // Return to previous screen with success
             },
             child: const Text(
               'Continue',
@@ -319,15 +264,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       const SizedBox(height: 12),
                     ],
 
-                    // Card payment with scanner
+                    // Card payment
                     _buildPaymentMethodCard(
                       icon: Icons.credit_card,
                       title: 'Credit/Debit Card',
-                      subtitle: 'Manual entry or scan your card',
+                      subtitle: 'Enter your card details',
                       color: const Color(0xFF7C3AED),
                       onTap: _isProcessing ? null : _processCardPayment,
-                      showScanButton: true,
-                      onScan: _isProcessing ? null : _scanCard,
                     ),
                     const SizedBox(height: 12),
 
@@ -399,7 +342,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isProcessing ? null : () => Navigator.pop(context),
+                  onPressed:
+                      _isProcessing ? null : () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[700],
                     padding: const EdgeInsets.symmetric(vertical: 14),
@@ -429,8 +373,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     required String subtitle,
     required Color color,
     required VoidCallback? onTap,
-    bool showScanButton = false,
-    VoidCallback? onScan,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -494,43 +436,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
               ],
             ),
-            if (showScanButton && onScan != null) ...[
-              const SizedBox(height: 12),
-              const Divider(color: Colors.white24),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: onScan,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.camera_alt,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Scan Card with Camera',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
           ],
         ),
       ),

@@ -21,7 +21,6 @@ dependencies:
   firebase_messaging: ^16.0.4
   firebase_storage: ^13.0.4
   flutter_dotenv: ^6.0.0
-  intl: ^0.20.2
   image_picker: ^1.1.2
   cached_network_image: ^3.4.1
   url_launcher: ^6.2.5
@@ -30,7 +29,7 @@ dependencies:
   # Note: phone_state_listener package doesn't exist; using native platform channels instead
   record: ^6.0.0
   geolocator: ^11.0.0
-  flutter_local_notifications: ^16.1.0
+  flutter_local_notifications: ^19.0.0
   
   # TekTool - Bluetooth HVAC tools
   flutter_blue_plus: ^1.32.12
@@ -51,9 +50,8 @@ dependencies:
   share_plus: ^10.0.0
   
   # Payment integration
-  flutter_stripe: ^11.1.0
+  flutter_stripe: ^11.5.0
   pay: ^2.0.0
-  card_scanner: ^1.0.3
   
 dev_dependencies:
   flutter_test:

@@ -65,6 +65,7 @@ class GradientScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
   final bool extendBodyBehindAppBar;
 
   const GradientScaffold({
@@ -73,6 +74,7 @@ class GradientScaffold extends StatelessWidget {
     this.appBar,
     this.bottomNavigationBar,
     this.floatingActionButton,
+    this.floatingActionButtonLocation,
     this.extendBodyBehindAppBar = true,
   });
 
@@ -88,6 +90,7 @@ class GradientScaffold extends StatelessWidget {
       ),
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
     );
   }
 }
@@ -134,10 +137,9 @@ class _GradientButtonState extends State<GradientButton> {
         height: widget.height,
         transform: Matrix4.identity()..translate(0.0, _isPressed ? 2.0 : 0.0),
         decoration: BoxDecoration(
-          gradient:
-              _isPressed
-                  ? AppColors.buttonGradientPressed
-                  : AppColors.buttonGradient,
+          gradient: _isPressed
+              ? AppColors.buttonGradientPressed
+              : AppColors.buttonGradient,
           borderRadius: BorderRadius.circular(widget.borderRadius),
           boxShadow: [
             BoxShadow(

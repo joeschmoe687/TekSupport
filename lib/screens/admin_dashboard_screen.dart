@@ -614,7 +614,7 @@ class _PricebookPaneState extends State<_PricebookPane> {
                 const SizedBox(height: 16),
                 const Divider(color: Colors.white12),
                 const SizedBox(height: 16),
-                
+
                 // Local Jobs Categories
                 const Text(
                   'Local Jobs Pricing',
@@ -637,7 +637,8 @@ class _PricebookPaneState extends State<_PricebookPane> {
                       builder: (context, itemSnap) {
                         final items = itemSnap.hasData
                             ? itemSnap.data!.docs
-                            : const <QueryDocumentSnapshot<Map<String, dynamic>>>[];
+                            : const <QueryDocumentSnapshot<
+                                Map<String, dynamic>>>[];
                         return Column(
                           children: categories.map((catDoc) {
                             final cat = catDoc.data();
@@ -649,9 +650,10 @@ class _PricebookPaneState extends State<_PricebookPane> {
                                   (data['categoryId'] ?? '').toString();
                               return itemCatId == catId;
                             }).toList();
-                            
-                            final isExpanded = _expandedCategories.contains(catId);
-                            
+
+                            final isExpanded =
+                                _expandedCategories.contains(catId);
+
                             return _buildCollapsibleCategory(
                               name: name,
                               itemCount: categoryItems.length,
@@ -786,12 +788,13 @@ class _PricebookPaneState extends State<_PricebookPane> {
       String label, double currentPrice, String field) async {
     final controller =
         TextEditingController(text: currentPrice.toStringAsFixed(2));
-    
+
     final newPrice = await showDialog<double>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
-        title: Text('Edit Price', style: TextStyle(color: AppColors.textPrimary)),
+        title:
+            Text('Edit Price', style: TextStyle(color: AppColors.textPrimary)),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -827,7 +830,7 @@ class _PricebookPaneState extends State<_PricebookPane> {
           .collection('settings')
           .doc('pricing')
           .set({field: newPrice}, SetOptions(merge: true));
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -881,9 +884,9 @@ class _PricebookPaneState extends State<_PricebookPane> {
               final price = (data['price'] ?? '').toString();
               final code = (data['code'] ?? '').toString();
               return Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: Colors.white05),
+                    top: BorderSide(color: Colors.white.withOpacity(0.05)),
                   ),
                 ),
                 child: ListTile(
@@ -909,22 +912,6 @@ class _PricebookPaneState extends State<_PricebookPane> {
               );
             }).toList(),
           ],
-        ],
-      ),
-    );
-  }
-}
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-          ),
         ],
       ),
     );
@@ -1765,8 +1752,7 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
             const SizedBox(height: 16),
             const Text(
               'The device will now be auto-recognized in future connections.',
-              style: TextStyle(
-                  color: AppColors.textMuted, fontSize: 12),
+              style: TextStyle(color: AppColors.textMuted, fontSize: 12),
             ),
           ],
         ),
