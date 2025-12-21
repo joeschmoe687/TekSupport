@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/gradient_scaffold.dart';
 import '../tools/screens/tools_hub_screen.dart';
 import '../tools/screens/devices_screen.dart';
+import '../jobs/screens/job_launch_screen.dart';
 import 'settings_screen.dart';
 import 'tech_inbox_screen.dart';
 import 'admin_dispatch_screen.dart';
@@ -122,6 +123,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     setState(() => _selectedIndex = index);
   }
 
+  void _launchJob() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => JobLaunchScreen(onToggleTheme: widget.onToggleTheme),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GradientScaffold(
@@ -131,6 +141,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               child: CircularProgressIndicator(color: AppColors.primaryCyan),
             )
           : _screens[_selectedIndex],
+      floatingActionButton: (_userRole == 'tech' || _userRole == 'admin')
+          ? FloatingActionButton.extended(
+              onPressed: _launchJob,
+              icon: const Icon(Icons.work_outline),
+              label: const Text('Start Job'),
+              backgroundColor: AppColors.primaryPurple,
+              foregroundColor: Colors.white,
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: _navItems.isEmpty
           ? null
           : SafeArea(
