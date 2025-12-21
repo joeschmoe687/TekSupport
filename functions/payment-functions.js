@@ -70,9 +70,10 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
       return;
     }
 
-    // Optional: Validate amount against expected prices from Firestore
+    // IMPORTANT: Server-side price validation
+    // TODO: Validate amount against expected prices from Firestore
     // This prevents users from tampering with payment amounts
-    // Uncomment to enable server-side price validation:
+    // Uncomment and implement the code below for production:
     /*
     const pricingDoc = await admin.firestore()
       .collection('settings')
@@ -81,8 +82,25 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
     
     if (pricingDoc.exists) {
       const pricing = pricingDoc.data();
-      // Add validation logic based on supportType
-      // Example: if (amount !== pricing.expectedAmount * 100) { throw error }
+      const supportType = req.body.supportType; // Add supportType to request
+      
+      // Validate amount based on support type and business hours
+      let expectedAmount;
+      const isBusinessHours = req.body.isBusinessHours; // Add this to request
+      
+      if (supportType === 'phone') {
+        expectedAmount = isBusinessHours ? pricing.bizPhone * 100 : pricing.twentyFourPhone * 100;
+      } else if (supportType === 'video') {
+        expectedAmount = isBusinessHours ? pricing.bizVideo * 100 : pricing.twentyFourVideo * 100;
+      } else if (supportType === 'text') {
+        expectedAmount = isBusinessHours ? pricing.bizMessage * 100 : pricing.twentyFourMessage * 100;
+      }
+      
+      if (amount !== expectedAmount) {
+        console.error(`Amount mismatch: expected ${expectedAmount}, got ${amount}`);
+        res.status(400).send({ error: 'Invalid payment amount' });
+        return;
+      }
     }
     */
 

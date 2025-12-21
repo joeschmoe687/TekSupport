@@ -14,6 +14,7 @@ class PaymentService {
   bool _isInitialized = false;
   String? _publishableKey;
   String? _merchantId;
+  bool _isTestMode = true; // Determined by publishable key prefix
   
   /// Initialize Stripe with publishable key from Firestore
   Future<void> initialize() async {
@@ -35,8 +36,10 @@ class PaymentService {
           if (_merchantId != null) {
             Stripe.merchantIdentifier = _merchantId!;
           }
+          // Determine test mode from key prefix
+          _isTestMode = _publishableKey!.startsWith('pk_test_');
           _isInitialized = true;
-          debugPrint('✅ Stripe initialized successfully');
+          debugPrint('✅ Stripe initialized successfully (${_isTestMode ? "TEST" : "LIVE"} mode)');
         } else {
           debugPrint('⚠️ Stripe publishable key not found in Firestore');
         }
@@ -139,7 +142,7 @@ class PaymentService {
           googlePay: PaymentSheetGooglePay(
             merchantCountryCode: 'US',
             currencyCode: 'USD',
-            testEnv: false, // Set to true for testing
+            testEnv: _isTestMode, // Use test mode based on key type
           ),
         ),
       );
@@ -225,7 +228,7 @@ class PaymentService {
           googlePay: PaymentSheetGooglePay(
             merchantCountryCode: 'US',
             currencyCode: 'USD',
-            testEnv: false,
+            testEnv: _isTestMode, // Use test mode based on key type
           ),
         ),
       );

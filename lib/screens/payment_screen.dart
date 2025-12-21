@@ -122,7 +122,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 children: [
                   const Icon(Icons.check_circle, color: Colors.white),
                   const SizedBox(width: 8),
-                  Text('Card scanned: ****${cardDetails.cardNumber.substring(cardDetails.cardNumber.length - 4)}'),
+                  Text('Card scanned: ****${cardDetails.cardNumber.length >= 4 ? cardDetails.cardNumber.substring(cardDetails.cardNumber.length - 4) : cardDetails.cardNumber}'),
                 ],
               ),
               backgroundColor: Colors.green,
