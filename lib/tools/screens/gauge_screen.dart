@@ -9,7 +9,11 @@ import '../services/device_registry.dart';
 import '../services/auto_reconnect_service.dart';
 import '../services/device_storage_service.dart';
 import '../services/calibration_service.dart';
+import '../services/diagnostic_engine.dart';
+import '../services/ml_data_service.dart';
 import '../widgets/calibration_popup.dart';
+import '../widgets/diagnostic_card.dart';
+import '../widgets/troubleshooting_sheet.dart';
 import '../utils/pt_chart.dart';
 
 /// Gauge slot types for sensor assignment
@@ -87,6 +91,8 @@ class _GaugeScreenState extends State<GaugeScreen> {
   final DeviceRegistry _registry = DeviceRegistry();
   final PTChart _ptChart = PTChart();
   final CalibrationService _calibrationService = CalibrationService();
+  final DiagnosticEngine _diagnosticEngine = DiagnosticEngine();
+  final MLDataService _mlDataService = MLDataService();
 
   // Global keys for calibration popup positioning
   final GlobalKey _highSidePressureKey = GlobalKey();
@@ -128,6 +134,9 @@ class _GaugeScreenState extends State<GaugeScreen> {
   // Current job type selection
   JobType _currentJobType = JobType.airConditioning;
 
+  // Diagnostic result (updated when readings change)
+  DiagnosticResult? _diagnosticResult;
+
   StreamSubscription? _deviceUpdatesSubscription;
   StreamSubscription? _disconnectSubscription;
   StreamSubscription? _batterySubscription;
@@ -143,6 +152,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
     await _dataService.init();
     await _storageService.init();
     await _reconnectService.init();
+    await _mlDataService.init();
     await _loadDeviceNames();
     await _loadBatteryLevels();
     _listenForDeviceUpdates();
@@ -398,6 +408,24 @@ class _GaugeScreenState extends State<GaugeScreen> {
         liquidLineTemp: _liquidLineTemp,
       );
     } else {
+      _subcool = null;
+    }
+
+    // Run diagnostics if we have any readings
+    if (_hasReceivedData) {
+      _diagnosticResult = _diagnosticEngine.analyze(
+        systemType: _currentJobType,
+        refrigerant: _currentRefrigerant,
+        suctionPressure: lowPsig > 0 ? lowPsig : null,
+        dischargePressure: highPsig > 0 ? highPsig : null,
+        superheat: _superheat,
+        subcool: _subcool,
+        // TODO: Add ambient temp from ambient sensor if connected
+      );
+    }
+
+    setState(() {});
+  }
       _subcool = null;
     }
 
@@ -974,6 +1002,15 @@ class _GaugeScreenState extends State<GaugeScreen> {
               // Show tip if devices connected but no data received
               if (!_hasReceivedData && _sensorAssignments.isNotEmpty)
                 _buildNoDataTip(),
+              // Diagnostic Card - Show AI insights
+              if (_diagnosticResult != null)
+                DiagnosticCard(
+                  diagnostic: _diagnosticResult!,
+                  onTroubleshootTap: () {
+                    TroubleshootingSheet.show(context, _diagnosticResult!);
+                  },
+                ),
+              if (_diagnosticResult != null) const SizedBox(height: 16),
               // Pressure Gauges
               _buildPressureGauges(),
               const SizedBox(height: 24),
