@@ -47,6 +47,20 @@ void main() {
         expect(profile?.manufacturer, HvacManufacturer.weatherflow);
       });
 
+      test('should have Fieldpiece profiles', () {
+        final tempClamp = registry.getProfile('fieldpiece_temp_clamp');
+        expect(tempClamp, isNotNull);
+        expect(tempClamp?.manufacturer, HvacManufacturer.fieldpiece);
+        expect(tempClamp?.type, HvacDeviceType.temperatureProbe);
+        expect(tempClamp?.isBroadcastOnly, isTrue);
+        expect(tempClamp?.manufacturerId, 0x5046);
+
+        final psychrometer = registry.getProfile('fieldpiece_psychrometer');
+        expect(psychrometer, isNotNull);
+        expect(psychrometer?.manufacturer, HvacManufacturer.fieldpiece);
+        expect(psychrometer?.isBroadcastOnly, isTrue);
+      });
+
       test('should return null for unknown service UUID', () {
         final profile = registry.getProfileByServiceUuid(
           'unknown-uuid-1234',
@@ -144,6 +158,53 @@ void main() {
       expect(profile.type, HvacDeviceType.unknown);
       expect(profile.serviceUuids, contains('test-uuid'));
       expect(profile.unit, 'test');
+    });
+
+    test('should support broadcast-only devices', () {
+      final profile = DeviceProfile(
+        name: 'Fieldpiece Test',
+        manufacturer: HvacManufacturer.fieldpiece,
+        type: HvacDeviceType.temperatureProbe,
+        serviceUuids: [],
+        unit: '°F',
+        isBroadcastOnly: true,
+        manufacturerId: 0x5046,
+      );
+
+      expect(profile.isBroadcastOnly, isTrue);
+      expect(profile.manufacturerId, 0x5046);
+      expect(profile.serviceUuids, isEmpty);
+    });
+  });
+
+  group('Fieldpiece Advertisement Parsing', () {
+    test('should parse Fieldpiece psychrometer wet bulb correctly', () {
+      // Real packet from HCI snoop: wet bulb = 55.7°F
+      // Bytes 15-16: 0x022d = 557 decimal ÷ 10 = 55.7°F
+      final manufacturerData = [
+        0x46, 0x50, // "FP" manufacturer ID
+        0x42, 0x48, // "BH" = Psychrometer
+        0x23, 0x07, // Header
+        0x56, 0x99, // Model 5699
+        0x04, 0x20, // Battery/status
+        0x23, 0x08, // Unknown
+        0x16, 0xb4, // Dry bulb (placeholder)
+        0x02,       // Separator
+        0x2d, 0x02, // Wet bulb: 0x022d = 557 ÷ 10 = 55.7°F
+        0x9d, 0x01, // Unknown
+        0xbf,       // Unknown
+        0x01, 0x33, // Humidity (placeholder)
+      ];
+
+      final registry = DeviceRegistry();
+      final profile = registry.getProfile('fieldpiece_psychrometer');
+      expect(profile, isNotNull);
+      
+      if (profile?.parseReading != null) {
+        final wetBulb = profile!.parseReading!(manufacturerData);
+        // Allow small floating point tolerance
+        expect(wetBulb, closeTo(55.7, 0.1));
+      }
     });
   });
 }

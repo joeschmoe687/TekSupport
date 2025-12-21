@@ -344,8 +344,10 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
     // Check if this is a known HVAC tool
     final profile = _deviceRegistry.identifyDevice(result);
     final isKnownDevice = profile != null;
+    final isBroadcastOnly = profile?.isBroadcastOnly ?? false;
 
     return Container(
+      key: ValueKey(result.device.remoteId.str), // Unique key to prevent duplicate widget issues
       key: key,
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -431,6 +433,25 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
                 ],
               ],
             ),
+            if (isBroadcastOnly) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Icon(Icons.broadcast_on_personal, 
+                       size: 12, 
+                       color: AppColors.warning),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Broadcast-only (reads from advertisement)',
+                    style: const TextStyle(
+                      color: AppColors.warning,
+                      fontSize: 10,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
         trailing: isConnecting
@@ -442,13 +463,15 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
                   color: AppColors.primaryCyan,
                 ),
               )
-            : IconButton(
-                icon:
-                    const Icon(Icons.add_circle, color: AppColors.primaryCyan),
-                onPressed: () => _connectToDevice(result),
-                tooltip: 'Connect',
-              ),
-        onTap: isConnecting ? null : () => _connectToDevice(result),
+            : isBroadcastOnly
+                ? const Icon(Icons.sensors, color: AppColors.warning, size: 24)
+                : IconButton(
+                    icon:
+                        const Icon(Icons.add_circle, color: AppColors.primaryCyan),
+                    onPressed: () => _connectToDevice(result),
+                    tooltip: 'Connect',
+                  ),
+        onTap: (isConnecting || isBroadcastOnly) ? null : () => _connectToDevice(result),
       ),
     );
   }

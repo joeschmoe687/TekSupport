@@ -72,6 +72,7 @@ class DeviceProfile {
     this.batteryCharacteristicUuid,
     this.parseReading,
     required this.unit,
+    this.isBroadcastOnly = false,
     this.connectionType = ConnectionType.gatt,
     this.manufacturerId,
   });
@@ -154,62 +155,58 @@ class DeviceRegistry {
       parseReading: _parseTestoPressure,
     ),
 
-    // Fieldpiece Temperature Clamp (FPBF, 8975)
-    // Protocol analyzed Dec 21, 2025 via HCI snoop log
-    // Broadcast-only device (ADV_NONCONN_IND) - no GATT connection possible
-    // Manufacturer ID: 0x5046 (ASCII "FP")
-    // Device type: bytes 2-3 = "BF" (0x42 0x46)
-    'fieldpiece_temp': DeviceProfile(
+    // Fieldpiece Devices - Broadcast-only (no GATT connection possible)
+    // HCI Snoop captured Dec 21, 2025 - 4 devices tested via Job Link app
+    // Manufacturer ID: 0x5046 (ASCII "FP" = Fieldpiece)
+    // Data is encoded in manufacturer_data field of advertisements
+    
+    // Fieldpiece Temperature Clamp (FPBF) - Model 8975
+    'fieldpiece_temp_clamp': DeviceProfile(
       name: 'Fieldpiece Temp Clamp',
       manufacturer: HvacManufacturer.fieldpiece,
       type: HvacDeviceType.temperatureProbe,
       serviceUuids: [], // No service UUIDs - broadcast only
       unit: '°F',
-      connectionType: ConnectionType.broadcastOnly,
+      isBroadcastOnly: true,
       manufacturerId: 0x5046,
       parseReading: _parseFieldpieceTemp,
     ),
 
-    // Fieldpiece Pressure Probe (FPBG, 2975/2976)
-    // Broadcast-only device - measurements in advertisement data
-    // Device type: bytes 2-3 = "BG" (0x42 0x47)
-    'fieldpiece_pressure': DeviceProfile(
+    // Fieldpiece Pressure Probe (FPBG) - Model 2975/2976
+    'fieldpiece_pressure_probe': DeviceProfile(
       name: 'Fieldpiece Pressure Probe',
       manufacturer: HvacManufacturer.fieldpiece,
       type: HvacDeviceType.pressureProbe,
-      serviceUuids: [], // No service UUIDs - broadcast only
+      serviceUuids: [],
       unit: 'psig',
-      connectionType: ConnectionType.broadcastOnly,
+      isBroadcastOnly: true,
       manufacturerId: 0x5046,
       parseReading: _parseFieldpiecePressure,
     ),
 
-    // Fieldpiece Psychrometer (FPBH, 5699)
-    // Broadcast-only device - dry bulb, wet bulb, humidity in advertisement
-    // Device type: bytes 2-3 = "BH" (0x42 0x48)
-    // Confirmed formula (Dec 21): Wet bulb = uint16_le(bytes 15-16) / 10.0 °F
+    // Fieldpiece Psychrometer (FPBH) - Model 5699
+    // Measures dry bulb, wet bulb, and relative humidity
     'fieldpiece_psychrometer': DeviceProfile(
       name: 'Fieldpiece Psychrometer',
       manufacturer: HvacManufacturer.fieldpiece,
-      type: HvacDeviceType.temperatureProbe, // Measures temps + humidity
-      serviceUuids: [], // No service UUIDs - broadcast only
+      type: HvacDeviceType.temperatureProbe,
+      serviceUuids: [],
       unit: '°F',
-      connectionType: ConnectionType.broadcastOnly,
+      isBroadcastOnly: true,
       manufacturerId: 0x5046,
       parseReading: _parseFieldpiecePsychrometer,
     ),
 
     // Fieldpiece SC680 Meter (FPCB)
-    // Broadcast-only hub display unit
-    // Device type: bytes 2-3 = "CB" (0x43 0x42)
-    'fieldpiece_meter': DeviceProfile(
+    'fieldpiece_sc680': DeviceProfile(
       name: 'Fieldpiece SC680 Meter',
       manufacturer: HvacManufacturer.fieldpiece,
       type: HvacDeviceType.clampMeter,
-      serviceUuids: [], // No service UUIDs - broadcast only
-      unit: '',
-      connectionType: ConnectionType.broadcastOnly,
+      serviceUuids: [],
+      unit: 'A',
+      isBroadcastOnly: true,
       manufacturerId: 0x5046,
+      parseReading: _parseFieldpieceSC680,
     ),
   };
 
@@ -222,21 +219,10 @@ class DeviceRegistry {
     return uuids.toList();
   }
 
-  /// Get all known manufacturer IDs for scanning (broadcast-only devices)
-  List<int> getAllManufacturerIds() {
-    final ids = <int>{};
-    for (final profile in _profiles.values) {
-      if (profile.manufacturerId != null) {
-        ids.add(profile.manufacturerId!);
-      }
-    }
-    return ids.toList();
-  }
-
   /// Try to identify a device by its advertised service UUIDs or manufacturer data
-  DeviceProfile? identifyDevice(dynamic scanResultOrUuids,
-      {Map<int, List<int>>? manufacturerData}) {
+  DeviceProfile? identifyDevice(dynamic scanResultOrUuids) {
     List<String> advertisedServiceUuids;
+    Map<int, List<int>>? manufacturerData;
     String? deviceName;
 
     // Handle flutter_blue_plus ScanResult or plain List<String>
@@ -249,6 +235,7 @@ class DeviceRegistry {
         advertisedServiceUuids =
             (serviceUuids as List?)?.map((e) => e.toString()).toList() ?? [];
         deviceName = scanResultOrUuids.device?.platformName as String?;
+        manufacturerData = scanResultOrUuids.advertisementData?.manufacturerData as Map<int, List<int>>?;
         // Try to extract manufacturer data from scan result
         if (manufacturerData == null) {
           try {
@@ -262,6 +249,13 @@ class DeviceRegistry {
       }
     }
 
+    // First check manufacturer data for broadcast-only devices (like Fieldpiece)
+    if (manufacturerData != null && manufacturerData.isNotEmpty) {
+      for (final profile in _profiles.values) {
+        if (profile.manufacturerId != null && 
+            manufacturerData.containsKey(profile.manufacturerId)) {
+          // Found a match by manufacturer ID - now identify specific device type
+          return _identifyFieldpieceDeviceType(manufacturerData[profile.manufacturerId]!);
     // First try to match by manufacturer ID (for broadcast-only devices like Fieldpiece)
     if (manufacturerData != null && manufacturerData.isNotEmpty) {
       for (final profile in _profiles.values) {
@@ -374,12 +368,54 @@ class DeviceRegistry {
   /// Get profile by key
   DeviceProfile? getProfile(String key) => _profiles[key];
 
+  /// Get profile by service UUID (for backward compatibility with tests)
+  DeviceProfile? getProfileByServiceUuid(String serviceUuid) {
+    for (final profile in _profiles.values) {
+      if (profile.serviceUuids.any((uuid) => 
+          uuid.toLowerCase() == serviceUuid.toLowerCase())) {
+        return profile;
+      }
+    }
+    return null;
+  }
+
+  /// Get profile by device name (for backward compatibility with tests)
+  DeviceProfile? getProfileByName(String deviceName) {
+    return identifyByName(deviceName);
+  }
+
   /// Get all profiles
   List<DeviceProfile> getAllProfiles() => _profiles.values.toList();
 
   /// Add a custom profile (for expandability)
   void addCustomProfile(String key, DeviceProfile profile) {
     _profiles[key] = profile;
+  }
+
+  /// Identify specific Fieldpiece device type from manufacturer data
+  /// Fieldpiece packet format (from HCI snoop Dec 21, 2025):
+  /// Bytes 0-1: "FP" manufacturer ID (already verified by caller)
+  /// Bytes 2-3: Device type code - "BF"=Temp, "BG"=Pressure, "BH"=Psychrometer, "CB"=SC680
+  DeviceProfile? _identifyFieldpieceDeviceType(List<int> manufacturerData) {
+    if (manufacturerData.length < 4) return null;
+    
+    // Skip manufacturer ID bytes 0-1 ("FP")
+    // Bytes 2-3 contain device type code
+    final deviceTypeCode = String.fromCharCodes(manufacturerData.sublist(2, 4));
+    
+    switch (deviceTypeCode) {
+      case 'BF':
+        return _profiles['fieldpiece_temp_clamp'];
+      case 'BG':
+        return _profiles['fieldpiece_pressure_probe'];
+      case 'BH':
+        return _profiles['fieldpiece_psychrometer'];
+      case 'CB':
+        return _profiles['fieldpiece_sc680'];
+      default:
+        // Unknown Fieldpiece device - return generic temp probe
+        return _profiles['fieldpiece_temp_clamp'];
+    }
   }
 }
 
@@ -676,6 +712,153 @@ double _parseTestoPressure(List<int> rawData) {
   return double.nan;
 }
 
+/// Parse Fieldpiece Temperature Clamp (FPBF Model 8975)
+/// Format: FP BF [header] [battery] [model] [data...]
+/// Temperature value needs more capture data to confirm format
+double _parseFieldpieceTemp(List<int> rawData) {
+  if (rawData.length < 16) return double.nan;
+  
+  // Placeholder - need more capture data to decode exact temperature position
+  // Based on psychrometer pattern, temp might be at bytes 15-16
+  final bytes = Uint8List.fromList(rawData);
+  final byteData = ByteData.view(bytes.buffer);
+  
+  try {
+    // Try uint16 LE at bytes 15-16 divided by 10
+    if (rawData.length >= 17) {
+      final tempRaw = byteData.getUint16(15, Endian.little);
+      final tempF = tempRaw / 10.0;
+      // Sanity check: valid HVAC temperatures are typically 0-150°F
+      if (tempF >= 0 && tempF <= 150) {
+        return tempF;
+      }
+    }
+  } catch (_) {}
+  
+  return double.nan;
+}
+
+/// Parse Fieldpiece Pressure Probe (FPBG Model 2975/2976)
+/// Packet size: 28 bytes
+/// Pressure value position needs more capture data
+double _parseFieldpiecePressure(List<int> rawData) {
+  if (rawData.length < 20) return double.nan;
+  
+  // Placeholder - need varied pressure readings to identify format
+  // Pressure probes typically send psig or psia values
+  final bytes = Uint8List.fromList(rawData);
+  final byteData = ByteData.view(bytes.buffer);
+  
+  try {
+    // Try int16 LE at various positions divided by 10 (common for pressure)
+    if (rawData.length >= 17) {
+      final pressureRaw = byteData.getInt16(15, Endian.little);
+      final psig = pressureRaw / 10.0;
+      // Sanity check: HVAC pressures are typically -30 to 800 psig
+      if (psig >= -30 && psig <= 800) {
+        return psig;
+      }
+    }
+  } catch (_) {}
+  
+  return double.nan;
+}
+
+/// Parse Fieldpiece Psychrometer (FPBH Model 5699)
+/// HCI snoop captured Dec 21, 2025:
+/// Packet size: 30 bytes
+/// Bytes 15-16: Wet bulb temp = uint16 LE ÷ 10 = °F (CONFIRMED)
+/// Example: 0x022d = 557 ÷ 10 = 55.7°F ✓ matches screenshot
+/// Bytes 12-13: Dry bulb temp (needs more data to confirm formula)
+/// Bytes 20-21: Humidity % (needs more data to confirm formula)
+double _parseFieldpiecePsychrometer(List<int> rawData) {
+  if (rawData.length < 17) return double.nan;
+  
+  final bytes = Uint8List.fromList(rawData);
+  final byteData = ByteData.view(bytes.buffer);
+  
+  try {
+    // Wet bulb temperature at bytes 15-16 (CONFIRMED via HCI snoop)
+    final wetBulbRaw = byteData.getUint16(15, Endian.little);
+    final wetBulbF = wetBulbRaw / 10.0;
+    
+    // Sanity check: valid wet bulb temps are 0-120°F
+    if (wetBulbF >= 0 && wetBulbF <= 120) {
+      return wetBulbF;
+    }
+  } catch (_) {}
+  
+  return double.nan;
+}
+
+/// Get additional Fieldpiece psychrometer readings (dry bulb, humidity)
+/// Call this for full data display
+Map<String, double> parseFieldpiecePsychrometerFull(List<int> rawData) {
+  if (rawData.length < 22) {
+    return {'wetBulb': double.nan, 'dryBulb': double.nan, 'humidity': double.nan};
+  }
+  
+  final bytes = Uint8List.fromList(rawData);
+  final byteData = ByteData.view(bytes.buffer);
+  
+  double wetBulbF = double.nan;
+  double dryBulbF = double.nan;
+  double humidity = double.nan;
+  
+  try {
+    // Wet bulb at bytes 15-16 (CONFIRMED)
+    final wetBulbRaw = byteData.getUint16(15, Endian.little);
+    wetBulbF = wetBulbRaw / 10.0;
+    
+    // Dry bulb likely at bytes 12-13 (needs confirmation with varied data)
+    if (rawData.length >= 14) {
+      final dryBulbRaw = byteData.getUint16(12, Endian.little);
+      dryBulbF = dryBulbRaw / 10.0;
+    }
+    
+    // Humidity likely at bytes 20-21 (needs confirmation)
+    if (rawData.length >= 22) {
+      final humidityRaw = byteData.getUint16(20, Endian.little);
+      // Humidity might need different divisor - test with 100 first
+      humidity = humidityRaw / 100.0;
+      // If result is >100%, try different divisor
+      if (humidity > 100) {
+        humidity = humidityRaw / 1000.0;
+      }
+    }
+  } catch (_) {}
+  
+  return {
+    'wetBulb': wetBulbF,
+    'dryBulb': dryBulbF,
+    'humidity': humidity,
+  };
+}
+
+/// Parse Fieldpiece SC680 Meter (FPCB)
+/// Packet size: 30 bytes
+/// This is a multi-function meter - value type depends on mode
+double _parseFieldpieceSC680(List<int> rawData) {
+  if (rawData.length < 20) return double.nan;
+  
+  // Placeholder - SC680 is a multi-meter (amps, volts, ohms, etc.)
+  // Need capture data showing different modes to decode
+  final bytes = Uint8List.fromList(rawData);
+  final byteData = ByteData.view(bytes.buffer);
+  
+  try {
+    // Try int16 LE at bytes 15-16 divided by 10 (common for amp readings)
+    if (rawData.length >= 17) {
+      final valueRaw = byteData.getInt16(15, Endian.little);
+      final value = valueRaw / 10.0;
+      // Sanity check for amp readings (0-600A typical max)
+      if (value >= 0 && value <= 600) {
+        return value;
+      }
+    }
+  } catch (_) {}
+  
+  return double.nan;
 // ============================================================================
 // FIELDPIECE PARSING FUNCTIONS
 // Broadcast-only devices - parse manufacturer data from advertisements

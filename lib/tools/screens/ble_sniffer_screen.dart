@@ -1388,21 +1388,87 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
   /// Fieldpiece devices broadcast measurement data directly - no GATT connection needed
   Widget _buildFieldpieceDataPreview(Map<int, List<int>> manufacturerData) {
     final data = manufacturerData[0x5046];
-    if (data == null || data.length < 19) {
+    if (data == null || data.length < 4) {
       return const SizedBox.shrink();
     }
 
-    // Parse Fieldpiece broadcast data format (reverse-engineered)
-    // Bytes 0-1: Device type identifier (e.g., "BF" = 0x42 0x46)
-    // Bytes 2-6: Device serial/ID (static)
-    // Byte 11: Primary measurement value
-    // Byte 17: Secondary measurement value / state
-    // Byte 18: Packet counter
-
-    final deviceType = String.fromCharCodes(data.sublist(0, 2));
-    final primaryValue = data.length > 11 ? data[11] : 0;
-    final secondaryValue = data.length > 17 ? data[17] : 0;
-    final packetCounter = data.length > 18 ? data[18] : 0;
+    // Bytes 2-3 contain device type code
+    final deviceTypeCode = String.fromCharCodes(data.sublist(2, 4));
+    String deviceTypeName = 'Unknown';
+    String reading = 'N/A';
+    
+    // Identify device type and parse reading
+    switch (deviceTypeCode) {
+      case 'BF': // Temperature Clamp
+        deviceTypeName = 'Temp Clamp';
+        if (data.length >= 17) {
+          try {
+            final bytes = Uint8List.fromList(data);
+            final byteData = ByteData.view(bytes.buffer);
+            final tempRaw = byteData.getUint16(15, Endian.little);
+            final tempF = tempRaw / 10.0;
+            if (tempF >= 0 && tempF <= 150) {
+              reading = '${tempF.toStringAsFixed(1)}°F';
+            }
+          } catch (_) {}
+        }
+        break;
+        
+      case 'BG': // Pressure Probe
+        deviceTypeName = 'Pressure';
+        if (data.length >= 17) {
+          try {
+            final bytes = Uint8List.fromList(data);
+            final byteData = ByteData.view(bytes.buffer);
+            final pressureRaw = byteData.getInt16(15, Endian.little);
+            final psig = pressureRaw / 10.0;
+            if (psig >= -30 && psig <= 800) {
+              reading = '${psig.toStringAsFixed(1)} psig';
+            }
+          } catch (_) {}
+        }
+        break;
+        
+      case 'BH': // Psychrometer
+        deviceTypeName = 'Psychrometer';
+        if (data.length >= 17) {
+          try {
+            final bytes = Uint8List.fromList(data);
+            final byteData = ByteData.view(bytes.buffer);
+            // Wet bulb at bytes 15-16 (CONFIRMED)
+            final wetBulbRaw = byteData.getUint16(15, Endian.little);
+            final wetBulbF = wetBulbRaw / 10.0;
+            if (wetBulbF >= 0 && wetBulbF <= 120) {
+              reading = 'WB: ${wetBulbF.toStringAsFixed(1)}°F';
+              
+              // Try to also show dry bulb if available
+              if (data.length >= 14) {
+                final dryBulbRaw = byteData.getUint16(12, Endian.little);
+                final dryBulbF = dryBulbRaw / 10.0;
+                if (dryBulbF >= 0 && dryBulbF <= 150) {
+                  reading = 'DB: ${dryBulbF.toStringAsFixed(1)}°F, WB: ${wetBulbF.toStringAsFixed(1)}°F';
+                }
+              }
+            }
+          } catch (_) {}
+        }
+        break;
+        
+      case 'CB': // SC680 Meter
+        deviceTypeName = 'SC680';
+        if (data.length >= 17) {
+          try {
+            final bytes = Uint8List.fromList(data);
+            final byteData = ByteData.view(bytes.buffer);
+            final valueRaw = byteData.getInt16(15, Endian.little);
+            final value = valueRaw / 10.0;
+            if (value >= 0 && value <= 600) {
+              reading = '${value.toStringAsFixed(1)}A';
+            }
+          } catch (_) {}
+        }
+        break;
+    }
 
     return Container(
       margin: const EdgeInsets.only(top: 4),
@@ -1418,11 +1484,11 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
           const Icon(Icons.sensors, size: 12, color: AppColors.primaryCyan),
           const SizedBox(width: 4),
           Text(
-            'FP-$deviceType: $primaryValue / $secondaryValue (#$packetCounter)',
+            'Fieldpiece $deviceTypeName: $reading',
             style: const TextStyle(
               color: AppColors.primaryCyan,
               fontSize: 9,
-              fontFamily: 'monospace',
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -2248,6 +2314,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         final deviceType = _guessDeviceType(name, adv.serviceUuids);
 
         return Card(
+          key: ValueKey(device.remoteId.str), // Unique key to prevent duplicate widget issues
           key: ValueKey(device.remoteId.str),
           color: isLikelyHvac
               ? AppColors.surfaceDark.withOpacity(0.9)
