@@ -172,7 +172,7 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
   - Implemented on Airflow Screen: velocity, temperature, humidity (NOT pressure - barometric)
   - NOT on scales/pressure gauges - they have hardware zero that works correctly
 - [x] **Test zero offset persistence** - Verified offsets survive app restart (CalibrationService initialized in main.dart)
-- [x] **Add calibration to Gauge Screen** - R22 confirmation dialog added for R22/drop-in refrigerant selection
+- [x] **Add calibration to Gauge Screen** - Long-press on pressure/temp readings to adjust calibration offsets (Dec 21) ✅
 - [ ] **High-pressure probe support** - T549i can be ±60 bar for high-side manifold use
 - [ ] **Connection stability** - LINK_SUPERVISION_TIMEOUT causing T549i disconnects during extended use
 - [ ] **Fix RenderFlex overflow** - Varies by orientation: 15px bottom (landscape), 57px bottom (portrait gauge), 2.5px right (scan)
@@ -333,7 +333,7 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
   - [x] Store connection history
   - [x] Store ML learned patterns
   - [x] Store custom device profiles
-- [ ] **Persist Zero Offsets** - Save pressure zeroing to SharedPreferences (Already implemented - GaugeZeroService persists to SharedPreferences)
+- [x] **Persist Zero Offsets** - Save pressure zeroing to SharedPreferences (Already implemented - GaugeZeroService persists to SharedPreferences, loaded at startup in main.dart)
 - [ ] **Foreground Service** - Persistent BLE when app backgrounded
   - [ ] Live readings in Android notification
   - [ ] Keep connections alive during multitasking

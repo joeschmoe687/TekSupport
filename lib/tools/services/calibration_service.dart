@@ -67,3 +67,11 @@ class Abm200CalibrationKeys {
   static const String temperature = 'abm200_temperature';
   static const String humidity = 'abm200_humidity';
 }
+
+/// Calibration offset keys for Testo probes (per device)
+/// Format: "testo_{deviceId}_{type}" to support multiple probes
+/// Note: Use device ID to allow independent calibration per probe
+class TestoCalibrationKeys {
+  static String pressure(String deviceId) => 'testo_${deviceId}_pressure';
+  static String temperature(String deviceId) => 'testo_${deviceId}_temperature';
+}
