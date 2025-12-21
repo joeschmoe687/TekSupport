@@ -317,6 +317,22 @@ class DeviceRegistry {
   /// Get profile by key
   DeviceProfile? getProfile(String key) => _profiles[key];
 
+  /// Get profile by service UUID (for backward compatibility with tests)
+  DeviceProfile? getProfileByServiceUuid(String serviceUuid) {
+    for (final profile in _profiles.values) {
+      if (profile.serviceUuids.any((uuid) => 
+          uuid.toLowerCase() == serviceUuid.toLowerCase())) {
+        return profile;
+      }
+    }
+    return null;
+  }
+
+  /// Get profile by device name (for backward compatibility with tests)
+  DeviceProfile? getProfileByName(String deviceName) {
+    return identifyByName(deviceName);
+  }
+
   /// Get all profiles
   List<DeviceProfile> getAllProfiles() => _profiles.values.toList();
 
