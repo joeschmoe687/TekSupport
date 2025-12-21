@@ -535,7 +535,7 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
 - **Workaround:** Use manual install + attach:
 	```bash
 	adb install -r android/app/build/outputs/apk/debug/app-debug.apk
-	adb shell am start -n com.tekneckjoe.hvacsupport.hvac_support_app/.MainActivity
+	adb shell am start -n com.tekneckjoe.tektool/.MainActivity
 	flutter attach -d RFCY518ZA0Y
 	```
 

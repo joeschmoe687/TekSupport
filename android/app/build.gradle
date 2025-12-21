@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.tekneckjoe.hvacsupport.hvac_support_app"
+    namespace "com.tekneckjoe.tektool"
     compileSdk = 34
     ndkVersion = "25.1.8937393"
 
@@ -46,7 +46,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.tekneckjoe.hvacsupport.hvac_support_app"
+        applicationId "com.tekneckjoe.tektool"
         minSdk = 23
         targetSdk = 34
         versionCode = flutterVersionCode.toInteger()

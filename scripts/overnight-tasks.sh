@@ -284,11 +284,11 @@ if [ -n "$DEVICE_ID" ]; then
     
     if [ $? -eq 0 ]; then
         echo "  → Launching app..."
-        adb shell am start -n com.tekneckjoe.hvacsupport.hvac_support_app/.MainActivity >> "$INTEGRATION_LOG" 2>&1
+        adb shell am start -n com.tekneckjoe.tektool/.MainActivity >> "$INTEGRATION_LOG" 2>&1
         sleep 5
         
         # Check if app is running
-        APP_RUNNING=$(adb shell pidof com.tekneckjoe.hvacsupport.hvac_support_app 2>/dev/null)
+        APP_RUNNING=$(adb shell pidof com.tekneckjoe.tektool 2>/dev/null)
         if [ -n "$APP_RUNNING" ]; then
             echo -e "${GREEN}✓ App launched successfully (PID: $APP_RUNNING)${NC}"
             

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hvac_support_app/screens/home_screen.dart';
+import 'package:tektool/screens/home_screen.dart';
 
 void main() {
   testWidgets('Home screen shows welcome text and chat button', (

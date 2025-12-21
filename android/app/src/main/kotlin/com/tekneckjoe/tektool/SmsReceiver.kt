@@ -1,4 +1,4 @@
-package com.tekneckjoe.hvacsupport.hvac_support_app
+package com.tekneckjoe.tektool
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -14,7 +14,7 @@ import java.util.Calendar
  * SMS Auto-Responder BroadcastReceiver
  * Intercepts incoming SMS and sends auto-reply during configured hours
  * 
- * Admin-only feature for TekNeck HVAC Support App
+ * Admin-only feature for TekTool
  */
 class SmsReceiver : BroadcastReceiver() {
     
@@ -32,7 +32,7 @@ class SmsReceiver : BroadcastReceiver() {
         // Cooldown to prevent spam - 1 hour between auto-replies to same number
         private const val REPLY_COOLDOWN_MS = 60 * 60 * 1000L
         
-        private const val DEFAULT_AUTO_REPLY = "Hi! Thanks for messaging. I'm currently unavailable but will get back to you soon. - TekNeck HVAC Support"
+        private const val DEFAULT_AUTO_REPLY = "Hi! Thanks for messaging. I'm currently unavailable but will get back to you soon. - TekTool"
         
         private fun getPrefs(context: Context): SharedPreferences {
             return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

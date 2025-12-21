@@ -1,5 +1,5 @@
-name: hvac_support_app
-description: "A new Flutter project."
+name: tektool
+description: "TekTool - Universal HVAC Bluetooth Hub for contractors."
 publish_to: 'none'
 
 version: 1.0.0+1
