@@ -166,6 +166,8 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
             'text': text,
             'createdAt': FieldValue.serverTimestamp(),
             'timestamp': FieldValue.serverTimestamp(),
+            'status': 'sent',
+            'readBy': [], // Array of user IDs who have read this message
           });
 
       // Update room
@@ -849,6 +851,28 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
                       text,
                       style: TextStyle(color: textColor, fontSize: 14),
                     ),
+                  // Read receipt indicator for tech messages
+                  if (isTech) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _getReceiptIcon(data),
+                          size: 14,
+                          color: _getReceiptColor(data),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _getReceiptText(data),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: _getReceiptColor(data),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -975,6 +999,41 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
       }
     } catch (e) {
       return '';
+    }
+  }
+
+  // Helper methods for read receipts
+  IconData _getReceiptIcon(Map<String, dynamic> data) {
+    final status = data['status']?.toString() ?? 'sent';
+    final readBy = data['readBy'] as List<dynamic>? ?? [];
+    
+    if (readBy.isNotEmpty) {
+      return Icons.done_all; // Read (double check)
+    } else if (status == 'delivered') {
+      return Icons.done_all; // Delivered (double check, grey)
+    } else {
+      return Icons.done; // Sent (single check)
+    }
+  }
+
+  Color _getReceiptColor(Map<String, dynamic> data) {
+    final readBy = data['readBy'] as List<dynamic>? ?? [];
+    
+    if (readBy.isNotEmpty) {
+      return AppColors.primaryCyan; // Read - cyan
+    } else {
+      return Colors.white38; // Sent/Delivered - grey
+    }
+  }
+
+  String _getReceiptText(Map<String, dynamic> data) {
+    final readBy = data['readBy'] as List<dynamic>? ?? [];
+    
+    if (readBy.isNotEmpty) {
+      return 'Read';
+    } else {
+      final status = data['status']?.toString() ?? 'sent';
+      return status == 'delivered' ? 'Delivered' : 'Sent';
     }
   }
 }

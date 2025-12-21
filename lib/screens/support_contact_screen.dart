@@ -119,16 +119,170 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
       ),
     );
 
-    // If payment successful, open WhatsApp
+    // If payment successful, show video call options
     if (result == true && mounted) {
-      final message = Uri.encodeComponent('Hi, I need a video call with support');
-      final waLink = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
-      try {
-        await launchUrl(Uri.parse(waLink), mode: LaunchMode.externalApplication);
-      } catch (e) {
-        print('Error launching WhatsApp: $e');
+      _showVideoCallOptions();
+    }
+  }
+
+  Future<void> _showVideoCallOptions() async {
+    await showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surfaceDark,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.videocam, color: AppColors.primaryCyan, size: 24),
+                  SizedBox(width: 12),
+                  Text(
+                    'Select Video Call App',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Choose your preferred app for the video call:',
+                style: TextStyle(color: Colors.white70, fontSize: 14),
+              ),
+              const SizedBox(height: 16),
+              
+              // WhatsApp option
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF25D366).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.phone, color: Color(0xFF25D366)),
+                ),
+                title: const Text('WhatsApp Video Call',
+                    style: TextStyle(color: Colors.white)),
+                subtitle: const Text('Most reliable for mobile',
+                    style: TextStyle(color: Colors.white60, fontSize: 12)),
+                onTap: () async {
+                  Navigator.pop(context);
+                  await _launchVideoCall('whatsapp');
+                },
+              ),
+              
+              // Zoom option
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2D8CFF).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.videocam, color: Color(0xFF2D8CFF)),
+                ),
+                title: const Text('Zoom',
+                    style: TextStyle(color: Colors.white)),
+                subtitle: const Text('Best for screen sharing',
+                    style: TextStyle(color: Colors.white60, fontSize: 12)),
+                onTap: () async {
+                  Navigator.pop(context);
+                  await _launchVideoCall('zoom');
+                },
+              ),
+              
+              // Google Meet option
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00AC47).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.video_call, color: Color(0xFF00AC47)),
+                ),
+                title: const Text('Google Meet',
+                    style: TextStyle(color: Colors.white)),
+                subtitle: const Text('Works in browser',
+                    style: TextStyle(color: Colors.white60, fontSize: 12)),
+                onTap: () async {
+                  Navigator.pop(context);
+                  await _launchVideoCall('meet');
+                },
+              ),
+              
+              // FaceTime option (iOS only - but we'll show it anyway)
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00D448).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.video_camera_front,
+                      color: Color(0xFF00D448)),
+                ),
+                title: const Text('FaceTime',
+                    style: TextStyle(color: Colors.white)),
+                subtitle: const Text('iOS only',
+                    style: TextStyle(color: Colors.white60, fontSize: 12)),
+                onTap: () async {
+                  Navigator.pop(context);
+                  await _launchVideoCall('facetime');
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _launchVideoCall(String platform) async {
+    String url;
+    
+    switch (platform) {
+      case 'whatsapp':
+        final message = Uri.encodeComponent('Hi, I need a video call with support');
+        url = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
+        break;
+      case 'zoom':
+        // TODO: In production, replace with dynamic Zoom meeting generation
+        // This should create a new meeting room via Zoom API and return the link
+        url = 'https://zoom.us/j/your_meeting_id';
+        break;
+      case 'meet':
+        // TODO: In production, replace with dynamic Google Meet room generation
+        // This should create a new meeting room via Google Meet API and return the link
+        url = 'https://meet.google.com/your-meeting-code';
+        break;
+      case 'facetime':
+        // FaceTime link format - this will prompt to call support
+        url = 'facetime://support@airpronwa.com';
+        break;
+      default:
+        url = 'https://wa.me/message/3OF3QGB7TX2RN1';
+    }
+    
+    try {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print('Error launching $platform: $e');
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not launch WhatsApp')),
+          SnackBar(
+            content: Text('Could not launch $platform. Please try another option.'),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     }
