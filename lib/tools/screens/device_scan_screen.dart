@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 import '../../widgets/gradient_scaffold.dart';
@@ -450,6 +451,10 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
                   ),
                 ],
               ),
+              // Display Fieldpiece readings from manufacturer data
+              if (result.advertisementData.manufacturerData.containsKey(0x5046))
+                _buildFieldpieceReadings(
+                    result.advertisementData.manufacturerData[0x5046]!),
             ],
           ],
         ),
@@ -514,5 +519,96 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
       default:
         return Icons.devices;
     }
+  }
+
+  /// Build Fieldpiece readings display from manufacturer data
+  Widget _buildFieldpieceReadings(List<int> manufacturerData) {
+    if (manufacturerData.length < 4) {
+      return const SizedBox.shrink();
+    }
+
+    // Get device type and readings
+    final deviceTypeCode = String.fromCharCodes(manufacturerData.sublist(2, 4));
+    String reading = '';
+
+    try {
+      switch (deviceTypeCode) {
+        case 'BF': // Temperature Clamp
+          final temp = _parseFieldpieceTemp(manufacturerData);
+          if (!temp.isNaN) {
+            reading = '${temp.toStringAsFixed(1)}°F';
+          }
+          break;
+
+        case 'BG': // Pressure Probe
+          final pressure = _parseFieldpiecePressure(manufacturerData);
+          if (!pressure.isNaN) {
+            reading = '${pressure.toStringAsFixed(1)} psig';
+          }
+          break;
+
+        case 'BH': // Psychrometer
+          final readings = parseFieldpiecePsychrometerFull(manufacturerData);
+          final wetBulb = readings['wetBulb'] ?? double.nan;
+          final dryBulb = readings['dryBulb'] ?? double.nan;
+          
+          List<String> parts = [];
+          if (!dryBulb.isNaN) {
+            parts.add('DB: ${dryBulb.toStringAsFixed(1)}°F');
+          }
+          if (!wetBulb.isNaN) {
+            parts.add('WB: ${wetBulb.toStringAsFixed(1)}°F');
+          }
+          
+          if (parts.isNotEmpty) {
+            reading = parts.join(', ');
+          }
+          break;
+
+        case 'CB': // SC680 Meter
+          final value = _parseFieldpieceSC680(manufacturerData);
+          if (!value.isNaN) {
+            reading = '${value.toStringAsFixed(1)}A';
+          }
+          break;
+      }
+    } catch (e) {
+      // Ignore parsing errors
+    }
+
+    if (reading.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.primaryCyan.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: AppColors.primaryCyan.withOpacity(0.3),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.sensors,
+            size: 12,
+            color: AppColors.primaryCyan,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            reading,
+            style: const TextStyle(
+              color: AppColors.primaryCyan,
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
