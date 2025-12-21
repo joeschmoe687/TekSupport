@@ -1,0 +1,198 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return isAuthenticated() &&
+        (request.auth.token.role == 'admin' ||
+         request.auth.token.isAdmin == true);
+    }
+    
+    // Helper function to check if user is tech or admin
+    function isTechOrAdmin() {
+      return isAuthenticated() &&
+        (request.auth.token.role in ['admin', 'tech'] ||
+         request.auth.token.isAdmin == true);
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Users can read their own profile
+      // Techs and admins can read all profiles (for chat display names)
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isTechOrAdmin());
+      
+      // Users can create their own profile, but cannot set authorization fields
+      allow create: if isAuthenticated()
+                    && request.auth.uid == userId
+                    && !('role' in request.resource.data.keys())
+                    && !('isAdmin' in request.resource.data.keys());
+
+      // Users can update their own profile, but cannot modify authorization fields
+      allow update: if isAuthenticated()
+                    && request.auth.uid == userId
+                    && !('role' in request.resource.data.diff(resource.data).changedKeys())
+                    && !('isAdmin' in request.resource.data.diff(resource.data).changedKeys());
+      
+      // Admins can write any profile (for role management and other changes)
+      allow write: if isAdmin();
+    }
+    
+    // Support rooms (chat sessions)
+    match /supportRooms/{roomId} {
+      // Users can read rooms they created
+      // Admins and techs can read all rooms
+      allow read: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || 
+         resource.data.customerUID == request.auth.uid ||
+         isTechOrAdmin());
+      
+      // Users can create their own rooms
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Users can update their own rooms, admins/techs can update any
+      allow update: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || 
+         resource.data.customerUID == request.auth.uid ||
+         isTechOrAdmin());
+      
+      // Only admins can delete rooms
+      allow delete: if isAdmin();
+      
+      // Messages subcollection
+      match /messages/{messageId} {
+        // Only room participants and techs/admins can read messages
+        allow read: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportRooms/$(roomId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/supportRooms/$(roomId)).data.customerUID == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only room participants and techs/admins can create messages
+        allow create: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportRooms/$(roomId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/supportRooms/$(roomId)).data.customerUID == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only room participants and techs/admins can update messages
+        allow update: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportRooms/$(roomId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/supportRooms/$(roomId)).data.customerUID == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only admins can delete messages
+        allow delete: if isAdmin();
+      }
+    }
+    
+    // Support sessions (alternate chat collection)
+    match /supportSessions/{sessionId} {
+      allow read: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isTechOrAdmin());
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isTechOrAdmin());
+      allow delete: if isAdmin();
+      
+      match /messages/{messageId} {
+        // Only session participants and techs/admins can read messages
+        allow read: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportSessions/$(sessionId)).data.userId == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only session participants and techs/admins can create messages
+        allow create: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportSessions/$(sessionId)).data.userId == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only session participants and techs/admins can update messages
+        allow update: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/supportSessions/$(sessionId)).data.userId == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only admins can delete messages
+        allow delete: if isAdmin();
+      }
+    }
+    
+    // Customers collection
+    match /customers/{customerId} {
+      // Only admins and techs can access
+      allow read, write: if isTechOrAdmin();
+    }
+    
+    // Jobs collection
+    match /jobs/{jobId} {
+      // Users can read jobs assigned to them
+      // Admins and techs can read/write all jobs
+      allow read: if isAuthenticated() && 
+        (resource.data.assignedTo == request.auth.uid || isTechOrAdmin());
+      allow write: if isTechOrAdmin();
+    }
+    
+    // Job dispatch
+    match /jobDispatch/{jobId} {
+      allow read: if isAuthenticated();
+      allow write: if isTechOrAdmin();
+    }
+    
+    // BLE sniffer logs (for device learning)
+    match /ble_sniff_logs/{logId} {
+      // Techs and admins can read/write
+      allow read, write: if isTechOrAdmin();
+    }
+    
+    // Support transactions (payment logs)
+    match /supportTransactions/{transactionId} {
+      // Users can read their own transactions
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      
+      // Admins can read all transactions
+      allow read: if isAdmin();
+      
+      // Users can create their own transactions
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Only system (Cloud Functions) can update transaction status
+      // Block direct updates from clients
+      allow update: if false;
+      
+      // Only admins can delete
+      allow delete: if isAdmin();
+    }
+    
+    // Settings collection
+    match /settings/{setting} {
+      // Everyone can read settings (pricing, config)
+      allow read: if true;
+      
+      // Only admins can write settings
+      allow write: if isAdmin();
+    }
+    
+    // ==========================================================================
+    // TEKMATE - ADMIN ONLY (GHOST MODE) - CRITICAL SECURITY
+    // ==========================================================================
+    // TekMate interactions, logs, and data are COMPLETELY HIDDEN from non-admins
+    // Non-admins cannot read, write, or even know this collection exists
+    match /admin/{document=**} {
+      // ONLY authenticated admins can access anything under /admin
+      allow read, write: if isAdmin();
+    }
+    
+    // Explicitly block any direct access to TekMate logs
+    match /tekmate_interactions/{document=**} {
+      // Blocked - should be under /admin collection
+      allow read, write: if false;
+    }
+    
+    // Default deny all other paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

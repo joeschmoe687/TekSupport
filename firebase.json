@@ -1,4 +1,8 @@
 {
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
   "functions": [
     {
       "source": "functions",
@@ -9,6 +13,22 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
+      "predeploy": []
+    }
+  ],
+  "hosting": {
+    "public": "web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run lint"
       ]

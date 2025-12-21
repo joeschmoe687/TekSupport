@@ -63,6 +63,13 @@ TekMate is the AI/ML brains providing:
 - [x] **Role-based UI loading** - TekMate UI only renders if isAdmin == true
 - [x] **Cloud Function auth** - `tekmateChatProxy` requires Firebase auth + admin role
 - [x] **No network evidence** - Non-admins never see any TekMate network calls
+- [x] **Cloud Function implementation** - Created `functions/index.js` with tekmateChatProxy
+- [x] **Admin UI integration** - Added "Ask TekMate" button to admin_chat_detail_screen.dart
+- [x] **Firestore security rules** - Created firestore.rules with admin-only collection protection
+- [x] **Deployment documentation** - Created GHOST_MODE_DEPLOYMENT.md and TEKMATE_TESTING.md
+- [ ] **Deploy Cloud Function** - Run `./scripts/deploy-tekmate.sh` to push to Firebase
+- [ ] **Test as non-admin** - Verify zero TekMate features visible (see TEKMATE_TESTING.md)
+- [ ] **Test as admin** - Verify full TekMate access and functionality (see TEKMATE_TESTING.md)
 - [x] **Cloud Function Implementation** - Created functions/index.js with tekmateChatProxy
 - [x] **UI Integration** - Added TekMate button to admin chat screen with confidence scoring
 - [ ] **Deploy Cloud Function** - Push to Firebase (See deployment instructions below)
@@ -154,6 +161,13 @@ If your TekMate backend is behind Cloudflare or requires special setup:
 - [ ] Set up SSL certificate for TekMate API endpoint
 
 ### Technician Chat Integration [APP + AI] (ADMIN ONLY)
+- [ ] **TekMate API endpoint** - Cloud Function for technician guidance queries
+- [ ] **Admin service chat** - Only admin techs see "Ask TekMate" button
+- [ ] **Confidence scoring** - Show confidence of AI guidance (helps noob techs learn)
+- [ ] **Context passing** - Send current job, customer, location to TekMate for context
+- [ ] **Fallback to human** - Low-confidence responses escalated to human tech
+- [ ] **Learning feedback** - Tech feedback on guidance improves future responses
+- [ ] **Axios dependency** - Install `axios` package when integrating real TekMate API (see GHOST_MODE_DEPLOYMENT.md line 240-244 for instructions)
 - [x] **TekMate API endpoint** - Cloud Function for technician guidance queries
 - [x] **Admin service chat** - Only admin techs see "Ask TekMate" button
 - [x] **Confidence scoring** - Show confidence of AI guidance (helps noob techs learn)

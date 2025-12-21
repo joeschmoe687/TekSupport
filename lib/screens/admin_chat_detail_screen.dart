@@ -27,6 +27,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final ImagePicker _picker = ImagePicker();
+  final TekMateChatService _tekMateService = TekMateChatService();
   final TekMateChatService _tekmateService = TekMateChatService();
 
   Map<String, dynamic>? _roomData;
@@ -34,6 +35,8 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
   String? _assignedToName;
   bool _isLoading = true;
   bool _isUploading = false;
+  bool _isTekMateAvailable = false;
+  bool _isTekMateLoading = false;
   bool _isTekmateAvailable = false;
   bool _isTekmateLoading = false;
 
@@ -46,6 +49,10 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
   }
 
   Future<void> _initTekMate() async {
+    final isAvailable = await _tekMateService.init();
+    if (mounted) {
+      setState(() {
+        _isTekMateAvailable = isAvailable;
     final isAvailable = await _tekmateService.init();
     if (mounted) {
       setState(() {
@@ -662,6 +669,184 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     }
   }
 
+  /// TekMate Dialog - ADMIN ONLY (Ghost Mode)
+  /// Shows AI-powered response suggestions with confidence scoring
+  Future<void> _showTekMateDialog() async {
+    final messageText = _messageController.text.trim();
+    if (messageText.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Type a message first, then ask TekMate for help'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isTekMateLoading = true;
+    });
+
+    try {
+      // Gather context for TekMate
+      final context = {
+        'roomId': widget.roomId,
+        'customerId': _roomData?['userId'] ?? _roomData?['customerUID'],
+        'customerName': _userData?['displayName'] ?? _userData?['name'],
+        'supportType': _roomData?['supportType'],
+        'jobType': _roomData?['jobType'],
+      };
+
+      // Get TekMate response
+      final response = await _tekMateService.getResponse(
+        messageText,
+        context: context,
+        platform: 'app',
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _isTekMateLoading = false;
+      });
+
+      if (response == null) {
+        // This should never happen for admins, but handle gracefully
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('TekMate is not available'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      // Show TekMate response in dialog
+      await showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          backgroundColor: AppColors.surfaceDark,
+          title: Row(
+            children: [
+              Icon(Icons.psychology, color: AppColors.primaryPurple),
+              const SizedBox(width: 8),
+              const Text(
+                'TekMate Suggestion',
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Confidence indicator
+                Row(
+                  children: [
+                    const Text(
+                      'Confidence: ',
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                    Text(
+                      '${response.confidencePercent}%',
+                      style: TextStyle(
+                        color: response.isHighConfidence
+                            ? Colors.green
+                            : Colors.orange,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      response.isHighConfidence
+                          ? Icons.check_circle
+                          : Icons.warning,
+                      color: response.isHighConfidence
+                          ? Colors.green
+                          : Colors.orange,
+                      size: 16,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // Response text
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    response.response,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                if (!response.isHighConfidence) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.info, color: Colors.orange, size: 16),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Low confidence - review before sending',
+                            style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                // Copy TekMate response to message field
+                _messageController.text = response.response;
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primaryPurple,
+              ),
+              child: const Text('Use This Response'),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      debugPrint('TekMate error: $e');
+      if (mounted) {
+        setState(() {
+          _isTekMateLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error getting TekMate suggestion: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _messageController.dispose();
@@ -1144,43 +1329,91 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
         ],
       ),
       child: SafeArea(
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Attachment button
-            _isUploading
-                ? Container(
-                  width: 40,
-                  height: 40,
-                  padding: const EdgeInsets.all(8),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
+            // TekMate button (ADMIN ONLY - Ghost Mode)
+            if (_isTekMateAvailable)
+              Container(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: OutlinedButton.icon(
+                  onPressed: _isTekMateLoading ? null : _showTekMateDialog,
+                  icon: _isTekMateLoading
+                      ? SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.primaryPurple,
+                          ),
+                        )
+                      : Icon(Icons.psychology, color: AppColors.primaryPurple),
+                  label: Text(
+                    _isTekMateLoading ? 'Thinking...' : 'Ask TekMate AI',
+                    style: TextStyle(color: AppColors.primaryPurple),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: AppColors.primaryPurple),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+              ),
+            Row(
+              children: [
+                // Attachment button
+                _isUploading
+                    ? Container(
+                      width: 40,
+                      height: 40,
+                      padding: const EdgeInsets.all(8),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.primaryCyan,
+                      ),
+                    )
+                    : IconButton(
+                      icon: Icon(Icons.attach_file, color: AppColors.primaryCyan),
+                      onPressed: () => _showImageSourceDialog(),
+                      tooltip: 'Attach image',
+                    ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Type your response...',
+                      hintStyle: const TextStyle(color: Colors.white38),
+                      filled: true,
+                      fillColor: AppColors.background,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                    ),
+                    maxLines: null,
+                    textCapitalization: TextCapitalization.sentences,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  decoration: const BoxDecoration(
                     color: AppColors.primaryCyan,
+                    shape: BoxShape.circle,
                   ),
-                )
-                : IconButton(
-                  icon: Icon(Icons.attach_file, color: AppColors.primaryCyan),
-                  onPressed: () => _showImageSourceDialog(),
-                  tooltip: 'Attach image',
-                ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: TextField(
-                controller: _messageController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: 'Type your response...',
-                  hintStyle: const TextStyle(color: Colors.white38),
-                  filled: true,
-                  fillColor: AppColors.background,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
+                  child: IconButton(
+                    icon: const Icon(Icons.send, color: Colors.white),
+                    onPressed: _sendMessage,
+                    tooltip: 'Send',
                   ),
                 ),
+              ],
                 maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
               ),

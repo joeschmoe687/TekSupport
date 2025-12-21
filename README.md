@@ -4,6 +4,34 @@ Mobile app for HVAC contractors: Bluetooth tool connectivity, dispatch, messagin
 
 **Powered by TekMate AI** - Automated technician guidance, device setup wizards, and HVAC knowledge synthesis.
 
+## 🧠 TekMate AI Integration (Ghost Mode - ADMIN ONLY)
+
+**SECURITY CRITICAL:** TekMate is completely invisible to non-admin users.
+
+TekMate provides AI-powered assistance to admin technicians:
+- **Technician Guidance** - Step-by-step service call walkthroughs
+- **Device Setup Wizard** - AI-guided Bluetooth tool integration  
+- **HVAC Knowledge** - Real-time troubleshooting during service calls
+- **Confidence Scoring** - Shows AI confidence to help techs learn
+
+**Implementation Status (Dec 21, 2025):**
+- ✅ Cloud Function: `tekmateChatProxy` with admin auth
+- ✅ Admin UI: "Ask TekMate AI" button in chat screen
+- ✅ Mock AI responses with confidence scoring
+- ✅ Firestore security rules: admin-only collection
+- ✅ Documentation: GHOST_MODE_DEPLOYMENT.md, TEKMATE_TESTING.md
+- [ ] Deploy to Firebase (run `./scripts/deploy-tekmate.sh`)
+- [ ] Test with admin and non-admin accounts
+- [ ] Replace mock with real TekMate AI API
+
+**Files:**
+- `functions/index.js` - Cloud Function with admin checks
+- `lib/services/tekmate_chat_service.dart` - Client service (returns null for non-admins)
+- `lib/screens/admin_chat_detail_screen.dart` - Admin UI integration
+- `firestore.rules` - Security rules with admin-only `/admin` collection
+- `GHOST_MODE_DEPLOYMENT.md` - Deployment guide
+- `TEKMATE_TESTING.md` - Testing procedures
+
 ## 🔗 GitHub & Firebase Integration
 
 > **IMPORTANT FOR COPILOT/AI AGENTS**: This app shares a Firebase backend with the AirPro website.
