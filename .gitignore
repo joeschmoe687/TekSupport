@@ -81,3 +81,9 @@ docs/BLE-Sniffing/ble_sniff_extract/
 
 # IDE
 .vscode/
+
+# Test artifacts
+test_results/
+coverage/
+integration_test_report.txt
+*.test.log
