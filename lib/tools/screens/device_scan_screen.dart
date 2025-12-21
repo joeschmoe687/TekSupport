@@ -463,7 +463,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
                 ),
               )
             : isBroadcastOnly
-                ? Icon(Icons.sensors, color: AppColors.warning, size: 24)
+                ? const Icon(Icons.sensors, color: AppColors.warning, size: 24)
                 : IconButton(
                     icon:
                         const Icon(Icons.add_circle, color: AppColors.primaryCyan),
