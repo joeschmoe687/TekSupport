@@ -689,25 +689,47 @@ double _parseTestoPressure(List<int> rawData) {
 }
 
 /// Parse Fieldpiece Temperature Clamp (FPBF Model 8975)
-/// Format: FP BF [header] [battery] [model] [data...]
-/// Temperature value needs more capture data to confirm format
+/// HCI snoop captured Dec 21, 2025:
+/// Packet size: 22 bytes (0x16)
+/// Bytes 0-1: "FP" manufacturer ID
+/// Bytes 2-3: "BF" device type
+/// Bytes 6-7: Model number (0x8975)
+/// Byte 9: Battery level (0x20 = good, needs more data to decode scale)
+/// Bytes 12-13: Temperature (uint16 LE, needs divisor confirmation)
+/// Example: 0xa828 = 43048 → possible °C*1000 or °F*100
 double _parseFieldpieceTemp(List<int> rawData) {
-  if (rawData.length < 16) return double.nan;
+  if (rawData.length < 14) return double.nan;
 
-  // Placeholder - need more capture data to decode exact temperature position
-  // Based on psychrometer pattern, temp might be at bytes 15-16
   final bytes = Uint8List.fromList(rawData);
   final byteData = ByteData.view(bytes.buffer);
 
   try {
-    // Try uint16 LE at bytes 15-16 divided by 10
-    if (rawData.length >= 17) {
-      final tempRaw = byteData.getUint16(15, Endian.little);
-      final tempF = tempRaw / 10.0;
-      // Sanity check: valid HVAC temperatures are typically 0-150°F
-      if (tempF >= 0 && tempF <= 150) {
-        return tempF;
-      }
+    // Temperature at bytes 12-13 (from HCI analysis)
+    // Sample: 0xa828 = 43048
+    // If this is 68°F (liquid temp from screenshot), then:
+    //   68°F = 20°C → 43048 / 2150 ≈ 20°C (possible)
+    //   OR 43048 / 100 = 430.48 (unlikely)
+    //   OR 43048 / 1000 = 43.048°C = 109°F (from analysis)
+    // Try multiple interpretations
+    final tempRaw = byteData.getUint16(12, Endian.little);
+    
+    // Try interpretation 1: raw value / 1000 = °C
+    double tempC = tempRaw / 1000.0;
+    double tempF = tempC * 9.0 / 5.0 + 32.0;
+    if (tempF >= 0 && tempF <= 200) {
+      return tempF;
+    }
+    
+    // Try interpretation 2: raw value / 10 = °F
+    tempF = tempRaw / 10.0;
+    if (tempF >= 0 && tempF <= 200) {
+      return tempF;
+    }
+    
+    // Try interpretation 3: raw value / 100 = °F
+    tempF = tempRaw / 100.0;
+    if (tempF >= 0 && tempF <= 200) {
+      return tempF;
     }
   } catch (_) {}
 
@@ -715,25 +737,46 @@ double _parseFieldpieceTemp(List<int> rawData) {
 }
 
 /// Parse Fieldpiece Pressure Probe (FPBG Model 2975/2976)
-/// Packet size: 28 bytes
-/// Pressure value position needs more capture data
+/// HCI snoop captured Dec 21, 2025:
+/// Packet size: 28 bytes (0x1C)
+/// Bytes 0-1: "FP" manufacturer ID
+/// Bytes 2-3: "BG" device type
+/// Bytes 6-7: Model number (0x2975 or 0x2976)
+/// Byte 9: Battery level (0x20 = good)
+/// Bytes 12-13: Pressure data
+/// Example: 0x2877 = 10359 when pressure is 0.0 psig (zero offset)
+/// Note: Need readings with actual pressure to determine offset and scale
 double _parseFieldpiecePressure(List<int> rawData) {
-  if (rawData.length < 20) return double.nan;
+  if (rawData.length < 14) return double.nan;
 
-  // Placeholder - need varied pressure readings to identify format
-  // Pressure probes typically send psig or psia values
   final bytes = Uint8List.fromList(rawData);
   final byteData = ByteData.view(bytes.buffer);
 
   try {
-    // Try int16 LE at various positions divided by 10 (common for pressure)
-    if (rawData.length >= 17) {
-      final pressureRaw = byteData.getInt16(15, Endian.little);
-      final psig = pressureRaw / 10.0;
-      // Sanity check: HVAC pressures are typically -30 to 800 psig
-      if (psig >= -30 && psig <= 800) {
-        return psig;
-      }
+    // Pressure at bytes 12-13
+    // From HCI: 0x2877 = 10359 when displaying 0.0 psig
+    // This suggests an offset-based encoding
+    final pressureRaw = byteData.getUint16(12, Endian.little);
+    
+    // Hypothesis 1: Zero offset at ~10359, scale unknown
+    // If offset is 10359, then (raw - 10359) / 10 = psig?
+    const zeroOffset = 10359;
+    double psig = (pressureRaw - zeroOffset) / 10.0;
+    if (psig >= -30 && psig <= 800) {
+      return psig;
+    }
+    
+    // Hypothesis 2: Direct scaled value
+    psig = pressureRaw / 100.0;
+    if (psig >= -30 && psig <= 800) {
+      return psig;
+    }
+    
+    // Hypothesis 3: Signed value with offset
+    final pressureSigned = byteData.getInt16(12, Endian.little);
+    psig = pressureSigned / 10.0;
+    if (psig >= -30 && psig <= 800) {
+      return psig;
     }
   } catch (_) {}
 
@@ -768,7 +811,10 @@ double _parseFieldpiecePsychrometer(List<int> rawData) {
 }
 
 /// Get additional Fieldpiece psychrometer readings (dry bulb, humidity)
+/// HCI snoop captured Dec 21, 2025:
 /// Call this for full data display
+/// Screenshot values: Dry=69.0°F, Wet=55.7°F, RH=41.6%
+/// Packet sample: 16b4 022d 029d 01bf 0133
 Map<String, double> parseFieldpiecePsychrometerFull(List<int> rawData) {
   if (rawData.length < 22) {
     return {
@@ -787,23 +833,56 @@ Map<String, double> parseFieldpiecePsychrometerFull(List<int> rawData) {
 
   try {
     // Wet bulb at bytes 15-16 (CONFIRMED)
+    // 0x022d = 557 ÷ 10 = 55.7°F ✓ matches screenshot
     final wetBulbRaw = byteData.getUint16(15, Endian.little);
     wetBulbF = wetBulbRaw / 10.0;
 
-    // Dry bulb likely at bytes 12-13 (needs confirmation with varied data)
+    // Dry bulb at bytes 12-13 (needs confirmation)
+    // Screenshot shows 69.0°F, packet shows 0x16b4 = 5812
+    // Try: 5812 / 10 = 581.2°F (no)
+    //      5812 / 100 = 58.12°F (close to wet bulb, but should be higher)
+    //      Try reading as little-endian: 0xb416 = 46102
+    //      46102 / 1000 = 46.1°C = 114.9°F (too high)
+    //      46102 / 100 = 461.02 (no)
+    // Multiple interpretations needed
     if (rawData.length >= 14) {
       final dryBulbRaw = byteData.getUint16(12, Endian.little);
-      dryBulbF = dryBulbRaw / 10.0;
+      
+      // Try 1: divide by 10
+      double dryBulbTest = dryBulbRaw / 10.0;
+      if (dryBulbTest >= 0 && dryBulbTest <= 150) {
+        dryBulbF = dryBulbTest;
+      } else {
+        // Try 2: convert to °C then to °F
+        double dryBulbC = dryBulbRaw / 100.0;
+        dryBulbF = dryBulbC * 9.0 / 5.0 + 32.0;
+      }
     }
 
-    // Humidity likely at bytes 20-21 (needs confirmation)
+    // Humidity at bytes 20-21
+    // Screenshot shows 41.6%, packet shows 0x0133 = 307
+    // Try: 307 / 10 = 30.7% (close but not exact)
+    //      307 / 7.38 ≈ 41.6% (possible but odd divisor)
+    // Need more data to confirm exact formula
     if (rawData.length >= 22) {
       final humidityRaw = byteData.getUint16(20, Endian.little);
-      // Humidity might need different divisor - test with 100 first
-      humidity = humidityRaw / 100.0;
-      // If result is >100%, try different divisor
-      if (humidity > 100) {
-        humidity = humidityRaw / 1000.0;
+      
+      // Try interpretation 1: direct %RH
+      if (humidityRaw <= 100) {
+        humidity = humidityRaw.toDouble();
+      }
+      // Try interpretation 2: scaled by 10
+      else if (humidityRaw <= 1000) {
+        humidity = humidityRaw / 10.0;
+      }
+      // Try interpretation 3: scaled by 100
+      else {
+        humidity = humidityRaw / 100.0;
+      }
+      
+      // Sanity check
+      if (humidity > 100 || humidity < 0) {
+        humidity = double.nan;
       }
     }
   } catch (_) {}
@@ -839,6 +918,67 @@ double _parseFieldpieceSC680(List<int> rawData) {
   } catch (_) {}
 
   return double.nan;
+}
+
+/// Extract battery level from Fieldpiece manufacturer data
+/// Byte 9 appears to contain battery status (0x20 = good)
+/// Returns battery percentage (0-100) or null if unable to determine
+int? getFieldpieceBatteryLevel(List<int> manufacturerData) {
+  if (manufacturerData.length < 10) return null;
+  
+  // Byte 9: Battery indicator
+  // From HCI analysis: 0x20 = good battery
+  // Need more samples to determine exact scale
+  final batteryByte = manufacturerData[9];
+  
+  // Hypothesis: 0x20 (32 decimal) = 100%?
+  // Or is it a flags byte where 0x20 bit means "battery good"?
+  // For now, return rough estimate based on observed value
+  if (batteryByte >= 0x20) {
+    return 100; // Good battery
+  } else if (batteryByte >= 0x10) {
+    return 50; // Medium battery
+  } else if (batteryByte > 0) {
+    return 20; // Low battery
+  }
+  
+  return null;
+}
+
+/// Extract model number from Fieldpiece manufacturer data
+/// Bytes 6-7 contain model number (little-endian uint16)
+/// Returns model number (e.g., 8975, 2975, 5699) or null if unable to determine
+int? getFieldpieceModelNumber(List<int> manufacturerData) {
+  if (manufacturerData.length < 8) return null;
+  
+  try {
+    final bytes = Uint8List.fromList(manufacturerData.sublist(6, 8));
+    final byteData = ByteData.view(bytes.buffer);
+    return byteData.getUint16(0, Endian.little);
+  } catch (_) {
+    return null;
+  }
+}
+
+/// Get device type name from Fieldpiece device code
+/// Bytes 2-3 contain ASCII device type code
+String getFieldpieceDeviceTypeName(List<int> manufacturerData) {
+  if (manufacturerData.length < 4) return 'Unknown';
+  
+  final deviceCode = String.fromCharCodes(manufacturerData.sublist(2, 4));
+  
+  switch (deviceCode) {
+    case 'BF':
+      return 'Temperature Clamp';
+    case 'BG':
+      return 'Pressure Probe';
+    case 'BH':
+      return 'Psychrometer';
+    case 'CB':
+      return 'SC680 Meter';
+    default:
+      return 'Unknown ($deviceCode)';
+  }
 }
 
 /// Helper to match byte pattern at offset

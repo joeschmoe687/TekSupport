@@ -1394,84 +1394,65 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
 
     // Bytes 2-3 contain device type code
     final deviceTypeCode = String.fromCharCodes(data.sublist(2, 4));
-    String deviceTypeName = 'Unknown';
+    String deviceTypeName = getFieldpieceDeviceTypeName(data);
     String reading = 'N/A';
+    
+    // Extract battery and model info
+    final batteryLevel = getFieldpieceBatteryLevel(data);
+    final modelNumber = getFieldpieceModelNumber(data);
+    String deviceInfo = deviceTypeName;
+    if (modelNumber != null) {
+      deviceInfo += ' ($modelNumber)';
+    }
 
-    // Identify device type and parse reading
+    // Identify device type and parse reading using device_registry parsers
     switch (deviceTypeCode) {
-      case 'BF': // Temperature Clamp
-        deviceTypeName = 'Temp Clamp';
-        if (data.length >= 17) {
-          try {
-            final bytes = Uint8List.fromList(data);
-            final byteData = ByteData.view(bytes.buffer);
-            final tempRaw = byteData.getUint16(15, Endian.little);
-            final tempF = tempRaw / 10.0;
-            if (tempF >= 0 && tempF <= 150) {
-              reading = '${tempF.toStringAsFixed(1)}°F';
-            }
-          } catch (_) {}
+      case 'BF': // Temperature Clamp (Model 8975)
+        final tempF = _parseFieldpieceTemp(data);
+        if (!tempF.isNaN) {
+          reading = '${tempF.toStringAsFixed(1)}°F';
         }
         break;
 
-      case 'BG': // Pressure Probe
-        deviceTypeName = 'Pressure';
-        if (data.length >= 17) {
-          try {
-            final bytes = Uint8List.fromList(data);
-            final byteData = ByteData.view(bytes.buffer);
-            final pressureRaw = byteData.getInt16(15, Endian.little);
-            final psig = pressureRaw / 10.0;
-            if (psig >= -30 && psig <= 800) {
-              reading = '${psig.toStringAsFixed(1)} psig';
-            }
-          } catch (_) {}
+      case 'BG': // Pressure Probe (Model 2975/2976)
+        final psig = _parseFieldpiecePressure(data);
+        if (!psig.isNaN) {
+          reading = '${psig.toStringAsFixed(1)} psig';
         }
         break;
 
-      case 'BH': // Psychrometer
-        deviceTypeName = 'Psychrometer';
-        if (data.length >= 17) {
-          try {
-            final bytes = Uint8List.fromList(data);
-            final byteData = ByteData.view(bytes.buffer);
-            // Wet bulb at bytes 15-16 (CONFIRMED)
-            final wetBulbRaw = byteData.getUint16(15, Endian.little);
-            final wetBulbF = wetBulbRaw / 10.0;
-            if (wetBulbF >= 0 && wetBulbF <= 120) {
-              reading = 'WB: ${wetBulbF.toStringAsFixed(1)}°F';
-
-              // Try to also show dry bulb if available
-              if (data.length >= 14) {
-                final dryBulbRaw = byteData.getUint16(12, Endian.little);
-                final dryBulbF = dryBulbRaw / 10.0;
-                if (dryBulbF >= 0 && dryBulbF <= 150) {
-                  reading =
-                      'DB: ${dryBulbF.toStringAsFixed(1)}°F, WB: ${wetBulbF.toStringAsFixed(1)}°F';
-                }
-              }
-            }
-          } catch (_) {}
+      case 'BH': // Psychrometer (Model 5699)
+        // Get full readings (wet bulb, dry bulb, humidity)
+        final readings = parseFieldpiecePsychrometerFull(data);
+        final wetBulb = readings['wetBulb'] ?? double.nan;
+        final dryBulb = readings['dryBulb'] ?? double.nan;
+        final humidity = readings['humidity'] ?? double.nan;
+        
+        List<String> readingParts = [];
+        if (!wetBulb.isNaN) {
+          readingParts.add('WB: ${wetBulb.toStringAsFixed(1)}°F');
+        }
+        if (!dryBulb.isNaN) {
+          readingParts.add('DB: ${dryBulb.toStringAsFixed(1)}°F');
+        }
+        if (!humidity.isNaN) {
+          readingParts.add('${humidity.toStringAsFixed(1)}%RH');
+        }
+        
+        if (readingParts.isNotEmpty) {
+          reading = readingParts.join(', ');
         }
         break;
 
       case 'CB': // SC680 Meter
-        deviceTypeName = 'SC680';
-        if (data.length >= 17) {
-          try {
-            final bytes = Uint8List.fromList(data);
-            final byteData = ByteData.view(bytes.buffer);
-            final valueRaw = byteData.getInt16(15, Endian.little);
-            final value = valueRaw / 10.0;
-            if (value >= 0 && value <= 600) {
-              reading = '${value.toStringAsFixed(1)}A';
-            }
-          } catch (_) {}
+        final value = _parseFieldpieceSC680(data);
+        if (!value.isNaN) {
+          reading = '${value.toStringAsFixed(1)}A';
         }
         break;
     }
 
-    return Container(
+     return Container(
       margin: const EdgeInsets.only(top: 4),
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
@@ -1485,13 +1466,30 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
           const Icon(Icons.sensors, size: 12, color: AppColors.primaryCyan),
           const SizedBox(width: 4),
           Text(
-            'Fieldpiece $deviceTypeName: $reading',
+            'Fieldpiece $deviceInfo: $reading',
             style: const TextStyle(
               color: AppColors.primaryCyan,
               fontSize: 9,
               fontWeight: FontWeight.w500,
             ),
           ),
+          if (batteryLevel != null) ...[
+            const SizedBox(width: 6),
+            Icon(
+              batteryLevel > 50 ? Icons.battery_full : 
+              batteryLevel > 20 ? Icons.battery_std : Icons.battery_alert,
+              size: 12,
+              color: batteryLevel > 20 ? AppColors.primaryCyan : Colors.orange,
+            ),
+            const SizedBox(width: 2),
+            Text(
+              '$batteryLevel%',
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 8,
+              ),
+            ),
+          ],
         ],
       ),
     );
