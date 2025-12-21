@@ -1,8 +1,39 @@
-# Firebase Cloud Functions for Payment Processing
+# Firebase Cloud Functions for TekNeck HVAC Support App
 
-This directory contains Cloud Functions for handling Stripe payment operations.
+This directory contains Cloud Functions for the TekNeck app, including:
+- **TekMate AI Integration** (ADMIN ONLY - Ghost Mode)
+- **Payment Processing** (Stripe integration)
 
-## Setup
+---
+
+## 🧠 TekMate Integration (ADMIN ONLY)
+
+**SECURITY: Ghost Mode - Only authenticated admins can access TekMate.**
+
+TekMate provides AI-powered technician guidance, device setup, and HVAC troubleshooting.
+
+### Features
+- Step-by-step service call guidance
+- Bluetooth device setup assistance
+- HVAC diagnostic recommendations
+- Confidence scoring for AI responses
+- Complete invisibility to non-admin users
+
+### Deployment
+See [GHOST_MODE_DEPLOYMENT.md](../GHOST_MODE_DEPLOYMENT.md) for complete setup instructions.
+
+Quick deploy:
+```bash
+cd functions
+npm install
+firebase deploy --only functions:tekmateChatProxy
+```
+
+---
+
+## 💳 Payment Processing
+
+### Setup
 
 ### 1. Initialize Firebase Functions (if not already done)
 
