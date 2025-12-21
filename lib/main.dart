@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'screens/welcome_screen.dart';
 import 'widgets/gradient_scaffold.dart';
 import 'services/notification_service.dart';
+import 'services/payment_service.dart';
 import 'tools/screens/devices_screen.dart';
 import 'tools/screens/device_scan_screen.dart';
 
@@ -26,6 +27,9 @@ void main() async {
 
   // Initialize notification service
   await NotificationService().initialize();
+
+  // Initialize payment service
+  await PaymentService().initialize();
 
   runApp(const TekToolApp());
 }
