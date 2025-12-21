@@ -686,44 +686,7 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
 - [ ] View all support threads, jobs, and message logs
 
 
-### 🚀 Nameplate Upload & ML-Driven Guide Sourcing
-- [ ] **Nameplate Upload in Chat**
-  - Enable paperclip/upload button in chat at any time
-  - Allow users to upload nameplate photos (JPG/PNG)
-- [ ] **Backend OCR Integration**
-  - Use Firebase Function for OCR (Tesseract or similar)
-  - Extract model, serial, brand, and other key fields from image
-- [ ] **Data Parsing & Validation**
-  - Parse OCR output for HVAC-specific fields
-  - If extraction fails, prompt for manual entry
-- [ ] **Guide Sourcing Logic**
-  - Search official manufacturer sites and trusted sources for install guides
-  - Log all fetch attempts and user feedback
-- [ ] **ML-Driven Source Ranking**
-  - Track source reliability, user ratings, and success rates
-  - Use a simple ML model to rank and adapt source selection
-  - Prefer official sources; fallback to others if needed
-- [ ] **Feedback Loop**
-  - Let users/techs rate or flag guides
-  - Feed ratings into ML model for continuous improvement
-- [ ] **Display Results**
-  - Show extracted data and guide links in chat (user & tech/admin view)
-  - Auto-fill or skip questionnaire if nameplate data is complete
-- [ ] **Security & Privacy**
-  - Securely store images and extracted data
-  - Delete images after processing if not needed
-
-#### Further Considerations
-- Start with rule-based trust, layer ML as data grows
-- Use open-source tools and libraries
-- Prioritize top HVAC brands for initial guide sourcing
-
-### 3. Privacy & Compliance (Dec 14, 2025)
-- [WEB] Cookie consent banner and analytics gating now live (see web repo)
-- [WEB] All analytics/trackers require explicit consent (GDPR/CCPA compliant)
-- [WEB] DNT (Do Not Track) respected for analytics
-
-### 4. Dispatch System Enhancements
+### 3. Dispatch System Enhancements
 - [x] Admins can assign jobs, mark complete
 
 ---
