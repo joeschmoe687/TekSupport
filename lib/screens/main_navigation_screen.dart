@@ -127,7 +127,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => JobLaunchScreen(onToggleTheme: widget.onToggleTheme),
+        builder: (context) =>
+            JobLaunchScreen(onToggleTheme: widget.onToggleTheme),
       ),
     );
   }
@@ -141,15 +142,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               child: CircularProgressIndicator(color: AppColors.primaryCyan),
             )
           : _screens[_selectedIndex],
-      floatingActionButton: (_userRole == 'tech' || _userRole == 'admin')
-          ? FloatingActionButton.extended(
-              onPressed: _launchJob,
-              icon: const Icon(Icons.work_outline),
-              label: const Text('Start Job'),
-              backgroundColor: AppColors.primaryPurple,
-              foregroundColor: Colors.white,
-            )
-          : null,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _launchJob,
+        icon: const Icon(Icons.work_outline),
+        label: const Text('Start Job'),
+        backgroundColor: AppColors.primaryPurple,
+        foregroundColor: Colors.white,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: _navItems.isEmpty
           ? null

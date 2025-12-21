@@ -21,9 +21,126 @@
 - [x] **Documentation** - See [FIELDPIECE_PROTOCOL_ANALYSIS.md](docs/BLE-Sniffing/FIELDPIECE_PROTOCOL_ANALYSIS.md)
 - [x] **UI Update** - BLE Sniffer now shows "Broadcast-only" warning for Fieldpiece devices
 - [x] **Connect Button Disabled** - Grayed out for non-connectable devices
+- [x] **HCI Snoop Log Captured** - Full protocol capture from Job Link app (Dec 21) - See [FIELDPIECE_HCI_ANALYSIS_DEC21.md](docs/BLE-Sniffing/FIELDPIECE_HCI_ANALYSIS_DEC21.md)
 - [ ] **Read advertisement data** - Parse manufacturer_data from advertisements (measurement values encoded)
-- [ ] **Manufacturer data format** - Bytes 11 and 17 appear to contain measurement data (need more captures)
+- [ ] **Manufacturer data format** - See protocol analysis below for byte positions
 - [ ] **Passive monitoring mode** - Show Fieldpiece readings without GATT connection (scan-only)
+
+---
+
+### 🔴🔴 CRITICAL: Fieldpiece Integration Fix (Dec 21, 2025) - FOR GITHUB AGENT
+
+**HCI Snoop Log Analysis Results (Dec 21, 2025):**
+Captured 4 Fieldpiece devices via bugreport with Job Link app running:
+
+| Device | FP Code | Model# | Packet Size | Screenshot Values |
+|--------|---------|--------|-------------|-------------------|
+| **Temp Clamp** | FPBF | 8975 | 22 bytes | Liquid Temp: 68.0°F |
+| **Pressure Probe** | FPBG | 2975/2976 | 28 bytes | Suction: 0.0 psig |
+| **Psychrometer** | FPBH | 5699 | 30 bytes | Dry: 69.0°F, Wet: 55.7°F, RH: 41.6% |
+| **SC680 Meter** | FPCB | SC680 | 30 bytes | Hub display unit |
+
+**Decoded Packet Structure (FPBH Psychrometer example):**
+```
+Offset  Hex      Meaning
+------  -------  --------------------------
+0-1     46 50    "FP" Manufacturer ID
+2-3     42 48    "BH" = Psychrometer
+4       23       Header
+5       07       Unknown
+6-7     56 99    Model# 5699
+8       04       Unknown
+9       20       Battery? (good)
+10-11   23 08    Unknown
+12-13   16 b4    Dry Bulb? (needs formula)
+14      02       Separator
+15-16   2d 02    WET BULB = 0x022d = 557 ÷ 10 = 55.7°F ✓ MATCHES SCREENSHOT
+17-18   9d 01    Unknown
+19      bf       Unknown
+20-21   01 33    Humidity? (needs formula)
+22-27   ...      Constants/sequence
+```
+
+**Confirmed Formula (Wet Bulb):**
+```dart
+double wetBulbF = ((msd[16] << 8) | msd[15]) / 10.0;  // 0x022d = 55.7°F ✓
+```
+
+**Problem Summary:**
+Fieldpiece devices (4 tools tested via Job Link app) are detected but not displaying data. Console shows massive `Multiple widgets used the same GlobalKey` spam and BLE scans aren't finding Fieldpiece devices.
+
+**Root Cause Analysis:**
+
+1. **GlobalKey Error (CRITICAL BUG)** - The BLE scanner/sniffer screens are creating list items with duplicate GlobalKeys. This happens when:
+   - Using `GlobalKey()` in a `ListView.builder` item widget
+   - Not using unique keys per device (e.g., `ValueKey(device.remoteId)`)
+   - Search files: `ble_sniffer_screen.dart`, `tek_scan_screen.dart`, `tek_devices_screen.dart`
+   - Fix: Remove GlobalKey usage or use `ValueKey(device.remoteId.str)` for each list item
+
+2. **BLE Scan Filter Excludes Fieldpiece** - Current scan filters by service UUIDs:
+   ```dart
+   with_services: [e3b744f3-..., ffe0, 961f0001-..., fff0]  // Wey-Tek, unknown, ABM-200, Testo
+   ```
+   Fieldpiece devices DON'T advertise service UUIDs - they're broadcast-only using manufacturer data!
+   - Search: `startScan` calls in `bluetooth_service.dart` or scan screens
+   - Fix: Add Fieldpiece manufacturer ID `0x5046` to `with_msd` filter OR remove service filter for Fieldpiece discovery
+
+3. **Fieldpiece Uses Advertisement Data Only** - These are ADV_NONCONN_IND devices:
+   - They cannot accept GATT connections (intentional by Fieldpiece)
+   - Measurement data is encoded in `manufacturerData` field of advertisements
+   - Manufacturer ID: `0x5046` (ASCII "FP")
+   - Need to parse bytes during scan, NOT after connection
+
+**Implementation Tasks:**
+
+- [ ] **Fix GlobalKey Duplication** - Search all BLE screens for `GlobalKey()` usage in list builders
+  - Replace with `ValueKey(device.remoteId.str)` or remove GlobalKey entirely
+  - Files to check: `ble_sniffer_screen.dart`, `tek_scan_screen.dart`, `tek_devices_screen.dart`
+
+- [ ] **Add Fieldpiece to BLE Scan** - Modify scan to include manufacturer data filter:
+  ```dart
+  FlutterBluePlus.startScan(
+    withMsd: [MsdFilter(0x5046)],  // Fieldpiece manufacturer ID
+    // OR remove withServices filter when scanning for all devices
+  );
+  ```
+
+- [ ] **Parse Fieldpiece Advertisement Data** - Create parser for manufacturer_data:
+  - Device type from bytes 2-3: "BF"=Temp, "BG"=Pressure, "BH"=Psychrometer, "CB"=SC680
+  - Wet bulb temp: bytes 15-16 as uint16 LE ÷ 10 = °F (CONFIRMED)
+  - Other values need more varied captures to confirm formulas
+  - Add `_parseFieldpieceAdvertisement()` to `device_registry.dart`
+
+- [ ] **Display Fieldpiece Readings Passively** - Since no GATT connection possible:
+  - Create a "passive scan" mode that shows Fieldpiece readings from advertisements
+  - Update UI when new advertisement received (devices broadcast ~1-2 Hz)
+  - Don't show "Connect" button for Fieldpiece (already done)
+
+- [ ] **Device Registry Update** - Add Fieldpiece device profiles:
+  ```dart
+  static const fieldpiece_probe = DeviceProfile(
+    id: 'fieldpiece_probe',
+    name: 'Fieldpiece Probe',
+    manufacturer: 'Fieldpiece',
+    connectionType: ConnectionType.broadcastOnly,  // NEW field needed
+    manufacturerId: 0x5046,
+  );
+  ```
+
+**Testing Checklist:**
+- [ ] Open BLE Sniffer → No GlobalKey errors in console
+- [ ] Fieldpiece devices appear in scan list (detected by manufacturer ID)
+- [ ] Fieldpiece readings display from advertisement data
+- [ ] "Broadcast-only" badge shows on Fieldpiece devices
+- [ ] Connect button disabled/hidden for Fieldpiece
+- [ ] Other devices (Testo, Wey-Tek, ABM-200) still connect normally
+
+**Terminal Log Evidence (Dec 21):**
+```
+I/flutter: [FBP] <startScan> args: {with_services: [...], with_msd: [], ...}
+Another exception was thrown: Multiple widgets used the same GlobalKey.
+(repeated 500+ times)
+```
 
 ---
 
@@ -176,6 +293,101 @@ Without the status emit, BLE connects but no data subscription → "Waiting for 
 - [ ] **High-pressure probe support** - T549i can be ±60 bar for high-side manifold use
 - [ ] **Connection stability** - LINK_SUPERVISION_TIMEOUT causing T549i disconnects during extended use
 - [ ] **Fix RenderFlex overflow** - Varies by orientation: 15px bottom (landscape), 57px bottom (portrait gauge), 2.5px right (scan)
+
+---
+
+## 🧠 HVAC Diagnostic AI & Machine Learning System
+
+> **Goal:** Build an intelligent HVAC diagnostic assistant that learns from real-world readings, alerts technicians to abnormal conditions, and provides step-by-step troubleshooting guidance.
+
+### Phase 1: ML Data Collection & Firebase Sync
+- [ ] **Firebase Collection: `ml_hvac_readings`** - Push diagnostic readings from phone to cloud
+  - Reading data: pressures, temps, superheat, subcool, ambient, refrigerant type
+  - System metadata: system type (AC, heat pump, cooler, freezer, ice machine), equipment info
+  - Job context: job ID, technician ID, timestamp, outcome (pass/fail/adjusted)
+  - Sync on job completion + periodic background sync
+- [ ] **MLDataService** - Central service for collecting and uploading ML training data
+  - Batch readings during job → upload on completion
+  - Include tech corrections (what they adjusted after seeing readings)
+  - Track "before" and "after" readings when charging/recovering
+- [ ] **Privacy Controls** - Option to opt-out of ML data sharing in Settings
+- [ ] **Data Anonymization** - Strip customer PII, keep only technical readings + system metadata
+
+### Phase 2: HVAC Knowledge Base (Built-in Intelligence)
+- [ ] **Expected Ranges Database** - Pre-load with HVAC industry standards:
+  
+  | System Type | Refrigerant | Suction PSI | Discharge PSI | Superheat | Subcool |
+  |-------------|-------------|-------------|---------------|-----------|---------|
+  | Residential AC | R410A | 118-145 | 350-425 | 10-15°F | 8-12°F |
+  | Residential AC | R22 | 65-80 | 225-275 | 10-15°F | 8-12°F |
+  | Heat Pump (Cool) | R410A | 118-145 | 350-425 | 10-15°F | 8-12°F |
+  | Heat Pump (Heat) | R410A | 90-130 | 200-350 | 5-10°F | 5-10°F |
+  | Walk-in Cooler | R404A | 20-35 | 180-225 | 6-12°F | 4-8°F |
+  | Walk-in Freezer | R404A | 5-15 | 180-225 | 6-12°F | 4-8°F |
+  | Ice Machine | R404A/R290 | 15-30 | 150-200 | 5-10°F | 4-8°F |
+
+- [ ] **Ambient Temperature Compensation** - Adjust expected ranges based on outdoor temp
+- [ ] **Fixed Orifice vs TXV Detection** - Different superheat targets (TXV: 10-12°F, Fixed: use chart)
+- [ ] **Manufacturer Specs Integration** - Pull from equipment nameplate data when available
+
+### Phase 3: Real-Time Alerts & Diagnostics
+- [ ] **Out-of-Range Detection** - Alert when readings deviate from expected:
+  - 🔴 Critical: >20% deviation (likely system fault)
+  - 🟡 Warning: 10-20% deviation (needs attention)
+  - 🟢 Normal: Within expected range
+- [ ] **Smart Alerts with Context** - Not just "pressure low" but WHY it matters:
+  - "Suction pressure 95 PSI is LOW for R410A AC. Expected: 118-145 PSI"
+  - "Superheat 25°F is HIGH. Possible causes: low charge, TXV issue, airflow restriction"
+- [ ] **Gauge Screen Integration** - Color-code readings based on status
+  - Green glow = normal, Yellow = warning, Red = critical
+  - Tap for detailed explanation
+
+### Phase 4: Step-by-Step Troubleshooting Guidance
+- [ ] **Diagnostic Decision Trees** - Based on symptom combinations:
+  
+  **Low Suction + High Superheat:**
+  1. Check refrigerant charge (likely low)
+  2. Inspect TXV sensing bulb placement
+  3. Check for liquid line restriction
+  4. Verify condenser airflow
+  
+  **High Suction + Low Superheat:**
+  1. Check for overcharge
+  2. Verify indoor blower operation
+  3. Check evaporator airflow (dirty filter/coil)
+  4. Inspect TXV for flooding
+  
+  **High Discharge + High Subcool:**
+  1. Likely overcharged
+  2. Check for condenser airflow issues
+  3. Verify fan motor operation
+
+- [ ] **Beginner Mode** - Extra detailed explanations for new techs
+  - "What is superheat?" tooltips
+  - Photo guides for common tasks
+  - Video links to tutorials
+- [ ] **Expert Mode** - Concise bullet points for experienced techs
+
+### Phase 5: Learning & Improvement
+- [ ] **Feedback Loop** - Tech confirms or overrides AI suggestion
+  - "Was this diagnosis correct?" → Yes/No/Partially
+  - Track correction patterns to improve model
+- [ ] **Regional Variations** - Learn from different climates/regions
+  - Florida AC vs Minnesota heat pump patterns
+  - High altitude adjustments
+- [ ] **Equipment-Specific Learning** - Build profiles for specific brands/models
+  - "Carrier 24ACC always runs slightly higher discharge"
+  - Learn quirks from aggregate data
+- [ ] **Firebase ML Integration** - Eventually train custom model on collected data
+  - Start with rule-based logic
+  - Layer ML predictions as data grows
+  - Keep human in the loop for safety
+
+### Phase 6: UI Components
+- [ ] **DiagnosticCard Widget** - Shows current status + recommendation
+- [ ] **TroubleshootingSheet** - Bottom sheet with step-by-step guide
+- [ ] **HistoryGraph** - Show readings over time during job
+- [ ] **ComparisonView** - Before/after charging visualization
 
 ---
 
