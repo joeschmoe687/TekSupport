@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import '../widgets/gradient_scaffold.dart';
 import '../services/tekmate_chat_service.dart';
+import '../services/gemini_chat_service.dart';
 
 class AdminChatDetailScreen extends StatefulWidget {
   final String roomId;
@@ -27,36 +28,33 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final ImagePicker _picker = ImagePicker();
-  final TekMateChatService _tekMateService = TekMateChatService();
   final TekMateChatService _tekmateService = TekMateChatService();
+  final GeminiChatService _geminiService = GeminiChatService();
 
   Map<String, dynamic>? _roomData;
   Map<String, dynamic>? _userData;
   String? _assignedToName;
   bool _isLoading = true;
   bool _isUploading = false;
-  bool _isTekMateAvailable = false;
-  bool _isTekMateLoading = false;
   bool _isTekmateAvailable = false;
-  bool _isTekmateLoading = false;
+  bool _isGeminiAvailable = false;
+  bool _isAiLoading = false;
 
   @override
   void initState() {
     super.initState();
     _loadRoomData();
     _claimIfNeeded();
-    _initTekMate();
+    _initAiServices();
   }
 
-  Future<void> _initTekMate() async {
-    final isAvailable = await _tekMateService.init();
+  Future<void> _initAiServices() async {
+    final tekmateAvailable = await _tekmateService.init();
+    final geminiAvailable = await _geminiService.init();
     if (mounted) {
       setState(() {
-        _isTekMateAvailable = isAvailable;
-    final isAvailable = await _tekmateService.init();
-    if (mounted) {
-      setState(() {
-        _isTekmateAvailable = isAvailable;
+        _isTekmateAvailable = tekmateAvailable;
+        _isGeminiAvailable = geminiAvailable;
       });
     }
   }
@@ -340,10 +338,8 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     );
   }
 
-  /// Get TekMate AI guidance for current conversation
-  Future<void> _getTekmateGuidance() async {
-    if (!_isTekmateAvailable) return;
-
+  /// Get AI guidance for current conversation (TekMate or Gemini fallback)
+  Future<void> _getAiGuidance() async {
     // Get recent messages for context
     final recentMessages = await _getRecentMessages();
     
@@ -362,7 +358,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
       }
     }
 
-    setState(() => _isTekmateLoading = true);
+    setState(() => _isAiLoading = true);
 
     try {
       // Get the last customer message as the query
@@ -377,35 +373,60 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
         }
       }
 
-      final response = await _tekmateService.getResponse(
-        query,
-        context: context,
-        platform: 'app',
-      );
+      // Try TekMate first, then fall back to Gemini
+      dynamic response;
+      String aiSource = '';
+      
+      if (_isTekmateAvailable) {
+        response = await _tekmateService.getResponse(
+          query,
+          context: context,
+          platform: 'app',
+        );
+        aiSource = 'TekMate';
+      }
+      
+      // Fallback to Gemini if TekMate unavailable or failed
+      if (response == null && _isGeminiAvailable) {
+        final geminiResponse = await _geminiService.getResponse(
+          query,
+          context: context,
+        );
+        if (geminiResponse != null) {
+          response = geminiResponse;
+          aiSource = 'Gemini';
+        }
+      }
 
       if (mounted) {
-        setState(() => _isTekmateLoading = false);
+        setState(() => _isAiLoading = false);
       }
 
       if (response == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('TekMate is temporarily unavailable')),
+            const SnackBar(
+              content: Text('AI services are temporarily unavailable'),
+              backgroundColor: AppColors.warning,
+            ),
           );
         }
         return;
       }
 
-      // Show TekMate suggestion dialog
+      // Show AI suggestion dialog
       if (mounted) {
-        _showTekmateSuggestionDialog(response);
+        _showAiSuggestionDialog(response, aiSource);
       }
     } catch (e) {
-      debugPrint('TekMate error: $e');
+      debugPrint('AI guidance error: $e');
       if (mounted) {
-        setState(() => _isTekmateLoading = false);
+        setState(() => _isAiLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error getting AI guidance: $e')),
+          SnackBar(
+            content: Text('Error getting AI guidance: $e'),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     }
@@ -436,8 +457,8 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     }
   }
 
-  /// Show TekMate suggestion dialog with confidence score
-  void _showTekmateSuggestionDialog(TekMateResponse response) {
+  /// Show AI suggestion dialog with confidence score
+  void _showAiSuggestionDialog(dynamic response, String aiSource) {
     final suggestionController = TextEditingController(text: response.response);
 
     showDialog(
@@ -447,9 +468,19 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            Icon(Icons.psychology, color: AppColors.primaryPurple),
+            Icon(
+              aiSource == 'TekMate' ? Icons.psychology : Icons.auto_awesome,
+              color: aiSource == 'TekMate' 
+                  ? AppColors.primaryPurple 
+                  : AppColors.primaryCyan,
+            ),
             const SizedBox(width: 8),
-            const Text(
+            Text(
+              '$aiSource Suggestion',
+              style: const TextStyle(color: AppColors.textPrimary),
+            ),
+          ],
+        ),
               'TekMate Suggestion',
               style: TextStyle(color: Colors.white),
             ),
@@ -1326,20 +1357,22 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
-        ],
+          ],
+        ),
       ),
       child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // TekMate button (ADMIN ONLY - Ghost Mode)
-            if (_isTekMateAvailable)
+            // AI Assistant button (ADMIN ONLY - Ghost Mode)
+            // Shows TekMate or Gemini based on availability
+            if (_isTekmateAvailable || _isGeminiAvailable)
               Container(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: OutlinedButton.icon(
-                  onPressed: _isTekMateLoading ? null : _showTekMateDialog,
-                  icon: _isTekMateLoading
-                      ? SizedBox(
+                  onPressed: _isAiLoading ? null : _getAiGuidance,
+                  icon: _isAiLoading
+                      ? const SizedBox(
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(
@@ -1347,13 +1380,32 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
                             color: AppColors.primaryPurple,
                           ),
                         )
-                      : Icon(Icons.psychology, color: AppColors.primaryPurple),
+                      : Icon(
+                          _isTekmateAvailable 
+                              ? Icons.psychology 
+                              : Icons.auto_awesome,
+                          color: _isTekmateAvailable
+                              ? AppColors.primaryPurple
+                              : AppColors.primaryCyan,
+                        ),
                   label: Text(
-                    _isTekMateLoading ? 'Thinking...' : 'Ask TekMate AI',
-                    style: TextStyle(color: AppColors.primaryPurple),
+                    _isAiLoading 
+                        ? 'Thinking...' 
+                        : _isTekmateAvailable 
+                            ? 'Ask TekMate AI' 
+                            : 'Ask Gemini AI',
+                    style: TextStyle(
+                      color: _isTekmateAvailable
+                          ? AppColors.primaryPurple
+                          : AppColors.primaryCyan,
+                    ),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: AppColors.primaryPurple),
+                    side: BorderSide(
+                      color: _isTekmateAvailable
+                          ? AppColors.primaryPurple
+                          : AppColors.primaryCyan,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
