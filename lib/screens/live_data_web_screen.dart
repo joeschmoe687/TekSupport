@@ -165,13 +165,13 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
   }
 
   String _formatDeviceType(String? type) {
-    if (type == null) return 'Unknown';
+    if (type == null || type.isEmpty) return 'Unknown';
     // Convert camelCase to Title Case
     final words = type.replaceAllMapped(
       RegExp(r'([A-Z])'),
       (match) => ' ${match.group(1)}',
     ).trim();
-    if (words.isEmpty) return 'Unknown';
+    if (words.isEmpty || words.length == 1) return words.toUpperCase();
     return words[0].toUpperCase() + words.substring(1);
   }
 
@@ -467,7 +467,7 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
                   color: AppColors.textMuted,
                 ),
               ),
-              if (_isAdmin)
+              if (_isAdmin && deviceId.isNotEmpty)
                 Text(
                   deviceId.length > 8 ? deviceId.substring(0, 8) : deviceId,
                   style: TextStyle(
