@@ -290,7 +290,10 @@ firebase deploy --only firestore:rules --project tekneck-support
 In `lib/services/notification_service.dart`:
 
 ```dart
-Future<void> handleNotificationTap(RemoteMessage message) async {
+Future<void> handleNotificationTap(
+  BuildContext context, 
+  RemoteMessage message,
+) async {
   final type = message.data['type'];
   final chatId = message.data['chatId'];
   
