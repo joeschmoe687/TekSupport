@@ -53,3 +53,4 @@ echo "    - apiKey: 'AIza...'"
 echo "    - personality: '...'"
 echo ""
 echo "Happy Testing! 🎉"
+

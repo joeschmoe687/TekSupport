@@ -269,3 +269,4 @@ class GeminiResponse {
   /// Confidence as percentage (0-100)
   int get confidencePercent => (confidence * 100).toInt();
 }
+

@@ -313,3 +313,4 @@ DEBUG=gemini:*
 - Rate limits: 60 requests/minute (Gemini free tier)
 - Response time: 2-5 seconds typical
 - Context window: Last 5 messages only
+
