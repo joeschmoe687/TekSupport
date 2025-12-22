@@ -4,8 +4,9 @@ Mobile app for HVAC contractors: Bluetooth tool connectivity, dispatch, messagin
 
 **Powered by TekMate AI** - Automated technician guidance, device setup wizards, and HVAC knowledge synthesis.
 
-## 🧠 TekMate AI Integration (Ghost Mode - ADMIN ONLY)
+## 🧠 AI Assistant Integration (Admin Only - Ghost Mode)
 
+### TekMate AI (Primary)
 **SECURITY CRITICAL:** TekMate is completely invisible to non-admin users.
 
 TekMate provides AI-powered assistance to admin technicians:
@@ -31,6 +32,115 @@ TekMate provides AI-powered assistance to admin technicians:
 - `firestore.rules` - Security rules with admin-only `/admin` collection
 - `GHOST_MODE_DEPLOYMENT.md` - Deployment guide
 - `TEKMATE_TESTING.md` - Testing procedures
+
+### Gemini AI (Fallback)
+**NEW:** Google Gemini integration as fallback when TekMate is unavailable.
+
+Gemini provides similar AI assistance and is admin-configurable:
+- **Fallback Support** - Automatically used when TekMate is down
+- **Admin Toggle** - Enable/disable via Admin Dashboard → Settings
+- **Personality Tuning** - Customize AI response style and behavior
+- **Confidence Scoring** - Same interface as TekMate
+
+**Setup Instructions:**
+
+1. **Get Gemini API Key**
+   - Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+   - Sign in with Google account
+   - Click "Create API Key"
+   - Copy the key (starts with `AIza...`)
+
+2. **Configure in Admin Dashboard**
+   - Open app as admin user
+   - Navigate to **Admin Dashboard** → **Settings** tab
+   - Scroll to **Gemini AI Assistant** section
+   - Tap **"Set API Key"**
+   - Paste your API key
+   - Tap **Save**
+
+3. **Enable Gemini**
+   - Toggle **"Enable Gemini AI"** to ON
+   - Gemini will now be used as fallback when TekMate is unavailable
+
+4. **Tune Personality (Optional)**
+   - Tap **"Personality Tuning"**
+   - Customize the system prompt to adjust:
+     - Response tone (professional, friendly, technical)
+     - Response length preferences
+     - Safety considerations
+     - Domain expertise level
+   - Example personality:
+     ```
+     You are a helpful HVAC technical support assistant.
+     Provide clear, professional guidance to HVAC technicians.
+     Be concise, practical, and safety-conscious.
+     When troubleshooting, explain your reasoning.
+     Prioritize customer safety and EPA regulations.
+     ```
+   - Tap **Save** to apply changes
+
+**Personality Tuning Tips:**
+- Define the tone: professional, friendly, or technical
+- Set response length: brief, detailed, or comprehensive
+- Specify safety emphasis level
+- Include domain expertise: residential, commercial, refrigeration
+- Add style preferences: bullet points, numbered steps, paragraphs
+
+**Files:**
+- `lib/services/gemini_chat_service.dart` - Gemini integration service
+- `lib/screens/admin_dashboard_screen.dart` - Settings UI with Gemini controls
+
+**Firestore Configuration:**
+```
+Collection: settings
+Document: gemini
+Fields:
+  - enabled: boolean (default: false)
+  - apiKey: string (your Gemini API key)
+  - personality: string (system prompt for AI behavior)
+```
+
+**Testing Gemini:**
+1. Disable TekMate (or wait for it to be unavailable)
+2. Open a support chat as admin
+3. Tap **"Ask Gemini AI"** button
+4. Verify response appears with confidence score
+5. Test personality tuning by changing system prompt
+
+**Auto-Response Feature:**
+Gemini automatically responds to unclaimed customer chats:
+- Activates when Gemini is enabled and chat has no assigned admin
+- Provides immediate assistance while customer waits
+- Adds AI disclaimer to all auto-responses
+- Only responds to substantive messages (>10 characters)
+- Uses conversation history for context
+- Admin can still claim chat and take over at any time
+
+**Cloud Function:**
+- `autoRespondWithGemini` - Triggers on new customer messages
+- Checks if chat is unclaimed before responding
+- Respects Gemini enabled/disabled setting
+- Uses configured personality for response style
+
+**Admin Chat Assignment Protocol:**
+The app already has robust admin-to-chat assignment:
+- **Auto-Claim on Open**: Admin opening an unclaimed chat automatically claims it
+- **Status Update**: Chat status changes from 'unclaimed'/'new'/'open' to 'claimed'
+- **Live Tech Indicator**: `hasLiveTech` flag set when admin claims
+- **Assignment Tracking**: `claimedBy` field stores admin's user ID
+- **AI Stops Responding**: Once claimed, Gemini auto-response is disabled
+- **Persistent Assignment**: Admin remains assigned until they release or complete chat
+
+Implementation in `lib/screens/admin_chat_detail_screen.dart`:
+```dart
+// Auto-claim unclaimed chats when admin opens them
+Future<void> _claimIfNeeded() async {
+  // Checks if chat is unclaimed
+  // Auto-assigns to current admin
+  // Updates status to 'claimed'
+  // Sets hasLiveTech flag
+}
+```
 
 ## 🔗 GitHub & Firebase Integration
 

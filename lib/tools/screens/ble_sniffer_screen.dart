@@ -11,8 +11,9 @@ import 'package:path_provider/path_provider.dart';
 import '../../widgets/gradient_scaffold.dart';
 import '../../bluetooth/bluetooth_service.dart';
 import '../services/device_registry.dart';
-import '../services/ble_sniff_upload_service.dart';
-import 'ble_sniffer_settings_screen.dart';
+import '../services/ble_pattern_analyzer.dart';
+import '../services/smart_device_classifier.dart';
+import '../services/profile_generator_service.dart';
 
 /// Admin-only BLE Sniffer screen for debugging HVAC tool protocols.
 /// Allows scanning, connecting, and viewing raw GATT data.
@@ -61,6 +62,13 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
   String? _deviceSerialNumber; // Char 0x2a25
   String? _deviceFirmwareRev; // Char 0x2a26
   String? _deviceHardwareRev; // Char 0x2a27
+
+  // Smart Analysis (NEW - Professional Grade Features)
+  final List<List<int>> _capturedPackets = []; // Store packets for analysis
+  final List<DateTime> _packetTimestamps = []; // For timing analysis
+  DataInterpretation? _currentAnalysis; // Current data analysis
+  DeviceClassification? _deviceClassification; // Smart device classification
+  bool _showSmartAnalysis = true; // Toggle smart analysis panel
 
   @override
   void initState() {
@@ -345,6 +353,9 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
 
       // Read Device Information Service to get real names
       await _readDeviceInfoService();
+      
+      // Run smart device classification (NEW)
+      _classifyConnectedDevice();
     } catch (e) {
       _addLog('Service discovery failed: $e', type: 'error');
     }
@@ -367,6 +378,21 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
               _addLog('📡 DATA [${char.uuid}]:', type: 'notify');
               _addLog('  Hex: $hex', type: 'data');
               _addLog('  Raw: [${value.join(', ')}]', type: 'data');
+
+              // Capture packet for smart analysis
+              _capturedPackets.add(List<int>.from(value));
+              _packetTimestamps.add(DateTime.now());
+              
+              // Limit stored packets to last 50
+              if (_capturedPackets.length > 50) {
+                _capturedPackets.removeAt(0);
+                _packetTimestamps.removeAt(0);
+              }
+              
+              // Run smart analysis every 5 packets
+              if (_capturedPackets.length % 5 == 0 && _capturedPackets.isNotEmpty) {
+                _runSmartAnalysis();
+              }
 
               // Enhanced data interpretation
               if (value.isNotEmpty) {
@@ -393,6 +419,17 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
                 final float32LE = byteData.getFloat32(0, Endian.little);
                 _addLog('  float32 LE: ${float32LE.toStringAsFixed(4)}',
                     type: 'debug');
+              }
+              
+              // Show smart analysis suggestions for this packet
+              if (_showSmartAnalysis && _currentAnalysis != null) {
+                final suggestions = _currentAnalysis!.suggestions.take(2);
+                for (final suggestion in suggestions) {
+                  _addLog(
+                    '  💡 ${suggestion.categoryDisplay}: ${suggestion.value.toStringAsFixed(2)} (${(suggestion.confidence * 100).toStringAsFixed(0)}% confidence)',
+                    type: 'success',
+                  );
+                }
               }
             });
 
@@ -680,6 +717,110 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
       _deviceFirmwareRev = null;
       _deviceHardwareRev = null;
     });
+  }
+
+  /// Run smart pattern analysis on captured packets (NEW - Professional Feature)
+  void _runSmartAnalysis() {
+    if (_capturedPackets.isEmpty) return;
+    
+    try {
+      // Analyze data patterns
+      final analysis = BlePatternAnalyzer.analyzeDataStream(_capturedPackets);
+      
+      setState(() {
+        _currentAnalysis = analysis;
+      });
+      
+      // Log analysis results
+      if (analysis.confidence > 0.5 && analysis.suggestions.isNotEmpty) {
+        _addLog(
+          '🧠 SMART ANALYSIS: Detected ${analysis.detectedFormat} with ${(analysis.confidence * 100).toStringAsFixed(0)}% confidence',
+          type: 'success',
+        );
+        
+        final topSuggestion = analysis.suggestions.first;
+        _addLog(
+          '   Best match: ${topSuggestion.categoryDisplay} at ${topSuggestion.humanReadable}',
+          type: 'success',
+        );
+      }
+      
+      // Analyze timing
+      if (_packetTimestamps.length >= 3) {
+        final timing = BlePatternAnalyzer.analyzeTiminginfo(_packetTimestamps);
+        if (timing.frequency > 0) {
+          _addLog('   Update rate: ${timing.humanReadable}', type: 'info');
+        }
+      }
+      
+      // Detect checksums
+      if (_capturedPackets.isNotEmpty) {
+        final checksum = BlePatternAnalyzer.detectChecksum(_capturedPackets.last);
+        if (checksum != null && checksum.confidence > 0.8) {
+          _addLog(
+            '   Checksum detected: ${checksum.type} at byte ${checksum.position}',
+            type: 'info',
+          );
+        }
+      }
+    } catch (e) {
+      // Silent fail - analysis is optional
+      debugPrint('Smart analysis error: $e');
+    }
+  }
+
+  /// Classify device intelligently (NEW - Professional Feature)
+  void _classifyConnectedDevice() {
+    if (_connectedDevice == null) return;
+    
+    try {
+      // Find scan result for this device
+      final scanResult = _scanResults.firstWhere(
+        (r) => r.device.remoteId.str == _connectedDevice!.remoteId.str,
+        orElse: () => throw Exception('Scan result not found'),
+      );
+      
+      final classification = SmartDeviceClassifier.classifyDevice(
+        deviceName: _connectedDevice!.platformName,
+        serviceUuids: scanResult.advertisementData.serviceUuids,
+        manufacturerData: scanResult.advertisementData.manufacturerData,
+        macAddress: _connectedDevice!.remoteId.str,
+        connectable: scanResult.advertisementData.connectable,
+        serviceData: scanResult.advertisementData.serviceData,
+      );
+      
+      setState(() {
+        _deviceClassification = classification;
+      });
+      
+      _addLog('🎯 DEVICE CLASSIFICATION:', type: 'success');
+      _addLog('   ${classification.summary}', type: 'success');
+      
+      // Auto-detect unit based on classification
+      switch (classification.category) {
+        case 'temperature_probe':
+          _detectedUnit = '°F';
+          break;
+        case 'pressure_probe':
+          _detectedUnit = 'psig';
+          break;
+        case 'refrigerant_scale':
+          _detectedUnit = 'lbs';
+          break;
+        case 'airflow_meter':
+          _detectedUnit = 'CFM';
+          break;
+        case 'clamp_meter':
+          _detectedUnit = 'A';
+          break;
+        case 'vacuum_gauge':
+          _detectedUnit = 'micron';
+          break;
+      }
+    } catch (e) {
+      // Silent fail - classification is optional
+      debugPrint('Device classification error: $e');
+    }
   }
 
   void _copyToClipboard(String text) {
@@ -1120,6 +1261,21 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
     final svcUuid = serviceUuid ?? '0000xxxx-0000-1000-8000-00805f9b34fb';
     final dataUuid = charUuid ?? '0000xxxx-0000-1000-8000-00805f9b34fb';
 
+    // Use smart analysis if available
+    if (_deviceClassification != null && _currentAnalysis != null) {
+      final code = ProfileGeneratorService.generateProfileWithAlternatives(
+        profileKey: key,
+        displayName: displayName,
+        classification: _deviceClassification!,
+        serviceUuid: svcUuid,
+        dataCharUuid: dataUuid,
+        parseSuggestions: _currentAnalysis!.suggestions,
+        unit: unit,
+      );
+      return code;
+    }
+
+    // Fallback to basic template if no analysis available
     return '''
 // Add to device_registry.dart _profiles map:
 
@@ -2368,6 +2524,16 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
 
         // Guess device type from name/services
         final deviceType = _guessDeviceType(name, adv.serviceUuids);
+        
+        // Run smart classification on this device (NEW)
+        final smartClass = SmartDeviceClassifier.classifyDevice(
+          deviceName: name,
+          serviceUuids: adv.serviceUuids,
+          manufacturerData: adv.manufacturerData,
+          macAddress: device.remoteId.str,
+          connectable: adv.connectable,
+          serviceData: adv.serviceData,
+        );
 
         return Card(
           key: ValueKey(device.remoteId.str),
@@ -2484,6 +2650,47 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                     fontSize: 9,
                   ),
                 ),
+                // Smart Classification (NEW - Professional Feature)
+                if (smartClass.confidence > 30)
+                  Container(
+                    margin: const EdgeInsets.only(top: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: smartClass.confidence >= 70
+                          ? AppColors.success.withOpacity(0.2)
+                          : AppColors.warning.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: smartClass.confidence >= 70
+                            ? AppColors.success
+                            : AppColors.warning,
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.smart_toy,
+                          size: 11,
+                          color: smartClass.confidence >= 70
+                              ? AppColors.success
+                              : AppColors.warning,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'AI: ${smartClass.categoryDisplay} (${smartClass.confidenceDisplay})',
+                          style: TextStyle(
+                            color: smartClass.confidence >= 70
+                                ? AppColors.success
+                                : AppColors.warning,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 // Fieldpiece broadcast-only warning
                 if (_isFieldpieceDevice(adv.manufacturerData))
                   Text(

@@ -918,15 +918,25 @@ class _PricebookPaneState extends State<_PricebookPane> {
   }
 }
 
-class _SettingsPane extends StatelessWidget {
+class _SettingsPane extends StatefulWidget {
   const _SettingsPane();
 
   @override
+  State<_SettingsPane> createState() => _SettingsPaneState();
+}
+
+class _SettingsPaneState extends State<_SettingsPane> {
+  @override
   Widget build(BuildContext context) {
     // Assumes a single doc 'admin' in 'settings' with booleans/toggles
-    final settingsDocStream = FirebaseFirestore.instance
+    final adminSettingsStream = FirebaseFirestore.instance
         .collection('settings')
         .doc('admin')
+        .snapshots();
+    
+    final geminiSettingsStream = FirebaseFirestore.instance
+        .collection('settings')
+        .doc('gemini')
         .snapshots();
 
     return Padding(
@@ -949,61 +959,386 @@ class _SettingsPane extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Expanded(
-            child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-              stream: settingsDocStream,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final data = snapshot.data!.data() ?? {};
-                // Toggles with safe defaults
-                final enableChatNotify =
-                    (data['enableChatNotifications'] ?? true) == true;
-                final enableDispatch = (data['enableDispatch'] ?? true) == true;
-                final requireAdminLogin =
-                    (data['requireAdminLogin'] ?? true) == true;
-                return ListView(
+            child: ListView(
+              children: [
+                // Admin Settings Section
+                const Text(
+                  'General Settings',
+                  style: TextStyle(
+                    color: AppColors.primaryCyan,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                  stream: adminSettingsStream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final data = snapshot.data!.data() ?? {};
+                    final enableChatNotify =
+                        (data['enableChatNotifications'] ?? true) == true;
+                    final enableDispatch = (data['enableDispatch'] ?? true) == true;
+                    final requireAdminLogin =
+                        (data['requireAdminLogin'] ?? true) == true;
+                    
+                    return Column(
+                      children: [
+                        _SettingsToggle(
+                          title: 'Chat Notifications',
+                          value: enableChatNotify,
+                          onChanged: (v) async {
+                            await FirebaseFirestore.instance
+                                .collection('settings')
+                                .doc('admin')
+                                .set({
+                              'enableChatNotifications': v,
+                            }, SetOptions(merge: true));
+                          },
+                        ),
+                        _SettingsToggle(
+                          title: 'Dispatch Enabled',
+                          value: enableDispatch,
+                          onChanged: (v) async {
+                            await FirebaseFirestore.instance
+                                .collection('settings')
+                                .doc('admin')
+                                .set({
+                              'enableDispatch': v,
+                            }, SetOptions(merge: true));
+                          },
+                        ),
+                        _SettingsToggle(
+                          title: 'Require Admin Login',
+                          value: requireAdminLogin,
+                          onChanged: (v) async {
+                            await FirebaseFirestore.instance
+                                .collection('settings')
+                                .doc('admin')
+                                .set({
+                              'requireAdminLogin': v,
+                            }, SetOptions(merge: true));
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                
+                const SizedBox(height: 24),
+                const Divider(color: Colors.white24),
+                const SizedBox(height: 24),
+                
+                // Gemini AI Settings Section
+                Row(
                   children: [
-                    _SettingsToggle(
-                      title: 'Chat Notifications',
-                      value: enableChatNotify,
-                      onChanged: (v) async {
-                        await FirebaseFirestore.instance
-                            .collection('settings')
-                            .doc('admin')
-                            .set({
-                          'enableChatNotifications': v,
-                        }, SetOptions(merge: true));
-                      },
-                    ),
-                    _SettingsToggle(
-                      title: 'Dispatch Enabled',
-                      value: enableDispatch,
-                      onChanged: (v) async {
-                        await FirebaseFirestore.instance
-                            .collection('settings')
-                            .doc('admin')
-                            .set({
-                          'enableDispatch': v,
-                        }, SetOptions(merge: true));
-                      },
-                    ),
-                    _SettingsToggle(
-                      title: 'Require Admin Login',
-                      value: requireAdminLogin,
-                      onChanged: (v) async {
-                        await FirebaseFirestore.instance
-                            .collection('settings')
-                            .doc('admin')
-                            .set({
-                          'requireAdminLogin': v,
-                        }, SetOptions(merge: true));
-                      },
+                    const Icon(Icons.auto_awesome, color: AppColors.primaryPurple, size: 20),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Gemini AI Assistant',
+                      style: TextStyle(
+                        color: AppColors.primaryPurple,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
-                );
-              },
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'AI-powered chat responses (fallback for TekMate)',
+                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                ),
+                const SizedBox(height: 12),
+                
+                StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                  stream: geminiSettingsStream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final data = snapshot.data!.data() ?? {};
+                    final geminiEnabled = (data['enabled'] ?? false) == true;
+                    final hasApiKey = (data['apiKey'] as String?)?.isNotEmpty ?? false;
+                    
+                    return Column(
+                      children: [
+                        _SettingsToggle(
+                          title: 'Enable Gemini AI',
+                          subtitle: hasApiKey ? 'API key configured' : 'API key required',
+                          value: geminiEnabled,
+                          onChanged: (v) async {
+                            if (v && !hasApiKey) {
+                              _showApiKeyDialog(context);
+                            } else {
+                              await FirebaseFirestore.instance
+                                  .collection('settings')
+                                  .doc('gemini')
+                                  .set({
+                                'enabled': v,
+                              }, SetOptions(merge: true));
+                            }
+                          },
+                        ),
+                        
+                        // API Key Button
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: ListTile(
+                            tileColor: const Color(0xFF121212),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: const BorderSide(color: Colors.white10),
+                            ),
+                            leading: Icon(
+                              hasApiKey ? Icons.key : Icons.key_off,
+                              color: hasApiKey ? AppColors.success : Colors.white54,
+                            ),
+                            title: Text(
+                              hasApiKey ? 'API Key Configured' : 'Set API Key',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              hasApiKey ? 'Tap to update' : 'Required for Gemini',
+                              style: const TextStyle(color: Colors.white70, fontSize: 12),
+                            ),
+                            trailing: const Icon(Icons.arrow_forward_ios, 
+                                color: Colors.white54, size: 16),
+                            onTap: () => _showApiKeyDialog(context),
+                          ),
+                        ),
+                        
+                        // Personality Tuning Button
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: ListTile(
+                            tileColor: const Color(0xFF121212),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: const BorderSide(color: Colors.white10),
+                            ),
+                            leading: const Icon(Icons.psychology, 
+                                color: AppColors.primaryPurple),
+                            title: const Text(
+                              'Personality Tuning',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: const Text(
+                              'Customize AI response style',
+                              style: TextStyle(color: Colors.white70, fontSize: 12),
+                            ),
+                            trailing: const Icon(Icons.arrow_forward_ios, 
+                                color: Colors.white54, size: 16),
+                            onTap: () => _showPersonalityDialog(context, data['personality']),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showApiKeyDialog(BuildContext context) {
+    final controller = TextEditingController();
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surfaceDark,
+        title: const Text('Gemini API Key', 
+            style: TextStyle(color: AppColors.textPrimary)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Enter your Google Gemini API key:',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              obscureText: true,
+              style: const TextStyle(color: AppColors.textPrimary),
+              decoration: InputDecoration(
+                hintText: 'AIza...',
+                hintStyle: const TextStyle(color: AppColors.textMuted),
+                filled: true,
+                fillColor: AppColors.background,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white24),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Get your API key from:\naistudio.google.com/app/apikey',
+              style: TextStyle(color: AppColors.textMuted, fontSize: 11),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final apiKey = controller.text.trim();
+              if (apiKey.isNotEmpty) {
+                await FirebaseFirestore.instance
+                    .collection('settings')
+                    .doc('gemini')
+                    .set({
+                  'apiKey': apiKey,
+                }, SetOptions(merge: true));
+                
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('API key saved successfully'),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Save', 
+                style: TextStyle(color: AppColors.primaryCyan)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPersonalityDialog(BuildContext context, String? currentPersonality) {
+    final controller = TextEditingController(
+      text: currentPersonality ?? 
+            'You are a helpful HVAC technical support assistant. '
+            'You provide clear, professional guidance to HVAC technicians and homeowners. '
+            'Be concise, practical, and safety-conscious in your responses. '
+            'When providing troubleshooting advice, explain the reasoning behind your recommendations.',
+    );
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surfaceDark,
+        title: const Text('Personality Tuning', 
+            style: TextStyle(color: AppColors.textPrimary)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Customize how Gemini AI responds to queries:',
+                style: TextStyle(color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: controller,
+                maxLines: 8,
+                style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
+                decoration: InputDecoration(
+                  hintText: 'Enter personality instructions...',
+                  hintStyle: const TextStyle(color: AppColors.textMuted),
+                  filled: true,
+                  fillColor: AppColors.background,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: Colors.white24),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.info.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.info.withOpacity(0.3)),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.lightbulb_outline, 
+                            color: AppColors.info, size: 16),
+                        SizedBox(width: 6),
+                        Text(
+                          'Tips:',
+                          style: TextStyle(
+                            color: AppColors.info,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      '• Define tone (professional, friendly, technical)\n'
+                      '• Set response length preferences\n'
+                      '• Specify safety considerations\n'
+                      '• Include domain expertise level',
+                      style: TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final personality = controller.text.trim();
+              if (personality.isNotEmpty) {
+                await FirebaseFirestore.instance
+                    .collection('settings')
+                    .doc('gemini')
+                    .set({
+                  'personality': personality,
+                }, SetOptions(merge: true));
+                
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Personality updated successfully'),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Save', 
+                style: TextStyle(color: AppColors.primaryCyan)),
           ),
         ],
       ),
@@ -1106,10 +1441,12 @@ class _PricebookItemsPane extends StatelessWidget {
 
 class _SettingsToggle extends StatelessWidget {
   final String title;
+  final String? subtitle;
   final bool value;
   final ValueChanged<bool> onChanged;
   const _SettingsToggle({
     required this.title,
+    this.subtitle,
     required this.value,
     required this.onChanged,
   });
@@ -1127,12 +1464,27 @@ class _SettingsToggle extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle!,
+                    style: const TextStyle(
+                      color: Colors.white54,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
           Switch(
