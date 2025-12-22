@@ -20,7 +20,7 @@ dependencies:
   cloud_firestore: ^6.1.0
   firebase_messaging: ^16.0.4
   firebase_storage: ^13.0.4
-  firebase_functions: ^5.1.1
+  cloud_functions: ^6.0.4
   flutter_dotenv: ^6.0.0
   image_picker: ^1.1.2
   cached_network_image: ^3.4.1

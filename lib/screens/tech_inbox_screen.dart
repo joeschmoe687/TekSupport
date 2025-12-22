@@ -42,7 +42,7 @@ class _TechInboxScreenState extends State<TechInboxScreen> {
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.brightness_6,
               color: AppColors.textSecondary,
             ),
@@ -94,12 +94,12 @@ class _TechInboxScreenState extends State<TechInboxScreen> {
                     ),
                     Text(
                       'Status: $status',
-                      style: const TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12),
                     ),
                     if (timestamp != null)
                       Text(
                         timestamp.toDate().toString(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 10,
                           color: Colors.grey,
                         ),

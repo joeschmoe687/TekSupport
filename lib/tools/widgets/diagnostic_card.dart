@@ -61,7 +61,7 @@ class DiagnosticCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     _getStatusTitle(diagnostic.overallStatus),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -101,12 +101,12 @@ class DiagnosticCard extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.lightbulb, color: AppColors.info, size: 20),
+                        Icon(Icons.lightbulb, color: AppColors.info, size: 20),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             diagnostic.combinedDiagnostic!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textPrimary,
                               fontSize: 14,
                               height: 1.4,
@@ -149,14 +149,14 @@ class DiagnosticCard extends StatelessWidget {
               color: AppColors.success.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.check_circle,
               color: AppColors.success,
               size: 32,
             ),
           ),
           const SizedBox(width: 16),
-          const Expanded(
+          Expanded(
             child: Text(
               'System readings are within normal range',
               style: TextStyle(
@@ -188,7 +188,7 @@ class DiagnosticCard extends StatelessWidget {
           // Alert message
           Text(
             alert.message,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textPrimary,
               fontSize: 14,
               fontWeight: FontWeight.w500,

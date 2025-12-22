@@ -379,7 +379,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
       String aiSource = '';
       
       if (_isTekmateAvailable) {
-        response = await _tekMateService.getResponse(
+        response = await _tekmateService.getResponse(
           query,
           context: context,
           platform: 'app',

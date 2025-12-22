@@ -336,7 +336,7 @@ class _AirflowScreenState extends State<AirflowScreen> {
         actions: [
           IconButton(
             icon: _isScanning
-                ? const SizedBox(
+                ? SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
@@ -390,7 +390,7 @@ class _AirflowScreenState extends State<AirflowScreen> {
                   child: Row(
                     children: [
                       if (_isScanning) ...[
-                        const SizedBox(
+                        SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
@@ -400,16 +400,16 @@ class _AirflowScreenState extends State<AirflowScreen> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             'Scanning for ABM-200...',
                             style: TextStyle(color: AppColors.primaryCyan),
                           ),
                         ),
                       ] else ...[
-                        const Icon(Icons.warning, color: AppColors.warning),
+                        Icon(Icons.warning, color: AppColors.warning),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             'No airflow meter connected. Tap bluetooth icon to scan.',
                             style: TextStyle(color: AppColors.warning),
@@ -442,14 +442,14 @@ class _AirflowScreenState extends State<AirflowScreen> {
                           children: [
                             Text(
                               '$_velocity',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 96,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.textPrimary,
                                 fontFamily: 'monospace',
                               ),
                             ),
-                            const Text(
+                            Text(
                               'FPM',
                               style: TextStyle(
                                 fontSize: 32,
@@ -523,7 +523,7 @@ class _AirflowScreenState extends State<AirflowScreen> {
                           children: [
                             Text(
                               _connectedDeviceName!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 color: AppColors.textMuted,
                               ),
@@ -546,7 +546,7 @@ class _AirflowScreenState extends State<AirflowScreen> {
                               const SizedBox(width: 2),
                               Text(
                                 '$_batteryLevel%',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
                                   color: AppColors.textMuted,
                                 ),
@@ -614,7 +614,7 @@ class _AirflowScreenState extends State<AirflowScreen> {
             const SizedBox(height: 8),
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
@@ -623,7 +623,7 @@ class _AirflowScreenState extends State<AirflowScreen> {
             ),
             Text(
               unit,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 color: AppColors.textSecondary,
               ),
@@ -654,7 +654,7 @@ class _AirflowScreenState extends State<AirflowScreen> {
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
@@ -663,7 +663,7 @@ class _AirflowScreenState extends State<AirflowScreen> {
           ),
           Text(
             unit,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               color: AppColors.textSecondary,
             ),

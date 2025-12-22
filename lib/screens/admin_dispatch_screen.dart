@@ -391,7 +391,7 @@ class _AdminDispatchScreenState extends State<AdminDispatchScreen> {
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.brightness_6,
               color: AppColors.textSecondary,
             ),
@@ -399,14 +399,14 @@ class _AdminDispatchScreenState extends State<AdminDispatchScreen> {
             tooltip: 'Toggle Theme',
           ),
           IconButton(
-            icon: const Icon(Icons.add_task, color: AppColors.textSecondary),
+            icon: Icon(Icons.add_task, color: AppColors.textSecondary),
             onPressed: _createDispatchDialog,
             tooltip: 'New Dispatch',
           ),
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+        decoration: BoxDecoration(gradient: AppColors.backgroundGradient),
         child: Column(
           children: [
             Padding(
@@ -554,11 +554,11 @@ class _AdminDispatchScreenState extends State<AdminDispatchScreen> {
                     })(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   }
 
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('No messages'));
+                    return Center(child: Text('No messages'));
                   }
 
                   return RefreshIndicator(

@@ -70,7 +70,7 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.brightness_6,
               color: AppColors.textSecondary,
             ),
@@ -80,7 +80,7 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+        decoration: BoxDecoration(gradient: AppColors.backgroundGradient),
         child: Column(
           children: [
             Container(
@@ -88,7 +88,7 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.filter_list,
                     color: AppColors.textSecondary,
                     size: 20,
@@ -353,7 +353,7 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
                               Expanded(
                                 child: Text(
                                   userName,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -424,7 +424,7 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
                         Expanded(
                           child: Text(
                             problem,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white70,
                               fontSize: 12,
                             ),
@@ -442,7 +442,7 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
                     lastMessage.length > 80
                         ? '${lastMessage.substring(0, 80)}...'
                         : lastMessage,
-                    style: const TextStyle(color: Colors.white54, fontSize: 13),
+                    style: TextStyle(color: Colors.white54, fontSize: 13),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -451,7 +451,7 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
                   const SizedBox(height: 8),
                   Text(
                     _formatTimestamp(ts),
-                    style: const TextStyle(color: Colors.white38, fontSize: 11),
+                    style: TextStyle(color: Colors.white38, fontSize: 11),
                   ),
                 ],
                 const SizedBox(height: 12),

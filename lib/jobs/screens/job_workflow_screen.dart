@@ -140,7 +140,7 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
           },
         );
       default:
-        return const Center(child: Text('Unknown step type'));
+        return Center(child: Text('Unknown step type'));
     }
   }
 
@@ -158,7 +158,7 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
         stream: _jobService.getJobSteps(widget.jobId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
+            return Center(
               child: CircularProgressIndicator(color: AppColors.primaryCyan),
             );
           }
@@ -167,14 +167,14 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
             return Center(
               child: Text(
                 'Error loading job steps: ${snapshot.error}',
-                style: const TextStyle(color: Colors.red),
+                style: TextStyle(color: Colors.red),
               ),
             );
           }
 
           final steps = snapshot.data ?? [];
           if (steps.isEmpty) {
-            return const Center(
+            return Center(
               child: Text('No steps found'),
             );
           }
@@ -229,14 +229,14 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
             children: [
               Text(
                 'Step ${currentIndex + 1} of $totalSteps',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 14,
                 ),
               ),
               Text(
                 '${(progress * 100).toInt()}% Complete',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.primaryCyan,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,

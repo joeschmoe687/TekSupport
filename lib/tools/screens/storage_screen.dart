@@ -66,9 +66,9 @@ class _StorageScreenState extends State<StorageScreen>
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
-        title: const Text('Clear All Data?',
+        title: Text('Clear All Data?',
             style: TextStyle(color: AppColors.textPrimary)),
-        content: const Text(
+        content: Text(
           'This will remove all saved devices, connection history, learned patterns, and custom profiles. This cannot be undone.',
           style: TextStyle(color: AppColors.textSecondary),
         ),
@@ -106,25 +106,25 @@ class _StorageScreenState extends State<StorageScreen>
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Storage',
+        title: Text('Storage',
             style: TextStyle(color: AppColors.textPrimary)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: AppColors.primaryCyan),
+            icon: Icon(Icons.refresh, color: AppColors.primaryCyan),
             onPressed: _loadData,
             tooltip: 'Refresh',
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: AppColors.textSecondary),
+            icon: Icon(Icons.more_vert, color: AppColors.textSecondary),
             color: AppColors.surfaceDark,
             onSelected: (value) {
               if (value == 'clear') _clearAllData();
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'clear',
                 child: Row(
                   children: [
@@ -153,7 +153,7 @@ class _StorageScreenState extends State<StorageScreen>
         ),
       ),
       body: _isLoading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(color: AppColors.primaryCyan))
           : TabBarView(
               controller: _tabController,
@@ -200,7 +200,7 @@ class _StorageScreenState extends State<StorageScreen>
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textPrimary,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -208,7 +208,7 @@ class _StorageScreenState extends State<StorageScreen>
         ),
         Text(
           label,
-          style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+          style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
         ),
       ],
     );
@@ -247,7 +247,7 @@ class _StorageScreenState extends State<StorageScreen>
               Expanded(
                 child: Text(
                   device.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
@@ -255,7 +255,7 @@ class _StorageScreenState extends State<StorageScreen>
                 ),
               ),
               if (device.autoReconnect)
-                const Icon(Icons.autorenew, color: AppColors.success, size: 20),
+                Icon(Icons.autorenew, color: AppColors.success, size: 20),
             ],
           ),
           const SizedBox(height: 8),
@@ -302,11 +302,11 @@ class _StorageScreenState extends State<StorageScreen>
             width: 100,
             child: Text(label,
                 style:
-                    const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                    TextStyle(color: AppColors.textMuted, fontSize: 12)),
           ),
           Expanded(
             child: Text(value,
-                style: const TextStyle(
+                style: TextStyle(
                     color: AppColors.textSecondary, fontSize: 12)),
           ),
         ],
@@ -360,7 +360,7 @@ class _StorageScreenState extends State<StorageScreen>
               children: [
                 Text(
                   event.deviceName,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.w500),
                 ),
@@ -373,7 +373,7 @@ class _StorageScreenState extends State<StorageScreen>
           ),
           Text(
             _formatTime(event.timestamp),
-            style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
+            style: TextStyle(color: AppColors.textMuted, fontSize: 11),
           ),
         ],
       ),
@@ -439,13 +439,13 @@ class _StorageScreenState extends State<StorageScreen>
         children: [
           Row(
             children: [
-              const Icon(Icons.psychology,
+              Icon(Icons.psychology,
                   color: AppColors.primaryCyan, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   pattern.deviceName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -479,7 +479,7 @@ class _StorageScreenState extends State<StorageScreen>
             const SizedBox(height: 8),
             Text(
               'Sample values: ${pattern.sampleValues.take(5).join(", ")}',
-              style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
+              style: TextStyle(color: AppColors.textMuted, fontSize: 11),
             ),
           ],
         ],
@@ -496,11 +496,11 @@ class _StorageScreenState extends State<StorageScreen>
             width: 100,
             child: Text(label,
                 style:
-                    const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                    TextStyle(color: AppColors.textMuted, fontSize: 12)),
           ),
           Expanded(
             child: Text(value,
-                style: const TextStyle(
+                style: TextStyle(
                     color: AppColors.textSecondary, fontSize: 12)),
           ),
         ],
@@ -546,13 +546,13 @@ class _StorageScreenState extends State<StorageScreen>
         children: [
           Row(
             children: [
-              const Icon(Icons.description,
+              Icon(Icons.description,
                   color: AppColors.primaryCyan, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   profile.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -572,7 +572,7 @@ class _StorageScreenState extends State<StorageScreen>
             const SizedBox(height: 8),
             Text(
               'Notes: ${profile.notes}',
-              style: const TextStyle(
+              style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 11,
                   fontStyle: FontStyle.italic),
@@ -615,11 +615,11 @@ class _StorageScreenState extends State<StorageScreen>
             width: 100,
             child: Text(label,
                 style:
-                    const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                    TextStyle(color: AppColors.textMuted, fontSize: 12)),
           ),
           Expanded(
             child: Text(value,
-                style: const TextStyle(
+                style: TextStyle(
                     color: AppColors.textSecondary, fontSize: 12)),
           ),
         ],
@@ -684,7 +684,7 @@ const ${_toCamelCase(profile.name)}Profile = HvacDeviceProfile(
             const SizedBox(height: 16),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -695,7 +695,7 @@ const ${_toCamelCase(profile.name)}Profile = HvacDeviceProfile(
             Text(
               subtitle,
               style:
-                  const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                  TextStyle(color: AppColors.textSecondary, fontSize: 14),
               textAlign: TextAlign.center,
             ),
           ],

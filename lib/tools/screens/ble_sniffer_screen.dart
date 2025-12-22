@@ -14,6 +14,7 @@ import '../services/device_registry.dart';
 import '../services/ble_pattern_analyzer.dart';
 import '../services/smart_device_classifier.dart';
 import '../services/profile_generator_service.dart';
+import '../services/ble_sniff_upload_service.dart';
 
 /// Admin-only BLE Sniffer screen for debugging HVAC tool protocols.
 /// Allows scanning, connecting, and viewing raw GATT data.
@@ -1063,12 +1064,12 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
                 // Profile Key
                 TextField(
                   controller: nameController,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Profile Key',
-                    labelStyle: const TextStyle(color: AppColors.textSecondary),
+                    labelStyle: TextStyle(color: AppColors.textSecondary),
                     hintText: 'e.g., testo_temp_probe',
-                    hintStyle: const TextStyle(color: AppColors.textMuted),
+                    hintStyle: TextStyle(color: AppColors.textMuted),
                     filled: true,
                     fillColor: AppColors.surfaceLight,
                     border: OutlineInputBorder(
@@ -1082,10 +1083,10 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
                 // Display Name
                 TextField(
                   controller: displayNameController,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Display Name',
-                    labelStyle: const TextStyle(color: AppColors.textSecondary),
+                    labelStyle: TextStyle(color: AppColors.textSecondary),
                     filled: true,
                     fillColor: AppColors.surfaceLight,
                     border: OutlineInputBorder(
@@ -1100,10 +1101,10 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
                 DropdownButtonFormField<String>(
                   value: selectedType,
                   dropdownColor: AppColors.surfaceLight,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Device Type',
-                    labelStyle: const TextStyle(color: AppColors.textSecondary),
+                    labelStyle: TextStyle(color: AppColors.textSecondary),
                     filled: true,
                     fillColor: AppColors.surfaceLight,
                     border: OutlineInputBorder(
@@ -1138,10 +1139,10 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
                 DropdownButtonFormField<String>(
                   value: selectedUnit,
                   dropdownColor: AppColors.surfaceLight,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Unit',
-                    labelStyle: const TextStyle(color: AppColors.textSecondary),
+                    labelStyle: TextStyle(color: AppColors.textSecondary),
                     filled: true,
                     fillColor: AppColors.surfaceLight,
                     border: OutlineInputBorder(
@@ -1181,7 +1182,7 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Detected UUIDs:',
                           style: TextStyle(
                               color: AppColors.primaryCyan, fontSize: 12),
@@ -1190,7 +1191,7 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
                         if (_selectedServiceUuid != null)
                           Text(
                             'Service: $_selectedServiceUuid',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: AppColors.textSecondary,
                                 fontSize: 10,
                                 fontFamily: 'monospace'),
@@ -1198,7 +1199,7 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
                         if (_selectedCharUuid != null)
                           Text(
                             'Char: $_selectedCharUuid',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: AppColors.textSecondary,
                                 fontSize: 10,
                                 fontFamily: 'monospace'),
@@ -1341,7 +1342,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
           children: [
             Text(
               char.uuid.toString(),
-              style: const TextStyle(
+              style: TextStyle(
                   color: AppColors.primaryCyan,
                   fontSize: 11,
                   fontFamily: 'monospace'),
@@ -1349,12 +1350,12 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             const SizedBox(height: 16),
             TextField(
               controller: controller,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Hex bytes (space separated)',
                 hintText: 'e.g., 01 02 FF',
-                labelStyle: const TextStyle(color: AppColors.textSecondary),
-                hintStyle: const TextStyle(color: AppColors.textMuted),
+                labelStyle: TextStyle(color: AppColors.textSecondary),
+                hintStyle: TextStyle(color: AppColors.textMuted),
                 filled: true,
                 fillColor: AppColors.surfaceLight,
                 border: OutlineInputBorder(
@@ -1656,11 +1657,11 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.sensors, size: 12, color: AppColors.primaryCyan),
+          Icon(Icons.sensors, size: 12, color: AppColors.primaryCyan),
           const SizedBox(width: 4),
           Text(
             'Fieldpiece $deviceInfo: $reading',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.primaryCyan,
               fontSize: 9,
               fontWeight: FontWeight.w500,
@@ -1677,7 +1678,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             const SizedBox(width: 2),
             Text(
               '$batteryLevel%',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 8,
               ),
@@ -1889,7 +1890,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         actions: [
           // Settings icon
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.settings,
               color: AppColors.textSecondary,
             ),
@@ -1897,7 +1898,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const BleSnifferSettingsScreen(),
+                  builder: (context) => BleSnifferSettingsScreen(),
                 ),
               ).then((_) {
                 // Reload settings after returning from settings screen
@@ -1931,19 +1932,19 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
           // Save Profile button
           if (_connectedDevice != null)
             IconButton(
-              icon: const Icon(Icons.save, color: AppColors.success),
+              icon: Icon(Icons.save, color: AppColors.success),
               onPressed: _generateProfile,
               tooltip: 'Save Profile',
             ),
           if (_connectedDevice != null)
             IconButton(
-              icon: const Icon(Icons.link_off, color: AppColors.error),
+              icon: Icon(Icons.link_off, color: AppColors.error),
               onPressed: _disconnect,
               tooltip: 'Disconnect',
             ),
           // More options popup
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: AppColors.textSecondary),
+            icon: Icon(Icons.more_vert, color: AppColors.textSecondary),
             color: AppColors.surfaceDark,
             onSelected: (value) {
               switch (value) {
@@ -1984,12 +1985,12 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                       _showDataInterpreter
                           ? 'Hide Interpretations'
                           : 'Show Interpretations',
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'export',
                 child: Row(
                   children: [
@@ -2000,7 +2001,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                   ],
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'share',
                 child: Row(
                   children: [
@@ -2010,7 +2011,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                   ],
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'sync',
                 child: Row(
                   children: [
@@ -2033,11 +2034,11 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                         size: 20),
                     const SizedBox(width: 12),
                     Text('Session History (${_savedSessions.length})',
-                        style: const TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.white)),
                   ],
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'clear',
                 child: Row(
                   children: [
@@ -2053,7 +2054,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+        decoration: BoxDecoration(gradient: AppColors.backgroundGradient),
         child: Column(
           children: [
             // History panel (collapsible)
@@ -2099,7 +2100,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                           Text(
                             '${_deviceManufacturer ?? ""} ${_deviceModelNumber ?? ""}'
                                 .trim(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.primaryCyan,
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
@@ -2119,7 +2120,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                               if (_deviceHardwareRev != null)
                                 'HW: $_deviceHardwareRev',
                             ].join(' | '),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textMuted,
                               fontSize: 9,
                             ),
@@ -2200,10 +2201,10 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Row(
                       children: [
-                        const Icon(Icons.terminal,
+                        Icon(Icons.terminal,
                             color: AppColors.primaryCyan, size: 16),
                         const SizedBox(width: 8),
-                        const Text(
+                        Text(
                           'Console',
                           style: TextStyle(
                             color: AppColors.primaryCyan,
@@ -2214,7 +2215,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                         const Spacer(),
                         Text(
                           '${_logEntries.length} entries',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 10,
                           ),
@@ -2257,12 +2258,12 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                const Icon(Icons.history,
+                Icon(Icons.history,
                     color: AppColors.primaryCyan, size: 18),
                 const SizedBox(width: 8),
                 Text(
                   'Saved Sessions (${_savedSessions.length})',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.primaryCyan,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -2270,7 +2271,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.close,
+                  icon: Icon(Icons.close,
                       color: AppColors.textSecondary, size: 18),
                   onPressed: () => setState(() => _showHistory = false),
                   padding: EdgeInsets.zero,
@@ -2281,7 +2282,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
           ),
           Expanded(
             child: _savedSessions.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
                       'No saved sessions yet.\nSessions auto-save after scans.',
                       textAlign: TextAlign.center,
@@ -2319,19 +2320,19 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                             connectedDevice != null
                                 ? connectedDevice['name'] ?? 'Unknown'
                                 : '$deviceCount devices scanned',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: Colors.white, fontSize: 13),
                           ),
                           subtitle: Text(
                             '${date.month}/${date.day} ${date.hour}:${date.minute.toString().padLeft(2, '0')} • $logCount logs',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: AppColors.textMuted, fontSize: 11),
                           ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.cloud_upload,
+                                icon: Icon(Icons.cloud_upload,
                                     color: AppColors.primaryCyan, size: 18),
                                 onPressed: () =>
                                     _syncSessionToFirebase(session),
@@ -2341,7 +2342,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                               ),
                               const SizedBox(width: 8),
                               IconButton(
-                                icon: const Icon(Icons.delete_outline,
+                                icon: Icon(Icons.delete_outline,
                                     color: AppColors.error, size: 18),
                                 onPressed: () => _deleteSession(session['id']),
                                 tooltip: 'Delete',
@@ -2418,7 +2419,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
 
   Widget _buildScanResults() {
     if (_isConnecting) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -2446,7 +2447,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
               _isScanning
                   ? 'Scanning for devices...'
                   : 'Tap Scan to find devices',
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           ],
         ),
@@ -2474,12 +2475,12 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.filter_alt_off,
+            Icon(Icons.filter_alt_off,
                 size: 64, color: AppColors.textMuted),
             const SizedBox(height: 16),
             Text(
               '${_scanResults.length} devices hidden (Apple filter)',
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 8),
             TextButton.icon(
@@ -2544,7 +2545,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
           shape: isLikelyHvac
               ? RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(color: AppColors.warning, width: 1),
+                  side: BorderSide(color: AppColors.warning, width: 1),
                 )
               : null,
           child: ListTile(
@@ -2572,7 +2573,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             ),
             title: Text(
               name,
-              style: const TextStyle(
+              style: TextStyle(
                   color: Colors.white, fontWeight: FontWeight.w500),
             ),
             subtitle: Column(
@@ -2581,7 +2582,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                 // MAC address
                 Text(
                   device.remoteId.str,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 10,
                       fontFamily: 'monospace'),
@@ -2592,20 +2593,20 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                   Text(
                     'Local Name: ${adv.advName}',
                     style:
-                        const TextStyle(color: AppColors.warning, fontSize: 10),
+                        TextStyle(color: AppColors.warning, fontSize: 10),
                   ),
                 // Manufacturer if known
                 if (manufacturerInfo.isNotEmpty)
                   Text(
                     manufacturerInfo,
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: AppColors.primaryCyan, fontSize: 10),
                   ),
                 // Raw manufacturer data (for debugging unknown devices)
                 if (adv.manufacturerData.isNotEmpty)
                   Text(
                     'Mfr Data: ${_formatManufacturerDataHex(adv.manufacturerData)}',
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 9,
                         fontFamily: 'monospace'),
@@ -2615,20 +2616,20 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                   Text(
                     'Type: $deviceType',
                     style:
-                        const TextStyle(color: AppColors.success, fontSize: 10),
+                        TextStyle(color: AppColors.success, fontSize: 10),
                   ),
                 // Service UUIDs
                 if (services.isNotEmpty)
                   Text(
                     'Services: $services',
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: AppColors.textSecondary, fontSize: 9),
                   ),
                 // Service data (often contains model/serial info)
                 if (adv.serviceData.isNotEmpty)
                   Text(
                     'Svc Data: ${_formatServiceData(adv.serviceData)}',
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 9,
                         fontFamily: 'monospace'),
@@ -2637,7 +2638,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                 if (adv.txPowerLevel != null)
                   Text(
                     'TX Power: ${adv.txPowerLevel} dBm',
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: AppColors.textMuted, fontSize: 9),
                   ),
                 // Connectable status
@@ -2708,11 +2709,11 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             ),
             trailing: adv.connectable
                 ? IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios,
+                    icon: Icon(Icons.arrow_forward_ios,
                         color: AppColors.primaryCyan, size: 18),
                     onPressed: () => _connectToDevice(device),
                   )
-                : const Icon(Icons.broadcast_on_personal,
+                : Icon(Icons.broadcast_on_personal,
                     color: AppColors.textMuted, size: 18),
             onTap: adv.connectable ? () => _connectToDevice(device) : null,
             isThreeLine: true,
@@ -2724,7 +2725,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
 
   Widget _buildServiceExplorer() {
     if (_services.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -2755,18 +2756,18 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
       margin: const EdgeInsets.only(bottom: 12),
       child: ExpansionTile(
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: const Icon(Icons.folder, color: AppColors.primaryCyan),
+        leading: Icon(Icons.folder, color: AppColors.primaryCyan),
         title: GestureDetector(
           onLongPress: () => _copyToClipboard(service.uuid.toString()),
           child: Text(
             service.uuid.toString(),
-            style: const TextStyle(
+            style: TextStyle(
                 color: Colors.white, fontSize: 12, fontFamily: 'monospace'),
           ),
         ),
         subtitle: Text(
           '${service.characteristics.length} characteristics',
-          style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
+          style: TextStyle(color: AppColors.textMuted, fontSize: 11),
         ),
         iconColor: AppColors.textSecondary,
         collapsedIconColor: AppColors.textSecondary,
@@ -2800,7 +2801,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             onLongPress: () => _copyToClipboard(char.uuid.toString()),
             child: Text(
               char.uuid.toString(),
-              style: const TextStyle(
+              style: TextStyle(
                   color: AppColors.primaryCyan,
                   fontSize: 11,
                   fontFamily: 'monospace'),
@@ -2818,7 +2819,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(p,
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: AppColors.textSecondary, fontSize: 9)),
                     ))
                 .toList(),
@@ -2939,11 +2940,11 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         onLongPress: () => _copyToClipboard(entry.message),
         child: RichText(
           text: TextSpan(
-            style: const TextStyle(fontFamily: 'monospace', fontSize: 11),
+            style: TextStyle(fontFamily: 'monospace', fontSize: 11),
             children: [
               TextSpan(
                 text: '[$time] ',
-                style: const TextStyle(color: AppColors.textMuted),
+                style: TextStyle(color: AppColors.textMuted),
               ),
               TextSpan(
                 text: entry.message,

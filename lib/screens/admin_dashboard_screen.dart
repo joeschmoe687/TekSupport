@@ -66,7 +66,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
 
   @override
   Widget build(BuildContext context) {
-    final tabLabelStyle = const TextStyle(
+    final tabLabelStyle = TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w600,
     );
@@ -76,10 +76,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
       return Scaffold(
         backgroundColor: AppColors.background,
         body: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: AppColors.backgroundGradient,
           ),
-          child: const Center(
+          child: Center(
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryCyan),
             ),
@@ -104,32 +104,32 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
           unselectedLabelColor: AppColors.textSecondary,
           labelStyle: tabLabelStyle,
           tabs: [
-            const Tab(
+            Tab(
               icon: Icon(Icons.dashboard, color: AppColors.textSecondary),
               text: 'Overview',
             ),
-            const Tab(
+            Tab(
               icon: Icon(Icons.assignment, color: AppColors.textSecondary),
               text: 'Dispatch',
             ),
-            const Tab(
+            Tab(
               icon: Icon(Icons.people, color: AppColors.textSecondary),
               text: 'Customers',
             ),
-            const Tab(
+            Tab(
               icon: Icon(Icons.receipt_long, color: AppColors.textSecondary),
               text: 'Invoices',
             ),
-            const Tab(
+            Tab(
               icon: Icon(Icons.price_change, color: AppColors.textSecondary),
               text: 'Pricebook',
             ),
-            const Tab(
+            Tab(
               icon: Icon(Icons.settings, color: AppColors.textSecondary),
               text: 'Settings',
             ),
             if (_isAdmin)
-              const Tab(
+              Tab(
                 icon: Icon(
                   Icons.admin_panel_settings,
                   color: AppColors.textSecondary,
@@ -140,7 +140,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
         ),
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.brightness_6,
               color: AppColors.textSecondary,
             ),
@@ -150,7 +150,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+        decoration: BoxDecoration(gradient: AppColors.backgroundGradient),
         child: TabBarView(
           controller: _tabController,
           children: [
@@ -267,7 +267,7 @@ class _AdminPane extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
                     Icon(Icons.info_outline,
                         color: AppColors.textMuted, size: 18),
@@ -341,7 +341,7 @@ class _AdminToolCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -350,7 +350,7 @@ class _AdminToolCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       description,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 12,
                       ),
@@ -381,9 +381,9 @@ class _DebugInfoRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label,
-              style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+              style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
           Text(value,
-              style: const TextStyle(
+              style: TextStyle(
                   color: AppColors.textSecondary, fontSize: 12)),
         ],
       ),
@@ -427,7 +427,7 @@ class _OverviewPane extends StatelessWidget {
           Wrap(
             spacing: 12,
             runSpacing: 12,
-            children: const [
+            children: [
               _QuickAction(icon: Icons.assignment, label: 'Create Job'),
               _QuickAction(icon: Icons.person_add, label: 'Add Customer'),
               _QuickAction(icon: Icons.receipt, label: 'New Invoice'),
@@ -461,7 +461,7 @@ class _StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70)),
+          Text(label, style: TextStyle(color: Colors.white70)),
           const SizedBox(height: 8),
           Text(
             value,
@@ -548,7 +548,7 @@ class _QuickAction extends StatelessWidget {
         children: [
           Icon(icon, color: Colors.white70, size: 18),
           const SizedBox(width: 8),
-          Text(label, style: const TextStyle(color: Colors.white)),
+          Text(label, style: TextStyle(color: Colors.white)),
         ],
       ),
     );
@@ -629,7 +629,7 @@ class _PricebookPaneState extends State<_PricebookPane> {
                   stream: categoriesStream,
                   builder: (context, catSnap) {
                     if (!catSnap.hasData) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     }
                     final categories = catSnap.data!.docs;
                     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -763,12 +763,12 @@ class _PricebookPaneState extends State<_PricebookPane> {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(color: Colors.white70, fontSize: 14),
+              style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
           ),
           Text(
             '\$${currentPrice.toStringAsFixed(2)}',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.primaryCyan,
               fontWeight: FontWeight.w600,
             ),
@@ -861,14 +861,14 @@ class _PricebookPaneState extends State<_PricebookPane> {
           ListTile(
             title: Text(
               name,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),
             ),
             subtitle: Text(
               'Items: $itemCount',
-              style: const TextStyle(color: Colors.white70),
+              style: TextStyle(color: Colors.white70),
             ),
             trailing: Icon(
               isExpanded ? Icons.expand_less : Icons.expand_more,
@@ -895,14 +895,14 @@ class _PricebookPaneState extends State<_PricebookPane> {
                       const EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                   title: Text(
                     itemName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white70,
                       fontSize: 14,
                     ),
                   ),
                   trailing: Text(
                     price.isEmpty ? '' : '\$$price',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.primaryCyan,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -962,7 +962,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
             child: ListView(
               children: [
                 // Admin Settings Section
-                const Text(
+                Text(
                   'General Settings',
                   style: TextStyle(
                     color: AppColors.primaryCyan,
@@ -975,7 +975,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                   stream: adminSettingsStream,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     }
                     final data = snapshot.data!.data() ?? {};
                     final enableChatNotify =
@@ -1034,9 +1034,9 @@ class _SettingsPaneState extends State<_SettingsPane> {
                 // Gemini AI Settings Section
                 Row(
                   children: [
-                    const Icon(Icons.auto_awesome, color: AppColors.primaryPurple, size: 20),
+                    Icon(Icons.auto_awesome, color: AppColors.primaryPurple, size: 20),
                     const SizedBox(width: 8),
-                    const Text(
+                    Text(
                       'Gemini AI Assistant',
                       style: TextStyle(
                         color: AppColors.primaryPurple,
@@ -1057,7 +1057,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                   stream: geminiSettingsStream,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     }
                     final data = snapshot.data!.data() ?? {};
                     final geminiEnabled = (data['enabled'] ?? false) == true;
@@ -1098,14 +1098,14 @@ class _SettingsPaneState extends State<_SettingsPane> {
                             ),
                             title: Text(
                               hasApiKey ? 'API Key Configured' : 'Set API Key',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                             subtitle: Text(
                               hasApiKey ? 'Tap to update' : 'Required for Gemini',
-                              style: const TextStyle(color: Colors.white70, fontSize: 12),
+                              style: TextStyle(color: Colors.white70, fontSize: 12),
                             ),
                             trailing: const Icon(Icons.arrow_forward_ios, 
                                 color: Colors.white54, size: 16),
@@ -1122,7 +1122,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                               borderRadius: BorderRadius.circular(10),
                               side: const BorderSide(color: Colors.white10),
                             ),
-                            leading: const Icon(Icons.psychology, 
+                            leading: Icon(Icons.psychology, 
                                 color: AppColors.primaryPurple),
                             title: const Text(
                               'Personality Tuning',
@@ -1159,13 +1159,13 @@ class _SettingsPaneState extends State<_SettingsPane> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
-        title: const Text('Gemini API Key', 
+        title: Text('Gemini API Key', 
             style: TextStyle(color: AppColors.textPrimary)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Enter your Google Gemini API key:',
               style: TextStyle(color: AppColors.textSecondary),
             ),
@@ -1173,10 +1173,10 @@ class _SettingsPaneState extends State<_SettingsPane> {
             TextField(
               controller: controller,
               obscureText: true,
-              style: const TextStyle(color: AppColors.textPrimary),
+              style: TextStyle(color: AppColors.textPrimary),
               decoration: InputDecoration(
                 hintText: 'AIza...',
-                hintStyle: const TextStyle(color: AppColors.textMuted),
+                hintStyle: TextStyle(color: AppColors.textMuted),
                 filled: true,
                 fillColor: AppColors.background,
                 border: OutlineInputBorder(
@@ -1186,7 +1186,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Get your API key from:\naistudio.google.com/app/apikey',
               style: TextStyle(color: AppColors.textMuted, fontSize: 11),
             ),
@@ -1219,7 +1219,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                 }
               }
             },
-            child: const Text('Save', 
+            child: Text('Save', 
                 style: TextStyle(color: AppColors.primaryCyan)),
           ),
         ],
@@ -1240,14 +1240,14 @@ class _SettingsPaneState extends State<_SettingsPane> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
-        title: const Text('Personality Tuning', 
+        title: Text('Personality Tuning', 
             style: TextStyle(color: AppColors.textPrimary)),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Customize how Gemini AI responds to queries:',
                 style: TextStyle(color: AppColors.textSecondary),
               ),
@@ -1255,10 +1255,10 @@ class _SettingsPaneState extends State<_SettingsPane> {
               TextField(
                 controller: controller,
                 maxLines: 8,
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
+                style: TextStyle(color: AppColors.textPrimary, fontSize: 13),
                 decoration: InputDecoration(
                   hintText: 'Enter personality instructions...',
-                  hintStyle: const TextStyle(color: AppColors.textMuted),
+                  hintStyle: TextStyle(color: AppColors.textMuted),
                   filled: true,
                   fillColor: AppColors.background,
                   border: OutlineInputBorder(
@@ -1337,7 +1337,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                 }
               }
             },
-            child: const Text('Save', 
+            child: Text('Save', 
                 style: TextStyle(color: AppColors.primaryCyan)),
           ),
         ],
@@ -1369,7 +1369,7 @@ class _PricebookItemsPane extends StatelessWidget {
         elevation: 0,
         title: Text(
           categoryName,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w700,
           ),
@@ -1381,11 +1381,11 @@ class _PricebookItemsPane extends StatelessWidget {
           stream: itemsStream,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator());
             }
             final docs = snapshot.data!.docs;
             if (docs.isEmpty) {
-              return const Center(
+              return Center(
                 child: Text(
                   'No items in this category',
                   style: TextStyle(color: Colors.white70),
@@ -1409,7 +1409,7 @@ class _PricebookItemsPane extends StatelessWidget {
                   child: ListTile(
                     title: Text(
                       name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
@@ -1419,7 +1419,7 @@ class _PricebookItemsPane extends StatelessWidget {
                         code.isEmpty ? null : 'Code: $code',
                         price.isEmpty ? null : 'Price: $price',
                       ].whereType<String>().join(' • '),
-                      style: const TextStyle(color: Colors.white70),
+                      style: TextStyle(color: Colors.white70),
                     ),
                     trailing: const Icon(
                       Icons.chevron_right,
@@ -1469,7 +1469,7 @@ class _SettingsToggle extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1478,7 +1478,7 @@ class _SettingsToggle extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white54,
                       fontSize: 12,
                     ),
@@ -1530,10 +1530,10 @@ class _CustomersPaneState extends State<_CustomersPane> {
           const SizedBox(height: 12),
           TextField(
             onChanged: (v) => setState(() => _search = v.trim().toLowerCase()),
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: 'Search by name, email, phone',
-              hintStyle: const TextStyle(color: Colors.white54),
+              hintStyle: TextStyle(color: Colors.white54),
               filled: true,
               fillColor: const Color(0xFF121212),
               prefixIcon: const Icon(Icons.search, color: Colors.white54),
@@ -1552,7 +1552,7 @@ class _CustomersPaneState extends State<_CustomersPane> {
               stream: stream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(child: CircularProgressIndicator());
                 }
                 final docs = snapshot.data!.docs;
                 final filtered = docs.where((d) {
@@ -1567,7 +1567,7 @@ class _CustomersPaneState extends State<_CustomersPane> {
                 }).toList();
 
                 if (filtered.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
                       'No customers found',
                       style: TextStyle(color: Colors.white70),
@@ -1588,11 +1588,11 @@ class _CustomersPaneState extends State<_CustomersPane> {
                       tileColor: const Color(0xFF121212),
                       title: Text(
                         name,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                       ),
                       subtitle: Text(
                         [email, phone].where((s) => s.isNotEmpty).join(' • '),
-                        style: const TextStyle(color: Colors.white70),
+                        style: TextStyle(color: Colors.white70),
                       ),
                       trailing: const Icon(
                         Icons.chevron_right,
@@ -1641,7 +1641,7 @@ class _CustomersPaneState extends State<_CustomersPane> {
                   children: [
                     Text(
                       'Customer Detail',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -1667,7 +1667,7 @@ class _CustomersPaneState extends State<_CustomersPane> {
                     Expanded(
                       child: ElevatedButton.icon(
                         icon: _saving
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 14,
                                 height: 14,
                                 child: CircularProgressIndicator(
@@ -1729,12 +1729,12 @@ class _CustomersPaneState extends State<_CustomersPane> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70)),
+        Text(label, style: TextStyle(color: Colors.white70)),
         const SizedBox(height: 6),
         TextField(
           controller: controller,
           maxLines: maxLines,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             filled: true,
             fillColor: const Color(0xFF121212),
@@ -1809,7 +1809,7 @@ class _CustomersPaneState extends State<_CustomersPane> {
               TextField(
                 controller: amountCtrl,
                 keyboardType: TextInputType.number,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: 'Amount',
                   labelStyle: TextStyle(color: Colors.white70),
@@ -1817,7 +1817,7 @@ class _CustomersPaneState extends State<_CustomersPane> {
               ),
               TextField(
                 controller: descCtrl,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: 'Description',
                   labelStyle: TextStyle(color: Colors.white70),
@@ -1900,11 +1900,11 @@ class _InvoicesPane extends StatelessWidget {
               stream: stream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(child: CircularProgressIndicator());
                 }
                 final docs = snapshot.data!.docs;
                 if (docs.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
                       'No invoices found',
                       style: TextStyle(color: Colors.white70),
@@ -1933,7 +1933,7 @@ class _InvoicesPane extends StatelessWidget {
                           children: [
                             Text(
                               'Invoice $number',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -1964,7 +1964,7 @@ class _InvoicesPane extends StatelessWidget {
                         ),
                         subtitle: Text(
                           amount.isEmpty ? 'Amount: —' : 'Amount: $amount',
-                          style: const TextStyle(color: Colors.white70),
+                          style: TextStyle(color: Colors.white70),
                         ),
                         trailing: const Icon(
                           Icons.chevron_right,
@@ -2081,7 +2081,7 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
-        title: const Text('Pattern Generated',
+        title: Text('Pattern Generated',
             style: TextStyle(color: AppColors.textPrimary)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -2089,20 +2089,20 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
           children: [
             Text(
               'Successfully learned communication pattern for ${_deviceNameController.text}',
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 16),
             Text(
               'Samples: $_sampleCount',
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Confidence: 85%',
               style: TextStyle(color: AppColors.primaryCyan),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'The device will now be auto-recognized in future connections.',
               style: TextStyle(color: AppColors.textMuted, fontSize: 12),
             ),
@@ -2114,7 +2114,7 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
               Navigator.pop(context);
               _endSession();
             },
-            child: const Text('Done',
+            child: Text('Done',
                 style: TextStyle(color: AppColors.primaryCyan)),
           ),
         ],
@@ -2146,7 +2146,7 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+        decoration: BoxDecoration(gradient: AppColors.backgroundGradient),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -2197,12 +2197,12 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
               TextField(
                 controller: _deviceNameController,
                 enabled: !_sessionActive,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: 'Device Name',
-                  labelStyle: const TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.white70),
                   hintText: 'e.g., New Brand Gauge Model X',
-                  hintStyle: const TextStyle(color: Colors.white38),
+                  hintStyle: TextStyle(color: Colors.white38),
                   filled: true,
                   fillColor: const Color(0xFF121212),
                   border: OutlineInputBorder(
@@ -2210,7 +2210,7 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
                     borderSide: const BorderSide(color: Color(0xFF4EC7F3)),
                   ),
                   prefixIcon:
-                      const Icon(Icons.devices, color: AppColors.primaryCyan),
+                      Icon(Icons.devices, color: AppColors.primaryCyan),
                 ),
               ),
               const SizedBox(height: 16),
@@ -2250,12 +2250,12 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.data_usage,
+                      Icon(Icons.data_usage,
                           color: AppColors.primaryCyan),
                       const SizedBox(width: 12),
                       Text(
                         'Samples Collected: $_sampleCount',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.primaryCyan,
                           fontWeight: FontWeight.w600,
                         ),
@@ -2268,12 +2268,12 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
                 // Raw data input
                 TextField(
                   controller: _rawDataController,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Raw Data (Hex)',
-                    labelStyle: const TextStyle(color: Colors.white70),
+                    labelStyle: TextStyle(color: Colors.white70),
                     hintText: '0A3B4C...',
-                    hintStyle: const TextStyle(color: Colors.white38),
+                    hintStyle: TextStyle(color: Colors.white38),
                     filled: true,
                     fillColor: const Color(0xFF121212),
                     border: OutlineInputBorder(
@@ -2287,12 +2287,12 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
                 TextField(
                   controller: _actualValueController,
                   keyboardType: TextInputType.number,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Actual Reading',
-                    labelStyle: const TextStyle(color: Colors.white70),
+                    labelStyle: TextStyle(color: Colors.white70),
                     hintText: 'What the device displays',
-                    hintStyle: const TextStyle(color: Colors.white38),
+                    hintStyle: TextStyle(color: Colors.white38),
                     filled: true,
                     fillColor: const Color(0xFF121212),
                     border: OutlineInputBorder(
@@ -2305,13 +2305,13 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
                 // Notes input
                 TextField(
                   controller: _notesController,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                   maxLines: 2,
                   decoration: InputDecoration(
                     labelText: 'Notes (Optional)',
-                    labelStyle: const TextStyle(color: Colors.white70),
+                    labelStyle: TextStyle(color: Colors.white70),
                     hintText: 'Any observations...',
-                    hintStyle: const TextStyle(color: Colors.white38),
+                    hintStyle: TextStyle(color: Colors.white38),
                     filled: true,
                     fillColor: const Color(0xFF121212),
                     border: OutlineInputBorder(

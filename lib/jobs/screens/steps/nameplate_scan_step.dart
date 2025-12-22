@@ -92,7 +92,7 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Icon(
+          Icon(
             Icons.camera_alt,
             size: 64,
             color: AppColors.primaryCyan,
@@ -100,7 +100,7 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
           const SizedBox(height: 24),
           Text(
             widget.step.title ?? 'Scan Equipment',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -123,9 +123,9 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
             label: const Text('Scan Nameplate'),
           ),
           const SizedBox(height: 24),
-          const Divider(color: AppColors.border),
+          Divider(color: AppColors.border),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Or enter details manually:',
             style: TextStyle(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
@@ -138,7 +138,7 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
               hintText: 'e.g., Carrier, Lennox, Trane',
             ),
             textCapitalization: TextCapitalization.words,
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white),
           ),
           const SizedBox(height: 16),
           TextField(
@@ -146,7 +146,7 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
             decoration: const InputDecoration(
               labelText: 'Model Number',
             ),
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white),
           ),
           const SizedBox(height: 16),
           TextField(
@@ -154,7 +154,7 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
             decoration: const InputDecoration(
               labelText: 'Serial Number (Optional)',
             ),
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white),
           ),
           const SizedBox(height: 32),
           ElevatedButton(

@@ -518,7 +518,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
                 const SizedBox(height: 4),
                 Text(
                   device.manufacturerName,
-                  style: const TextStyle(color: AppColors.textSecondary),
+                  style: TextStyle(color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: 4),
                 Row(

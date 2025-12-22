@@ -310,7 +310,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     activeColor: AppColors.primaryCyan,
                   ),
                   if (_mlDataSharingEnabled) ...[
-                    const Divider(color: AppColors.border, height: 1),
+                    Divider(color: AppColors.border, height: 1),
                     Padding(
                       padding: const EdgeInsets.all(12),
                       child: Row(
@@ -394,14 +394,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.check_circle,
+                      Icon(Icons.check_circle,
                           color: AppColors.primaryCyan),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Auto-Responder Active',
                               style: TextStyle(
                                 color: AppColors.primaryCyan,
@@ -654,7 +654,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ],
                 ),
-                child: const Center(
+                child: Center(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

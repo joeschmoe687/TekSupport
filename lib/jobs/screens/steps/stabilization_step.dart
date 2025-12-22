@@ -56,7 +56,7 @@ class _StabilizationStepState extends State<StabilizationStep> {
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
         title: const Text('Skip Stabilization?', style: TextStyle(color: Colors.white)),
-        content: const Text(
+        content: Text(
           'The system may not have stabilized yet. Readings may be inaccurate. Are you sure you want to continue?',
           style: TextStyle(color: AppColors.textSecondary),
         ),
@@ -101,7 +101,7 @@ class _StabilizationStepState extends State<StabilizationStep> {
           const SizedBox(height: 24),
           Text(
             widget.step.title ?? 'System Stabilization',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -161,7 +161,7 @@ class _StabilizationStepState extends State<StabilizationStep> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(Icons.info_outline, color: AppColors.primaryCyan, size: 20),
                       SizedBox(width: 8),

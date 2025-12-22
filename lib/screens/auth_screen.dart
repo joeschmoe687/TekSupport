@@ -388,7 +388,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(
                     errorMsg,
-                    style: const TextStyle(color: AppColors.error),
+                    style: TextStyle(color: AppColors.error),
                     textAlign: TextAlign.center,
                   ),
                 ),

@@ -159,7 +159,7 @@ class GradientScaffold extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: appBar,
       body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+        decoration: BoxDecoration(gradient: AppColors.backgroundGradient),
         child: body,
       ),
       bottomNavigationBar: bottomNavigationBar,

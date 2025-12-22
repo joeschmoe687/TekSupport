@@ -277,7 +277,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
                 Expanded(
                   child: Text(
                     '$deviceName disconnected',
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
@@ -314,7 +314,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
                 Expanded(
                   child: Text(
                     '$deviceName connected',
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
@@ -652,7 +652,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Select Refrigerant',
             style: TextStyle(
               color: AppColors.textPrimary,
@@ -731,7 +731,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
             const SizedBox(width: 8),
             Text(
               'Confirm ${refrigerant.displayName}',
-              style: const TextStyle(color: AppColors.textPrimary),
+              style: TextStyle(color: AppColors.textPrimary),
             ),
           ],
         ),
@@ -743,10 +743,10 @@ class _GaugeScreenState extends State<GaugeScreen> {
               refrigerant == Refrigerant.r22
                   ? 'R-22 systems may have been converted to drop-in refrigerants like R-407C or Nu-22.'
                   : '${refrigerant.displayName} is a drop-in replacement for R-22. Verify this is the correct refrigerant for this system.',
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Check the nameplate or service stickers to confirm the current refrigerant type.',
               style: TextStyle(
                 color: AppColors.textSecondary,
@@ -758,7 +758,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel',
+            child: Text('Cancel',
                 style: TextStyle(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
@@ -894,7 +894,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Job Type',
             style: TextStyle(
               color: AppColors.textPrimary,
@@ -903,7 +903,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Select the type of system you\'re working on',
             style: TextStyle(
               color: AppColors.textSecondary,
@@ -916,7 +916,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
           _buildJobTypeOption(JobType.heatPump),
           const SizedBox(height: 12),
           // Refrigeration header
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(left: 8, bottom: 8),
             child: Text(
               'Refrigeration',
@@ -980,7 +980,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle,
+              Icon(Icons.check_circle,
                   color: AppColors.primaryCyan, size: 22),
           ],
         ),
@@ -1033,10 +1033,10 @@ class _GaugeScreenState extends State<GaugeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Gauges',
           style: TextStyle(
             color: AppColors.textPrimary,
@@ -1059,7 +1059,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
           ),
           // Settings gear for job type
           IconButton(
-            icon: const Icon(Icons.settings, color: AppColors.textSecondary),
+            icon: Icon(Icons.settings, color: AppColors.textSecondary),
             onPressed: _showJobTypePicker,
             tooltip: 'Job Type',
           ),
@@ -1078,7 +1078,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
                 children: [
                   Text(
                     _currentRefrigerant.displayName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -1212,12 +1212,12 @@ class _GaugeScreenState extends State<GaugeScreen> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline, color: AppColors.warning, size: 24),
+          Icon(Icons.info_outline, color: AppColors.warning, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Waiting for probe data...',
                   style: TextStyle(
@@ -1384,7 +1384,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 14,
                   ),
@@ -1433,7 +1433,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
               const SizedBox(height: 2),
               Text(
                 assignedDevice,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 10,
                 ),
@@ -1515,11 +1515,11 @@ class _GaugeScreenState extends State<GaugeScreen> {
           ),
           if (_targetSuperheat != null) ...[
             const SizedBox(height: 16),
-            const Divider(color: AppColors.border),
+            Divider(color: AppColors.border),
             const SizedBox(height: 12),
             Text(
               'Target Superheat: ${_targetSuperheat!.toStringAsFixed(1)}°F',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 14,
               ),
@@ -1536,7 +1536,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textSecondary,
             fontSize: 14,
           ),
@@ -1545,7 +1545,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
         if (value != null)
           Text(
             '${value.toStringAsFixed(1)}$unit',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.primaryCyan,
               fontSize: 32,
               fontWeight: FontWeight.bold,
@@ -1575,7 +1575,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Line Temp Probes',
             style: TextStyle(
               color: AppColors.textPrimary,
@@ -1650,7 +1650,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
                     children: [
                       Text(
                         label,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 12,
                         ),
@@ -1697,7 +1697,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
                   if (assignedDevice != null)
                     Text(
                       assignedDevice,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 9,
                       ),
@@ -1705,7 +1705,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
                     ),
                   Text(
                     value > 0 ? '${value.toStringAsFixed(1)}°F' : '--',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -1734,7 +1734,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
                   'Air Temp Probes',
                   style: TextStyle(
@@ -1782,6 +1782,16 @@ class _GaugeScreenState extends State<GaugeScreen> {
       ),
     );
   }
+
+  Widget _buildScaleOverlay() {
+    // Placeholder implementation for scale overlay
+    return SizedBox.shrink();
+  }
+
+  Widget _buildAnalogGauge({required double value, required Color color}) {
+    // Placeholder implementation for analog gauge
+    return SizedBox.shrink();
+  }
 }
 
 /// Stateful sensor picker sheet with live Bluetooth scanning
@@ -1827,6 +1837,12 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
   bool _isScanning = false;
   bool _isConnecting = false;
   String? _connectingDeviceId;
+  int? _scaleBatteryLevel;
+  bool _isScaleConnected = false;
+  double _scaleWeight = 0.0;
+  String? _scaleDeviceId;
+  String? _scaleDeviceName;
+  double? _lastKnownScaleWeight;
   StreamSubscription? _scanResultsSubscription;
   StreamSubscription? _isScanningSubscription;
 
@@ -2019,7 +2035,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                   children: [
                     Text(
                       'Assign ${widget.isTemperatureSlot ? "Temperature" : "Pressure"} Sensor',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -2028,7 +2044,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                     const SizedBox(height: 4),
                     Text(
                       widget.slotDisplayName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.primaryCyan,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -2044,7 +2060,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                     color: AppColors.primaryCyan.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const SizedBox(
+                  child: SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
@@ -2067,12 +2083,12 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.check_circle,
+                  Icon(Icons.check_circle,
                       color: AppColors.success, size: 16),
                   const SizedBox(width: 8),
                   Text(
                     '${connectedDevices.length} Compatible ${connectedDevices.length == 1 ? "Device" : "Devices"} Connected',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.success,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -2139,15 +2155,15 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                   ),
                   subtitle: Text(
                     profile?.name ?? 'Ready to use',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12,
                     ),
                   ),
                   trailing: isAssignedToSlot
-                      ? const Icon(Icons.check_circle,
+                      ? Icon(Icons.check_circle,
                           color: AppColors.primaryCyan, size: 28)
-                      : const Text(
+                      : Text(
                           'TAP TO SELECT',
                           style: TextStyle(
                             color: AppColors.primaryCyan,
@@ -2163,7 +2179,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
               );
             }),
             const SizedBox(height: 8),
-            const Divider(color: AppColors.border),
+            Divider(color: AppColors.border),
           ],
 
           // Discovered compatible devices section
@@ -2178,7 +2194,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
               const SizedBox(width: 8),
               Text(
                 _isScanning ? 'Scanning for sensors...' : 'Available Sensors',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -2237,20 +2253,20 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                           ),
                           title: Text(
                             deviceName,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textPrimary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           subtitle: Text(
                             profile?.name ?? 'Tap to connect',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.textMuted,
                               fontSize: 12,
                             ),
                           ),
                           trailing: isConnecting
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 24,
                                   height: 24,
                                   child: CircularProgressIndicator(
@@ -2299,7 +2315,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                       label: const Text('Zero'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.primaryCyan,
-                        side: const BorderSide(color: AppColors.primaryCyan),
+                        side: BorderSide(color: AppColors.primaryCyan),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
@@ -2315,7 +2331,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                     label: const Text('Unassign'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.error,
-                      side: const BorderSide(color: AppColors.error),
+                      side: BorderSide(color: AppColors.error),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
@@ -2365,7 +2381,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -2439,7 +2455,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
               const SizedBox(height: 8),
               Text(
                 assignedDevice,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 10,
                 ),
@@ -2508,7 +2524,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                   children: [
                     Text(
                       _scaleDeviceName ?? 'Scale',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -2519,7 +2535,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                       children: [
                         Text(
                           weight.toStringAsFixed(2),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -2574,7 +2590,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                         const SizedBox(width: 4),
                         Text(
                           '${_scaleBatteryLevel}%',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 10,
                           ),
@@ -2615,7 +2631,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
               _isScanning
                   ? 'Looking for sensors...'
                   : 'No compatible sensors found',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -2627,7 +2643,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                   ? 'Make sure your probe is powered on'
                   : 'Power on your sensor and try again',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 13,
               ),
@@ -2643,12 +2659,12 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.info_outline,
+                  Icon(Icons.info_outline,
                       color: AppColors.info, size: 16),
                   const SizedBox(width: 8),
                   Text(
                     supportedDevicesHint,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.info,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
@@ -2675,6 +2691,19 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
         ),
       ),
     );
+  }
+
+  String? _getAssignedDeviceName(GaugeSlot slot) {
+    // Placeholder implementation
+    return null;
+  }
+
+  int? _getAssignedBatteryLevel(GaugeSlot slot) {
+    // Placeholder implementation
+    return null;
+  }
+  void _showSensorPicker(GaugeSlot slot) {
+    // Placeholder implementation
   }
 }
 

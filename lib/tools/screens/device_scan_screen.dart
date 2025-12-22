@@ -178,10 +178,10 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Scan for Devices',
           style: TextStyle(color: AppColors.textPrimary),
         ),
@@ -200,7 +200,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
             )
           else
             IconButton(
-              icon: const Icon(Icons.refresh, color: AppColors.primaryCyan),
+              icon: Icon(Icons.refresh, color: AppColors.primaryCyan),
               onPressed: _startScan,
               tooltip: 'Rescan',
             ),
@@ -226,7 +226,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
         children: [
           Text(
             _isScanning ? 'Scanning...' : 'Scan Complete',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -237,7 +237,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
             _scanResults.isEmpty
                 ? 'Make sure your devices are powered on and in pairing mode'
                 : '${_scanResults.length} device${_scanResults.length == 1 ? '' : 's'} found',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textSecondary,
               fontSize: 14,
             ),
@@ -272,7 +272,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
 
   Widget _buildEmptyState() {
     if (_isScanning) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -304,7 +304,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
             color: AppColors.textMuted.withOpacity(0.5),
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'No Devices Found',
             style: TextStyle(
               color: AppColors.textPrimary,
@@ -313,7 +313,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Make sure your HVAC tools are\npowered on and nearby',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -468,7 +468,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
                 ),
               )
             : isBroadcastOnly
-                ? const Icon(Icons.sensors, color: AppColors.warning, size: 24)
+                ? Icon(Icons.sensors, color: AppColors.warning, size: 24)
                 : IconButton(
                     icon: const Icon(Icons.add_circle,
                         color: AppColors.primaryCyan),

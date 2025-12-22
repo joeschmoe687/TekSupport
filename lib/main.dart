@@ -49,7 +49,8 @@ void main() async {
   await MLDataService().init();
 
   // Initialize live data sync service (only on mobile, not web)
-  await LiveDataSyncService().init();
+  // TODO: Implement LiveDataSyncService
+  // await LiveDataSyncService().init();
 
   runApp(const TekToolApp());
 }
@@ -180,7 +181,7 @@ class _TekToolAppState extends State<TekToolApp> {
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
             foregroundColor: Colors.white,
-            side: const BorderSide(color: AppColors.border),
+            side: BorderSide(color: AppColors.border),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -192,11 +193,11 @@ class _TekToolAppState extends State<TekToolApp> {
           fillColor: AppColors.surfaceDark.withOpacity(0.5),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border),
+            borderSide: BorderSide(color: AppColors.border),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.border),
+            borderSide: BorderSide(color: AppColors.border),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -205,7 +206,7 @@ class _TekToolAppState extends State<TekToolApp> {
               width: 2,
             ),
           ),
-          hintStyle: const TextStyle(color: AppColors.textMuted),
+          hintStyle: TextStyle(color: AppColors.textMuted),
         ),
         dividerColor: AppColors.border,
         snackBarTheme: SnackBarThemeData(

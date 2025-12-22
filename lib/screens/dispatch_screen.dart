@@ -92,7 +92,7 @@ class _DispatchScreenState extends State<DispatchScreen> {
         actions: [
           if (widget.onThemeToggle != null)
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.brightness_6,
                 color: AppColors.textSecondary,
               ),
@@ -102,7 +102,7 @@ class _DispatchScreenState extends State<DispatchScreen> {
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.backgroundGradient),
+        decoration: BoxDecoration(gradient: AppColors.backgroundGradient),
         child: _isLoading
             ? Center(
                 child: CircularProgressIndicator(
@@ -179,7 +179,7 @@ class _DispatchScreenState extends State<DispatchScreen> {
                     DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -284,7 +284,7 @@ class _DispatchScreenState extends State<DispatchScreen> {
       child: ExpansionTile(
         title: Text(
           job['title'] as String? ?? 'Untitled Job',
-          style: const TextStyle(fontWeight: FontWeight.w600),
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +375,7 @@ class _DispatchScreenState extends State<DispatchScreen> {
             width: 100,
             child: Text(
               '$label:',
-              style: const TextStyle(fontWeight: FontWeight.w600),
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
           Expanded(child: Text(value)),
@@ -424,7 +424,7 @@ class _DispatchScreenState extends State<DispatchScreen> {
   void _showCreateJobModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) => const Center(
+      builder: (context) => Center(
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Text(

@@ -181,7 +181,7 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'TekTool',
               style: TextStyle(
                 fontSize: 28,
@@ -214,7 +214,7 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
               )
             else
               IconButton(
-                icon: const Icon(Icons.refresh, color: AppColors.textSecondary),
+                icon: Icon(Icons.refresh, color: AppColors.textSecondary),
                 onPressed: () {
                   _hasScannedOnce = false;
                   _autoScanForDevices();
@@ -227,7 +227,7 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
           _connectedDeviceCount > 0
               ? '$_connectedDeviceCount device${_connectedDeviceCount != 1 ? 's' : ''} connected'
               : 'No devices assigned',
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textSecondary,
             fontSize: 14,
           ),
@@ -354,7 +354,7 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
                       color: AppColors.textMuted.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Soon',
                       style: TextStyle(
                         color: AppColors.textMuted,
@@ -496,7 +496,7 @@ class _DeviceDiscoverySheetState extends State<_DeviceDiscoverySheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surfaceDark,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -524,7 +524,7 @@ class _DeviceDiscoverySheetState extends State<_DeviceDiscoverySheet> {
                   color: AppColors.success.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.bluetooth_searching,
                   color: AppColors.success,
                   size: 28,
@@ -537,13 +537,13 @@ class _DeviceDiscoverySheetState extends State<_DeviceDiscoverySheet> {
                   children: [
                     Text(
                       'Found ${widget.devices.length} Device${widget.devices.length != 1 ? 's' : ''}!',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textPrimary,
                       ),
                     ),
-                    const Text(
+                    Text(
                       'Compatible HVAC tools nearby',
                       style: TextStyle(
                         fontSize: 14,
@@ -571,7 +571,7 @@ class _DeviceDiscoverySheetState extends State<_DeviceDiscoverySheet> {
                   onPressed: widget.onDismiss,
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.textSecondary,
-                    side: const BorderSide(color: AppColors.border),
+                    side: BorderSide(color: AppColors.border),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -667,7 +667,7 @@ class _DeviceDiscoverySheetState extends State<_DeviceDiscoverySheet> {
                 children: [
                   Text(
                     device.displayName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,

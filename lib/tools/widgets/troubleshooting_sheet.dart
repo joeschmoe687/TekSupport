@@ -34,7 +34,7 @@ class _TroubleshootingSheetState extends State<TroubleshootingSheet> {
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surfaceDark,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
@@ -59,13 +59,13 @@ class _TroubleshootingSheetState extends State<TroubleshootingSheet> {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.build_circle,
                   color: AppColors.primaryCyan,
                   size: 28,
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Troubleshooting Guide',
                     style: TextStyle(
@@ -100,7 +100,7 @@ class _TroubleshootingSheetState extends State<TroubleshootingSheet> {
                         },
                         child: Text(
                           _isBeginnerMode ? 'Beginner' : 'Expert',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.primaryCyan,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -112,14 +112,14 @@ class _TroubleshootingSheetState extends State<TroubleshootingSheet> {
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: const Icon(Icons.close, color: AppColors.textMuted),
+                  icon: Icon(Icons.close, color: AppColors.textMuted),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
           ),
 
-          const Divider(color: AppColors.border, height: 1),
+          Divider(color: AppColors.border, height: 1),
 
           // Steps
           Expanded(
@@ -190,7 +190,7 @@ class _TroubleshootingSheetState extends State<TroubleshootingSheet> {
                       )
                     : Text(
                         stepNumber.toString(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.primaryCyan,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -228,7 +228,7 @@ class _TroubleshootingSheetState extends State<TroubleshootingSheet> {
                 children: [
                   Text(
                     step.description,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14,
                       height: 1.4,
@@ -247,7 +247,7 @@ class _TroubleshootingSheetState extends State<TroubleshootingSheet> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.warning_amber,
                             color: AppColors.warning,
                             size: 20,
@@ -256,7 +256,7 @@ class _TroubleshootingSheetState extends State<TroubleshootingSheet> {
                           Expanded(
                             child: Text(
                               step.caution!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.textPrimary,
                                 fontSize: 12,
                               ),

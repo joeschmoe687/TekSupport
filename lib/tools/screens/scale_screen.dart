@@ -216,7 +216,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                 Expanded(
                   child: Text(
                     '$deviceName disconnected',
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
@@ -246,7 +246,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                 Expanded(
                   child: Text(
                     '$deviceName connected',
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
@@ -299,19 +299,19 @@ class _ScaleScreenState extends State<ScaleScreen> {
         final unitLabel = _scaleSettings.unitSuffix;
         return AlertDialog(
           backgroundColor: AppColors.surfaceDark,
-          title: const Text('Set Target Charge',
+          title: Text('Set Target Charge',
               style: TextStyle(color: AppColors.textPrimary)),
           content: TextField(
             controller: controller,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            style: const TextStyle(color: AppColors.textPrimary),
+            style: TextStyle(color: AppColors.textPrimary),
             decoration: InputDecoration(
               hintText: 'Enter target weight ($unitLabel)',
-              hintStyle: const TextStyle(color: AppColors.textMuted),
-              enabledBorder: const UnderlineInputBorder(
+              hintStyle: TextStyle(color: AppColors.textMuted),
+              enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: AppColors.textMuted),
               ),
-              focusedBorder: const UnderlineInputBorder(
+              focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: AppColors.primaryCyan),
               ),
             ),
@@ -319,7 +319,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel',
+              child: Text('Cancel',
                   style: TextStyle(color: AppColors.textMuted)),
             ),
             TextButton(
@@ -339,7 +339,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                 }
                 Navigator.pop(ctx);
               },
-              child: const Text('Set',
+              child: Text('Set',
                   style: TextStyle(color: AppColors.primaryCyan)),
             ),
           ],
@@ -412,13 +412,13 @@ class _ScaleScreenState extends State<ScaleScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings, color: AppColors.textSecondary),
+            icon: Icon(Icons.settings, color: AppColors.textSecondary),
             onPressed: _showScaleSettings,
             tooltip: 'Scale Settings',
           ),
           IconButton(
             icon: _isScanning
-                ? const SizedBox(
+                ? SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
@@ -472,7 +472,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                   child: Row(
                     children: [
                       if (_isScanning) ...[
-                        const SizedBox(
+                        SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
@@ -489,7 +489,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                           ),
                         ),
                       ] else ...[
-                        const Icon(Icons.warning, color: AppColors.warning),
+                        Icon(Icons.warning, color: AppColors.warning),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -512,7 +512,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                       if (_scaleSettings.unit == ScaleUnit.lbOz) ...[
                         Text(
                           _scaleSettings.formatWeight(_currentWeight),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 64,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
@@ -526,7 +526,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                               .toStringAsFixed(
                                 _scaleSettings.unit == ScaleUnit.kg ? 3 : 1,
                               ),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 96,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
@@ -535,7 +535,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                         ),
                         Text(
                           _scaleSettings.unitSuffix,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 32,
                             color: AppColors.textSecondary,
                           ),
@@ -551,7 +551,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                           children: [
                             Text(
                               _connectedDeviceName!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 color: AppColors.textMuted,
                               ),
@@ -644,7 +644,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                                       ),
                                       Text(
                                         'added${_scaleSettings.unit != ScaleUnit.lbOz ? ' ${_scaleSettings.unitSuffix}' : ''}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 12,
                                           color: AppColors.textMuted,
                                         ),
@@ -652,7 +652,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                                     ],
                                   ),
                                   const SizedBox(width: 24),
-                                  const Text(
+                                  Text(
                                     '/',
                                     style: TextStyle(
                                       fontSize: 36,
@@ -674,14 +674,14 @@ class _ScaleScreenState extends State<ScaleScreen> {
                                                       ? 3
                                                       : 1,
                                                 ),
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 36,
                                           fontWeight: FontWeight.bold,
                                           color: AppColors.textSecondary,
                                           fontFamily: 'monospace',
                                         ),
                                       ),
-                                      const Text(
+                                      Text(
                                         'target',
                                         style: TextStyle(
                                           fontSize: 12,
@@ -712,7 +712,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                                   padding: const EdgeInsets.only(top: 12),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: const [
+                                    children: [
                                       Icon(Icons.check_circle,
                                           color: AppColors.success, size: 20),
                                       SizedBox(width: 8),
@@ -732,7 +732,7 @@ class _ScaleScreenState extends State<ScaleScreen> {
                         const SizedBox(height: 16),
                         TextButton(
                           onPressed: _clearTarget,
-                          child: const Text(
+                          child: Text(
                             'Clear Target',
                             style: TextStyle(color: AppColors.textMuted),
                           ),

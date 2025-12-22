@@ -42,7 +42,7 @@ class _CompletionStepState extends State<CompletionStep> {
           const SizedBox(height: 24),
           Text(
             widget.step.title ?? 'Complete Job',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -67,7 +67,7 @@ class _CompletionStepState extends State<CompletionStep> {
               alignLabelWithHint: true,
             ),
             maxLines: 5,
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white),
           ),
           const SizedBox(height: 24),
           Card(
@@ -76,7 +76,7 @@ class _CompletionStepState extends State<CompletionStep> {
               borderRadius: BorderRadius.circular(12),
               side: const BorderSide(color: Colors.green, width: 2),
             ),
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(
                 children: [
