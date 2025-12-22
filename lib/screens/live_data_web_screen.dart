@@ -430,7 +430,12 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
     final type = data['type'] as String?;
     final timestamp = data['timestamp'];
     final batteryLevel = data['batteryLevel'] as int?;
+    final syncStatus = data['syncStatus'] as String?;
     final statusColor = _getStatusColor(timestamp);
+
+    // Check for sync errors
+    final hasSyncError = syncStatus == 'error';
+    final displayStatusColor = hasSyncError ? AppColors.error : statusColor;
 
     return AppCard(
       padding: const EdgeInsets.all(20),
@@ -445,7 +450,7 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
                 width: 12,
                 height: 12,
                 decoration: BoxDecoration(
-                  color: statusColor,
+                  color: displayStatusColor,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -470,6 +475,15 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
                         color: AppColors.textSecondary,
                       ),
                     ),
+                    if (hasSyncError)
+                      Text(
+                        'Sync error',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: AppColors.error,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
                   ],
                 ),
               ),

@@ -103,9 +103,25 @@ class LiveDataSyncService {
         'unit': reading.unit,
         'timestamp': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
+        'syncStatus': 'success',
       }, SetOptions(merge: true));
     } catch (e) {
       debugPrint('[LiveDataSync] Failed to sync reading: $e');
+      // Set error status in Firestore so web UI can display sync issues
+      try {
+        await _firestore
+            .collection('live_device_data')
+            .doc(_userId)
+            .collection('readings')
+            .doc(reading.deviceId)
+            .set({
+          'syncStatus': 'error',
+          'lastError': e.toString(),
+          'lastErrorAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+      } catch (statusUpdateError) {
+        debugPrint('[LiveDataSync] Failed to update error status: $statusUpdateError');
+      }
     }
   }
 
@@ -125,6 +141,7 @@ class LiveDataSyncService {
       }, SetOptions(merge: true));
     } catch (e) {
       debugPrint('[LiveDataSync] Failed to sync battery: $e');
+      // Battery sync failures are less critical, just log them
     }
   }
 
