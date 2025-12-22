@@ -11,6 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import '../../widgets/gradient_scaffold.dart';
 import '../../bluetooth/bluetooth_service.dart';
 import '../services/device_registry.dart';
+import '../services/ble_sniff_upload_service.dart';
+import 'ble_sniffer_settings_screen.dart';
 
 /// Admin-only BLE Sniffer screen for debugging HVAC tool protocols.
 /// Allows scanning, connecting, and viewing raw GATT data.
@@ -23,6 +25,7 @@ class BleSnifferScreen extends StatefulWidget {
 
 class _BleSnifferScreenState extends State<BleSnifferScreen> {
   final BluetoothService _bleService = BluetoothService();
+  final BleSniffUploadService _uploadService = BleSniffUploadService();
 
   bool _isScanning = false;
   bool _isConnecting = false;
@@ -76,6 +79,12 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
       _sniffBox = await Hive.openBox('ble_sniff_sessions');
       _currentSessionId = 'session_${DateTime.now().millisecondsSinceEpoch}';
       _loadSavedSessions();
+      
+      // Load upload service settings
+      await _uploadService.loadSettings();
+      
+      // Auto-upload any unsynced sessions on startup
+      _autoUploadUnsyncedSessions();
     } catch (e) {
       print('[BLE Sniffer] Storage init error: $e');
     }
@@ -98,6 +107,20 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
     setState(() {
       _savedSessions = sessions;
     });
+  }
+
+  /// Auto-upload unsynced sessions in the background
+  Future<void> _autoUploadUnsyncedSessions() async {
+    if (_sniffBox == null) return;
+    
+    try {
+      final count = await _uploadService.uploadUnsyncedSessions(_sniffBox!);
+      if (count > 0) {
+        _addLog('Auto-uploaded $count unsynced session(s) to Firebase', type: 'success');
+      }
+    } catch (e) {
+      debugPrint('[BLE Sniffer] Auto-upload failed: $e');
+    }
   }
 
   /// Auto-save current session to local storage with FULL BLE data
@@ -147,6 +170,17 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
 
     await _sniffBox!.put(_currentSessionId, jsonEncode(sessionData));
     _loadSavedSessions();
+    
+    // Auto-upload if enabled
+    _uploadService.autoUploadSessionIfEnabled(
+      _sniffBox!,
+      _currentSessionId,
+      sessionData,
+    ).then((uploaded) {
+      if (uploaded) {
+        _addLog('Session auto-uploaded to Firebase', type: 'success');
+      }
+    });
   }
 
   StreamSubscription? _isScanningSubscription;
@@ -1695,6 +1729,25 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
+          // Settings icon
+          IconButton(
+            icon: const Icon(
+              Icons.settings,
+              color: AppColors.textSecondary,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BleSnifferSettingsScreen(),
+                ),
+              ).then((_) {
+                // Reload settings after returning from settings screen
+                _uploadService.loadSettings();
+              });
+            },
+            tooltip: 'BLE Sniffer Settings',
+          ),
           // History toggle
           IconButton(
             icon: Icon(

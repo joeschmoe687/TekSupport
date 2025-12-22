@@ -8,6 +8,7 @@ import 'screens/welcome_screen.dart';
 import 'widgets/gradient_scaffold.dart';
 import 'services/notification_service.dart';
 import 'services/payment_service.dart';
+import 'services/error_log_service.dart';
 import 'tools/services/calibration_service.dart';
 import 'tools/services/gauge_zero_service.dart';
 import 'tools/services/ml_data_service.dart';
@@ -25,6 +26,9 @@ void main() async {
 
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize error logging service (must be early to catch all errors)
+  await ErrorLogService().initialize();
 
   // Set up background message handler
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
