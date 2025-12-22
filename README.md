@@ -107,6 +107,41 @@ Fields:
 4. Verify response appears with confidence score
 5. Test personality tuning by changing system prompt
 
+**Auto-Response Feature:**
+Gemini automatically responds to unclaimed customer chats:
+- Activates when Gemini is enabled and chat has no assigned admin
+- Provides immediate assistance while customer waits
+- Adds AI disclaimer to all auto-responses
+- Only responds to substantive messages (>10 characters)
+- Uses conversation history for context
+- Admin can still claim chat and take over at any time
+
+**Cloud Function:**
+- `autoRespondWithGemini` - Triggers on new customer messages
+- Checks if chat is unclaimed before responding
+- Respects Gemini enabled/disabled setting
+- Uses configured personality for response style
+
+**Admin Chat Assignment Protocol:**
+The app already has robust admin-to-chat assignment:
+- **Auto-Claim on Open**: Admin opening an unclaimed chat automatically claims it
+- **Status Update**: Chat status changes from 'unclaimed'/'new'/'open' to 'claimed'
+- **Live Tech Indicator**: `hasLiveTech` flag set when admin claims
+- **Assignment Tracking**: `claimedBy` field stores admin's user ID
+- **AI Stops Responding**: Once claimed, Gemini auto-response is disabled
+- **Persistent Assignment**: Admin remains assigned until they release or complete chat
+
+Implementation in `lib/screens/admin_chat_detail_screen.dart`:
+```dart
+// Auto-claim unclaimed chats when admin opens them
+Future<void> _claimIfNeeded() async {
+  // Checks if chat is unclaimed
+  // Auto-assigns to current admin
+  // Updates status to 'claimed'
+  // Sets hasLiveTech flag
+}
+```
+
 ## 🔗 GitHub & Firebase Integration
 
 > **IMPORTANT FOR COPILOT/AI AGENTS**: This app shares a Firebase backend with the AirPro website.
