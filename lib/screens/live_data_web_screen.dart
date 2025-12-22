@@ -20,6 +20,7 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
   String? _selectedUserId; // For admin viewing other users
   bool _isAdmin = false;
   StreamSubscription? _dataSubscription;
+  StreamSubscription? _usersSubscription; // For real-time user list updates
   Map<String, Map<String, dynamic>> _deviceReadings = {};
   DateTime? _lastUpdate;
   List<Map<String, String>> _availableUsers = []; // For admin dropdown
@@ -46,9 +47,10 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
       _isAdmin = role == 'admin';
     });
 
-    // If admin, load list of users with live data
+    // If admin, load list of users with live data and subscribe to updates
     if (_isAdmin) {
       await _loadAvailableUsers();
+      _subscribeToUserListUpdates();
     }
 
     _subscribeToLiveData();
@@ -59,11 +61,17 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
       final liveDataSnapshot = await _firestore.collection('live_device_data').get();
       final users = <Map<String, String>>[];
       
-      for (final doc in liveDataSnapshot.docs) {
-        final userId = doc.id;
-        // Get user info
-        final userDoc = await _firestore.collection('users').doc(userId).get();
-        final userData = userDoc.data();
+      // Batch get all user documents to avoid N+1 queries
+      final userIds = liveDataSnapshot.docs.map((doc) => doc.id).toList();
+      if (userIds.isEmpty) return;
+      
+      final userDocs = await Future.wait(
+        userIds.map((userId) => _firestore.collection('users').doc(userId).get())
+      );
+      
+      for (var i = 0; i < userIds.length; i++) {
+        final userId = userIds[i];
+        final userData = userDocs[i].data();
         final name = userData?['displayName'] as String? ??
             userData?['name'] as String? ??
             userData?['email'] as String? ??
@@ -80,6 +88,51 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
     } catch (e) {
       debugPrint('[LiveDataWeb] Error loading users: $e');
     }
+  }
+
+  /// Subscribe to real-time updates of users with live data
+  void _subscribeToUserListUpdates() {
+    _usersSubscription = _firestore
+        .collection('live_device_data')
+        .snapshots()
+        .listen((snapshot) async {
+      if (!mounted) return;
+      
+      try {
+        final userIds = snapshot.docs.map((doc) => doc.id).toList();
+        if (userIds.isEmpty) {
+          setState(() {
+            _availableUsers = [];
+          });
+          return;
+        }
+        
+        // Batch get all user documents
+        final userDocs = await Future.wait(
+          userIds.map((userId) => _firestore.collection('users').doc(userId).get())
+        );
+        
+        final users = <Map<String, String>>[];
+        for (var i = 0; i < userIds.length; i++) {
+          final userId = userIds[i];
+          final userData = userDocs[i].data();
+          final name = userData?['displayName'] as String? ??
+              userData?['name'] as String? ??
+              userData?['email'] as String? ??
+              'Unknown user';
+          
+          users.add({'id': userId, 'name': name});
+        }
+        
+        if (mounted) {
+          setState(() {
+            _availableUsers = users;
+          });
+        }
+      } catch (e) {
+        debugPrint('[LiveDataWeb] Error updating user list: $e');
+      }
+    });
   }
 
   void _subscribeToLiveData() {
@@ -123,6 +176,7 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
   @override
   void dispose() {
     _dataSubscription?.cancel();
+    _usersSubscription?.cancel();
     super.dispose();
   }
 

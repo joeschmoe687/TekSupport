@@ -178,7 +178,7 @@ match /live_device_data/{userId} {
 
 ### Mobile App Impact
 - Minimal overhead (< 1% CPU)
-- Firestore writes are optimized to reduce unnecessary updates; actual rate depends on device sampling
+- Firestore writes are throttled (max 1 write per second per device)
 - No UI blocking during sync
 - Automatic cleanup on disconnect
 

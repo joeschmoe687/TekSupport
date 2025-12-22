@@ -185,7 +185,21 @@ service cloud.firestore {
       // Subcollection for device readings
       match /readings/{deviceId} {
         // Users can read/write their own device readings
-        allow read, write: if isAuthenticated() && request.auth.uid == userId;
+        allow read: if isAuthenticated() && request.auth.uid == userId;
+        allow write: if isAuthenticated() && 
+                       request.auth.uid == userId &&
+                       // Validate data structure
+                       request.resource.data.keys().hasAll(['deviceId', 'deviceName', 'type', 'value', 'unit']) &&
+                       request.resource.data.deviceId is string &&
+                       request.resource.data.deviceName is string &&
+                       request.resource.data.type is string &&
+                       request.resource.data.value is number &&
+                       request.resource.data.unit is string &&
+                       // Battery level must be 0-100 if present
+                       (!request.resource.data.keys().hasAny(['batteryLevel']) || 
+                        (request.resource.data.batteryLevel is int && 
+                         request.resource.data.batteryLevel >= 0 && 
+                         request.resource.data.batteryLevel <= 100));
         
         // Admins can read all device readings
         allow read: if isAdmin();

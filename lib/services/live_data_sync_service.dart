@@ -16,8 +16,13 @@ class LiveDataSyncService {
   
   StreamSubscription? _readingsSubscription;
   StreamSubscription? _batterySubscription;
+  StreamSubscription? _authSubscription;
   bool _isInitialized = false;
   String? _userId;
+  
+  // Throttling: Track last write time per device (max 1 write per second per device)
+  final Map<String, DateTime> _lastWriteTime = {};
+  static const _throttleDuration = Duration(seconds: 1);
 
   /// Initialize the sync service (only on mobile, not web)
   Future<void> init() async {
@@ -30,17 +35,54 @@ class LiveDataSyncService {
     _userId = user.uid;
     _isInitialized = true;
 
-    // Subscribe to device readings and push to Firestore
-    _readingsSubscription = _deviceDataService.readings.listen((reading) {
-      _syncReading(reading);
+    // Listen for auth state changes to cleanup on logout
+    _authSubscription = FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+        // User logged out - cleanup
+        dispose();
+      } else if (user.uid != _userId) {
+        // User changed - reinitialize
+        dispose();
+        init();
+      }
     });
 
-    // Subscribe to battery updates
+    // Subscribe to device readings and push to Firestore with throttling
+    _readingsSubscription = _deviceDataService.readings.listen((reading) {
+      _syncReadingThrottled(reading);
+    });
+
+    // Subscribe to battery updates with throttling
     _batterySubscription = _deviceDataService.batteryUpdates.listen((battery) {
-      _syncBattery(battery);
+      _syncBatteryThrottled(battery);
     });
 
     debugPrint('[LiveDataSync] Started syncing data for user $_userId');
+  }
+
+  /// Throttled sync for device reading (max 1 write per second per device)
+  void _syncReadingThrottled(DeviceReading reading) {
+    final now = DateTime.now();
+    final lastWrite = _lastWriteTime[reading.deviceId];
+    
+    if (lastWrite == null || now.difference(lastWrite) >= _throttleDuration) {
+      _lastWriteTime[reading.deviceId] = now;
+      _syncReading(reading);
+    }
+    // Else: Skip this reading to avoid excessive writes
+  }
+
+  /// Throttled sync for battery update (max 1 write per second per device)
+  void _syncBatteryThrottled(BatteryReading battery) {
+    final now = DateTime.now();
+    final key = '${battery.deviceId}_battery';
+    final lastWrite = _lastWriteTime[key];
+    
+    if (lastWrite == null || now.difference(lastWrite) >= _throttleDuration) {
+      _lastWriteTime[key] = now;
+      _syncBattery(battery);
+    }
+    // Else: Skip this update to avoid excessive writes
   }
 
   /// Sync a device reading to Firestore
@@ -107,6 +149,9 @@ class LiveDataSyncService {
   Future<void> dispose() async {
     await _readingsSubscription?.cancel();
     await _batterySubscription?.cancel();
+    await _authSubscription?.cancel();
+    _lastWriteTime.clear();
     _isInitialized = false;
+    _userId = null;
   }
 }
