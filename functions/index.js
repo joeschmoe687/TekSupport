@@ -4,11 +4,13 @@
  * This file contains all Cloud Functions including:
  * - Payment processing (Stripe)
  * - TekMate AI chat proxy (admin only)
+ * - Gemini AI auto-response
  * - Push notifications
  */
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -566,6 +568,152 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
 
   res.status(200).send({ received: true });
 });
+
+/**
+ * Auto-Respond with Gemini AI (for unclaimed chats)
+ * 
+ * Automatically responds to customer messages using Gemini AI when:
+ * 1. Chat is not claimed by any admin
+ * 2. Gemini is enabled in settings
+ * 3. Customer message is not a greeting/introduction
+ * 
+ * This helps customers get immediate assistance while waiting for admin
+ */
+exports.autoRespondWithGemini = functions.firestore
+  .document('supportRooms/{roomId}/messages/{messageId}')
+  .onCreate(async (snap, context) => {
+    const message = snap.data();
+    const roomId = context.params.roomId;
+    
+    // Only auto-respond to customer messages
+    if (message.senderType !== 'customer' && message.from !== 'customer') {
+      return null;
+    }
+    
+    try {
+      // Get room data
+      const roomDoc = await admin.firestore()
+        .collection('supportRooms')
+        .doc(roomId)
+        .get();
+      
+      if (!roomDoc.exists) return null;
+      
+      const roomData = roomDoc.data();
+      const assignedTo = roomData.claimedBy || roomData.assignedTo;
+      
+      // Only auto-respond if chat is not claimed
+      if (assignedTo) {
+        console.log(`Chat ${roomId} is claimed by ${assignedTo}, skipping auto-response`);
+        return null;
+      }
+      
+      // Check if Gemini is enabled
+      const geminiSettings = await admin.firestore()
+        .collection('settings')
+        .doc('gemini')
+        .get();
+      
+      if (!geminiSettings.exists) {
+        console.log('Gemini settings not found');
+        return null;
+      }
+      
+      const geminiConfig = geminiSettings.data();
+      
+      if (!geminiConfig.enabled || !geminiConfig.apiKey) {
+        console.log('Gemini not enabled or API key missing');
+        return null;
+      }
+      
+      // Skip if message is too short (likely greeting)
+      const messageText = message.text || message.messageText || '';
+      if (messageText.length < 10) {
+        console.log('Message too short, skipping auto-response');
+        return null;
+      }
+      
+      // Get recent messages for context
+      const recentMessagesSnap = await admin.firestore()
+        .collection('supportRooms')
+        .doc(roomId)
+        .collection('messages')
+        .orderBy('createdAt', 'desc')
+        .limit(5)
+        .get();
+      
+      const recentMessages = recentMessagesSnap.docs.map(doc => {
+        const data = doc.data();
+        return {
+          text: data.text || data.messageText || '',
+          senderType: data.senderType || data.from || 'unknown',
+        };
+      });
+      
+      // Call Gemini API
+      const genAI = new GoogleGenerativeAI(geminiConfig.apiKey);
+      const model = genAI.getGenerativeModel({
+        model: 'gemini-1.5-flash',
+        systemInstruction: geminiConfig.personality || 
+          'You are a helpful HVAC technical support assistant. ' +
+          'Provide clear, professional guidance to customers. ' +
+          'Be concise and practical. Mention that a technician will review this chat soon.'
+      });
+      
+      // Build context
+      let prompt = messageText;
+      if (roomData.systemType) {
+        prompt = `System Type: ${roomData.systemType}\n\n${prompt}`;
+      }
+      if (recentMessages.length > 1) {
+        prompt = 'Recent conversation:\n' +
+                 recentMessages.reverse().map(m => 
+                   `${m.senderType}: ${m.text}`
+                 ).join('\n') + '\n\n' + prompt;
+      }
+      
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      const aiReply = response.text();
+      
+      // Add AI response to chat
+      const aiDisclaimer = '\n\n_This is an AI-generated response. A technician will review your chat shortly._';
+      
+      await admin.firestore()
+        .collection('supportRooms')
+        .doc(roomId)
+        .collection('messages')
+        .add({
+          role: 'assistant',
+          senderType: 'ai',
+          from: 'gemini',
+          text: aiReply + aiDisclaimer,
+          messageText: aiReply + aiDisclaimer,
+          aiGenerated: true,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        });
+      
+      // Update room
+      await admin.firestore()
+        .collection('supportRooms')
+        .doc(roomId)
+        .update({
+          lastMessage: '🤖 AI: ' + aiReply.substring(0, 50) + '...',
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          aiResponded: true,
+        });
+      
+      console.log(`Gemini auto-responded to chat ${roomId}`);
+      
+      return null;
+    } catch (error) {
+      console.error('Error in Gemini auto-response:', error);
+      return null;
+    }
+  });
+
+/**
  * Push Notification - New Customer Message
  */
 exports.sendPushNotificationOnNewMessage = functions.firestore
@@ -706,3 +854,4 @@ exports.sendPushNotificationOnAdminReply = functions.firestore
       return null;
     }
   });
+
