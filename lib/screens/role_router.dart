@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'main_navigation_screen.dart';
 import 'chat_screen.dart';
+import 'live_data_web_screen.dart';
 
 class RoleRouter extends StatelessWidget {
   final String role;
@@ -14,6 +16,12 @@ class RoleRouter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // If running on web, show the live data web UI for all users
+    if (kIsWeb) {
+      return LiveDataWebScreen(onToggleTheme: onToggleTheme);
+    }
+    
+    // Mobile app routing based on role
     switch (role) {
       case 'admin':
         return MainNavigationScreen(onToggleTheme: onToggleTheme);

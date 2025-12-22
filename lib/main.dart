@@ -8,6 +8,7 @@ import 'screens/welcome_screen.dart';
 import 'widgets/gradient_scaffold.dart';
 import 'services/notification_service.dart';
 import 'services/payment_service.dart';
+import 'services/live_data_sync_service.dart';
 import 'tools/services/calibration_service.dart';
 import 'tools/services/gauge_zero_service.dart';
 import 'tools/services/ml_data_service.dart';
@@ -43,6 +44,9 @@ void main() async {
 
   // Initialize ML data service
   await MLDataService().init();
+
+  // Initialize live data sync service (only on mobile, not web)
+  await LiveDataSyncService().init();
 
   runApp(const TekToolApp());
 }
