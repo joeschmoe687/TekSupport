@@ -64,10 +64,10 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
         // Get user info
         final userDoc = await _firestore.collection('users').doc(userId).get();
         final userData = userDoc.data();
-        final name = userData?['displayName'] as String? ?? 
-                     userData?['name'] as String? ?? 
-                     userData?['email'] as String? ?? 
-                     'User $userId';
+        final name = userData?['displayName'] as String? ??
+            userData?['name'] as String? ??
+            userData?['email'] as String? ??
+            'Unknown user';
         
         users.add({'id': userId, 'name': name});
       }
