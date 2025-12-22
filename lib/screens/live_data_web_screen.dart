@@ -249,10 +249,10 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
                         ],
                       ),
                     ),
-                    // Divider
-                    const DropdownMenuItem(
+                    // Divider (non-selectable dummy item to visually separate sections)
+                    const DropdownMenuItem<String>(
                       enabled: false,
-                      value: null,
+                      value: '__divider__',
                       child: Divider(),
                     ),
                     // Other users
