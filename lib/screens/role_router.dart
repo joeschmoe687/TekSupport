@@ -16,7 +16,10 @@ class RoleRouter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // If running on web, show the live data web UI for all users
+    // Web routing:
+    // For web builds we always route to LiveDataWebScreen, regardless of `role`.
+    // Role-based feature gating (e.g. admin-only tools) is handled *inside*
+    // LiveDataWebScreen, so `role` is intentionally not used here on web.
     if (kIsWeb) {
       return LiveDataWebScreen(onToggleTheme: onToggleTheme);
     }
