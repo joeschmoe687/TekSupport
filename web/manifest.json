@@ -1,11 +1,11 @@
 {
-    "name": "TekTool",
+    "name": "TekTool - Live Device Monitor",
     "short_name": "TekTool",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "TekTool - Universal HVAC Bluetooth Hub for contractors.",
+    "background_color": "#1A1A2E",
+    "theme_color": "#4EC7F3",
+    "description": "View live HVAC Bluetooth device data from your desktop. Part of TekTool - Universal HVAC Bluetooth Hub.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

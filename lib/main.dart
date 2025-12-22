@@ -48,6 +48,9 @@ void main() async {
   // Initialize ML data service
   await MLDataService().init();
 
+  // Initialize live data sync service (only on mobile, not web)
+  await LiveDataSyncService().init();
+
   runApp(const TekToolApp());
 }
 
