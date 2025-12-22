@@ -17,6 +17,7 @@ class ErrorLogService {
   bool _initialized = false;
   String? _deviceInfo;
   String? _appVersion;
+  bool _isLoggingError = false; // Prevent recursive error logging
   
   /// Initialize the error logging service.
   /// Sets up global error handlers for Flutter and platform errors.
@@ -106,6 +107,14 @@ class ErrorLogService {
     bool fatal = false,
     Map<String, dynamic>? additionalData,
   }) async {
+    // Prevent recursive error logging
+    if (_isLoggingError) {
+      debugPrint('[ErrorLogService] Skipping recursive error log');
+      return;
+    }
+    
+    _isLoggingError = true;
+    
     try {
       final user = FirebaseAuth.instance.currentUser;
       final timestamp = DateTime.now();
@@ -134,7 +143,10 @@ class ErrorLogService {
       debugPrint('[ErrorLogService] Error logged to Firebase: ${error.substring(0, error.length > 100 ? 100 : error.length)}');
     } catch (e) {
       // Don't let error logging itself crash the app
+      // Don't try to log this error to prevent infinite recursion
       debugPrint('[ErrorLogService] Failed to log error to Firebase: $e');
+    } finally {
+      _isLoggingError = false;
     }
   }
 }

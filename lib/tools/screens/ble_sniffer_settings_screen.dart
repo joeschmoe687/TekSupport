@@ -33,42 +33,74 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
   }
 
   Future<void> _toggleAutoUpload(bool value) async {
-    await _uploadService.setAutoUploadEnabled(value);
-    setState(() {
-      _autoUploadEnabled = value;
-    });
-    
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            value
-                ? 'Auto-upload enabled - New logs will sync automatically'
-                : 'Auto-upload disabled - Manual sync required',
+    try {
+      await _uploadService.setAutoUploadEnabled(value);
+      setState(() {
+        _autoUploadEnabled = value;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              value
+                  ? 'Auto-upload enabled - New logs will sync automatically'
+                  : 'Auto-upload disabled - Manual sync required',
+            ),
+            backgroundColor: value ? AppColors.success : AppColors.warning,
           ),
-          backgroundColor: value ? AppColors.success : AppColors.warning,
-        ),
-      );
+        );
+      }
+    } catch (e) {
+      // Revert UI state on error
+      setState(() {
+        _autoUploadEnabled = !value;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save setting: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
     }
   }
 
   Future<void> _toggleUploadMode(bool value) async {
-    await _uploadService.setUploadAllMode(value);
-    setState(() {
-      _uploadAllMode = value;
-    });
-    
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            value
-                ? 'Upload ALL logs mode enabled'
-                : 'Upload NEW logs only mode enabled',
+    try {
+      await _uploadService.setUploadAllMode(value);
+      setState(() {
+        _uploadAllMode = value;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              value
+                  ? 'Upload ALL logs mode enabled'
+                  : 'Upload NEW logs only mode enabled',
+            ),
+            backgroundColor: AppColors.info,
           ),
-          backgroundColor: AppColors.info,
-        ),
-      );
+        );
+      }
+    } catch (e) {
+      // Revert UI state on error
+      setState(() {
+        _uploadAllMode = !value;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save setting: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
     }
   }
 

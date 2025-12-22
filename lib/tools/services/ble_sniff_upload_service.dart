@@ -37,18 +37,48 @@ class BleSniffUploadService {
   
   /// Set auto-upload enabled/disabled
   Future<void> setAutoUploadEnabled(bool enabled) async {
+    final previousValue = _autoUploadEnabled;
     _autoUploadEnabled = enabled;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_prefKeyAutoUpload, enabled);
-    debugPrint('[BleSniffUpload] Auto-upload ${enabled ? 'enabled' : 'disabled'}');
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final success = await prefs.setBool(_prefKeyAutoUpload, enabled);
+
+      if (!success) {
+        _autoUploadEnabled = previousValue;
+        debugPrint('[BleSniffUpload] Failed to persist auto-upload setting (setBool returned false)');
+        throw Exception('Failed to save auto-upload setting');
+      }
+
+      debugPrint('[BleSniffUpload] Auto-upload ${enabled ? 'enabled' : 'disabled'}');
+    } catch (e) {
+      _autoUploadEnabled = previousValue;
+      debugPrint('[BleSniffUpload] Error saving auto-upload setting: $e');
+      rethrow;
+    }
   }
   
   /// Set upload mode (true = all logs, false = only new)
   Future<void> setUploadAllMode(bool uploadAll) async {
+    final previousValue = _uploadAllMode;
     _uploadAllMode = uploadAll;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_prefKeyUploadAll, uploadAll);
-    debugPrint('[BleSniffUpload] Upload mode: ${uploadAll ? 'ALL logs' : 'NEW logs only'}');
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final success = await prefs.setBool(_prefKeyUploadAll, uploadAll);
+
+      if (!success) {
+        _uploadAllMode = previousValue;
+        debugPrint('[BleSniffUpload] Failed to persist upload mode setting (setBool returned false)');
+        throw Exception('Failed to save upload mode setting');
+      }
+
+      debugPrint('[BleSniffUpload] Upload mode: ${uploadAll ? 'ALL logs' : 'NEW logs only'}');
+    } catch (e) {
+      _uploadAllMode = previousValue;
+      debugPrint('[BleSniffUpload] Error saving upload mode setting: $e');
+      rethrow;
+    }
   }
   
   /// Check if a session has been uploaded
@@ -79,11 +109,14 @@ class BleSniffUploadService {
       await FirebaseFirestore.instance
           .collection('ble_sniff_logs')
           .doc(docId)
-          .set({
-        ...sessionData,
-        'syncedAt': FieldValue.serverTimestamp(),
-        'autoUploaded': true,
-      });
+          .set(
+        {
+          ...sessionData,
+          'syncedAt': FieldValue.serverTimestamp(),
+          'autoUploaded': true,
+        },
+        SetOptions(merge: true),
+      );
       
       debugPrint('[BleSniffUpload] Uploaded session: $docId');
       return true;
