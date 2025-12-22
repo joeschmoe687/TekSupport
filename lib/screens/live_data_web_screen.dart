@@ -171,6 +171,7 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
       RegExp(r'([A-Z])'),
       (match) => ' ${match.group(1)}',
     ).trim();
+    if (words.isEmpty) return 'Unknown';
     return words[0].toUpperCase() + words.substring(1);
   }
 
@@ -468,7 +469,7 @@ class _LiveDataWebScreenState extends State<LiveDataWebScreen> {
               ),
               if (_isAdmin)
                 Text(
-                  deviceId.substring(0, 8),
+                  deviceId.length > 8 ? deviceId.substring(0, 8) : deviceId,
                   style: TextStyle(
                     fontSize: 10,
                     color: AppColors.textMuted,

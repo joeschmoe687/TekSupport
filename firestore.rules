@@ -185,8 +185,7 @@ service cloud.firestore {
       // Subcollection for device readings
       match /readings/{deviceId} {
         // Users can read/write their own device readings
-        allow read, write: if isAuthenticated() && 
-          get(/databases/$(database)/documents/live_device_data/$(userId)).id == request.auth.uid;
+        allow read, write: if isAuthenticated() && request.auth.uid == userId;
         
         // Admins can read all device readings
         allow read: if isAdmin();

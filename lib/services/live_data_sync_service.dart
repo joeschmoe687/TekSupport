@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import '../tools/services/device_data_service.dart';
-import '../tools/services/device_registry.dart';
 
 /// Service that syncs live BLE device data to Firestore for web viewing
 /// Only runs on mobile (not on web platform)
