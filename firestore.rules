@@ -146,6 +146,16 @@ service cloud.firestore {
       allow read, write: if isTechOrAdmin();
     }
     
+    // App error logs (automated error reporting)
+    match /app_error_logs/{logId} {
+      // Authenticated users can create error logs
+      allow create: if isAuthenticated();
+      // Techs and admins can read all error logs
+      allow read: if isTechOrAdmin();
+      // No one can update or delete (immutable logs)
+      allow update, delete: if false;
+    }
+    
     // Support transactions (payment logs)
     match /supportTransactions/{transactionId} {
       // Users can read their own transactions

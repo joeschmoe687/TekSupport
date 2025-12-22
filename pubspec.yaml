@@ -50,6 +50,10 @@ dependencies:
   # TekTool - Share functionality for BLE sniffer
   share_plus: ^10.0.0
   
+  # Error logging and device info
+  device_info_plus: ^11.1.0
+  package_info_plus: ^8.1.0
+  
   # Payment integration
   flutter_stripe: ^11.5.0
   pay: ^2.0.0
