@@ -6,6 +6,18 @@ applyTo: '**'
 
 > **Flutter mobile app for HVAC contractor support, Bluetooth tool integration, and dispatch**
 
+## 📋 Quick Reference
+
+| What | Where |
+|------|-------|
+| **Main codebase** | `lib/` |
+| **Tests** | `test/` (unit/widget), `integration_test/` (e2e) |
+| **BLE services** | `lib/tools/services/` |
+| **Screens** | `lib/screens/`, `lib/tools/screens/` |
+| **Firebase config** | `lib/firebase_options.dart` |
+| **Build scripts** | `scripts/` |
+| **Test docs** | `test/README.md` |
+
 ## 🔗 Firebase Integration (CRITICAL)
 
 **This app shares Firebase backend with the AirPro Website:**
@@ -248,8 +260,288 @@ flutter clean && flutter pub get
 
 ---
 
+---
+
+## 📝 Git Workflow
+
+### Commit Messages
+Follow conventional commits format:
+```
+feat: Add Fieldpiece broadcast parsing
+fix: Resolve BLE reconnection issue
+docs: Update BLE protocol documentation
+refactor: Simplify device registry lookup
+test: Add PT chart calculation tests
+chore: Update dependencies
+```
+
+### Branch Naming
+```
+feature/device-name-support
+fix/ble-connection-timeout
+refactor/device-registry-cleanup
+docs/update-readme
+```
+
+### Before Committing
+- [ ] `flutter analyze` passes
+- [ ] `flutter test` passes
+- [ ] Manual testing on device complete
+- [ ] No debug code or commented-out code
+- [ ] No secrets or API keys
+
+---
+
+## 🧪 Testing Strategy
+
+### Test Pyramid
+1. **Unit Tests** (fast, many) - `test/`
+   - Business logic
+   - Calculations (PT charts, conversions)
+   - Data parsing
+   - No UI dependencies
+
+2. **Widget Tests** (medium speed) - `test/screens/`, `test/widgets/`
+   - Individual widgets
+   - User interactions
+   - UI rendering
+   - Mock dependencies
+
+3. **Integration Tests** (slow, few) - `integration_test/`
+   - Complete user flows
+   - Navigation
+   - Firebase integration
+   - End-to-end scenarios
+
+### Running Tests Efficiently
+```bash
+# Fast feedback loop (unit tests only)
+flutter test --exclude-tags=widget,integration
+
+# Test specific area
+flutter test test/tools/
+
+# Watch mode (run tests on file changes)
+flutter test --watch
+
+# Parallel execution (faster)
+flutter test --concurrency=4
+
+# Integration tests (requires device)
+flutter test integration_test/ --device-id=<device_id>
+```
+
+### Test Coverage Goals
+- **Critical paths:** 100% (BLE connection, Firebase sync)
+- **Business logic:** >80% (calculations, validations)
+- **UI widgets:** >60% (key screens, components)
+- **Overall:** >70%
+
+Check coverage:
+```bash
+flutter test --coverage
+genhtml coverage/lcov.info -o coverage/html
+open coverage/html/index.html
+```
+
+---
+
+## 🔧 Development Tools
+
+### Recommended VS Code Extensions
+- **Dart** - Language support
+- **Flutter** - Framework support
+- **GitLens** - Git insights
+- **Error Lens** - Inline error display
+- **Flutter Widget Snippets** - Code snippets
+
+### Debugging
+```bash
+# View Flutter logs
+flutter logs
+
+# Android device logs
+adb logcat -s flutter
+
+# BLE-specific debugging
+adb logcat -s BluetoothGatt
+
+# Performance profiling
+flutter run --profile
+# Open DevTools at URL shown
+```
+
+### Hot Reload Best Practices
+- Use hot reload (r) for UI changes
+- Use hot restart (R) for:
+  - Changing app state
+  - Modifying main()
+  - Changing global variables
+- Full rebuild for:
+  - Native code changes (Android/iOS)
+  - Asset changes
+  - Dependency updates
+
+---
+
+## 🔒 Security Best Practices
+
+### Secrets Management
+- **Never commit:**
+  - API keys
+  - Firebase private keys
+  - Keystore passwords
+  - Test credentials
+  
+- **Use `.env` files:** (gitignored)
+  ```dart
+  await dotenv.load(fileName: ".env");
+  final apiKey = dotenv.env['API_KEY'];
+  ```
+
+- **Firebase config:** Safe to commit (public info)
+  - `google-services.json`
+  - `GoogleService-Info.plist`
+
+### Role-Based Access
+Always check user role before showing admin features:
+```dart
+final user = await FirebaseFirestore.instance
+    .collection('users')
+    .doc(userId)
+    .get();
+final isAdmin = user.data()?['role'] == 'admin';
+
+if (isAdmin) {
+  // Show admin features
+}
+```
+
+### Firestore Security Rules
+Before modifying rules:
+1. Review existing rules
+2. Test with Firebase Emulator
+3. Check impact on mobile app
+4. Check impact on web dashboard
+5. Deploy to staging first
+6. Monitor for auth failures
+
+---
+
+## 🎨 UI/UX Guidelines
+
+### Theme Consistency
+Use `AppColors` constants from `lib/widgets/gradient_scaffold.dart`:
+```dart
+AppColors.primaryPurple   // #7C3AED
+AppColors.primaryCyan     // #4EC7F3
+AppColors.background      // #0A0A0A
+AppColors.surfaceDark     // #1A1A1A
+AppColors.textPrimary     // #FFFFFF
+AppColors.textSecondary   // #9CA3AF
+```
+
+### Responsive Design
+```dart
+// Use layout utilities
+final isMobile = MediaQuery.of(context).size.width < 600;
+final isTablet = MediaQuery.of(context).size.width >= 600 &&
+                 MediaQuery.of(context).size.width < 1024;
+
+// Use LayoutBuilder for complex layouts
+LayoutBuilder(
+  builder: (context, constraints) {
+    if (constraints.maxWidth < 600) {
+      return MobileLayout();
+    }
+    return TabletLayout();
+  },
+)
+```
+
+### Loading States
+Always show feedback during async operations:
+```dart
+bool _isLoading = false;
+
+Future<void> _loadData() async {
+  setState(() => _isLoading = true);
+  try {
+    // Async operation
+  } catch (e) {
+    _showError(e.toString());
+  } finally {
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
+  }
+}
+```
+
+### Error Handling
+Show user-friendly messages:
+```dart
+ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text('Failed to connect to device'),
+    backgroundColor: Colors.red,
+    action: SnackBarAction(
+      label: 'Retry',
+      onPressed: _retryConnection,
+    ),
+  ),
+);
+```
+
+---
+
+## 📦 Dependency Management
+
+### Adding Dependencies
+1. **Check necessity:** Can we use existing packages?
+2. **Check maintenance:** Last updated? Active issues?
+3. **Check license:** Compatible with project?
+4. **Check size:** Impact on APK size?
+5. **Add to `pubspec.yaml`:**
+```yaml
+dependencies:
+  package_name: ^version
+```
+6. **Get packages:** `flutter pub get`
+7. **Update imports:** Use in code
+8. **Test:** Verify functionality
+9. **Document:** Update README if significant
+
+### Updating Dependencies
+```bash
+# Check for updates
+flutter pub outdated
+
+# Update all (careful!)
+flutter pub upgrade
+
+# Update specific package
+flutter pub upgrade package_name
+
+# After updating, always:
+flutter clean
+flutter pub get
+flutter test  # Verify nothing broke
+```
+
+---
+
 ## Repository Info
 
-- **GitHub:** Private repo (tekneckjoe/hvac_support_app)
+- **GitHub:** Private repo (TekNeck-LLC/hvac_support_app)
 - **Firebase:** tekneck-support (shared with AirPro website)
 - **Package:** com.tekneckjoe.tektool
+- **Min SDK:** Android 21 (5.0 Lollipop)
+- **Target SDK:** Android 34
+
+## 📚 Additional Resources
+
+- **Flutter Docs:** https://docs.flutter.dev/
+- **Firebase Docs:** https://firebase.google.com/docs/flutter
+- **BLE Plus Docs:** https://pub.dev/packages/flutter_blue_plus
+- **Dart Style Guide:** https://dart.dev/guides/language/effective-dart
