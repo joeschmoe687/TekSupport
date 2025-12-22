@@ -4,11 +4,13 @@
  * This file contains all Cloud Functions including:
  * - Payment processing (Stripe)
  * - TekMate AI chat proxy (admin only)
+ * - Gemini AI auto-response
  * - Push notifications
  */
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -649,7 +651,6 @@ exports.autoRespondWithGemini = functions.firestore
       });
       
       // Call Gemini API
-      const { GoogleGenerativeAI } = require('@google/generative-ai');
       const genAI = new GoogleGenerativeAI(geminiConfig.apiKey);
       const model = genAI.getGenerativeModel({
         model: 'gemini-1.5-flash',

@@ -481,11 +481,6 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
             ),
           ],
         ),
-              'TekMate Suggestion',
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,

@@ -24,10 +24,11 @@ class GeminiChatService {
   bool _isAdmin = false;
   String _personality = _defaultPersonality;
 
-  static const String _defaultPersonality = '''You are a helpful HVAC technical support assistant. 
-You provide clear, professional guidance to HVAC technicians and homeowners.
-Be concise, practical, and safety-conscious in your responses.
-When providing troubleshooting advice, explain the reasoning behind your recommendations.''';
+  static const String _defaultPersonality = 
+      'You are a helpful HVAC technical support assistant. '
+      'You provide clear, professional guidance to HVAC technicians and homeowners. '
+      'Be concise, practical, and safety-conscious in your responses. '
+      'When providing troubleshooting advice, explain the reasoning behind your recommendations.';
 
   /// Initialize service - checks admin status and loads configuration
   Future<bool> init() async {
@@ -190,7 +191,9 @@ When providing troubleshooting advice, explain the reasoning behind your recomme
       }
     }
     
-    return score.clamp(0.0, 0.95);
+    // Cap at 95% - AI should never claim 100% certainty
+    const maxConfidence = 0.95;
+    return score.clamp(0.0, maxConfidence);
   }
 
   /// Check if Gemini is available and enabled
