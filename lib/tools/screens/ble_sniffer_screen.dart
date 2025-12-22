@@ -180,6 +180,8 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
       if (uploaded) {
         _addLog('Session auto-uploaded to Firebase', type: 'success');
       }
+    }).catchError((error, stackTrace) {
+      _addLog('Failed to auto-upload session: $error', type: 'error');
     });
   }
 
