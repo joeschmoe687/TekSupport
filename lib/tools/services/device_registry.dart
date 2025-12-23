@@ -589,28 +589,35 @@ double _parseTestoPressure(List<int> rawData) {
     // Debug: dump full packet for analysis
     debugPrint('[Pressure] Full packet: ${bytesToHex(rawData)}');
 
-    // Float32 starts after "tialPressure" + null terminator (byte 13)
-    // Try multiple interpretations to find valid pressure
+    // Format reverse-engineered from btsnoop capture Dec 22, 2025:
+    // "tialPressure" (12 bytes) + [3-byte timestamp] + marker + 0x00 0x00 + [Int16 LE mbar*10]
+    // Byte offsets from start of "tialPressure":
+    //   0-11: ASCII "tialPressure"
+    //   12-14: Timestamp/unknown (3 bytes)
+    //   15: Marker byte (0x48 or 0x49)
+    //   16-17: Always 0x00 0x00
+    //   18-19: Int16 LE (mbar × 10) - packets are 20 bytes total
     double? validMbar;
 
-    // Try 1: Int16 at bytes 13-14 with /100 scaling (most likely format based on data analysis)
-    // This appears to be how Testo encodes differential pressure
-    if (rawData.length >= 15 && rawData[12] == 0x00) {
-      final bytes = Uint8List.fromList(rawData.sublist(13, 15));
+    // Try 1: Int16 at offset 18 with ÷10 scaling (confirmed via live capture)
+    // Example: 0xd3ae (54190) ÷ 10 = 5419 mbar = 78.6 psi ✓
+    if (rawData.length >= 20) {
+      final bytes = Uint8List.fromList(rawData.sublist(18, 20));
       final byteData = ByteData.view(bytes.buffer);
       final rawInt16 = byteData.getInt16(0, Endian.little);
-      final mbarFromInt = rawInt16 / 100.0;
+      final mbarFromInt = rawInt16 / 10.0;
       debugPrint(
-          '[Pressure] bytes 13-14 Int16/100: $rawInt16 -> $mbarFromInt mbar (${(mbarFromInt * 0.0145038).toStringAsFixed(2)} psi)');
+          '[Pressure] offset 18 Int16/10: $rawInt16 -> $mbarFromInt mbar (${(mbarFromInt * 0.0145038).toStringAsFixed(2)} psi)');
 
       // Valid range: -1100 to 50000 mbar (about -16 to 725 psi)
       if (mbarFromInt > -1100 && mbarFromInt < 50000) {
         validMbar = mbarFromInt;
-        debugPrint('[Pressure] Using Int16/100 interpretation');
+        debugPrint('[Pressure] Using Int16/10 at offset 18 (live capture confirmed)');
       }
     }
 
-    // Try 2: bytes 13-16 as Float32 little-endian (fallback)
+    // Try 2: Fallback to Float32 at bytes 13-16 (for older firmware or other Testo models)
+    // Note: T549i uses Int32/10 at offset 18, but keep this as fallback
     if (validMbar == null && rawData.length >= 17 && rawData[12] == 0x00) {
       final bytes = Uint8List.fromList(rawData.sublist(13, 17));
       final byteData = ByteData.view(bytes.buffer);
