@@ -890,6 +890,9 @@ class _GaugeScreenState extends State<GaugeScreen> {
   Widget _buildJobTypePicker() {
     return Container(
       padding: const EdgeInsets.all(20),
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.7,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -911,25 +914,38 @@ class _GaugeScreenState extends State<GaugeScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          // Main job types
-          _buildJobTypeOption(JobType.airConditioning),
-          _buildJobTypeOption(JobType.heatPump),
-          const SizedBox(height: 12),
-          // Refrigeration header
-          Padding(
-            padding: EdgeInsets.only(left: 8, bottom: 8),
-            child: Text(
-              'Refrigeration',
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+          // Make the list scrollable
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Main job types
+                  _buildJobTypeOption(JobType.airConditioning),
+                  _buildJobTypeOption(JobType.heatPump),
+                  const SizedBox(height: 12),
+                  // Refrigeration header
+                  Padding(
+                    padding: EdgeInsets.only(left: 8, bottom: 8),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Refrigeration',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  _buildJobTypeOption(JobType.refrigerationCooler),
+                  _buildJobTypeOption(JobType.refrigerationFreezer),
+                  _buildJobTypeOption(JobType.refrigerationIceMachine),
+                ],
               ),
             ),
           ),
-          _buildJobTypeOption(JobType.refrigerationCooler),
-          _buildJobTypeOption(JobType.refrigerationFreezer),
-          _buildJobTypeOption(JobType.refrigerationIceMachine),
           const SizedBox(height: 16),
         ],
       ),
