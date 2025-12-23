@@ -1,300 +1,162 @@
-# TekNeck HVAC Support App (TekTool)
+# TekNeck HVAC Support App - AI Agent Instructions
 
-> **Flutter mobile app for HVAC contractors with Bluetooth tool integration, dispatch, and AI-powered support**
+> **Last Updated:** December 23, 2025  
+> **For:** GitHub Copilot, Copilot Chat, and AI coding assistants
 
-## Quick Links
-- [Detailed Development Standards](.github/instructions/Expectations.instructions.md)
-- [Test Documentation](../test/README.md)
-- [Firebase Console](https://console.firebase.google.com/project/tekneck-support)
-- [GitHub Repo](https://github.com/TekNeck-LLC/hvac_support_app)
+---
 
-## Tech Stack
-- **Frontend:** Flutter/Dart (SDK ^3.0.0)
-- **Backend:** Firebase (Firestore, Cloud Functions, FCM, Auth, Storage)
-- **BLE:** flutter_blue_plus (device integration)
-- **AI:** TekMate AI (admin-only) + Google Gemini (fallback)
-- **Supported Devices:** Testo, Fieldpiece, Wey-Tek, ABM-200
+## 🎯 QUICK START FOR AGENTS
 
-## 🧠 AI Assistant Integration (TekMate) - GHOST MODE ADMIN-ONLY
-This app integrates with **tekmate-consolidated** (separate repo) which provides:
-- **Technician guidance** - AI walks admin techs through service calls step-by-step
-- **Device setup wizard** - AI helps integrate new Bluetooth tools
-- **HVAC troubleshooting** - Real-time problem-solving during service calls
-- **Knowledge synthesis** - Learns from all technician interactions
-- **Noob tech training** - Confidence-based guidance for experienced techs
+### When User Says "Handle the most important task" or "Do task #X":
+1. **Read [TODO.md](../../TODO.md)** immediately
+2. Find the task by number in the **🤖 AGENT TASKS** section
+3. Check task type icon:
+   - 🤖 = Agent can do autonomously (DO THESE)
+   - 👤 = Joey must do manually (SKIP - tell user it's manual)
+   - 🤝 = Requires Joey + Agent together (ASK if Joey is available)
+4. Execute the task completely following all steps listed
+5. Report results with clear success/failure status
 
-**Ghost Mode Security (CRITICAL):**
-- TekMate is COMPLETELY INVISIBLE to non-admin technicians
-- Only authenticated admins (role='admin' in Firestore) see TekMate features
-- Non-admins get zero TekMate UI, network calls, or evidence of its existence
-- `TekMateChatService().init()` returns false for non-admins (silent, no error)
-- All TekMate calls go through Cloud Function with Firebase auth + admin role check
-- Logs stored in admin-only Firestore collection `admin/tekmate_interactions`
+### Task Priority:
+- Tasks are numbered by priority (1 = most important)
+- When asked for "most important task" → find lowest numbered 🤖 task
+- Skip any 👤 manual tasks - just inform user those need their action
 
-**How it works (Admin tech workflow):**
-1. Admin tech asks question in service chat
-2. TekMate UI button available (non-admins don't see this button)
-3. Cloud Function `tekmateChatProxy` called with admin auth
-4. AI generates guidance with confidence score
-5. Admin tech reads suggestion, may add personal notes, then uses it
-6. TekMate interaction logged to Firebase for learning
-7. BLE device captures feed TekMate's device learning (admin only)
+---
 
-**See also:**
-- [GHOST_MODE_SETUP.md](../../tekmate-consolidated/GHOST_MODE_SETUP.md) - Deployment & security verification
+## 📋 PROJECT CONTEXT
 
-## Shared Firebase Backend
-This app shares Firebase project `tekneck-support` with:
-- AirPro website (`airpro-website`)
-- TekMate consolidated AI (`tekmate-consolidated`)
+### What This Is
+- **Flutter mobile app** for HVAC contractors
+- BLE device integration (Testo, Fieldpiece, Wey-Tek, ABM-200)
+- Firebase backend (shared with AirPro website)
+- TekMate AI integration (Ghost Mode - admin only)
 
-**Shared Collections:**
-- `chats` - Customer support & technician guidance (all platforms read/write)
-- `users` - User profiles (all platforms read, web manages)
-- `customers` - CRM data (all platforms read, web manages)
-- `jobs` - Dispatch/work orders (all platforms read, web creates)
-- `ble_sniff_logs` - BLE protocol captures (app writes, TekMate analyzes for device learning)
+### Current Status
+- ✅ BLE device support working
+- ✅ Firebase sync working
+- ✅ TekMate code complete
+- ⚠️ TekMate deployment pending (Cloud Function)
+- ⚠️ TekMate backend verification needed
 
-**When modifying Firestore:**
-- Check impact on web dashboard AND TekMate AI
-- Don't change security rules without testing all three platforms
-- Keep collection schemas compatible
-- BLE captures logged for TekMate device protocol learning
-- Service call interactions logged for technician training
+### Ghost Mode (CRITICAL)
+- TekMate is **INVISIBLE** to non-admin users
+- Only role='admin' in Firestore sees TekMate UI
+- Non-admins get ZERO TekMate features, network calls, or UI elements
 
-## Code Conventions
-- Singleton pattern for services (BluetoothService, DeviceDataService)
-- All BLE parsing goes in device_registry.dart
-- Check `mounted` before `setState()` calls
-- SharedPreferences for device persistence
+---
 
-## BLE Protocol Notes
-- Testo probes require init handshake before streaming
-- Fieldpiece devices are broadcast-only (ADV_NONCONN_IND)
-- Always emit ReconnectStatus.connected after BLE connect
+## 🔧 CRITICAL FILES (Don't Break)
 
-## Critical Files (DO NOT MODIFY BEHAVIOR)
-- `auto_reconnect_service.dart`: `markConnected()` must emit status
-- `device_registry.dart`: Device profiles and parsing logic
-- `device_data_service.dart`: Central BLE data streaming
+| File | Critical Behavior |
+|------|-------------------|
+| `auto_reconnect_service.dart` | `markConnected()` MUST emit `ReconnectStatus.connected` |
+| `device_registry.dart` | Device profiles and BLE parsing logic |
+| `device_data_service.dart` | Central BLE data streaming |
+| `tekmate_chat_service.dart` | Returns null for non-admins (Ghost Mode) |
 
-## Common Tasks & Examples
-
-### Adding a New BLE Device
-1. **Capture protocol:** Tools → BLE Sniffer → Connect device
-2. **Sync to Firebase:** Sniffer auto-uploads to `ble_sniff_logs`
-3. **Add profile:** Edit `lib/tools/services/device_registry.dart`
-```dart
-'YOUR-SERVICE-UUID': DeviceProfile(
-  name: 'Device Name',
-  manufacturer: 'Brand',
-  type: DeviceType.pressure, // or temperature, scale, etc.
-  parseCharacteristic: (uuid, data) {
-    // Parse raw bytes to measurement
-    return YourMeasurement(value: parseFloat(data));
-  },
-),
-```
-4. **Add parser:** Edit `lib/tools/services/device_data_service.dart`
-5. **Test:** Connect device, verify data appears in Tools Hub
-6. **Document:** Add protocol notes to `docs/BLE-Sniffing/`
-
-### Adding a New Screen
-1. **Create widget:** `lib/screens/your_screen.dart`
-```dart
-class YourScreen extends StatefulWidget {
-  const YourScreen({Key? key}) : super(key: key);
-  
-  @override
-  State<YourScreen> createState() => _YourScreenState();
-}
-
-class _YourScreenState extends State<YourScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return GradientScaffold(
-      title: 'Your Screen',
-      body: // Your UI here
-    );
-  }
-  
-  @override
-  void dispose() {
-    // Clean up listeners/controllers
-    super.dispose();
-  }
-}
-```
-2. **Add navigation:** Link from relevant screen
-3. **Add tests:** `test/screens/your_screen_test.dart`
-4. **Test manually:** Run on device, verify navigation
-
-### Modifying Firebase Collection
-1. **Check schema:** Review existing documents in Firebase Console
-2. **Check web dashboard:** Will this break the website?
-3. **Update security rules:** `firestore.rules` if needed
-4. **Test both platforms:** Mobile app + web dashboard
-5. **Document changes:** Update README or code comments
-
-### Debugging BLE Issues
-```bash
-# Enable Android BLE logging
-adb shell settings put global bluetooth_hci_log 1
-adb shell setprop persist.bluetooth.btsnoopenable true
-
-# View Flutter logs
-adb logcat | grep flutter
-
-# Pull bugreport with BLE logs
-adb bugreport bugreport_$(date +%Y%m%d_%H%M%S).zip
-
-# Clear app data (fresh start)
-adb shell pm clear com.tekneckjoe.tektool
-```
-
-## File Locations
+### Key Paths
 - **BLE services:** `lib/tools/services/`
-- **Screens:** `lib/tools/screens/`, `lib/screens/`
-- **Utils:** `lib/tools/utils/`
-- **Tests:** `test/` (unit/widget), `integration_test/` (e2e)
-- **Scripts:** `scripts/` (deploy, test runners)
+- **Screens:** `lib/screens/`, `lib/tools/screens/`
+- **Firebase functions:** `functions/index.js`
+- **Tests:** `test/`, `integration_test/`
 
-## Testing & Quality
+---
 
-### Running Tests
+## 🛠️ COMMANDS
+
 ```bash
-# Unit & widget tests (fast)
-flutter test
-
-# Specific test file
-flutter test test/tools/utils/pt_chart_test.dart
-
-# With coverage report
-flutter test --coverage
-genhtml coverage/lcov.info -o coverage/html
-
-# Integration tests (requires device)
-flutter test integration_test/app_test.dart --device-id=<device_id>
-
-# Comprehensive test script
-./scripts/run_tests.sh
-```
-
-### Linting & Analysis
-```bash
-# Static analysis
-flutter analyze
-
-# Check for outdated packages
-flutter pub outdated
-
-# Full environment check
-flutter doctor
-```
-
-**Before committing:**
-1. Run `flutter analyze` - must pass with no errors
-2. Run `flutter test` - all tests must pass
-3. Test on physical Android device for BLE features
-4. Verify Firebase sync with web dashboard
-
-### Build Commands
-```bash
-# Debug build
+# Run app
+cd /Users/joeykeilbarth/Desktop/To_New_Beginnings/TekNeck/Apps/Support/hvac_support_app
 flutter run
 
-# Release APK
+# Run tests
+flutter test
+
+# Build APK
 flutter build apk --release
-# Output: android/app/build/outputs/apk/release/app-release.apk
 
-# Manual install + hot reload (recommended)
-cd android && ./gradlew assembleDebug
-adb install -r android/app/build/outputs/apk/debug/app-debug.apk
-adb shell am start -n com.tekneckjoe.tektool/.MainActivity
-flutter attach -d <device_id>
+# Deploy TekMate function
+./scripts/deploy-tekmate.sh
+# OR: cd functions && npm install && firebase deploy --only functions:tekmateChatProxy
 
-# Clean rebuild (fixes weird errors)
+# Clean rebuild
 flutter clean && flutter pub get && flutter run
 ```
 
-## Development Workflow
+---
 
-### Starting Development
-1. **Check Flutter environment:** `flutter doctor`
-2. **Get dependencies:** `flutter pub get`
-3. **Run analyzer:** `flutter analyze` (baseline check)
-4. **Start development:** `flutter run` or manual install method
+## 📝 CODE STYLE
 
-### Making Changes
-1. **Make minimal, surgical changes** - smallest possible modifications
-2. **Test early and often** - run relevant tests after each change
-3. **Check `mounted` before `setState()`** - prevent disposed widget errors
-4. **Use existing patterns** - follow codebase conventions
-5. **Don't break critical flows** - especially BLE connection chain
+```dart
+// Always check mounted before setState
+if (mounted) {
+  setState(() {
+    _data = newData;
+  });
+}
 
-### Firebase Deployments
-```bash
-# Deploy TekMate Cloud Functions (admin only)
-./scripts/deploy-tekmate.sh
+// Singleton pattern for services
+class MyService {
+  static final MyService _instance = MyService._internal();
+  factory MyService() => _instance;
+  MyService._internal();
+}
 
-# Deploy Gemini AI functions
-./scripts/deploy-gemini.sh
-
-# Check Firestore rules before deploy
-# Remember: shared with AirPro website!
+// Error handling
+try {
+  await someAsyncOperation();
+} catch (e) {
+  debugPrint('Error: $e');
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text('Something went wrong')),
+  );
+}
 ```
 
-## Common Issues & Solutions
+---
 
-### BLE Not Connecting
-1. Verify `markConnected()` emits event in `auto_reconnect_service.dart`
-2. Check device is in range (RSSI > -80 dBm)
-3. Verify Android location permission granted
-4. Try forgetting and re-pairing device
-5. Check device battery level
+## ⚠️ BLE PROTOCOL NOTES
 
-### Firebase Sync Issues
-1. Check internet connection
-2. Verify `google-services.json` is current
-3. Check Firestore security rules allow operation
-4. Test with web dashboard to isolate issue
-5. Check Firebase Auth token is valid
+- **Testo:** Requires init handshake before streaming data
+- **Fieldpiece:** Broadcast-only (ADV_NONCONN_IND) - NO GATT connection possible
+  - Parse manufacturer data (ID `0x5046`)
+  - No service UUIDs, read advertisement data directly
+- **Wey-Tek/ABM-200:** Standard GATT connection
 
-### Build Errors
-```bash
-# AGP/Gradle issues
-cd android && ./gradlew clean && cd ..
-flutter clean && flutter pub get
+---
 
-# Flutter not found
-export PATH="$HOME/flutter/bin:$PATH"
+## ✅ AFTER COMPLETING ANY TASK
 
-# Stale IDE errors
-# Ignore stale AGP 7.4.2 errors, reload VS Code window
-```
+1. `flutter analyze` - No errors
+2. `flutter test` - All pass
+3. Test on physical device for BLE
+4. Update TODO.md (mark task complete)
+5. Clear report: what was done + results
 
-### Test Failures
-- **BLE tests:** Require physical hardware, skip in CI
-- **Firebase tests:** Need valid test credentials
-- **SMS tests:** Android only, manual testing required
+---
 
-## Security & Best Practices
+## 🔗 RELATED PROJECTS
 
-### DO NOT Commit
-- `android/key.properties` - Keystore passwords
-- `*.jks`, `*.keystore` - Signing keys
-- API keys in plain text
-- Test credentials
+| Project | Path | Relation |
+|---------|------|----------|
+| AirPro Website | `../airpro-website/` | Shared Firebase, same TekMate |
+| Wear OS App | `../wearos-tekmate/` | Same TekMate backend |
+| TekMate Server | joloserve:192.168.1.117 | AI backend |
 
-### Ghost Mode (TekMate AI)
-- **CRITICAL:** TekMate is invisible to non-admin users
-- All TekMate UI elements hidden from non-admins
-- Admin checks: `role='admin'` in Firestore users collection
-- Cloud Functions enforce admin-only access
-- Logs stored in admin-only collection
+---
 
-### Firestore Security
-- Read security rules before modifying
-- Test impact on web dashboard AND mobile app
-- Don't delete shared collections
-- Validate role-based access control
+## 🔥 FIREBASE INFO
+
+- **Project:** tekneck-support
+- **Console:** https://console.firebase.google.com/project/tekneck-support
+
+### Shared Collections
+| Collection | Purpose | Who writes |
+|------------|---------|------------|
+| `chats` | Customer support | All platforms |
+| `users` | User profiles | Web manages |
+| `customers` | CRM data | Web manages |
+| `jobs` | Dispatch | Web creates, app updates |
+| `ble_sniff_logs` | Protocol captures | App only |
+| `admin/tekmate_interactions` | AI logs | Admin only |
