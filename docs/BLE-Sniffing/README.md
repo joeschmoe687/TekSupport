@@ -1,10 +1,31 @@
 # BLE Sniffing Data Repository
 
 > **Central location for all Bluetooth Low Energy protocol analysis and device discovery**
+> 
+> **Primary Test Device:** Samsung SM S931U (RFCY518ZA0Y) • Android 16 (API 36)
 
 ---
 
-## Quick Commands - HCI Snoop Log Pull
+## Quick Start (Samsung S931U)
+
+```bash
+cd hvac_support_app
+
+# Pull HCI snoop log
+./scripts/pull_ble_logs.sh s931u
+
+# Pull + export to CSV
+./scripts/pull_ble_logs.sh s931u --csv
+
+# Pull + full bugreport
+./scripts/pull_ble_logs.sh s931u --full
+```
+
+See [QUICK_START.sh](QUICK_START.sh) for full command reference.
+
+---
+
+## Quick Commands - HCI Snoop Log Pull (Legacy)
 
 ```bash
 cd docs/BLE-Sniffing
@@ -37,26 +58,58 @@ This folder contains all BLE sniffing captures, analysis scripts, and extracted 
 docs/BLE-Sniffing/
 ├── README.md                    # This file (central docs)
 ├── scripts/                     # Analysis and comparison scripts
+│   ├── pull_ble_logs.sh         # Automated HCI log extraction & CSV export
 │   └── compare-firebase-sync.mjs  # Firebase vs local data comparison
 ├── phone-data/                  # Data pulled from phone via ADB
-│   └── ble_sniff_sessions.hive  # Hive DB export from app
-├── logs/                        # HCI snoop logs (extracted)
-│   └── btsnoop_hci_*.log        # Raw Bluetooth traffic captures
-├── [device]_capture.zip         # Raw bugreport archives
-├── [device]_extracted/          # Extracted bugreport contents
+│   ├── btsnoop_hci_*.log        # Raw Bluetooth HCI packets (binary)
+│   └── bugreport_*.zip          # Full Android bugreports
+├── extracted_YYYY-MM-DD_*/      # Unzipped bugreport contents
 │   └── FS/data/log/bt/btsnoop_hci.log
+├── reports/                     # Human-readable exports & summaries
+│   ├── hci_packets_*.csv        # CSV from tshark (HCI packet export)
+│   ├── 2025-12-23-testo_*.tjf   # Testo device measurements (.tjf format)
+│   └── *_BG_*.csv               # Fieldpiece device measurements (.csv format)
 ├── parse_[device].py            # Per-device analysis scripts
 ├── ABM-200/                     # Device-specific protocol docs
 ├── Testo/                       # Device-specific protocol docs
-├── Weytek/                      # Device-specific protocol docs
-└── Unknown/                     # Unidentified device captures
+├── Fieldpiece/                  # Device-specific protocol docs
+└── commands.md                  # Historical commands reference
 ```
 
 ### File Naming Conventions
 - Bugreports: `bugreport_YYYYMMDD_HHMMSS.zip`
 - Extracted folders: `extracted_YYYYMMDD_HHMMSS/` or `[device]_extracted/`
-- HCI logs: `btsnoop_hci_YYYYMMDD_HHMMSS.log`
+- HCI logs: `btsnoop_hci_YYYYMMDD_HHMMSS.log` (device tag: `s931u`)
 - Phone exports: `ble_sniff_sessions.hive`
+
+---
+
+## Test Device Setup
+
+### Primary Test Device: Samsung SM S931U
+**Device ID:** RFCY518ZA0Y  
+**OS:** Android 16 (API 36)  
+**HCI Log Path:** `/sdcard/Android/data/com.android.bluetooth/files/btsnoop_hci.log`
+
+**Enable HCI Logging:**
+1. Settings → About phone → Build number (tap 7× to unlock Developer Options)
+2. Developer Options → **Bluetooth HCI snoop log** (toggle ON)
+3. Reproduce BLE session (connect device, measure with Testo/Fieldpiece/ABM-200)
+4. Pull logs using: `./scripts/pull_ble_logs.sh s931u`
+
+**Verify Device Connected:**
+```bash
+adb devices
+# Should show: RFCY518ZA0Y    device
+```
+
+**Check HCI Logging Status:**
+```bash
+adb shell getprop persist.bluetooth.hcidump  # Should return "1"
+adb shell getprop ro.build.version.release   # Should return "16"
+```
+
+---
 
 ## Supported Devices
 
@@ -69,7 +122,7 @@ docs/BLE-Sniffing/
 | CCS Airflow Meter | 🔄 Pending | Need capture |
 
 ### ABM-200 Airflow Meter (WeatherFlow / AAB / CPS)
-**Verified Dec 19, 2025 via HCI Snoop Log Analysis**
+**Verified Dec 19, 2025 via HCI Snoop Log Analysis (Samsung S931U)**
 
 - **Manufacturer:** WeatherFlow (rebranded as AAB/CPS ABM-200)
 - **Sensors:** Airflow velocity (FPM), Temperature, Humidity, Pressure
@@ -141,6 +194,134 @@ docs/BLE-Sniffing/
 - **Notify Char:** fff2 (data + battery)
 - **Init Sequence:** Handshake → Stream → Measurement commands
 - **Battery:** Sent as "BatteryLevel" ASCII string + value
+
+---
+
+## Device Export Formats
+
+### Testo Tools (`.tjf` format)
+**Source:** Testo app export  
+**Content:** Binary device measurement format (vendor-specific)  
+
+**Contains:**
+- Timestamp (YYYY-MM-DD HH:MM:SS)
+- Temperature (°C or °F)
+- Pressure (psig, bar, or Pa depending on tool)
+- Humidity (if applicable)
+- Device ID/Serial
+- Refrigerant type and color indicator
+
+**Example metadata:**
+```
+Start Date: 12/23/2025
+Start Time: 12:32:00 AM
+Tool ID: 2975
+Duration: 30 minutes
+Interval: 1 min
+Measurements: Time, Pressure(psig), Vapor Saturation(°F)
+```
+
+**How to export:**
+1. Open Testo app
+2. Select session/measurement
+3. Export → Share → Save as file
+4. Move to `docs/BLE-Sniffing/reports/`
+
+---
+
+### Fieldpiece Tools (`.csv` format)
+**Source:** Fieldpiece app or device SD card  
+**Content:** Human-readable comma-separated values  
+
+**Contains:**
+- Metadata header: Start/End dates, duration, interval, Tool ID, refrigerant type
+- Columns: Time, Pressure (psig), Vapor Saturation (°F)
+- Data rows: 1-minute intervals
+
+**Example export:**
+```
+Start Date,12/23/2025,,Tool ID,2975
+Start Time,12:32:00 AM
+End Date,12/23/2025,,Red/Blue Indicator,Blue
+End Time,01:02:00 AM,,Refrigerant Type,R-404A
+Duration,30minutes
+Interval,1min
+
+Time,Pressure(psig),Vapor Saturation(°F)
+12:32:00 AM,86.8,40.5
+12:33:00 AM,88.0,41.2
+...
+```
+
+**How to export:**
+1. Open Fieldpiece app or device
+2. Select measurement session
+3. Export → CSV
+4. Move to `docs/BLE-Sniffing/reports/`
+
+---
+
+### Android HCI Snoop Log (`.log` format)
+**Source:** Android system Bluetooth logs  
+**Content:** Binary HCI (Host Controller Interface) packets  
+
+**Contains:**
+- Frame timing and direction (host→controller, controller→host)
+- HCI command opcodes and event codes
+- Bluetooth addresses (src/dst)
+- Service UUIDs and manufacturer data
+- Raw packet payload
+
+**How to enable on device:**
+1. Settings → Developer Options
+2. Enable "Bluetooth HCI snoop log"
+3. Reproduce your BLE session
+4. Run `./scripts/pull_ble_logs.sh <device>`
+
+**File locations on device:**
+- Modern path: `/sdcard/Android/data/com.android.bluetooth/files/btsnoop_hci.log`
+- Older path: `/sdcard/btsnoop_hci.log`
+
+---
+
+### Exported CSV (tshark output)
+**Generated by:** `./scripts/pull_ble_logs.sh <device> --csv`
+
+**Columns:**
+| Column | Example | Notes |
+|--------|---------|-------|
+| frame.time | 2025-12-23 12:32:45.123456 | Packet timestamp |
+| frame.len | 34 | Packet size in bytes |
+| bluetooth.hci_command_opcode | 0x0413 | HCI command type |
+| bluetooth.hci_event_code | 0x05 | HCI event type |
+| bluetooth.src | 00:1A:7D:DA:71:13 | Source Bluetooth address |
+| bluetooth.dst | AA:BB:CC:DD:EE:FF | Dest Bluetooth address |
+| bluetooth.uuid | 0000180A-0000-1000-8000-00805F9B34FB | Service UUID |
+| bluetooth.manufacturer_data | 5046AAAA... | Mfg data (e.g., Fieldpiece 0x5046) |
+
+---
+
+## Automated Log Extraction
+
+Use the provided script to automate pulling, extracting, and exporting BLE logs:
+
+```bash
+cd hvac_support_app
+
+# Pull HCI snoop log with device tag
+./scripts/pull_ble_logs.sh pixel
+
+# Pull HCI log + export to CSV
+./scripts/pull_ble_logs.sh pixel --csv
+
+# Pull HCI log + full bugreport
+./scripts/pull_ble_logs.sh pixel --full
+```
+
+**Output locations:**
+- Raw HCI logs: `docs/BLE-Sniffing/phone-data/`
+- Extracted bugreports: `docs/BLE-Sniffing/extracted_YYYY-MM-DD_*/`
+- Reports (CSV, .tjf, summaries): `docs/BLE-Sniffing/reports/`
 
 ---
 
