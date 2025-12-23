@@ -148,7 +148,7 @@ class _TekToolAppState extends State<TekToolApp> {
       ),
       darkTheme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: AppColors.background,
-        colorScheme: const ColorScheme.dark(
+        colorScheme: ColorScheme.dark(
           primary: AppColors.primaryCyan,
           secondary: AppColors.primaryPurple,
           tertiary: AppColors.accentBlue,

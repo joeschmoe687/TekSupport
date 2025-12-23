@@ -1275,7 +1275,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: AppColors.info.withOpacity(0.3)),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(

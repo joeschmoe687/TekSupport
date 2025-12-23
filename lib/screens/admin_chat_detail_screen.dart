@@ -345,17 +345,17 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     final recentMessages = await _getRecentMessages();
     
     // Build context from room data
-    final context = <String, dynamic>{
+    final contextData = <String, dynamic>{
       'roomId': widget.roomId,
       'recentMessages': recentMessages,
     };
 
     if (_roomData != null) {
       if (_roomData!['jobId'] != null) {
-        context['jobId'] = _roomData!['jobId'];
+        contextData['jobId'] = _roomData!['jobId'];
       }
       if (_roomData!['systemType'] != null) {
-        context['systemType'] = _roomData!['systemType'];
+        contextData['systemType'] = _roomData!['systemType'];
       }
     }
 
@@ -381,7 +381,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
       if (_isTekmateAvailable) {
         response = await _tekMateService.getResponse(
           query,
-          context: context,
+          context: contextData,
           platform: 'app',
         );
         aiSource = 'TekMate';
@@ -391,7 +391,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
       if (response == null && _isGeminiAvailable) {
         final geminiResponse = await _geminiService.getResponse(
           query,
-          context: context,
+          context: contextData,
         );
         if (geminiResponse != null) {
           response = geminiResponse;
@@ -716,7 +716,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
 
     try {
       // Gather context for TekMate
-      final context = {
+      final contextData = {
         'roomId': widget.roomId,
         'customerId': _roomData?['userId'] ?? _roomData?['customerUID'],
         'customerName': _userData?['displayName'] ?? _userData?['name'],
@@ -727,7 +727,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
       // Get TekMate response
       final response = await _tekMateService.getResponse(
         messageText,
-        context: context,
+        context: contextData,
         platform: 'app',
       );
 
@@ -1353,8 +1353,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
-          ],
-        ),
+        ],
       ),
       child: SafeArea(
         child: Column(

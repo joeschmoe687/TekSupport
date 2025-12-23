@@ -650,6 +650,49 @@ double _parseTestoPressure(List<int> rawData) {
       }
     }
 
+    // Try 4: bytes 12-15 as Float32 (no null terminator) - observed in captures
+    if (validMbar == null && rawData.length >= 16) {
+      final bytes = Uint8List.fromList(rawData.sublist(12, 16));
+      final byteData = ByteData.view(bytes.buffer);
+      final mbarLE = byteData.getFloat32(0, Endian.little);
+      final mbarBE = byteData.getFloat32(0, Endian.big);
+      if (mbarLE.isFinite && mbarLE > -1100 && mbarLE < 50000) {
+        validMbar = mbarLE;
+        debugPrint('[Pressure] Using bytes 12-15 LE Float32: $mbarLE mbar');
+      } else if (mbarBE.isFinite && mbarBE > -1100 && mbarBE < 50000) {
+        validMbar = mbarBE;
+        debugPrint('[Pressure] Using bytes 12-15 BE Float32: $mbarBE mbar');
+      }
+    }
+
+    // Try 5: heuristic scan for Int16 values near label (÷10 or ÷100)
+    if (validMbar == null) {
+      // Search window after the "tialPressure" text
+      final start = 12; // first byte after the label
+      final end = rawData.length - 1;
+      for (int off = start; off + 1 < end; off++) {
+        final b0 = rawData[off];
+        final b1 = rawData[off + 1];
+        final bytes = Uint8List.fromList([b0, b1]);
+        final bd = ByteData.view(bytes.buffer);
+        final s16 = bd.getInt16(0, Endian.little);
+
+        // Try divisors commonly seen in Testo packets
+        final candidatesMbar = <double>{
+          s16 / 10.0,
+          s16 / 100.0,
+        };
+        for (final mbar in candidatesMbar) {
+          if (mbar.isFinite && mbar > -1100 && mbar < 50000) {
+            validMbar = mbar;
+            debugPrint('[Pressure] Using Int16 heuristic at +$off: $s16 -> $mbar mbar');
+            break;
+          }
+        }
+        if (validMbar != null) break;
+      }
+    }
+
     if (validMbar != null) {
       // Convert mbar to psi (1 mbar = 0.0145038 psi)
       final psi = validMbar * 0.0145038;
@@ -669,17 +712,35 @@ double _parseTestoPressure(List<int> rawData) {
   // Generic search for "ressure" pattern in any packet
   for (int i = 0; i <= rawData.length - 11; i++) {
     if (_matchesPattern(rawData, i, ressurePattern)) {
-      // After "ressure" (7 bytes), Float32 starts immediately
+      // After "ressure" (7 bytes), data follows. Try Float32 and Int16 heuristics.
       final valueStart = i + 7;
+      // Float32 attempt
       if (valueStart + 4 <= rawData.length) {
         final bytes =
             Uint8List.fromList(rawData.sublist(valueStart, valueStart + 4));
         final byteData = ByteData.view(bytes.buffer);
-        final mbar = byteData.getFloat32(0, Endian.little);
-        if (mbar.isFinite && mbar > -1100 && mbar < 50000) {
-          // Convert mbar to psi (1 mbar = 0.0145038 psi)
-          final psi = mbar * 0.0145038;
-          return psi;
+        final mbarLE = byteData.getFloat32(0, Endian.little);
+        final mbarBE = byteData.getFloat32(0, Endian.big);
+        if (mbarLE.isFinite && mbarLE > -1100 && mbarLE < 50000) {
+          return mbarLE * 0.0145038;
+        }
+        if (mbarBE.isFinite && mbarBE > -1100 && mbarBE < 50000) {
+          return mbarBE * 0.0145038;
+        }
+      }
+
+      // Int16 ÷10/÷100 attempt within next few bytes
+      for (int off = valueStart; off + 1 < rawData.length && off < valueStart + 6; off++) {
+        final bytes = Uint8List.fromList([rawData[off], rawData[off + 1]]);
+        final bd = ByteData.view(bytes.buffer);
+        final s16 = bd.getInt16(0, Endian.little);
+        final mbar10 = s16 / 10.0;
+        final mbar100 = s16 / 100.0;
+        if (mbar10.isFinite && mbar10 > -1100 && mbar10 < 50000) {
+          return mbar10 * 0.0145038;
+        }
+        if (mbar100.isFinite && mbar100 > -1100 && mbar100 < 50000) {
+          return mbar100 * 0.0145038;
         }
       }
     }

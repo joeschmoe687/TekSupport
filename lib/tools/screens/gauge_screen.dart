@@ -1788,9 +1788,153 @@ class _GaugeScreenState extends State<GaugeScreen> {
     return SizedBox.shrink();
   }
 
-  Widget _buildAnalogGauge({required double value, required Color color}) {
-    // Placeholder implementation for analog gauge
-    return SizedBox.shrink();
+  /// Build analog gauge (classic round dial)
+  Widget _buildAnalogGauge({
+    required GaugeSlot slot,
+    required String label,
+    required double value,
+    required String unit,
+    required Color color,
+    required double minValue,
+    required double maxValue,
+  }) {
+    final assignedDevice = _getAssignedDeviceName(slot);
+    final batteryLevel = _getAssignedBatteryLevel(slot);
+    final hasReading = value != 0;
+
+    // Normalize value to 0-1 range for gauge
+    double normalizedValue = 0;
+    if (hasReading) {
+      normalizedValue = ((value - minValue) / (maxValue - minValue)).clamp(0.0, 1.0);
+    }
+
+    return GestureDetector(
+      onTap: () => _showSensorPicker(slot),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceDark,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: assignedDevice != null
+                ? color.withOpacity(0.5)
+                : AppColors.textMuted.withOpacity(0.2),
+            width: 2,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Label and assigned device name
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                if (batteryLevel != null)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.battery_std,
+                        size: 16,
+                        color: _getBatteryColor(batteryLevel),
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        '$batteryLevel%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+            if (assignedDevice != null) ...[
+              const SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  assignedDevice,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 16),
+
+            // Circular gauge
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // Background arc
+                CustomPaint(
+                  size: const Size(120, 120),
+                  painter: _GaugeArcPainter(
+                    backgroundColor: AppColors.textMuted.withOpacity(0.1),
+                    foregroundColor: color,
+                    value: normalizedValue,
+                  ),
+                ),
+                // Value display
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      hasReading ? value.toStringAsFixed(1) : '--',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: hasReading ? color : AppColors.textMuted,
+                      ),
+                    ),
+                    Text(
+                      unit,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Assignment prompt or tap to reassign
+            Text(
+              assignedDevice != null
+                  ? 'Tap to reassign'
+                  : 'Tap to assign sensor',
+              style: TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getBatteryColor(int level) {
+    if (level > 75) return AppColors.success;
+    if (level > 30) return AppColors.warning;
+    return AppColors.error;
   }
 }
 
@@ -2344,130 +2488,6 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
     );
   }
 
-  /// Build analog gauge (classic round dial)
-  Widget _buildAnalogGauge({
-    required GaugeSlot slot,
-    required String label,
-    required double value,
-    required String unit,
-    required Color color,
-    required double minValue,
-    required double maxValue,
-  }) {
-    final assignedDevice = _getAssignedDeviceName(slot);
-    final batteryLevel = _getAssignedBatteryLevel(slot);
-    final hasReading = value != 0;
-
-    // Normalize value to 0-1 range for gauge
-    double normalizedValue = 0;
-    if (hasReading) {
-      normalizedValue = ((value - minValue) / (maxValue - minValue)).clamp(0.0, 1.0);
-    }
-
-    return GestureDetector(
-      onTap: () => _showSensorPicker(slot),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceDark,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.3)),
-        ),
-        child: Column(
-          children: [
-            // Label and battery
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Icon(
-                  assignedDevice != null
-                      ? Icons.sensors
-                      : Icons.add_circle_outline,
-                  color: assignedDevice != null
-                      ? AppColors.success
-                      : AppColors.textMuted,
-                  size: 16,
-                ),
-                if (batteryLevel != null) ...[
-                  const SizedBox(width: 6),
-                  Icon(
-                    batteryLevel >= 60
-                        ? Icons.battery_full
-                        : batteryLevel >= 20
-                            ? Icons.battery_4_bar
-                            : Icons.battery_alert,
-                    color: batteryLevel >= 60
-                        ? AppColors.success
-                        : batteryLevel >= 20
-                            ? AppColors.warning
-                            : AppColors.error,
-                    size: 14,
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(height: 16),
-            // Analog dial
-            SizedBox(
-              width: 140,
-              height: 140,
-              child: CustomPaint(
-                painter: _AnalogGaugePainter(
-                  value: normalizedValue,
-                  color: color,
-                  isDarkMode: Theme.of(context).brightness == Brightness.dark,
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 20),
-                      Text(
-                        hasReading ? value.toStringAsFixed(1) : '--',
-                        style: TextStyle(
-                          color: color,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        unit,
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            if (assignedDevice != null) ...[
-              const SizedBox(height: 8),
-              Text(
-                assignedDevice,
-                style: TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 10,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
   /// Build scale overlay that auto-appears when scale is connected
   Widget _buildScaleOverlay() {
     final isConnected = _isScaleConnected;
@@ -2815,5 +2835,65 @@ class _AnalogGaugePainter extends CustomPainter {
   @override
   bool shouldRepaint(_AnalogGaugePainter oldDelegate) {
     return oldDelegate.value != value || oldDelegate.color != color;
+  }
+}
+
+/// Custom painter for simpler arc-style gauge
+class _GaugeArcPainter extends CustomPainter {
+  final Color backgroundColor;
+  final Color foregroundColor;
+  final double value;
+
+  _GaugeArcPainter({
+    required this.backgroundColor,
+    required this.foregroundColor,
+    required this.value,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = math.min(size.width, size.height) / 2 - 8;
+    const startAngle = math.pi * 0.75; // Start at 135 degrees
+    const sweepAngle = math.pi * 1.5; // 270 degrees total
+
+    // Background arc
+    final backgroundPaint = Paint()
+      ..color = backgroundColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 12
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      startAngle,
+      sweepAngle,
+      false,
+      backgroundPaint,
+    );
+
+    // Foreground arc
+    if (value > 0) {
+      final foregroundPaint = Paint()
+        ..color = foregroundColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 12
+        ..strokeCap = StrokeCap.round;
+
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        startAngle,
+        sweepAngle * value,
+        false,
+        foregroundPaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_GaugeArcPainter oldDelegate) {
+    return oldDelegate.value != value ||
+        oldDelegate.foregroundColor != foregroundColor ||
+        oldDelegate.backgroundColor != backgroundColor;
   }
 }

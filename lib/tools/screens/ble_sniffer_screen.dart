@@ -1898,7 +1898,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BleSnifferSettingsScreen(),
+                  builder: (context) => _BleSnifferSettingsScreen(),
                 ),
               ).then((_) {
                 // Reload settings after returning from settings screen
@@ -2968,4 +2968,44 @@ class _LogEntry {
     required this.message,
     required this.type,
   });
+}
+
+/// Settings screen for BLE Sniffer (stub implementation)
+class _BleSnifferSettingsScreen extends StatelessWidget {
+  const _BleSnifferSettingsScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    return GradientScaffold(
+      appBar: AppBar(
+        title: Text('BLE Sniffer Settings'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Text(
+            'Settings',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            color: AppColors.surfaceDark,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'Settings configuration coming soon',
+                style: TextStyle(color: AppColors.textSecondary),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

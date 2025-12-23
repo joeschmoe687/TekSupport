@@ -243,9 +243,9 @@ class _DevicesScreenState extends State<DevicesScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
-        title: const Text('Forget Device?',
+        title: Text('Forget Device?',
             style: TextStyle(color: AppColors.textPrimary)),
-        content: const Text(
+        content: Text(
           'This will remove the device from your saved list. You can scan for it again anytime.',
           style: TextStyle(color: AppColors.textSecondary),
         ),
@@ -331,7 +331,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -414,7 +414,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
                 color: AppColors.textMuted.withOpacity(0.5),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'No Devices Yet',
                 style: TextStyle(
                   color: AppColors.textPrimary,
@@ -423,7 +423,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Add your Bluetooth HVAC tools\nto start taking readings',
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -507,7 +507,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
             ),
             title: Text(
               device.name,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w600,
               ),
@@ -553,7 +553,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
                       const SizedBox(width: 4),
                       Text(
                         '${device.batteryLevel}%',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 12,
                         ),

@@ -93,7 +93,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
-        title: const Row(
+        title: Row(
           children: [
             Icon(Icons.bluetooth_disabled, color: AppColors.error),
             SizedBox(width: 12),
@@ -101,7 +101,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
                 style: TextStyle(color: AppColors.textPrimary)),
           ],
         ),
-        content: const Text(
+        content: Text(
           'Please turn on Bluetooth to scan for HVAC tools.',
           style: TextStyle(color: AppColors.textSecondary),
         ),
@@ -382,7 +382,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
             Expanded(
               child: Text(
                 name,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
                 ),
@@ -417,7 +417,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
                 const SizedBox(width: 8),
                 Text(
                   '$rssi dBm',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12,
                   ),
@@ -426,7 +426,7 @@ class _DeviceScanScreenState extends State<DeviceScanScreen> {
                   const SizedBox(width: 16),
                   Text(
                     profile.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 12,
                     ),
