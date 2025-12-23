@@ -51,17 +51,22 @@ android/key.properties
 android/app/upload-keystore.jks
 node_modules
 
-# Build artifacts (folders with spaces from copy operations)
-.dart_tool 2/
-.dart_tool 3/
-.flutter-plugins-dependencies 2
-.flutter-plugins-dependencies 3
-.flutter-plugins-dependencies 4
-build 2/
-build 3/
+# Build artifacts (folders with spaces/numbers from copy operations)
+.dart_tool*/
+.flutter-plugins-dependencies*
+build*/
 android_backup_*/
-android/app/build 2/
-android/app/build 3/
+android/app/build*/
+
+# Flutter generated/ephemeral files (all platforms)
+ios/Flutter/ephemeral*/
+ios/Flutter/Generated*.xcconfig
+ios/Flutter/flutter_export_environment*.sh
+ios/Runner/GeneratedPluginRegistrant*.m
+ios/Runner/GeneratedPluginRegistrant*.h
+linux/flutter/ephemeral*/
+macos/Flutter/ephemeral*/
+windows/flutter/ephemeral*/
 
 # Large logs
 logs/

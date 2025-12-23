@@ -146,7 +146,29 @@ try {
 
 ---
 
-## 🔥 FIREBASE INFO
+## � SERVER ACCESS (TekMate Backend)
+
+**Passwordless SSH is configured:**
+```bash
+ssh joloserve
+# No password needed! Uses ~/.ssh/id_ed25519_server
+```
+
+**Server Details:**
+- **Host alias:** `joloserve`
+- **IP:** `192.168.1.117`
+- **User:** `jolo`
+
+**Useful Commands:**
+```bash
+ssh joloserve 'systemctl status tekmate tekmate-proxy'
+ssh joloserve 'journalctl -u tekmate -f'
+ssh -t joloserve 'sudo systemctl restart tekmate'
+```
+
+---
+
+## �🔥 FIREBASE INFO
 
 - **Project:** tekneck-support
 - **Console:** https://console.firebase.google.com/project/tekneck-support
