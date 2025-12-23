@@ -402,7 +402,7 @@ class _AirflowScreenState extends State<AirflowScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'Scanning for ABM-200...',
+                            'Scanning for ABM-200 / TS-100...',
                             style: TextStyle(color: AppColors.primaryCyan),
                           ),
                         ),

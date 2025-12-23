@@ -10,6 +10,7 @@ import '../services/device_data_service.dart';
 import 'gauge_screen.dart';
 import 'scale_screen.dart';
 import 'airflow_screen.dart';
+import 'clamp_meter_screen.dart';
 
 /// Main Tools Hub screen - displays available HVAC tools
 class ToolsHubScreen extends StatefulWidget {
@@ -303,8 +304,16 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
                 subtitle: 'Electrical readings',
                 icon: Icons.bolt,
                 color: AppColors.warning,
-                isAvailable: false,
-                onTap: () => _showComingSoon('Clamp Meter'),
+                isAvailable: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ClampMeterScreen(onToggleTheme: widget.onToggleTheme),
+                    ),
+                  );
+                },
               ),
             ],
           ),
