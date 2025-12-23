@@ -599,20 +599,24 @@ double _parseTestoPressure(List<int> rawData) {
     //   18-19: Int16 LE (mbar × 10) - packets are 20 bytes total
     double? validMbar;
 
-    // Try 1: Int16 at offset 18 with ÷10 scaling (confirmed via live capture)
-    // Example: 0xd3ae (54190) ÷ 10 = 5419 mbar = 78.6 psi ✓
+    // Try 1: Uint16 at offset 18 with ÷10 scaling (confirmed via btsnoop analysis Dec 22, 2025)
+    // Example: 0xc084 (49284 unsigned) ÷ 10 = 4928.4 mbar = 71.48 psi ✓
+    // CRITICAL: Must use Uint16 (unsigned), not Int16 (signed)!
+    //   84 c0 as Uint16 LE = 49284 → 4928.4 mbar → 71.48 psi ✓
+    //   84 c0 as Int16 LE = -16252 → -1625.2 mbar → WRONG!
     if (rawData.length >= 20) {
       final bytes = Uint8List.fromList(rawData.sublist(18, 20));
       final byteData = ByteData.view(bytes.buffer);
-      final rawInt16 = byteData.getInt16(0, Endian.little);
-      final mbarFromInt = rawInt16 / 10.0;
+      final rawUint16 = byteData.getUint16(0, Endian.little);  // UNSIGNED!
+      final mbarFromInt = rawUint16 / 10.0;
       debugPrint(
-          '[Pressure] offset 18 Int16/10: $rawInt16 -> $mbarFromInt mbar (${(mbarFromInt * 0.0145038).toStringAsFixed(2)} psi)');
+          '[Pressure] offset 18 Uint16/10: $rawUint16 -> $mbarFromInt mbar (${(mbarFromInt * 0.0145038).toStringAsFixed(2)} psi)');
 
-      // Valid range: -1100 to 50000 mbar (about -16 to 725 psi)
-      if (mbarFromInt > -1100 && mbarFromInt < 50000) {
+      // Valid range: 0 to 50000 mbar (0 to 725 psi)
+      // Note: Negative pressures use different encoding
+      if (mbarFromInt >= 0 && mbarFromInt < 50000) {
         validMbar = mbarFromInt;
-        debugPrint('[Pressure] Using Int16/10 at offset 18 (live capture confirmed)');
+        debugPrint('[Pressure] ✓ Using Uint16/10 at offset 18 (btsnoop confirmed)');
       }
     }
 
