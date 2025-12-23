@@ -295,7 +295,11 @@ class DeviceRegistry {
     }
 
     // ABM-200 Airflow Meter - advertises as "ABM-200 XXX"
-    if (nameLower.contains('abm-200') || nameLower.contains('abm200')) {
+    // TS-100 Airflow Meter - advertises as "TS-100 XXX" (AAB/CPS model)
+    if (nameLower.contains('abm-200') || 
+        nameLower.contains('abm200') ||
+        nameLower.contains('ts-100') ||
+        nameLower.contains('ts100')) {
       return _profiles['abm_200'];
     }
 

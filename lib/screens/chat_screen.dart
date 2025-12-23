@@ -17,6 +17,57 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  Map<String, double> _pricing = {};
+  bool _isBusinessHours = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isBusinessHours = _checkBusinessHours();
+    _loadPricing();
+  }
+
+  bool _checkBusinessHours() {
+    final now = DateTime.now();
+    final cstOffset = Duration(hours: -6); // CST is UTC-6
+    final cstTime = now.add(cstOffset);
+    final hour = cstTime.hour;
+    final weekday = cstTime.weekday; // 1 = Monday, 7 = Sunday
+    return hour >= 9 && hour < 17 && weekday >= 1 && weekday <= 5;
+  }
+
+  Future<void> _loadPricing() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('settings')
+          .doc('pricing')
+          .get();
+
+      if (doc.exists && mounted) {
+        setState(() {
+          _pricing = {
+            'bizMessage': (doc.data()?['bizMessage'] ?? 5).toDouble(),
+            'bizPhone': (doc.data()?['bizPhone'] ?? 45).toDouble(),
+            'bizVideo': (doc.data()?['bizVideo'] ?? 60).toDouble(),
+            'twentyFourMessage': (doc.data()?['twentyFourMessage'] ?? 45).toDouble(),
+            'twentyFourPhone': (doc.data()?['twentyFourPhone'] ?? 60).toDouble(),
+            'twentyFourVideo': (doc.data()?['twentyFourVideo'] ?? 80).toDouble(),
+          };
+        });
+      }
+    } catch (error) {
+      debugPrint('Error loading pricing: $error');
+    }
+  }
+
+  double _getPrice(String type) {
+    if (_isBusinessHours) {
+      return _pricing['biz$type'] ?? 0.0;
+    } else {
+      return _pricing['twentyFour$type'] ?? 0.0;
+    }
+  }
+
   void _showProfileDialog() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -244,6 +295,10 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _showSupportOptions() {
+    final messagePrice = _getPrice('Message');
+    final phonePrice = _getPrice('Phone');
+    final videoPrice = _getPrice('Video');
+    
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surfaceDark,
@@ -257,66 +312,66 @@ class _ChatScreenState extends State<ChatScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                'Choose Support Type',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Choose Support Type',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    _isBusinessHours ? '🟢 Business Hours' : '🌙 24HR',
+                    style: TextStyle(
+                      color: _isBusinessHours ? Colors.green : Colors.amber,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
               _SupportOptionCard(
                 icon: Icons.chat_bubble_outline,
                 title: 'Text Chat',
-                subtitle: '\$5 join fee + \$33/mo',
+                subtitle: '\$${messagePrice.toStringAsFixed(0)}${_isBusinessHours ? '' : ' (24HR)'}',
                 description: 'Chat with HVAC techs anytime',
                 color: AppColors.primaryCyan,
                 onTap: () {
                   Navigator.pop(context);
-                  _launchCheckout('text', 500, 3300);
+                  _launchCheckout('text', (messagePrice * 100).toInt(), null);
                 },
               ),
               const SizedBox(height: 12),
               _SupportOptionCard(
                 icon: Icons.phone_in_talk,
                 title: 'Phone Support',
-                subtitle: '\$45 per session',
+                subtitle: '\$${phonePrice.toStringAsFixed(0)} per session${_isBusinessHours ? '' : ' (24HR)'}',
                 description: 'Live phone call with a tech',
                 color: Colors.green,
                 onTap: () {
                   Navigator.pop(context);
-                  _launchCheckout('phone', 4500, null);
+                  _launchCheckout('phone', (phonePrice * 100).toInt(), null);
                 },
               ),
               const SizedBox(height: 12),
               _SupportOptionCard(
                 icon: Icons.videocam,
                 title: 'Video Call',
-                subtitle: '\$60 per session',
+                subtitle: '\$${videoPrice.toStringAsFixed(0)} per session${_isBusinessHours ? '' : ' (24HR)'}',
                 description: 'Face-to-face video support',
                 color: Colors.purple,
                 onTap: () {
                   Navigator.pop(context);
-                  _launchCheckout('video', 6000, null);
-                },
-              ),
-              const SizedBox(height: 12),
-              _SupportOptionCard(
-                icon: Icons.warning_amber_rounded,
-                title: 'Emergency Support',
-                subtitle: '\$70 per session',
-                description: 'Priority response for urgent issues',
-                color: Colors.red,
-                onTap: () {
-                  Navigator.pop(context);
-                  _launchCheckout('emergency', 7000, null);
+                  _launchCheckout('video', (videoPrice * 100).toInt(), null);
                 },
               ),
               const SizedBox(height: 16),
               Text(
-                'Secure payment via Stripe',
+                'Secure payment via Stripe • ${_isBusinessHours ? '9-5 CST Mon-Fri' : 'After hours pricing'}',
                 style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 12,
