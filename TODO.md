@@ -18,7 +18,7 @@
 ## 🤖 AGENT TASKS (Numbered by Priority)
 
 > **For AI Agents:** When asked "handle the most important task" or "do task #X", execute these in order.
-> **Task 1 = highest priority.** Skip 👤 tasks and inform user they're manual.
+> **Task 0 = highest priority.** Skip 👤 tasks and inform user they're manual.
 
 ---
 
