@@ -301,6 +301,15 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     
+    // Settings collection (app config, pricing, Stripe keys)
+    match /settings/{setting} {
+      // Everyone can read settings (pricing, config)
+      allow read: if true;
+      
+      // Only admins can write settings
+      allow write: if isAdmin();
+    }
+    
     // Default deny all other paths
     match /{document=**} {
       allow read, write: if false;

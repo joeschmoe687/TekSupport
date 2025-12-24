@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart' as tz;
 import '../widgets/gradient_scaffold.dart';
 import 'payment_screen.dart';
 
@@ -25,16 +26,25 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
   }
 
   bool _checkBusinessHours() {
-    final now = DateTime.now();
-    // Adjust to CST timezone
-    final cstOffset = Duration(hours: -6); // CST is UTC-6
-    final cstTime = now.add(cstOffset);
+    try {
+      // Use America/Chicago timezone for proper CST/CDT handling
+      final chicago = tz.getLocation('America/Chicago');
+      final now = tz.TZDateTime.now(chicago);
 
-    final hour = cstTime.hour;
-    final weekday = cstTime.weekday; // 1 = Monday, 7 = Sunday
+      final hour = now.hour;
+      final weekday = now.weekday; // 1 = Monday, 7 = Sunday
 
-    // 9 AM - 5 PM, Monday-Friday
-    return hour >= 9 && hour < 17 && weekday >= 1 && weekday <= 5;
+      // 9 AM - 5 PM, Monday-Friday
+      return hour >= 9 && hour < 17 && weekday >= 1 && weekday <= 5;
+    } catch (e) {
+      // Fallback to UTC if timezone fails
+      debugPrint('Timezone error: $e, falling back to UTC');
+      final now = DateTime.now().toUtc();
+      final cstTime = now.subtract(Duration(hours: 6)); // UTC-6 fallback
+      final hour = cstTime.hour;
+      final weekday = cstTime.weekday;
+      return hour >= 9 && hour < 17 && weekday >= 1 && weekday <= 5;
+    }
   }
 
   Future<void> _loadPricing() async {
@@ -70,10 +80,18 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
   }
 
   String _getCurrentCSTTime() {
-    final now = DateTime.now();
-    final cstOffset = Duration(hours: -6);
-    final cstTime = now.add(cstOffset);
-    return DateFormat('h:mm a').format(cstTime);
+    try {
+      // Use America/Chicago timezone for proper CST/CDT handling
+      final chicago = tz.getLocation('America/Chicago');
+      final now = tz.TZDateTime.now(chicago);
+      return DateFormat('h:mm a').format(now);
+    } catch (e) {
+      // Fallback to UTC calculation if timezone fails
+      debugPrint('Timezone error: $e, falling back to UTC');
+      final now = DateTime.now().toUtc();
+      final cstTime = now.subtract(Duration(hours: 6)); // UTC-6 fallback
+      return DateFormat('h:mm a').format(cstTime);
+    }
   }
 
   Future<void> _initiateCall() async {

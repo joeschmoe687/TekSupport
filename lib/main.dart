@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'firebase_options.dart';
 import 'screens/welcome_screen.dart';
 import 'widgets/gradient_scaffold.dart';
@@ -17,6 +18,9 @@ import 'tools/screens/device_scan_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize timezone database
+  tz.initializeTimeZones();
 
   try {
     await dotenv.load(fileName: ".env");
@@ -89,11 +93,11 @@ class _TekToolAppState extends State<TekToolApp> {
     setState(() {
       _themeMode = newMode;
     });
-    
+
     // Update AppColors based on theme
     AppColors.updateTheme(isDark);
     AppColors.updateGradient(isDark);
-    
+
     // Persist the preference
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isDarkTheme', isDark);

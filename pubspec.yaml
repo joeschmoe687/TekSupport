@@ -57,6 +57,7 @@ dependencies:
   # Payment integration
   flutter_stripe: ^11.5.0
   pay: ^2.0.0
+  timezone: ^0.10.0
   
   # AI Integration
   google_generative_ai: ^0.4.6

@@ -22,6 +22,130 @@
 
 ---
 
+### 🤖 Task 0: Debug & Fix Stripe Theme Initialization Error (BLOCKING ALL PAYMENTS)
+**Priority:** CRITICAL 🔴  
+**Status:** In Investigation (as of 2025-12-24)  
+**Time:** 1-2 hours  
+
+**The Problem:**
+Payment system completely blocked by Stripe theme error. Despite changing Android theme to `Theme.AppCompat.Light.NoActionBar` and doing a full rebuild, the error persists:
+
+```
+Error: Your theme isn't set to use Theme.AppCompat or Theme.MaterialComponents
+  - Appears ONLY when presentPaymentSheet() called (not at startup)
+  - Blocks payment dialog for Phone, Video, and Text Chat options
+  - Causes "Bad Request" error from Cloud Function
+```
+
+**Root Cause Analysis Needed:**
+
+This is a **context/threading issue**. The app shows "✅ Stripe initialized successfully (LIVE mode)" at startup, but theme check FAILS when Google Pay is initialized during payment sheet presentation. This suggests:
+1. Stripe's Google Pay check happens in wrong Activity context
+2. Or theme is being overridden somewhere else in the codebase
+3. Or ProGuard minification is stripping theme classes
+4. Or AndroidManifest.xml doesn't have proper theme binding
+
+**Files to Investigate (In Order):**
+
+1. **AndroidManifest.xml Theme Binding:**
+   - Path: `android/app/src/main/AndroidManifest.xml`
+   - Check: Does `MainActivity` have `android:theme="@style/LaunchTheme"` attribute?
+   - Current state: Unknown if theme is explicitly bound
+   - If missing: Add the attribute to `<activity android:name="com.tekneckjoe.tektool.MainActivity"`
+
+2. **All Theme Files (Look for conflicts):**
+   - List: `find android/app/src/main/res -name "styles.xml"`
+   - Check ALL:
+     - `android/app/src/main/res/values/styles.xml` (main)
+     - `android/app/src/main/res/values-v21/styles.xml` (if exists)
+     - `android/app/src/main/res/values-v31/styles.xml` (if exists)
+     - `android/app/src/main/res/values-night/styles.xml` (if exists - THIS MIGHT OVERRIDE)
+   - All must inherit from `Theme.AppCompat.Light.NoActionBar`
+   - Night theme in particular often causes overrides
+
+3. **ProGuard Rules (Class Stripping):**
+   - Path: `android/app/proguard-rules.pro`
+   - Issue: Minification might be stripping AppCompat theme classes
+   - Add these lines:
+     ```
+     -keep class androidx.appcompat.app.AppCompatActivity { *; }
+     -keep class androidx.appcompat.** { *; }
+     -keep class android.support.** { *; }
+     -keepresources color,drawable,layout,menu,anim,attr,transition,interpolator,id
+     ```
+   - Rebuild with: `flutter build apk --release`
+
+4. **Build Gradle Theme Configuration:**
+   - Path: `android/app/build.gradle`
+   - Check: Are there gradle-level theme overrides?
+   - Look for: `android { compileSdkVersion`, theme specs
+
+5. **Stripe Plugin Native Code (As Last Resort):**
+   - Verify google_pay check is using correct Activity
+   - May need to debug native Android bridge
+
+**Debug Steps:**
+
+1. Check AndroidManifest.xml:
+   ```bash
+   grep -n "android:theme" android/app/src/main/AndroidManifest.xml
+   ```
+   - Should show: `android:theme="@style/LaunchTheme"` on MainActivity
+
+2. Check for conflicting theme files:
+   ```bash
+   find android/app/src/main/res -name "styles.xml" -exec grep -l "LaunchTheme" {} \;
+   cat android/app/src/main/res/values-night/styles.xml 2>/dev/null || echo "No night theme"
+   ```
+
+3. Verify ProGuard rules exist:
+   ```bash
+   cat android/app/proguard-rules.pro
+   ```
+   - If file missing or doesn't have AppCompat rules, add them
+
+4. Full rebuild with debugging:
+   ```bash
+   cd android && ./gradlew clean && cd ..
+   flutter clean && flutter pub get
+   flutter build apk --release -v 2>&1 | grep -i "theme\|stripe"
+   ```
+
+5. Check if night theme is overriding:
+   - Temporarily disable night theme support
+   - In `android/app/src/main/AndroidManifest.xml`, add to `<application>`:
+     ```xml
+     <meta-data android:name="prefers_colorscheme" android:value="light" />
+     ```
+
+**Expected Outcome:**
+Once theme is properly configured in all three places (Manifest + CSS files + ProGuard), the Stripe initialization should succeed when presentPaymentSheet() is called.
+
+**Verification:**
+```bash
+adb logcat -s flutter 2>&1 | grep -i "stripe\|theme"
+# Should see: "✅ Stripe initialized successfully" WITHOUT the AppCompat error
+```
+
+**Blockers for:**
+- Task 1 (TekMate deployment)
+- Task 2 (Backend testing)
+- Task 3 (Ghost Mode verification)
+- All payment testing
+
+---
+
+### 👤 Task 0.5: Migrate Firebase Functions Config (functions.config() → .env)
+**Priority:** MEDIUM (Before March 2026 deadline)  
+**Time:** 30 min (research/planning phase)  
+**Deadline:** March 2026  
+
+**Context:** Firebase is deprecating the `functions.config()` API. Currently using it for Stripe secret key. Need to migrate to `.env` files before the deadline.
+
+**Note:** Joey will do this when moving project to server. Can handle both app and website functions at same time.
+
+---
+
 ### 🤖 Task 1: Deploy TekMate Cloud Function
 **Priority:** CRITICAL  
 **Time:** 15 min
