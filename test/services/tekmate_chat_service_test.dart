@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hvac_support_app/services/tekmate_chat_service.dart';
+import '../../lib/services/tekmate_chat_service.dart';
 
 /// Unit tests for TekMate Chat Service
-/// 
+///
 /// These tests verify the Ghost Mode security implementation:
 /// - Non-admin users get null responses (no error)
 /// - Admin users can access TekMate
@@ -31,6 +31,28 @@ void main() {
 
     test('getResponse returns null for non-admin before init', () async {
       final response = await service.getResponse('test message');
+      expect(response, null);
+    });
+
+    test('init sets _isInitialized to true', () async {
+      await service.init();
+      // _isInitialized is private, but after init, isAvailable should be false (non-admin)
+      expect(service.isAvailable, false);
+    });
+
+    test('getResponse returns null if not admin after init', () async {
+      await service.init();
+      final response = await service.getResponse('test');
+      expect(response, null);
+    });
+
+    test('getResponse returns null if message is empty', () async {
+      final response = await service.getResponse('');
+      expect(response, null);
+    });
+
+    test('getResponse returns null if message is whitespace', () async {
+      final response = await service.getResponse('   ');
       expect(response, null);
     });
 
@@ -87,6 +109,17 @@ void main() {
         autoRespond: false,
       );
       expect(response.confidencePercent, 87);
+    });
+
+    test('TekMateResponse fields are set correctly', () {
+      final response = TekMateResponse(
+        response: 'Hello',
+        confidence: 0.99,
+        autoRespond: true,
+      );
+      expect(response.response, 'Hello');
+      expect(response.confidence, 0.99);
+      expect(response.autoRespond, true);
     });
   });
 }
