@@ -92,10 +92,12 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
 
     // If payment successful, open WhatsApp
     if (result == true && mounted) {
-      final message = Uri.encodeComponent('Hi, I need a phone call with support');
+      final message =
+          Uri.encodeComponent('Hi, I need a phone call with support');
       final waLink = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
       try {
-        await launchUrl(Uri.parse(waLink), mode: LaunchMode.externalApplication);
+        await launchUrl(Uri.parse(waLink),
+            mode: LaunchMode.externalApplication);
       } catch (e) {
         print('Error launching WhatsApp: $e');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -159,7 +161,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
                 style: TextStyle(color: Colors.white70, fontSize: 14),
               ),
               const SizedBox(height: 16),
-              
+
               // WhatsApp option
               ListTile(
                 leading: Container(
@@ -179,7 +181,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
                   await _launchVideoCall('whatsapp');
                 },
               ),
-              
+
               // Zoom option
               ListTile(
                 leading: Container(
@@ -190,8 +192,8 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
                   ),
                   child: const Icon(Icons.videocam, color: Color(0xFF2D8CFF)),
                 ),
-                title: const Text('Zoom',
-                    style: TextStyle(color: Colors.white)),
+                title:
+                    const Text('Zoom', style: TextStyle(color: Colors.white)),
                 subtitle: const Text('Best for screen sharing',
                     style: TextStyle(color: Colors.white60, fontSize: 12)),
                 onTap: () async {
@@ -199,7 +201,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
                   await _launchVideoCall('zoom');
                 },
               ),
-              
+
               // Google Meet option
               ListTile(
                 leading: Container(
@@ -219,7 +221,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
                   await _launchVideoCall('meet');
                 },
               ),
-              
+
               // FaceTime option (iOS only - but we'll show it anyway)
               ListTile(
                 leading: Container(
@@ -249,10 +251,11 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
 
   Future<void> _launchVideoCall(String platform) async {
     String url;
-    
+
     switch (platform) {
       case 'whatsapp':
-        final message = Uri.encodeComponent('Hi, I need a video call with support');
+        final message =
+            Uri.encodeComponent('Hi, I need a video call with support');
         url = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
         break;
       case 'zoom':
@@ -272,7 +275,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
       default:
         url = 'https://wa.me/message/3OF3QGB7TX2RN1';
     }
-    
+
     try {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } catch (e) {
@@ -280,7 +283,8 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Could not launch $platform. Please try another option.'),
+            content:
+                Text('Could not launch $platform. Please try another option.'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -347,44 +351,46 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    // Text Chat Card
-                    _buildServiceCard(
-                      icon: Icons.chat_bubble,
-                      title: 'Text Chat',
-                      price: messagePrice,
-                      onTap: () {
-                        // Text chat via web UI
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Text chat available in web app'),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 12),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Text Chat Card
+                      _buildServiceCard(
+                        icon: Icons.chat_bubble,
+                        title: 'Text Chat',
+                        price: messagePrice,
+                        onTap: () {
+                          // Text chat via web UI
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Text chat available in web app'),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 12),
 
-                    // Phone Call Card
-                    _buildServiceCard(
-                      icon: Icons.phone,
-                      title: 'Phone Call',
-                      price: phonePrice,
-                      onTap: _initiateCall,
-                      color: const Color(0xFF4EC7F3),
-                    ),
-                    const SizedBox(height: 12),
+                      // Phone Call Card
+                      _buildServiceCard(
+                        icon: Icons.phone,
+                        title: 'Phone Call',
+                        price: phonePrice,
+                        onTap: _initiateCall,
+                        color: const Color(0xFF4EC7F3),
+                      ),
+                      const SizedBox(height: 12),
 
-                    // Video Call Card
-                    _buildServiceCard(
-                      icon: Icons.videocam,
-                      title: 'Video Call',
-                      price: videoPrice,
-                      onTap: _initiateVideo,
-                      color: const Color(0xFFF093FB),
-                    ),
-                    const SizedBox(height: 12),
-                  ],
+                      // Video Call Card
+                      _buildServiceCard(
+                        icon: Icons.videocam,
+                        title: 'Video Call',
+                        price: videoPrice,
+                        onTap: _initiateVideo,
+                        color: const Color(0xFFF093FB),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
                 ),
               ),
             ),
