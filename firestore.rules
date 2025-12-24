@@ -280,6 +280,18 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
     
+    // Error logs (for error reporting from all platforms)
+    match /errorLogs/{logId} {
+      // Any authenticated user can create error logs
+      allow create: if request.auth != null;
+      // Only admins and techs can read error logs
+      allow read: if isTechOrAdmin();
+      // No one can update error logs (immutable)
+      allow update: if false;
+      // Only admins can delete error logs
+      allow delete: if isAdmin();
+    }
+    
     // Pricebook categories
     match /pricebookCategories/{categoryId} {
       // Everyone can read pricing (public info)

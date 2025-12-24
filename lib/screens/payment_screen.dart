@@ -250,61 +250,64 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    // Google Pay option (if available)
-                    if (_isGooglePayAvailable) ...[
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Google Pay option (if available)
+                      if (_isGooglePayAvailable) ...[
+                        _buildPaymentMethodCard(
+                          icon: Icons.account_balance_wallet,
+                          title: 'Google Pay',
+                          subtitle: 'Fast and secure payment',
+                          color: const Color(0xFF4285F4),
+                          onTap:
+                              _isProcessing ? null : _processGooglePayPayment,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+
+                      // Card payment
                       _buildPaymentMethodCard(
-                        icon: Icons.account_balance_wallet,
-                        title: 'Google Pay',
-                        subtitle: 'Fast and secure payment',
-                        color: const Color(0xFF4285F4),
-                        onTap: _isProcessing ? null : _processGooglePayPayment,
+                        icon: Icons.credit_card,
+                        title: 'Credit/Debit Card',
+                        subtitle: 'Enter your card details',
+                        color: const Color(0xFF7C3AED),
+                        onTap: _isProcessing ? null : _processCardPayment,
                       ),
                       const SizedBox(height: 12),
-                    ],
 
-                    // Card payment
-                    _buildPaymentMethodCard(
-                      icon: Icons.credit_card,
-                      title: 'Credit/Debit Card',
-                      subtitle: 'Enter your card details',
-                      color: const Color(0xFF7C3AED),
-                      onTap: _isProcessing ? null : _processCardPayment,
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Security info
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.1),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.security,
-                            size: 20,
-                            color: Colors.green,
+                      // Security info
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.1),
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'Secure payment via Stripe. Your card information is encrypted and never stored on our servers.',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[400],
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.security,
+                              size: 20,
+                              color: Colors.green,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Secure payment via Stripe. Your card information is encrypted and never stored on our servers.',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[400],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

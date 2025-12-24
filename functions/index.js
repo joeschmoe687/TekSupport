@@ -15,32 +15,21 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 // Initialize Firebase Admin
 admin.initializeApp();
 
-// Import payment functions - lazy load to avoid initialization errors
+// Initialize Stripe with environment variable (Gen 2 compatible)
 let stripe = null;
-try {
-  const stripeKey = functions.config().stripe?.secret_key;
-  if (stripeKey && stripeKey !== 'sk_dummy_for_deployment') {
-    stripe = require('stripe')(stripeKey);
-  }
-} catch (error) {
-  console.warn('Stripe initialization failed:', error.message);
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+if (STRIPE_SECRET_KEY && STRIPE_SECRET_KEY !== 'sk_dummy_for_deployment') {
+  stripe = require('stripe')(STRIPE_SECRET_KEY);
+  console.log('✅ Stripe initialized successfully');
+} else {
+  console.warn('⚠️  Stripe secret key not configured via environment variable');
 }
 
-// TekMate configuration - wrapped in try-catch for safety
-let TEKMATE_API_URL = 'https://tekmate.airpronwa.com/api/personality-chat';
-let TEKMATE_API_KEY = '';
-let CF_ACCESS_CLIENT_ID = '';
-let CF_ACCESS_CLIENT_SECRET = '';
-
-try {
-  const config = functions.config();
-  TEKMATE_API_URL = config.tekmate?.api_url || TEKMATE_API_URL;
-  TEKMATE_API_KEY = config.tekmate?.api_key || '';
-  CF_ACCESS_CLIENT_ID = config.cloudflare?.access_client_id || '';
-  CF_ACCESS_CLIENT_SECRET = config.cloudflare?.access_client_secret || '';
-} catch (error) {
-  console.warn('Config initialization failed:', error.message);
-}
+// TekMate configuration from environment variables (Gen 2 compatible)
+const TEKMATE_API_URL = process.env.TEKMATE_API_URL || 'https://tekmate.airpronwa.com/api/personality-chat';
+const TEKMATE_API_KEY = process.env.TEKMATE_API_KEY || '';
+const CF_ACCESS_CLIENT_ID = process.env.CF_ACCESS_CLIENT_ID || '';
+const CF_ACCESS_CLIENT_SECRET = process.env.CF_ACCESS_CLIENT_SECRET || '';
 
 /**
  * TekMate Chat Proxy - ADMIN ONLY (Ghost Mode)
@@ -274,6 +263,33 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
   }
 
   try {
+    // Ensure Stripe is initialized
+    if (!stripe) {
+      // Try environment variable first (Gen 2)
+      let stripeKey = STRIPE_SECRET_KEY;
+      
+      // If env var not set, try Firestore or use test key for testing
+      if (!stripeKey || stripeKey === 'sk_dummy_for_deployment') {
+        try {
+          const settings = await admin.firestore().collection('settings').doc('stripe').get();
+          const stripeConfig = settings.data();
+          stripeKey = stripeConfig?.secretKey;
+        } catch (firestoreError) {
+          console.warn('⚠️  Could not fetch from Firestore, using test key:', firestoreError.message);
+          // Fallback to test key for development
+          stripeKey = 'sk_dummy_for_deployment';
+        }
+        
+        if (!stripeKey) {
+          console.error('❌ Stripe secret key not found anywhere');
+          return res.status(500).send({ error: 'Payment service not configured. Missing secretKey in Firestore settings/stripe.' });
+        }
+      }
+      
+      stripe = require('stripe')(stripeKey);
+      console.log('✅ Stripe initialized with key starting with:', stripeKey.substring(0, 10) + '...');
+    }
+
     const { amount, currency, description, userId, email } = req.body;
 
     // Validate required parameters
