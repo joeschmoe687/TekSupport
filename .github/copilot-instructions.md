@@ -44,6 +44,34 @@
 - Only role='admin' in Firestore sees TekMate UI
 - Non-admins get ZERO TekMate features, network calls, or UI elements
 
+### TekMate Setup & Testing
+1. **Create Firestore document:**
+   ```
+   Collection: settings
+   Document:   tekmate
+   ```
+   ```json
+   {
+     "apiUrl": "https://us-central1-tekneck-support.cloudfunctions.net/tekmateChatProxy",
+     "enabled": true,
+     "models": ["hvac-support", "tekmate-trained", "tekmate-memory"],
+     "timeout": 120000,
+     "cloudflareTimeout": 120
+   }
+   ```
+
+2. **Test with admin user:**
+   - Must have `role: 'admin'` in Firestore `users/{uid}`
+   - Open TekMate chat feature
+   - Ask HVAC question: "What is R-22 pressure at 90°F?"
+   - Should receive technical response with pressure value (226 PSIG)
+
+3. **Monitor:**
+   ```bash
+   firebase functions:log
+   # Check admin/tekmate_interactions in Firestore for interaction logs
+   ```
+
 ---
 
 ## 🔧 CRITICAL FILES (Don't Break)
