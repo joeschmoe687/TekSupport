@@ -38,6 +38,14 @@
         android:label="TekTool"
         android:icon="@mipmap/ic_launcher">
         
+        <!-- Documentation hint for light theme on Stripe-related screens.
+             Note: `prefers_colorscheme` is not a standard Android/Flutter key
+             and does not itself enforce light mode. Actual theme selection
+             is handled by the app's theme configuration (e.g. LaunchTheme / Flutter theme). -->
+        <meta-data
+            android:name="prefers_colorscheme"
+            android:value="light" />
+        
         <!-- Google Pay Configuration -->
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
