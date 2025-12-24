@@ -216,7 +216,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       key: ValueKey('chat_stream_${user.uid}'),
                       stream: FirebaseFirestore.instance
                           .collection('supportRooms')
-                          .where('userId', isEqualTo: user.uid)
+                          .where('customerUID', isEqualTo: user.uid)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==

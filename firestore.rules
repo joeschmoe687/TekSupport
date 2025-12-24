@@ -10,15 +10,17 @@ service cloud.firestore {
     // Helper function to check if user is admin
     function isAdmin() {
       return isAuthenticated() &&
-        (request.auth.token.role == 'admin' ||
-         request.auth.token.isAdmin == true);
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true);
     }
     
     // Helper function to check if user is tech or admin
     function isTechOrAdmin() {
       return isAuthenticated() &&
-        (request.auth.token.role in ['admin', 'tech'] ||
-         request.auth.token.isAdmin == true);
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'tech'] ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true);
     }
     
     // Users collection
@@ -241,6 +243,50 @@ service cloud.firestore {
     match /tekmate_interactions/{document=**} {
       // Blocked - should be under /admin collection
       allow read, write: if false;
+    }
+    
+    // Job workflow steps
+    match /jobSteps/{stepId} {
+      // Users can read steps for jobs they're assigned to or created
+      // Admins/techs can read all steps
+      allow read: if isAuthenticated();
+      
+      // Users can create steps for their jobs
+      // Admins/techs can create any steps
+      allow create: if isAuthenticated();
+      
+      // Users can update steps for their jobs
+      // Admins/techs can update any steps
+      allow update: if isAuthenticated();
+      
+      // Only admins can delete steps
+      allow delete: if isAdmin();
+    }
+    
+    // Invoices collection
+    match /invoices/{invoiceId} {
+      // Users can read their own invoices
+      allow read: if isAuthenticated() && 
+        (resource.data.customerId == request.auth.uid || 
+         resource.data.userId == request.auth.uid);
+      
+      // Admins/techs can read all invoices
+      allow read: if isTechOrAdmin();
+      
+      // Only admins/techs can create/update invoices
+      allow create, update: if isTechOrAdmin();
+      
+      // Only admins can delete
+      allow delete: if isAdmin();
+    }
+    
+    // Pricebook categories
+    match /pricebookCategories/{categoryId} {
+      // Everyone can read pricing (public info)
+      allow read: if true;
+      
+      // Only admins can modify pricing
+      allow write: if isAdmin();
     }
     
     // Default deny all other paths

@@ -32,7 +32,7 @@ enum GaugeSlot {
 /// Gauge display mode
 enum GaugeDisplayMode {
   digital, // Default: Digital box layout
-  analog,  // Classic round analog gauge
+  analog, // Classic round analog gauge
 }
 
 /// Job types for gauge configuration
@@ -103,11 +103,15 @@ class _GaugeScreenState extends State<GaugeScreen> {
   final DiagnosticEngine _diagnosticEngine = DiagnosticEngine();
   final MLDataService _mlDataService = MLDataService();
 
-  // Global keys for calibration popup positioning
-  final GlobalKey _highSidePressureKey = GlobalKey();
-  final GlobalKey _lowSidePressureKey = GlobalKey();
-  final GlobalKey _suctionLineTempKey = GlobalKey();
-  final GlobalKey _liquidLineTempKey = GlobalKey();
+  // Global keys for calibration popup positioning (with unique debugLabels)
+  late final GlobalKey _highSidePressureKey =
+      GlobalKey(debugLabel: 'highSidePressure_$hashCode');
+  late final GlobalKey _lowSidePressureKey =
+      GlobalKey(debugLabel: 'lowSidePressure_$hashCode');
+  late final GlobalKey _suctionLineTempKey =
+      GlobalKey(debugLabel: 'suctionLineTemp_$hashCode');
+  late final GlobalKey _liquidLineTempKey =
+      GlobalKey(debugLabel: 'liquidLineTemp_$hashCode');
 
   // Current refrigerant selection
   Refrigerant _currentRefrigerant = Refrigerant.r410a;
@@ -184,8 +188,8 @@ class _GaugeScreenState extends State<GaugeScreen> {
     final modeStr = prefs.getString('gaugeDisplayMode') ?? 'digital';
     if (mounted) {
       setState(() {
-        _gaugeDisplayMode = modeStr == 'analog' 
-            ? GaugeDisplayMode.analog 
+        _gaugeDisplayMode = modeStr == 'analog'
+            ? GaugeDisplayMode.analog
             : GaugeDisplayMode.digital;
       });
     }
@@ -193,7 +197,8 @@ class _GaugeScreenState extends State<GaugeScreen> {
 
   Future<void> _saveGaugeDisplayMode(GaugeDisplayMode mode) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('gaugeDisplayMode', mode == GaugeDisplayMode.analog ? 'analog' : 'digital');
+    await prefs.setString('gaugeDisplayMode',
+        mode == GaugeDisplayMode.analog ? 'analog' : 'digital');
     if (mounted) {
       setState(() {
         _gaugeDisplayMode = mode;
@@ -227,7 +232,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
 
         // Check if this is a scale
         final profile = _registry.identifyByName(deviceName);
-        if (profile?.type == HvacDeviceType.refrigerantScale && 
+        if (profile?.type == HvacDeviceType.refrigerantScale &&
             status.deviceId == _scaleDeviceId) {
           setState(() {
             _isScaleConnected = false;
@@ -293,7 +298,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
           status.deviceId != null) {
         // Show reconnect notification
         final deviceName = _deviceNames[status.deviceId] ?? 'Device';
-        
+
         // Check if this is a scale reconnecting
         final profile = _registry.identifyByName(deviceName);
         if (profile?.type == HvacDeviceType.refrigerantScale) {
@@ -303,7 +308,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
             _scaleDeviceName = deviceName;
           });
         }
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -996,8 +1001,7 @@ class _GaugeScreenState extends State<GaugeScreen> {
               ),
             ),
             if (isSelected)
-              Icon(Icons.check_circle,
-                  color: AppColors.primaryCyan, size: 22),
+              Icon(Icons.check_circle, color: AppColors.primaryCyan, size: 22),
           ],
         ),
       ),
@@ -1821,7 +1825,8 @@ class _GaugeScreenState extends State<GaugeScreen> {
     // Normalize value to 0-1 range for gauge
     double normalizedValue = 0;
     if (hasReading) {
-      normalizedValue = ((value - minValue) / (maxValue - minValue)).clamp(0.0, 1.0);
+      normalizedValue =
+          ((value - minValue) / (maxValue - minValue)).clamp(0.0, 1.0);
     }
 
     return GestureDetector(
@@ -2243,8 +2248,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.check_circle,
-                      color: AppColors.success, size: 16),
+                  Icon(Icons.check_circle, color: AppColors.success, size: 16),
                   const SizedBox(width: 8),
                   Text(
                     '${connectedDevices.length} Compatible ${connectedDevices.length == 1 ? "Device" : "Devices"} Connected',
@@ -2508,7 +2512,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
   Widget _buildScaleOverlay() {
     final isConnected = _isScaleConnected;
     final weight = isConnected ? _scaleWeight : (_lastKnownScaleWeight ?? 0.0);
-    
+
     return Positioned(
       bottom: 16,
       left: 16,
@@ -2695,8 +2699,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.info_outline,
-                      color: AppColors.info, size: 16),
+                  Icon(Icons.info_outline, color: AppColors.info, size: 16),
                   const SizedBox(width: 8),
                   Text(
                     supportedDevicesHint,
@@ -2719,7 +2722,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
                   backgroundColor: AppColors.primaryCyan,
                   foregroundColor: Colors.white,
                   padding:
-                                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
               ),
             ],
@@ -2738,6 +2741,7 @@ class _SensorPickerSheetState extends State<_SensorPickerSheet> {
     // Placeholder implementation
     return null;
   }
+
   void _showSensorPicker(GaugeSlot slot) {
     // Placeholder implementation
   }

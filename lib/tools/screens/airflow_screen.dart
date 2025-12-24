@@ -29,10 +29,12 @@ class _AirflowScreenState extends State<AirflowScreen> {
   final DeviceRegistry _registry = DeviceRegistry();
   final CalibrationService _calibrationService = CalibrationService();
 
-  // Global keys for calibration popup positioning
-  final GlobalKey _velocityKey = GlobalKey();
-  final GlobalKey _tempKey = GlobalKey();
-  final GlobalKey _humidityKey = GlobalKey();
+  // Global keys for calibration popup positioning (with unique debugLabels)
+  late final GlobalKey _velocityKey =
+      GlobalKey(debugLabel: 'velocity_$hashCode');
+  late final GlobalKey _tempKey = GlobalKey(debugLabel: 'temp_$hashCode');
+  late final GlobalKey _humidityKey =
+      GlobalKey(debugLabel: 'humidity_$hashCode');
 
   // Current readings (raw, before calibration offset)
   int _velocityRaw = 0; // FPM
