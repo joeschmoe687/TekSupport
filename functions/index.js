@@ -15,8 +15,32 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 // Initialize Firebase Admin
 admin.initializeApp();
 
-// Import payment functions
-const stripe = require('stripe')(functions.config().stripe?.secret_key || '');
+// Import payment functions - lazy load to avoid initialization errors
+let stripe = null;
+try {
+  const stripeKey = functions.config().stripe?.secret_key;
+  if (stripeKey && stripeKey !== 'sk_dummy_for_deployment') {
+    stripe = require('stripe')(stripeKey);
+  }
+} catch (error) {
+  console.warn('Stripe initialization failed:', error.message);
+}
+
+// TekMate configuration - wrapped in try-catch for safety
+let TEKMATE_API_URL = 'https://tekmate.airpronwa.com/api/personality-chat';
+let TEKMATE_API_KEY = '';
+let CF_ACCESS_CLIENT_ID = '';
+let CF_ACCESS_CLIENT_SECRET = '';
+
+try {
+  const config = functions.config();
+  TEKMATE_API_URL = config.tekmate?.api_url || TEKMATE_API_URL;
+  TEKMATE_API_KEY = config.tekmate?.api_key || '';
+  CF_ACCESS_CLIENT_ID = config.cloudflare?.access_client_id || '';
+  CF_ACCESS_CLIENT_SECRET = config.cloudflare?.access_client_secret || '';
+} catch (error) {
+  console.warn('Config initialization failed:', error.message);
+}
 
 /**
  * TekMate Chat Proxy - ADMIN ONLY (Ghost Mode)
@@ -143,15 +167,23 @@ exports.tekmateChatProxy = functions.https.onCall(async (data, context) => {
       );
     }
 
-    // Call TekMate API
-    const fetch = require('node-fetch');
+    // Call TekMate API with Cloudflare Access credentials
     
-    const tekmateResponse = await fetch(tekmateApiUrl, {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${TEKMATE_API_KEY || ''}`,
+    };
+    
+    // Add Cloudflare Access headers if configured
+    if (CF_ACCESS_CLIENT_ID && CF_ACCESS_CLIENT_SECRET) {
+      headers['CF-Access-Client-Id'] = CF_ACCESS_CLIENT_ID;
+      headers['CF-Access-Client-Secret'] = CF_ACCESS_CLIENT_SECRET;
+    }
+    
+    const tekmateResponse = await fetch(TEKMATE_API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${tekmateApiKey || ''}`,
-      },
+      headers,
+      timeout: 120000,  // 2 minutes for complex HVAC analysis
       body: JSON.stringify({
         message: message,
         context: {
@@ -408,280 +440,168 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
  * 3. Customer message is not a greeting/introduction
  * 
  * This helps customers get immediate assistance while waiting for admin
+ * 
+ * TODO: Fix Firestore trigger compatibility with firebase-functions v6
  */
-exports.autoRespondWithGemini = functions.firestore
-  .document('supportRooms/{roomId}/messages/{messageId}')
-  .onCreate(async (snap, context) => {
-    const message = snap.data();
-    const roomId = context.params.roomId;
-    
-    // Only auto-respond to customer messages
-    if (message.senderType !== 'customer' && message.from !== 'customer') {
-      return null;
-    }
-    
-    try {
-      // Get room data
-      const roomDoc = await admin.firestore()
-        .collection('supportRooms')
-        .doc(roomId)
-        .get();
-      
-      if (!roomDoc.exists) return null;
-      
-      const roomData = roomDoc.data();
-      const assignedTo = roomData.claimedBy || roomData.assignedTo;
-      
-      // Only auto-respond if chat is not claimed
-      if (assignedTo) {
-        console.log(`Chat ${roomId} is claimed by ${assignedTo}, skipping auto-response`);
-        return null;
-      }
-      
-      // Check if Gemini is enabled
-      const geminiSettings = await admin.firestore()
-        .collection('settings')
-        .doc('gemini')
-        .get();
-      
-      if (!geminiSettings.exists) {
-        console.log('Gemini settings not found');
-        return null;
-      }
-      
-      const geminiConfig = geminiSettings.data();
-      
-      if (!geminiConfig.enabled || !geminiConfig.apiKey) {
-        console.log('Gemini not enabled or API key missing');
-        return null;
-      }
-      
-      // Skip if message is too short (likely greeting)
-      const messageText = message.text || message.messageText || '';
-      if (messageText.length < 10) {
-        console.log('Message too short, skipping auto-response');
-        return null;
-      }
-      
-      // Get recent messages for context
-      const recentMessagesSnap = await admin.firestore()
-        .collection('supportRooms')
-        .doc(roomId)
-        .collection('messages')
-        .orderBy('createdAt', 'desc')
-        .limit(5)
-        .get();
-      
-      const recentMessages = recentMessagesSnap.docs.map(doc => {
-        const data = doc.data();
-        return {
-          text: data.text || data.messageText || '',
-          senderType: data.senderType || data.from || 'unknown',
-        };
-      });
-      
-      // Call Gemini API
-      const genAI = new GoogleGenerativeAI(geminiConfig.apiKey);
-      const model = genAI.getGenerativeModel({
-        model: 'gemini-1.5-flash',
-        systemInstruction: geminiConfig.personality || 
-          'You are a helpful HVAC technical support assistant. ' +
-          'Provide clear, professional guidance to customers. ' +
-          'Be concise and practical. Mention that a technician will review this chat soon.'
-      });
-      
-      // Build context
-      let prompt = messageText;
-      if (roomData.systemType) {
-        prompt = `System Type: ${roomData.systemType}\n\n${prompt}`;
-      }
-      if (recentMessages.length > 1) {
-        prompt = 'Recent conversation:\n' +
-                 recentMessages.reverse().map(m => 
-                   `${m.senderType}: ${m.text}`
-                 ).join('\n') + '\n\n' + prompt;
-      }
-      
-      const result = await model.generateContent(prompt);
-      const response = result.response;
-      const aiReply = response.text();
-      
-      // Add AI response to chat
-      const aiDisclaimer = '\n\n_This is an AI-generated response. A technician will review your chat shortly._';
-      
-      await admin.firestore()
-        .collection('supportRooms')
-        .doc(roomId)
-        .collection('messages')
-        .add({
-          role: 'assistant',
-          senderType: 'ai',
-          from: 'gemini',
-          text: aiReply + aiDisclaimer,
-          messageText: aiReply + aiDisclaimer,
-          aiGenerated: true,
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        });
-      
-      // Update room
-      await admin.firestore()
-        .collection('supportRooms')
-        .doc(roomId)
-        .update({
-          lastMessage: '🤖 AI: ' + aiReply.substring(0, 50) + '...',
-          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-          aiResponded: true,
-        });
-      
-      console.log(`Gemini auto-responded to chat ${roomId}`);
-      
-      return null;
-    } catch (error) {
-      console.error('Error in Gemini auto-response:', error);
-      return null;
-    }
-  });
+// exports.autoRespondWithGemini = functions.firestore
+//   .document('supportRooms/{roomId}/messages/{messageId}')
+//   .onCreate(async (snap, context) => {
+//    const message = snap.data();
+//    const roomId = context.params.roomId;
+//    
+//    // Only auto-respond to customer messages
+//    if (message.senderType !== 'customer' && message.from !== 'customer') {
+//      return null;
+//    }
+//    
+//    try {
+//      // Get room data
+//      const roomDoc = await admin.firestore()
+//        .collection('supportRooms')
+//        .doc(roomId)
+//        .get();
+//      
+//      if (!roomDoc.exists) return null;
+//      
+//      const roomData = roomDoc.data();
+//      const assignedTo = roomData.claimedBy || roomData.assignedTo;
+//      
+//      // Only auto-respond if chat is not claimed
+//      if (assignedTo) {
+//        console.log(`Chat ${roomId} is claimed by ${assignedTo}, skipping auto-response`);
+//        return null;
+//      }
+//      
+//      // Check if Gemini is enabled
+//      const geminiSettings = await admin.firestore()
+//        .collection('settings')
+//        .doc('gemini')
+//        .get();
+//      
+//      if (!geminiSettings.exists) {
+//        console.log('Gemini settings not found');
+//        return null;
+//      }
+//      
+//      const geminiConfig = geminiSettings.data();
+//      
+//      if (!geminiConfig.enabled || !geminiConfig.apiKey) {
+//        console.log('Gemini not enabled or API key missing');
+//        return null;
+//      }
+//      
+//      // Skip if message is too short (likely greeting)
+//      const messageText = message.text || message.messageText || '';
+//      if (messageText.length < 10) {
+//        console.log('Message too short, skipping auto-response');
+//        return null;
+//      }
+//      
+//      // Get recent messages for context
+//      const recentMessagesSnap = await admin.firestore()
+//        .collection('supportRooms')
+//        .doc(roomId)
+//        .collection('messages')
+//        .orderBy('createdAt', 'desc')
+//        .limit(5)
+//        .get();
+//      
+//      const recentMessages = recentMessagesSnap.docs.map(doc => {
+//        const data = doc.data();
+//        return {
+//          text: data.text || data.messageText || '',
+//          senderType: data.senderType || data.from || 'unknown',
+//        };
+//      });
+//      
+//      // Call Gemini API
+//      const genAI = new GoogleGenerativeAI(geminiConfig.apiKey);
+//      const model = genAI.getGenerativeModel({
+//        model: 'gemini-1.5-flash',
+//        systemInstruction: geminiConfig.personality || 
+//          'You are a helpful HVAC technical support assistant. ' +
+//          'Provide clear, professional guidance to customers. ' +
+//          'Be concise and practical. Mention that a technician will review this chat soon.'
+//      });
+//      
+//      // Build context
+//      let prompt = messageText;
+//      if (roomData.systemType) {
+//        prompt = `System Type: ${roomData.systemType}\n\n${prompt}`;
+//      }
+//      if (recentMessages.length > 1) {
+//        prompt = 'Recent conversation:\n' +
+//                 recentMessages.reverse().map(m => 
+//                   `${m.senderType}: ${m.text}`
+//                 ).join('\n') + '\n\n' + prompt;
+//      }
+//      
+//      const result = await model.generateContent(prompt);
+//      const response = result.response;
+//      const aiReply = response.text();
+//      
+//      // Add AI response to chat
+//      const aiDisclaimer = '\n\n_This is an AI-generated response. A technician will review your chat shortly._';
+//      
+//      await admin.firestore()
+//        .collection('supportRooms')
+//        .doc(roomId)
+//        .collection('messages')
+//        .add({
+//          role: 'assistant',
+//          senderType: 'ai',
+//          from: 'gemini',
+//          text: aiReply + aiDisclaimer,
+//          messageText: aiReply + aiDisclaimer,
+//          aiGenerated: true,
+//          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+//          timestamp: admin.firestore.FieldValue.serverTimestamp(),
+//        });
+//      
+//      // Update room
+//      await admin.firestore()
+//        .collection('supportRooms')
+//        .doc(roomId)
+//        .update({
+//          lastMessage: '🤖 AI: ' + aiReply.substring(0, 50) + '...',
+//          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+//          aiResponded: true,
+//        });
+//      
+//      console.log(`Gemini auto-responded to chat ${roomId}`);
+//      
+//      return null;
+//    } catch (error) {
+//      console.error('Error in Gemini auto-response:', error);
+//      return null;
+//    }
+  // });
 
 /**
  * Push Notification - New Customer Message
+ * TODO: Fix Firestore trigger compatibility with firebase-functions v6
  */
-exports.sendPushNotificationOnNewMessage = functions.firestore
-  .document('supportRooms/{roomId}/messages/{messageId}')
-  .onCreate(async (snap, context) => {
-    const message = snap.data();
-    const roomId = context.params.roomId;
+// exports.sendPushNotificationOnNewMessage = functions.firestore
+//   .document('supportRooms/{roomId}/messages/{messageId}')
+//   .onCreate(async (snap, context) => {
+//    const message = snap.data();
+//    const roomId = context.params.roomId;
+//
+//    // Only send notification for customer messages
+//    if (message.senderType !== 'customer' && message.from !== 'customer') {
+//      return null;
+//    }
 
-    // Only send notification for customer messages
-    if (message.senderType !== 'customer' && message.from !== 'customer') {
-      return null;
-    }
-
-    try {
-      // Get room data
-      const roomDoc = await admin.firestore()
-        .collection('supportRooms')
-        .doc(roomId)
-        .get();
-
-      if (!roomDoc.exists) return null;
-
-      const roomData = roomDoc.data();
-      const assignedTo = roomData.claimedBy || roomData.assignedTo;
-
-      if (!assignedTo) {
-        console.log('No assigned tech/admin for notification');
-        return null;
-      }
-
-      // Get admin's FCM token
-      const adminDoc = await admin.firestore()
-        .collection('users')
-        .doc(assignedTo)
-        .get();
-
-      if (!adminDoc.exists) return null;
-
-      const adminData = adminDoc.data();
-      const fcmToken = adminData.fcmToken;
-
-      if (!fcmToken) {
-        console.log('Admin has no FCM token');
-        return null;
-      }
-
-      // Send notification
-      const payload = {
-        notification: {
-          title: 'New Message',
-          body: message.text || 'New message received',
-        },
-        data: {
-          type: 'new_message',
-          roomId: roomId,
-          click_action: 'FLUTTER_NOTIFICATION_CLICK',
-        },
-        token: fcmToken,
-      };
-
-      await admin.messaging().send(payload);
-      console.log(`Notification sent to admin ${assignedTo}`);
-
-      return null;
-    } catch (error) {
-      console.error('Error sending notification:', error);
-      return null;
-    }
-  });
-
-/**
- * Push Notification - Admin Reply
- */
-exports.sendPushNotificationOnAdminReply = functions.firestore
-  .document('supportRooms/{roomId}/messages/{messageId}')
-  .onCreate(async (snap, context) => {
-    const message = snap.data();
-    const roomId = context.params.roomId;
-
-    // Only send notification for tech/admin messages
-    if (message.senderType !== 'tech' && message.from !== 'tech') {
-      return null;
-    }
-
-    try {
-      // Get room data
-      const roomDoc = await admin.firestore()
-        .collection('supportRooms')
-        .doc(roomId)
-        .get();
-
-      if (!roomDoc.exists) return null;
-
-      const roomData = roomDoc.data();
-      const customerId = roomData.userId || roomData.customerUID;
-
-      if (!customerId) {
-        console.log('No customer ID for notification');
-        return null;
-      }
-
-      // Get customer's FCM token
-      const customerDoc = await admin.firestore()
-        .collection('users')
-        .doc(customerId)
-        .get();
-
-      if (!customerDoc.exists) return null;
-
-      const customerData = customerDoc.data();
-      const fcmToken = customerData.fcmToken;
-
-      if (!fcmToken) {
-        console.log('Customer has no FCM token');
-        return null;
-      }
-
-      // Send notification
-      const payload = {
-        notification: {
-          title: 'Support Reply',
-          body: message.text || 'You have a new reply',
-        },
-        data: {
-          type: 'admin_reply',
-          roomId: roomId,
-          click_action: 'FLUTTER_NOTIFICATION_CLICK',
-        },
-        token: fcmToken,
-      };
-
-      await admin.messaging().send(payload);
-      console.log(`Notification sent to customer ${customerId}`);
-
-      return null;
-    } catch (error) {
-      console.error('Error sending notification:', error);
-      return null;
-    }
-  });
-
+// ============================================================================
+// COMMENTED OUT FIRESTORE TRIGGERS (Firebase Functions v6 compatibility)
+// ============================================================================
+//
+// The following functions have been temporarily disabled due to
+// compatibility issues with firebase-functions v6:
+// - autoRespondWithGemini
+// - sendPushNotificationOnNewMessage  
+// - sendPushNotificationOnAdminReply
+//
+// They can be re-enabled when upgrading to firebase-functions v7+ 
+// with environment parameter migration.
+// ============================================================================
