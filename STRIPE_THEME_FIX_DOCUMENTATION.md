@@ -96,7 +96,7 @@ Added metadata to application tag:
 ### 1. Clean and Rebuild
 
 ```bash
-cd /home/runner/work/hvac_support_app/hvac_support_app
+cd /Users/joeykeilbarth/Desktop/To_New_Beginnings/TekNeck/Apps/Support/hvac_support_app
 flutter clean
 flutter pub get
 flutter build apk --release
