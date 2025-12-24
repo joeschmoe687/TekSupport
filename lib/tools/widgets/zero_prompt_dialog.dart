@@ -90,7 +90,7 @@ class ZeroPromptDialog extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Title
-              const Text(
+              Text(
                 'Zero Your Gauges',
                 style: TextStyle(
                   color: AppColors.textPrimary,

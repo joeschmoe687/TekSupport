@@ -7,7 +7,8 @@ class BleSnifferSettingsScreen extends StatefulWidget {
   const BleSnifferSettingsScreen({super.key});
 
   @override
-  State<BleSnifferSettingsScreen> createState() => _BleSnifferSettingsScreenState();
+  State<BleSnifferSettingsScreen> createState() =>
+      _BleSnifferSettingsScreenState();
 }
 
 class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
@@ -38,7 +39,7 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
       setState(() {
         _autoUploadEnabled = value;
       });
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -56,7 +57,7 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
       setState(() {
         _autoUploadEnabled = !value;
       });
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -74,7 +75,7 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
       setState(() {
         _uploadAllMode = value;
       });
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -92,7 +93,7 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
       setState(() {
         _uploadAllMode = !value;
       });
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -160,7 +161,7 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
                           _autoUploadEnabled
                               ? 'BLE sniff logs will automatically sync to Firebase after each scan'
                               : 'BLE sniff logs will only sync when manually triggered',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.textSecondary,
                             fontSize: 14,
                           ),
@@ -169,9 +170,9 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Upload mode selector
                 Card(
                   color: AppColors.surfaceDark,
@@ -210,7 +211,7 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
                           _uploadAllMode
                               ? 'Upload ALL logs (including previously synced)'
                               : 'Upload NEW logs only (skip previously synced)',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.textSecondary,
                             fontSize: 14,
                           ),
@@ -252,9 +253,9 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Info section
                 Card(
                   color: AppColors.surfaceDark.withOpacity(0.7),
@@ -282,13 +283,13 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        _buildInfoRow(Icons.check_circle_outline, 
+                        _buildInfoRow(Icons.check_circle_outline,
                             'Logs are saved locally first'),
-                        _buildInfoRow(Icons.cloud_done, 
+                        _buildInfoRow(Icons.cloud_done,
                             'Auto-upload syncs to Firebase in background'),
-                        _buildInfoRow(Icons.verified_outlined, 
+                        _buildInfoRow(Icons.verified_outlined,
                             'Uploaded logs are marked to prevent duplicates'),
-                        _buildInfoRow(Icons.sync, 
+                        _buildInfoRow(Icons.sync,
                             'Manual sync available from main screen'),
                       ],
                     ),
@@ -298,7 +299,7 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
             ),
     );
   }
-  
+
   Widget _buildInfoRow(IconData icon, String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -309,7 +310,7 @@ class _BleSnifferSettingsScreenState extends State<BleSnifferSettingsScreen> {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 13,
               ),

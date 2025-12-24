@@ -94,7 +94,7 @@ class RefrigerantConfirmDialog extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Title
-              const Text(
+              Text(
                 'Confirm Refrigerant Type',
                 style: TextStyle(
                   color: AppColors.textPrimary,
