@@ -38,6 +38,11 @@
         android:label="TekTool"
         android:icon="@mipmap/ic_launcher">
         
+        <!-- Force light theme for Stripe compatibility -->
+        <meta-data
+            android:name="prefers_colorscheme"
+            android:value="light" />
+        
         <!-- Google Pay Configuration -->
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"

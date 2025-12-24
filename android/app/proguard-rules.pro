@@ -12,6 +12,12 @@
 # Flutter Stripe
 -keep class com.google.android.gms.wallet.** { *; }
 
+# AppCompat theme classes (required for Stripe)
+-keep class androidx.appcompat.app.AppCompatActivity { *; }
+-keep class androidx.appcompat.** { *; }
+-keep class android.support.** { *; }
+-keepresources color,drawable,layout,menu,anim,attr,transition,interpolator,id
+
 # Don't warn about missing classes
 -dontwarn com.google.mlkit.vision.text.chinese.**
 -dontwarn com.google.mlkit.vision.text.devanagari.**
