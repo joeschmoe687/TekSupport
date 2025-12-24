@@ -6,6 +6,7 @@ import '../widgets/gradient_scaffold.dart';
 import 'chat_detail_screen.dart';
 import 'support_contact_screen.dart';
 import 'payment_screen.dart';
+import '../services/tekmate_chat_service.dart';
 
 class ChatScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -19,12 +20,26 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   Map<String, double> _pricing = {};
   bool _isBusinessHours = false;
+  bool _isAdmin = false;
+  final TekMateChatService _tekMateService = TekMateChatService();
 
   @override
   void initState() {
     super.initState();
     _isBusinessHours = _checkBusinessHours();
     _loadPricing();
+    _checkAdminStatus();
+  }
+
+  Future<void> _checkAdminStatus() async {
+    final isAdmin = await _tekMateService.init();
+    debugPrint('ChatScreen - Admin status: $isAdmin');
+    if (mounted) {
+      setState(() {
+        _isAdmin = isAdmin;
+      });
+      debugPrint('ChatScreen - _isAdmin set to: $_isAdmin');
+    }
   }
 
   bool _checkBusinessHours() {
@@ -49,9 +64,12 @@ class _ChatScreenState extends State<ChatScreen> {
             'bizMessage': (doc.data()?['bizMessage'] ?? 5).toDouble(),
             'bizPhone': (doc.data()?['bizPhone'] ?? 45).toDouble(),
             'bizVideo': (doc.data()?['bizVideo'] ?? 60).toDouble(),
-            'twentyFourMessage': (doc.data()?['twentyFourMessage'] ?? 45).toDouble(),
-            'twentyFourPhone': (doc.data()?['twentyFourPhone'] ?? 60).toDouble(),
-            'twentyFourVideo': (doc.data()?['twentyFourVideo'] ?? 80).toDouble(),
+            'twentyFourMessage':
+                (doc.data()?['twentyFourMessage'] ?? 45).toDouble(),
+            'twentyFourPhone':
+                (doc.data()?['twentyFourPhone'] ?? 60).toDouble(),
+            'twentyFourVideo':
+                (doc.data()?['twentyFourVideo'] ?? 80).toDouble(),
           };
         });
       }
@@ -99,6 +117,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
+    // Debug: Print admin status every time widget rebuilds
+    debugPrint('ChatScreen.build() - _isAdmin: $_isAdmin, user: ${user?.uid}');
+
     return GradientScaffold(
       body: SafeArea(
         child: Column(
@@ -121,10 +142,64 @@ class _ChatScreenState extends State<ChatScreen> {
                     },
                     tooltip: 'Support Contact',
                   ),
-                  IconButton(
-                    icon: Icon(Icons.person, color: AppColors.textPrimary),
-                    onPressed: _showProfileDialog,
-                    tooltip: 'Profile',
+                  Row(
+                    children: [
+                      // TekMate Chat Bubble (Admin Only)
+                      if (_isAdmin) ...[
+                        Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF7C3AED), Color(0xFF4EC7F3)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF7C3AED).withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.smart_toy,
+                                color: Colors.white, size: 20),
+                            onPressed: () {
+                              debugPrint('TekMate bubble tapped!');
+                              // Navigate to the regular chat detail screen for TekMate
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatDetailScreen(
+                                    roomId: 'tekmate_admin_${user?.uid}',
+                                    isTekMateChat: true,
+                                  ),
+                                ),
+                              );
+                            },
+                            tooltip: 'TekMate AI',
+                          ),
+                        ),
+                      ] else
+                        // Debug indicator when not admin
+                        Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          child: Text(
+                            'Not Admin',
+                            style: TextStyle(
+                              color: Colors.red.withOpacity(0.5),
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      IconButton(
+                        icon: Icon(Icons.person, color: AppColors.textPrimary),
+                        onPressed: _showProfileDialog,
+                        tooltip: 'Profile',
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -138,6 +213,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     )
                   : StreamBuilder<QuerySnapshot>(
+                      key: ValueKey('chat_stream_${user.uid}'),
                       stream: FirebaseFirestore.instance
                           .collection('supportRooms')
                           .where('userId', isEqualTo: user.uid)
@@ -298,7 +374,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final messagePrice = _getPrice('Message');
     final phonePrice = _getPrice('Phone');
     final videoPrice = _getPrice('Video');
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surfaceDark,
@@ -337,7 +413,8 @@ class _ChatScreenState extends State<ChatScreen> {
               _SupportOptionCard(
                 icon: Icons.chat_bubble_outline,
                 title: 'Text Chat',
-                subtitle: '\$${messagePrice.toStringAsFixed(0)}${_isBusinessHours ? '' : ' (24HR)'}',
+                subtitle:
+                    '\$${messagePrice.toStringAsFixed(0)}${_isBusinessHours ? '' : ' (24HR)'}',
                 description: 'Chat with HVAC techs anytime',
                 color: AppColors.primaryCyan,
                 onTap: () {
@@ -349,7 +426,8 @@ class _ChatScreenState extends State<ChatScreen> {
               _SupportOptionCard(
                 icon: Icons.phone_in_talk,
                 title: 'Phone Support',
-                subtitle: '\$${phonePrice.toStringAsFixed(0)} per session${_isBusinessHours ? '' : ' (24HR)'}',
+                subtitle:
+                    '\$${phonePrice.toStringAsFixed(0)} per session${_isBusinessHours ? '' : ' (24HR)'}',
                 description: 'Live phone call with a tech',
                 color: Colors.green,
                 onTap: () {
@@ -361,7 +439,8 @@ class _ChatScreenState extends State<ChatScreen> {
               _SupportOptionCard(
                 icon: Icons.videocam,
                 title: 'Video Call',
-                subtitle: '\$${videoPrice.toStringAsFixed(0)} per session${_isBusinessHours ? '' : ' (24HR)'}',
+                subtitle:
+                    '\$${videoPrice.toStringAsFixed(0)} per session${_isBusinessHours ? '' : ' (24HR)'}',
                 description: 'Face-to-face video support',
                 color: Colors.purple,
                 onTap: () {

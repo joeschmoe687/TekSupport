@@ -37,8 +37,15 @@ class TekMateChatService {
       final userDoc = await _firestore.collection('users').doc(user.uid).get();
       final userData = userDoc.data() ?? {};
 
+      debugPrint('TekMate Admin Check - User: ${user.uid}');
+      debugPrint('TekMate Admin Check - Doc exists: ${userDoc.exists}');
+      debugPrint('TekMate Admin Check - Role: ${userData['role']}');
+      debugPrint('TekMate Admin Check - isAdmin: ${userData['isAdmin']}');
+
       _isAdmin = (userData['role'] == 'admin') || (userData['isAdmin'] == true);
       _isInitialized = true;
+
+      debugPrint('TekMate Admin Check - Result: $_isAdmin');
 
       return _isAdmin;
     } catch (e) {

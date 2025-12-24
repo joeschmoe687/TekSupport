@@ -127,11 +127,21 @@ service cloud.firestore {
     
     // Jobs collection
     match /jobs/{jobId} {
-      // Users can read jobs assigned to them
+      // Users can read jobs assigned to them OR jobs they created
       // Admins and techs can read/write all jobs
       allow read: if isAuthenticated() && 
-        (resource.data.assignedTo == request.auth.uid || isTechOrAdmin());
-      allow write: if isTechOrAdmin();
+        (resource.data.assignedTo == request.auth.uid || 
+         resource.data.userId == request.auth.uid ||
+         resource.data.customerUID == request.auth.uid ||
+         isTechOrAdmin());
+      // Users can create jobs
+      allow create: if isAuthenticated();
+      // Users can update their own jobs, admins/techs can update any
+      allow update: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || 
+         resource.data.customerUID == request.auth.uid ||
+         isTechOrAdmin());
+      allow delete: if isAdmin();
     }
     
     // Job dispatch
@@ -148,8 +158,9 @@ service cloud.firestore {
     
     // App error logs (automated error reporting)
     match /app_error_logs/{logId} {
-      // Authenticated users can create error logs
-      allow create: if isAuthenticated();
+      // ANY user (even not logged in) can create error logs
+      // This is critical for debugging app crashes
+      allow create: if true;
       // Techs and admins can read all error logs
       allow read: if isTechOrAdmin();
       // No one can update or delete (immutable logs)

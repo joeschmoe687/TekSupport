@@ -5,11 +5,17 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../widgets/gradient_scaffold.dart';
+import '../services/tekmate_chat_service.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final String roomId;
+  final bool isTekMateChat;
 
-  const ChatDetailScreen({super.key, required this.roomId});
+  const ChatDetailScreen({
+    super.key,
+    required this.roomId,
+    this.isTekMateChat = false,
+  });
 
   @override
   State<ChatDetailScreen> createState() => _ChatDetailScreenState();
@@ -19,37 +25,46 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   final TextEditingController _controller = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   bool _isUploading = false;
+  final TekMateChatService _tekMateService = TekMateChatService();
 
   Future<void> _sendMessage() async {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
     try {
+      // For TekMate chats, send directly to TekMate service
+      if (widget.isTekMateChat) {
+        await _sendTekMateMessage(text);
+        _controller.clear();
+        return;
+      }
+
+      // Regular support chat flow
       // Add message to room
       await FirebaseFirestore.instance
           .collection('supportRooms')
           .doc(widget.roomId)
           .collection('messages')
           .add({
-            'role': 'user',
-            'from': 'customer',
-            'text': text,
-            'messageText': text,
-            'createdAt': FieldValue.serverTimestamp(),
-            'timestamp': FieldValue.serverTimestamp(),
-            'status': 'sent', // Message status: sent, delivered, read
-            'readBy': [], // Array of user IDs who have read this message
-          });
+        'role': 'user',
+        'from': 'customer',
+        'text': text,
+        'messageText': text,
+        'createdAt': FieldValue.serverTimestamp(),
+        'timestamp': FieldValue.serverTimestamp(),
+        'status': 'sent', // Message status: sent, delivered, read
+        'readBy': [], // Array of user IDs who have read this message
+      });
 
       // Update room
       await FirebaseFirestore.instance
           .collection('supportRooms')
           .doc(widget.roomId)
           .update({
-            'lastMessage': text,
-            'updatedAt': FieldValue.serverTimestamp(),
-            'unreadByTech': FieldValue.increment(1),
-          });
+        'lastMessage': text,
+        'updatedAt': FieldValue.serverTimestamp(),
+        'unreadByTech': FieldValue.increment(1),
+      });
 
       _controller.clear();
     } catch (e) {
@@ -58,6 +73,57 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Error sending message: $e')));
+      }
+    }
+  }
+
+  Future<void> _sendTekMateMessage(String text) async {
+    try {
+      // Add user message to Firestore
+      await FirebaseFirestore.instance
+          .collection('supportRooms')
+          .doc(widget.roomId)
+          .collection('messages')
+          .add({
+        'role': 'user',
+        'from': 'admin',
+        'text': text,
+        'messageText': text,
+        'createdAt': FieldValue.serverTimestamp(),
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      // Get TekMate response
+      final responseData = await _tekMateService.getResponse(
+        text,
+        platform: 'app',
+      );
+
+      if (responseData == null) {
+        throw Exception('Failed to get TekMate response');
+      }
+
+      if (mounted) {
+        // Add TekMate response to Firestore
+        await FirebaseFirestore.instance
+            .collection('supportRooms')
+            .doc(widget.roomId)
+            .collection('messages')
+            .add({
+          'role': 'assistant',
+          'from': 'tekmate',
+          'text': responseData.response,
+          'messageText': responseData.response,
+          'createdAt': FieldValue.serverTimestamp(),
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      debugPrint('Error with TekMate: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('TekMate error: $e')),
+        );
       }
     }
   }
@@ -92,23 +158,23 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           .doc(widget.roomId)
           .collection('messages')
           .add({
-            'role': 'user',
-            'from': 'customer',
-            'text': '📷 Image',
-            'messageText': '📷 Image',
-            'imageUrl': downloadUrl,
-            'createdAt': FieldValue.serverTimestamp(),
-            'timestamp': FieldValue.serverTimestamp(),
-          });
+        'role': 'user',
+        'from': 'customer',
+        'text': '📷 Image',
+        'messageText': '📷 Image',
+        'imageUrl': downloadUrl,
+        'createdAt': FieldValue.serverTimestamp(),
+        'timestamp': FieldValue.serverTimestamp(),
+      });
 
       // Update room
       await FirebaseFirestore.instance
           .collection('supportRooms')
           .doc(widget.roomId)
           .update({
-            'lastMessage': '📷 Image',
-            'updatedAt': FieldValue.serverTimestamp(),
-          });
+        'lastMessage': '📷 Image',
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
 
       if (mounted) {
         setState(() => _isUploading = false);
@@ -131,45 +197,44 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder:
-          (context) => SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    leading: Icon(
-                      Icons.camera_alt,
-                      color: AppColors.primaryCyan,
-                    ),
-                    title: const Text(
-                      'Take Photo',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _pickAndUploadImage(ImageSource.camera);
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.photo_library,
-                      color: AppColors.primaryCyan,
-                    ),
-                    title: const Text(
-                      'Choose from Gallery',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _pickAndUploadImage(ImageSource.gallery);
-                    },
-                  ),
-                ],
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: AppColors.primaryCyan,
+                ),
+                title: const Text(
+                  'Take Photo',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickAndUploadImage(ImageSource.camera);
+                },
               ),
-            ),
+              ListTile(
+                leading: Icon(
+                  Icons.photo_library,
+                  color: AppColors.primaryCyan,
+                ),
+                title: const Text(
+                  'Choose from Gallery',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickAndUploadImage(ImageSource.gallery);
+                },
+              ),
+            ],
           ),
+        ),
+      ),
     );
   }
 
@@ -191,12 +256,11 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           children: [
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream:
-                    FirebaseFirestore.instance
-                        .collection('supportRooms')
-                        .doc(widget.roomId)
-                        .collection('messages')
-                        .snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection('supportRooms')
+                    .doc(widget.roomId)
+                    .collection('messages')
+                    .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> msgSnapshot) {
                   if (msgSnapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -214,12 +278,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                     final aData = a.data() as Map<String, dynamic>;
                     final bData = b.data() as Map<String, dynamic>;
 
-                    final aTime =
-                        aData['createdAt'] ??
+                    final aTime = aData['createdAt'] ??
                         aData['timestamp'] ??
                         Timestamp.now();
-                    final bTime =
-                        bData['createdAt'] ??
+                    final bTime = bData['createdAt'] ??
                         bData['timestamp'] ??
                         Timestamp.now();
 
@@ -262,10 +324,9 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                       }
 
                       return Align(
-                        alignment:
-                            isCustomer
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
+                        alignment: isCustomer
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
                         child: Container(
                           margin: const EdgeInsets.symmetric(
                             vertical: 4,
@@ -273,15 +334,13 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                           ),
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color:
-                                isCustomer
-                                    ? AppColors.primaryPurple.withOpacity(0.3)
-                                    : AppColors.surfaceDark,
+                            color: isCustomer
+                                ? AppColors.primaryPurple.withOpacity(0.3)
+                                : AppColors.surfaceDark,
                             borderRadius: BorderRadius.circular(8),
-                            border:
-                                isCustomer
-                                    ? null
-                                    : Border.all(color: AppColors.border),
+                            border: isCustomer
+                                ? null
+                                : Border.all(color: AppColors.border),
                           ),
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.75,
@@ -293,32 +352,31 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: GestureDetector(
-                                    onTap:
-                                        () => _showFullImage(context, imageUrl),
+                                    onTap: () =>
+                                        _showFullImage(context, imageUrl),
                                     child: CachedNetworkImage(
                                       imageUrl: imageUrl,
-                                      placeholder:
-                                          (context, url) => Container(
-                                            height: 150,
-                                            color: AppColors.surfaceLight,
-                                            child: Center(
-                                              child: CircularProgressIndicator(
-                                                color: AppColors.primaryCyan,
-                                                strokeWidth: 2,
-                                              ),
-                                            ),
+                                      placeholder: (context, url) => Container(
+                                        height: 150,
+                                        color: AppColors.surfaceLight,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: AppColors.primaryCyan,
+                                            strokeWidth: 2,
                                           ),
-                                      errorWidget:
-                                          (context, url, error) => Container(
-                                            height: 150,
-                                            color: AppColors.surfaceLight,
-                                            child: const Center(
-                                              child: Icon(
-                                                Icons.broken_image,
-                                                color: Colors.white54,
-                                              ),
-                                            ),
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                        height: 150,
+                                        color: AppColors.surfaceLight,
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.broken_image,
+                                            color: Colors.white54,
                                           ),
+                                        ),
+                                      ),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -459,28 +517,25 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder:
-            (context) => Scaffold(
-              backgroundColor: Colors.black,
-              appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
-              body: Center(
-                child: InteractiveViewer(
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    placeholder:
-                        (context, url) => CircularProgressIndicator(
-                          color: AppColors.primaryCyan,
-                        ),
-                    errorWidget:
-                        (context, url, error) => const Icon(
-                          Icons.broken_image,
-                          color: Colors.white54,
-                          size: 64,
-                        ),
-                  ),
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+          body: Center(
+            child: InteractiveViewer(
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                placeholder: (context, url) => CircularProgressIndicator(
+                  color: AppColors.primaryCyan,
+                ),
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.broken_image,
+                  color: Colors.white54,
+                  size: 64,
                 ),
               ),
             ),
+          ),
+        ),
       ),
     );
   }
@@ -499,12 +554,9 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         color: AppColors.surfaceDark,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color:
-              hasResponded
-                  ? (customerResponse == 'accepted'
-                      ? Colors.green
-                      : Colors.orange)
-                  : AppColors.primaryCyan,
+          color: hasResponded
+              ? (customerResponse == 'accepted' ? Colors.green : Colors.orange)
+              : AppColors.primaryCyan,
           width: 2,
         ),
       ),
@@ -516,12 +568,11 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                     ? Icons.check_circle
                     : Icons.help_outline)
                 : Icons.help_outline,
-            color:
-                hasResponded
-                    ? (customerResponse == 'accepted'
-                        ? Colors.green
-                        : Colors.orange)
-                    : AppColors.primaryCyan,
+            color: hasResponded
+                ? (customerResponse == 'accepted'
+                    ? Colors.green
+                    : Colors.orange)
+                : AppColors.primaryCyan,
             size: 40,
           ),
           const SizedBox(height: 12),
@@ -554,8 +605,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed:
-                        () => _respondToCompletion(messageId, 'accepted'),
+                    onPressed: () =>
+                        _respondToCompletion(messageId, 'accepted'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
@@ -570,8 +621,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: OutlinedButton(
-                    onPressed:
-                        () => _respondToCompletion(messageId, 'declined'),
+                    onPressed: () =>
+                        _respondToCompletion(messageId, 'declined'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.orange,
                       side: const BorderSide(color: Colors.orange),
@@ -649,7 +700,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   IconData _getReceiptIcon(Map<String, dynamic> data) {
     final status = data['status']?.toString() ?? 'sent';
     final readBy = data['readBy'] as List<dynamic>? ?? [];
-    
+
     if (readBy.isNotEmpty) {
       return Icons.done_all; // Read (double check)
     } else if (status == 'delivered') {
@@ -661,7 +712,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
   Color _getReceiptColor(Map<String, dynamic> data) {
     final readBy = data['readBy'] as List<dynamic>? ?? [];
-    
+
     if (readBy.isNotEmpty) {
       return AppColors.primaryCyan; // Read - cyan
     } else {
@@ -671,7 +722,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
   String _getReceiptText(Map<String, dynamic> data) {
     final readBy = data['readBy'] as List<dynamic>? ?? [];
-    
+
     if (readBy.isNotEmpty) {
       return 'Read';
     } else {
