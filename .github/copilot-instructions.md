@@ -210,3 +210,22 @@ ssh -t joloserve 'sudo systemctl restart tekmate'
 | `jobs` | Dispatch | Web creates, app updates |
 | `ble_sniff_logs` | Protocol captures | App only |
 | `admin/tekmate_interactions` | AI logs | Admin only |
+
+---
+
+## Helper Notes Requirement
+
+### When Adjusting Files:
+1. **Add Helper Notes:**
+   - For any file adjusted, ensure that all key methods, classes, and functions have helper notes.
+   - Use `#` for inline comments to explain the purpose of the code.
+   - If a file already has helper notes, ensure they are updated to reflect the changes made.
+
+2. **Commenting Standards:**
+   - Use concise and clear language.
+   - Avoid redundant comments.
+   - Ensure comments are relevant to the code being explained.
+
+3. **Validation:**
+   - After adding comments, verify that the file is free of syntax errors.
+   - Ensure comments do not introduce any formatting issues.
