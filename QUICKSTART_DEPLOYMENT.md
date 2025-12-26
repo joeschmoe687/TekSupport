@@ -17,6 +17,23 @@ cd /home/runner/work/hvac_support_app/hvac_support_app
 ./scripts/test-tekmate-backend.sh
 ```
 
+
+# 1. Clean rebuild with ProGuard protection
+cd android && ./gradlew clean && cd ..
+flutter clean && flutter pub get
+flutter build apk --release
+
+# 2. Install fresh build
+adb install -r android/app/build/outputs/apk/release/app-release.apk
+
+# 3. Monitor payment flow with emoji filters
+adb logcat -s flutter 2>&1 | grep -E "💳|✅|❌|⚠️"
+
+# 4. Open app and test: 
+#    - User Verification screen (verify your account)
+#    - Text Chat (should show payment screen)
+#    - Phone Call (should complete payment)
+#    - Video Call (should complete payment)
 ---
 
 ## ✅ What's Already Done
