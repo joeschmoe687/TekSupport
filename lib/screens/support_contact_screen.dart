@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 import '../widgets/gradient_scaffold.dart';
 import 'payment_screen.dart';
+import 'chat_screen.dart';
 
 class SupportContactScreen extends StatefulWidget {
   const SupportContactScreen({super.key});
@@ -67,7 +67,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
         });
       }
     } catch (error) {
-      print('Error loading pricing: $error');
+      debugPrint('Error loading pricing: $error');
     }
   }
 
@@ -109,7 +109,9 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
     );
 
     // If payment successful, open WhatsApp
-    if (result == true && mounted) {
+    if (!mounted) return;
+
+    if (result == true) {
       final message =
           Uri.encodeComponent('Hi, I need a phone call with support');
       final waLink = 'https://wa.me/message/3OF3QGB7TX2RN1?text=$message';
@@ -117,7 +119,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
         await launchUrl(Uri.parse(waLink),
             mode: LaunchMode.externalApplication);
       } catch (e) {
-        print('Error launching WhatsApp: $e');
+        debugPrint('Error launching WhatsApp: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not launch WhatsApp')),
         );
@@ -140,7 +142,9 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
     );
 
     // If payment successful, show video call options
-    if (result == true && mounted) {
+    if (!mounted) return;
+
+    if (result == true) {
       _showVideoCallOptions();
     }
   }
@@ -297,7 +301,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
     try {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } catch (e) {
-      print('Error launching $platform: $e');
+      debugPrint('Error launching $platform: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -377,13 +381,32 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
                         icon: Icons.chat_bubble,
                         title: 'Text Chat',
                         price: messagePrice,
-                        onTap: () {
-                          // Text chat via web UI
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Text chat available in web app'),
+                        onTap: () async {
+                          // Open payment screen for text chat
+                          final result = await Navigator.push<bool>(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentScreen(
+                                supportType: 'text',
+                                amountCents: (messagePrice * 100).toInt(),
+                                description:
+                                    'Text Chat Support - Chat with HVAC techs',
+                              ),
                             ),
                           );
+
+                          if (!mounted) return;
+
+                          if (result == true) {
+                            // Open in-app chat after successful payment
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ChatScreen(onToggleTheme: () {}),
+                              ),
+                            );
+                          }
                         },
                       ),
                       const SizedBox(height: 12),

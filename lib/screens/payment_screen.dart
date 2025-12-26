@@ -22,7 +22,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   final PaymentService _paymentService = PaymentService();
   bool _isProcessing = false;
-  bool _isGooglePayAvailable = false;
+  bool _isPlatformPayAvailable = false;
 
   @override
   void initState() {
@@ -32,9 +32,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Future<void> _initializePayment() async {
     await _paymentService.initialize();
-    final googlePayAvailable = await _paymentService.isGooglePayAvailable();
+    final platformPayAvailable = await _paymentService.isPlatformPayAvailable();
     setState(() {
-      _isGooglePayAvailable = googlePayAvailable;
+      _isPlatformPayAvailable = platformPayAvailable;
     });
   }
 
@@ -254,7 +254,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   child: Column(
                     children: [
                       // Google Pay option (if available)
-                      if (_isGooglePayAvailable) ...[
+                      if (_isPlatformPayAvailable) ...[
                         _buildPaymentMethodCard(
                           icon: Icons.account_balance_wallet,
                           title: 'Google Pay',

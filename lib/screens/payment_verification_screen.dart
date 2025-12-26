@@ -38,8 +38,8 @@ class _PaymentVerificationScreenState extends State<PaymentVerificationScreen> {
     // Check 3: Payment service initialization
     await _checkPaymentService();
 
-    // Check 4: Google Pay availability
-    await _checkGooglePay();
+    // Check 4: Platform Pay availability (Google Pay / Apple Pay)
+    await _checkPlatformPay();
 
     setState(() {
       _isChecking = false;
@@ -125,22 +125,22 @@ class _PaymentVerificationScreenState extends State<PaymentVerificationScreen> {
     }
   }
 
-  Future<void> _checkGooglePay() async {
+  Future<void> _checkPlatformPay() async {
     try {
       final paymentService = PaymentService();
-      final isAvailable = await paymentService.isGooglePayAvailable();
+      final isAvailable = await paymentService.isPlatformPayAvailable();
       _addCheck(
-        'Google Pay',
+        'Platform Pay',
         isAvailable,
         isAvailable
-            ? 'Google Pay is available on this device'
-            : 'Google Pay is not available (device may not support it)',
+            ? 'Platform Pay is available on this device'
+            : 'Platform Pay is not available (device may not support it)',
       );
     } catch (e) {
       _addCheck(
-        'Google Pay',
+        'Platform Pay',
         false,
-        'Error checking Google Pay: $e',
+        'Error checking Platform Pay: $e',
       );
     }
   }

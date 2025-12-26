@@ -15,22 +15,22 @@ class PaymentService {
   String? _publishableKey;
   String? _merchantId;
   bool _isTestMode = true; // Determined by publishable key prefix
-  
+
   /// Initialize Stripe with publishable key from Firestore
   Future<void> initialize() async {
     if (_isInitialized) return;
-    
+
     try {
       // Fetch Stripe configuration from Firestore
       final doc = await FirebaseFirestore.instance
           .collection('settings')
           .doc('stripe')
           .get();
-      
+
       if (doc.exists) {
         _publishableKey = doc.data()?['publishableKey'] as String?;
         _merchantId = doc.data()?['merchantId'] as String?;
-        
+
         if (_publishableKey != null) {
           Stripe.publishableKey = _publishableKey!;
           if (_merchantId != null) {
@@ -39,7 +39,8 @@ class PaymentService {
           // Determine test mode from key prefix
           _isTestMode = _publishableKey!.startsWith('pk_test_');
           _isInitialized = true;
-          debugPrint('✅ Stripe initialized successfully (${_isTestMode ? "TEST" : "LIVE"} mode)');
+          debugPrint(
+              '✅ Stripe initialized successfully (${_isTestMode ? "TEST" : "LIVE"} mode)');
         } else {
           debugPrint('⚠️ Stripe publishable key not found in Firestore');
         }
@@ -53,6 +54,10 @@ class PaymentService {
 
   /// Create a payment intent on the server
   /// Returns the client secret for confirming payment
+  ///
+  /// Note: This method supports guest payments. If the user is not signed
+  /// in the app will still attempt to create a payment intent by sending
+  /// nullable `userId` and `email` fields to the backend.
   Future<String?> createPaymentIntent({
     required int amountCents,
     required String currency,
@@ -61,7 +66,8 @@ class PaymentService {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        throw Exception('User not authenticated');
+        // Allow guest payments: log and continue with nullable fields
+        debugPrint('⚠️ User not authenticated, proceeding as guest');
       }
 
       // Get the Cloud Function URL from Firestore settings
@@ -69,8 +75,9 @@ class PaymentService {
           .collection('settings')
           .doc('stripe')
           .get();
-      
-      final createPaymentIntentUrl = doc.data()?['createPaymentIntentUrl'] as String?;
+
+      final createPaymentIntentUrl =
+          doc.data()?['createPaymentIntentUrl'] as String?;
       if (createPaymentIntentUrl == null) {
         throw Exception('Payment Intent URL not configured');
       }
@@ -83,8 +90,8 @@ class PaymentService {
           'amount': amountCents,
           'currency': currency,
           'description': description,
-          'userId': user.uid,
-          'email': user.email,
+          'userId': user?.uid,
+          'email': user?.email,
         }),
       );
 
@@ -208,14 +215,13 @@ class PaymentService {
       }
 
       // Check if Google Pay is available
-      final isGooglePaySupported = await Stripe.instance.isGooglePaySupported(
-        const IsGooglePaySupportedParams(),
-      );
+      final isPlatformPaySupported =
+          await Stripe.instance.isPlatformPaySupported();
 
-      if (!isGooglePaySupported) {
+      if (!isPlatformPaySupported) {
         return PaymentResult(
           success: false,
-          error: 'Google Pay is not available on this device',
+          error: 'Platform Pay is not available on this device',
         );
       }
 
@@ -290,14 +296,12 @@ class PaymentService {
     }
   }
 
-  /// Check if Google Pay is available
-  Future<bool> isGooglePayAvailable() async {
+  /// Check if Platform Pay (Google Pay / Apple Pay) is available
+  Future<bool> isPlatformPayAvailable() async {
     try {
-      return await Stripe.instance.isGooglePaySupported(
-        const IsGooglePaySupportedParams(),
-      );
+      return await Stripe.instance.isPlatformPaySupported();
     } catch (e) {
-      debugPrint('Error checking Google Pay availability: $e');
+      debugPrint('Error checking platform pay availability: $e');
       return false;
     }
   }
