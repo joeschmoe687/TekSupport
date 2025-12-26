@@ -115,17 +115,25 @@ class PaymentService {
     required String supportType,
     required String description,
   }) async {
+    debugPrint('💳 ========== CARD PAYMENT START ==========');
+    debugPrint('💳 Amount: \$${amountCents / 100}');
+    debugPrint('💳 Support Type: $supportType');
+    debugPrint('💳 Initialized: $_isInitialized');
+    
     if (!_isInitialized) {
+      debugPrint('⚠️ Payment service not initialized, initializing now...');
       await initialize();
       if (!_isInitialized) {
+        debugPrint('❌ Failed to initialize payment service');
         return PaymentResult(
           success: false,
-          error: 'Payment system not initialized',
+          error: 'Payment system not initialized. Please check settings.',
         );
       }
     }
 
     try {
+      debugPrint('💳 Creating payment intent...');
       // Create payment intent
       final clientSecret = await createPaymentIntent(
         amountCents: amountCents,
@@ -134,12 +142,16 @@ class PaymentService {
       );
 
       if (clientSecret == null) {
+        debugPrint('❌ Failed to create payment intent');
         return PaymentResult(
           success: false,
-          error: 'Failed to create payment intent',
+          error: 'Failed to create payment intent. Please check your connection.',
         );
       }
 
+      debugPrint('✅ Payment intent created, client secret: ${clientSecret.substring(0, 20)}...');
+      debugPrint('💳 Initializing payment sheet...');
+      
       // Present card form to user
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
@@ -154,9 +166,14 @@ class PaymentService {
         ),
       );
 
+      debugPrint('✅ Payment sheet initialized');
+      debugPrint('💳 Presenting payment sheet...');
+      
       // Show payment sheet
       await Stripe.instance.presentPaymentSheet();
 
+      debugPrint('✅ Payment sheet completed successfully');
+      
       // Payment successful - log transaction
       await _logTransaction(
         supportType: supportType,
@@ -165,19 +182,31 @@ class PaymentService {
         paymentMethod: 'card',
       );
 
+      debugPrint('💳 ========== CARD PAYMENT SUCCESS ==========');
       return PaymentResult(success: true);
     } on StripeException catch (e) {
-      debugPrint('❌ Stripe error: ${e.error.message}');
+      debugPrint('❌ ========== STRIPE ERROR ==========');
+      debugPrint('❌ Error Code: ${e.error.code}');
+      debugPrint('❌ Error Message: ${e.error.message}');
+      debugPrint('❌ Error Type: ${e.error.type}');
+      debugPrint('❌ Declined Code: ${e.error.declineCode}');
+      debugPrint('❌ Full Error: $e');
+      debugPrint('❌ ========================================');
+      
       return PaymentResult(
         success: false,
         error: e.error.message ?? 'Payment failed',
         cancelled: e.error.code == FailureCode.Canceled,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('❌ ========== UNEXPECTED ERROR ==========');
       debugPrint('❌ Payment error: $e');
+      debugPrint('❌ Stack trace: $stackTrace');
+      debugPrint('❌ ========================================');
+      
       return PaymentResult(
         success: false,
-        error: 'An unexpected error occurred',
+        error: 'An unexpected error occurred: $e',
       );
     }
   }

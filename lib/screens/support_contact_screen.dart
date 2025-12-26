@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -17,6 +18,7 @@ class SupportContactScreen extends StatefulWidget {
 class _SupportContactScreenState extends State<SupportContactScreen> {
   late Map<String, double> _pricing = {};
   bool _isBusinessHours = false;
+  bool _isPricingLoaded = false;  // Add loading state flag
 
   @override
   void initState() {
@@ -64,10 +66,29 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
             'twentyFourPhone': (doc['twentyFourPhone'] ?? 60).toDouble(),
             'twentyFourVideo': (doc['twentyFourVideo'] ?? 80).toDouble(),
           };
+          _isPricingLoaded = true;  // Mark pricing as loaded
         });
+      } else {
+        debugPrint('❌ Pricing document not found in Firestore');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to load pricing. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     } catch (error) {
-      debugPrint('Error loading pricing: $error');
+      debugPrint('❌ Error loading pricing: $error');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading pricing: $error'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -381,31 +402,64 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
                         icon: Icons.chat_bubble,
                         title: 'Text Chat',
                         price: messagePrice,
-                        onTap: () async {
-                          // Open payment screen for text chat
-                          final result = await Navigator.push<bool>(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PaymentScreen(
-                                supportType: 'text',
-                                amountCents: (messagePrice * 100).toInt(),
-                                description:
-                                    'Text Chat Support - Chat with HVAC techs',
-                              ),
-                            ),
-                          );
-
-                          if (!mounted) return;
-
-                          if (result == true) {
-                            // Open in-app chat after successful payment
-                            Navigator.push(
+                        onTap: !_isPricingLoaded ? null : () async {
+                          try {
+                            debugPrint('💳 Text Chat tapped - Amount: \$${messagePrice}');
+                            
+                            // Verify user is authenticated
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user == null) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Please sign in to use support features'),
+                                    backgroundColor: Colors.orange,
+                                  ),
+                                );
+                              }
+                              return;
+                            }
+                            
+                            debugPrint('✅ User authenticated: ${user.email}');
+                            
+                            // Open payment screen for text chat
+                            final result = await Navigator.push<bool>(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ChatScreen(onToggleTheme: () {}),
+                                builder: (context) => PaymentScreen(
+                                  supportType: 'text',
+                                  amountCents: (messagePrice * 100).toInt(),
+                                  description:
+                                      'Text Chat Support - Chat with HVAC techs',
+                                ),
                               ),
                             );
+
+                            if (!mounted) return;
+
+                            if (result == true) {
+                              debugPrint('✅ Payment successful, opening chat');
+                              // Open in-app chat after successful payment
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ChatScreen(onToggleTheme: () {}),
+                                ),
+                              );
+                            } else if (result == false) {
+                              debugPrint('❌ Payment failed or cancelled');
+                            }
+                          } catch (e) {
+                            debugPrint('❌ Error in text chat flow: $e');
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Error: $e'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
                           }
                         },
                       ),

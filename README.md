@@ -148,7 +148,7 @@ Future<void> _claimIfNeeded() async {
 
 | Resource | Location |
 |----------|----------|
-| **GitHub Repo** | [joeschmoe687/hvac_support_app](https://github.com/joeschmoe687/hvac_support_app) (private - will be renamed to tektool) |
+| **GitHub Repo** | [TekNeck-LLC/hvac_support_app](https://github.com/TekNeck-LLC/hvac_support_app) |
 | **Firebase Project** | `tekneck-support` |
 | **AirPro Website Repo** | `airpro-website` (same workspace) |
 | **Website URL** | [airpronwa.com](https://airpronwa.com) |
@@ -167,8 +167,10 @@ Future<void> _claimIfNeeded() async {
 - BLE sniff captures from mobile sync to Firebase for analysis
 - User roles (admin/tech/customer) shared across platforms
 
-## Status (Dec 19, 2025)
+## Current Status (Dec 23, 2025)
 - ✅ Android builds successfully (AGP 8.1.1, Kotlin 1.8.22, Java 17)
+- ⚠️ **CRITICAL FIX IN PROGRESS:** Stripe payment theme error (ProGuard rules added)
+- ✅ **User Verification Screen:** New debug tool added for Firebase Auth/Stripe diagnostics
 - ✅ Release APK: `build/app/outputs/flutter-apk/app-release.apk` (55MB)
 - ✅ Gradient theme matching website (purple #7C3AED, cyan #4EC7F3)
 - ✅ FCM Push notifications implemented (admin + customer alerts)
@@ -407,90 +409,11 @@ Native Android SMS auto-reply for off-hours support. No Firebase or third-party 
 - Data: `jobDispatch` (Firestore), filters by selected date (`yyyy-MM-dd` prefix)
 - Actions: assign / complete with snackbar feedback
 
+---
 
-## Recent Changes (Dec 18, 2025)
+## 📝 Changelog
 
-### 🔧 TekTool - Universal HVAC Bluetooth Hub ✅ NEW
-- ✅ `lib/bluetooth/bluetooth_service.dart` - Singleton BLE manager
-- ✅ `lib/tools/services/device_registry.dart` - Known HVAC device profiles
-- ✅ `lib/tools/services/refrigerant_detector.dart` - Auto-detect refrigerant
-- ✅ `lib/tools/services/gauge_zero_service.dart` - Smart zero prompt logic
-- ✅ `lib/tools/utils/pt_chart.dart` - P/T saturation tables (6 refrigerants)
-- ✅ `lib/tools/models/connected_device.dart` - Device data model
-- ✅ `lib/tools/screens/tools_hub_screen.dart` - Main dashboard
-- ✅ `lib/tools/screens/devices_screen.dart` - Device management
-- ✅ `lib/tools/screens/device_scan_screen.dart` - BLE scanning
-- ✅ `lib/tools/screens/ble_sniffer_screen.dart` - Admin debugging tool
-- ✅ `lib/tools/widgets/zero_prompt_dialog.dart` - Zero gauges modal
-- ✅ `lib/tools/widgets/refrigerant_confirm_dialog.dart` - R22 confirmation
-- ✅ `lib/screens/main_navigation_screen.dart` - Added Tools + Devices tabs
-- ✅ Updated Android/iOS permissions for Bluetooth + background
-
-## Recent Changes (Dec 17, 2025)
-
-### 💰 Paid Support System Implementation ✅
-- ✅ `lib/screens/support_contact_screen.dart` - New screen with pricing display
-  - Dynamic price fetching from Firestore `settings/pricing`
-  - CST business hours detection with time display
-  - Phone/Video options route through WhatsApp Business (no direct phone number)
-  - Transaction logging with correct pricing for each service type
-  - UI: 4 service cards (Text Chat, Phone Call, Video Call, Direct Info)
-- ✅ `lib/screens/chat_screen.dart` - Added phone icon button in header
-  - Navigates to SupportContactScreen
-  - Always-accessible support option from any chat
-- ✅ `USERS/pages/chat.html` (Web) - Support modal with Stripe integration
-  - Fetches pricing from same Firestore document (app-web parity)
-  - Shows business hours indicator and current CST time
-  - Payment flow: Select service → Stripe modal → Card entry → WhatsApp opens
-  - All support channels (text/phone/video/whatsapp) route through WhatsApp Business
-  - Transaction logging to Firestore on successful payment
-- ✅ **Phone Number Protection** - Removed direct phone number exposure
-  - No phone number displayed in app or web UI
-  - All support routes exclusively through WhatsApp
-  - Prevents users from calling directly to bypass payment
-- ✅ **Production Deployments**
-  - Flutter app: Compiled and running on device ✅
-  - Web UI: Deployed to Firebase hosting ✅
-
-## Recent Changes (Dec 16, 2025)
-
-### ✅ Mark Session Complete Feature NEW
-- ✅ `lib/screens/tech_reply_screen.dart` - Added complete button and function
-  - Green "Complete" button in AppBar with checkmark icon
-  - Confirmation dialog before marking complete
-  - Updates Firestore: status=completed, completedAt, completedBy, completedByUid
-  - Adds system message to chat history
-  - Shows success snackbar and navigates back to chat list
-- ✅ Matches web admin dashboard "Mark Complete" functionality
-- ✅ Supports pay-per-issue business model
-
-## Recent Changes (Dec 15, 2025)
-
-### 📱 FCM Push Notifications ✅
-- ✅ `lib/services/notification_service.dart` - Full FCM implementation
-  - Token registration on login (saved to Firestore `users/{uid}.fcmToken`)
-  - Foreground message display
-  - Background message handling
-  - Notification tap navigation
-- ✅ Cloud Functions deployed:
-  - `sendPushNotificationOnNewMessage` - Alerts admins when customer sends message
-  - `sendPushNotificationOnAdminReply` - Alerts customer when admin replies
-- ✅ Auto-cleanup of invalid FCM tokens
-
-### 🎨 Gradient Theme Styling ✅ NEW
-- ✅ `lib/widgets/gradient_scaffold.dart` - Reusable gradient components
-  - `AppColors` - Consistent color constants (primaryCyan, primaryPurple, etc.)
-  - `GradientScaffold` - Dark gradient background matching website
-  - `GradientButton` - Styled buttons with gradient
-  - `AppCard` - Consistent card styling
-- ✅ Updated screens: welcome, main_navigation, chat to use gradient theme
-
-### 🐛 Bug Fixes ✅
-- ✅ Fixed RenderFlex overflow in admin_chat_detail_screen.dart
-- ✅ Fixed setState() after dispose() in dispatch_screen.dart
-- ✅ Fixed settings screen overflow (changed Row to Wrap for auto-reply hours)
-
-### 🔄 Message Sync Fix ✅ NEW
+For detailed change history, see [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
@@ -539,33 +462,6 @@ Native Android SMS auto-reply for off-hours support. No Firebase or third-party 
 - [ ] **User Documentation** (FAQ, support process)
 
 ---
-- ✅ Admin chat screens now receive customer messages in real-time
-  - Removed `orderBy('createdAt')` from Firestore queries (caused missing messages)
-  - Manual sorting in Dart handles both `createdAt` and legacy `timestamp` fields
-  - Auto-scroll to newest message when new messages arrive
-- ✅ Updated screens: `admin_chat_detail_screen.dart`, `tech_reply_screen.dart`
-
-### Previous Changes (Dec 14, 2025)
-
-### Chat Fixes ✅
-- ✅ Session status badge shows "Claimed by [Tech Name]" instead of generic "Claimed"
-- ✅ Fixed admin messages not appearing in chat history
-  - Added manual message sorting by `createdAt` or `timestamp` (handles both old and new messages)
-  - Updated `chat_detail_screen.dart` to support legacy `timestamp` field
-  - Admin messages now sync seamlessly from web UI to mobile app
-- ✅ Updated Firestore rules to allow customers to read tech user profiles
-
-### Previous Updates
-- ✅ Admin dashboard with 6 tabs (Overview, Dispatch, Customers, Invoices, Pricebook, Settings)
-- ✅ Password autofill support via `AutofillGroup` and `AutofillHints`
-- ✅ Pricebook categories/items drilldown navigation
-- ✅ Dark theme alignment (#1A1A1A background, #4EC7F3 accent)
-- `android/app/build.gradle`: using `dev.flutter.flutter-gradle-plugin`; namespace fixed to `com.tekneckjoe.tektool`.
-- `android/app/src/main/res/values/colors.xml`: added `ic_launcher_background`.
-- `lib/screens/dispatch_screen.dart`: `DateFormat` usage, filter chips, color API updated.
-
-## Next
-- ✅ Message sync verified - customer → admin messages now update in real-time
 - Verify install on SM S931U and full chat flow testing
 - Begin Phase 1: CRM separation (new Firebase project, data migration).
 
@@ -632,4 +528,28 @@ adb shell setprop persist.bluetooth.btsnoopenable true
 
 # Pull bugreport with BLE logs
 adb bugreport bugreport_$(date +%Y%m%d_%H%M%S).zip
+```
+
+### Stripe Payment Debugging (CRITICAL)
+```bash
+# Check user authentication
+adb logcat -s flutter 2>&1 | grep -i "user\|auth"
+
+# Monitor Stripe initialization
+adb logcat -s flutter 2>&1 | grep -i "stripe\|payment"
+
+# Full payment flow debugging (shows all emojis: 💳 ✅ ❌ ⚠️)
+adb logcat -s flutter 2>&1 | grep -E "💳|✅|❌|⚠️"
+
+# Check ProGuard kept classes
+cd android && ./gradlew app:dependencies | grep -i "stripe\|appcompat"
+
+# Verify theme configuration
+grep -r "LaunchTheme" android/app/src/main/res/values*/
+
+# Test Stripe initialization
+# 1. Open app, navigate to Support Options
+# 2. Watch logs with: adb logcat -s flutter | grep "💳"
+# 3. Tap "Text Chat" or "Phone Call"
+# 4. Select payment method and watch for errors
 ```

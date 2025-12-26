@@ -36,6 +36,14 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            
+            // Enable ProGuard for code optimization and Stripe compatibility
+            isMinifyEnabled = true
+            isShrinkResources = false  // Disable resource shrinking for now to prevent issues
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
