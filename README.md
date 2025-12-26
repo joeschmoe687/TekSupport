@@ -148,7 +148,7 @@ Future<void> _claimIfNeeded() async {
 
 | Resource | Location |
 |----------|----------|
-| **GitHub Repo** | [joeschmoe687/hvac_support_app](https://github.com/joeschmoe687/hvac_support_app) (private - will be renamed to tektool) |
+| **GitHub Repo** | [TekNeck-LLC/hvac_support_app](https://github.com/TekNeck-LLC/hvac_support_app) |
 | **Firebase Project** | `tekneck-support` |
 | **AirPro Website Repo** | `airpro-website` (same workspace) |
 | **Website URL** | [airpronwa.com](https://airpronwa.com) |
@@ -167,8 +167,10 @@ Future<void> _claimIfNeeded() async {
 - BLE sniff captures from mobile sync to Firebase for analysis
 - User roles (admin/tech/customer) shared across platforms
 
-## Status (Dec 19, 2025)
+## Current Status (Dec 23, 2025)
 - ✅ Android builds successfully (AGP 8.1.1, Kotlin 1.8.22, Java 17)
+- ⚠️ **CRITICAL FIX IN PROGRESS:** Stripe payment theme error (ProGuard rules added)
+- ✅ **User Verification Screen:** New debug tool added for Firebase Auth/Stripe diagnostics
 - ✅ Release APK: `build/app/outputs/flutter-apk/app-release.apk` (55MB)
 - ✅ Gradient theme matching website (purple #7C3AED, cyan #4EC7F3)
 - ✅ FCM Push notifications implemented (admin + customer alerts)
@@ -632,4 +634,28 @@ adb shell setprop persist.bluetooth.btsnoopenable true
 
 # Pull bugreport with BLE logs
 adb bugreport bugreport_$(date +%Y%m%d_%H%M%S).zip
+```
+
+### Stripe Payment Debugging (CRITICAL)
+```bash
+# Check user authentication
+adb logcat -s flutter 2>&1 | grep -i "user\|auth"
+
+# Monitor Stripe initialization
+adb logcat -s flutter 2>&1 | grep -i "stripe\|payment"
+
+# Full payment flow debugging (shows all emojis: 💳 ✅ ❌ ⚠️)
+adb logcat -s flutter 2>&1 | grep -E "💳|✅|❌|⚠️"
+
+# Check ProGuard kept classes
+cd android && ./gradlew app:dependencies | grep -i "stripe\|appcompat"
+
+# Verify theme configuration
+grep -r "LaunchTheme" android/app/src/main/res/values*/
+
+# Test Stripe initialization
+# 1. Open app, navigate to Support Options
+# 2. Watch logs with: adb logcat -s flutter | grep "💳"
+# 3. Tap "Text Chat" or "Phone Call"
+# 4. Select payment method and watch for errors
 ```
