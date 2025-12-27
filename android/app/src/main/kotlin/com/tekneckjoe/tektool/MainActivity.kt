@@ -2,10 +2,12 @@ package com.tekneckjoe.tektool
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Build
+import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
@@ -25,18 +27,18 @@ class MainActivity : FlutterActivity() {
         private const val TAG = "MainActivity"
     }
 
-    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+    // Verify we have an AppCompat theme at startup (Stripe needs it for UI).
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         // Log theme configuration for Stripe debugging
         try {
             val theme = theme
-            val themeName = resources.getResourceName(theme.hashCode())
-            Log.d(TAG, "✅ MainActivity theme initialized: $themeName")
-            Log.d(TAG, "✅ Activity is AppCompatActivity: ${this is androidx.appcompat.app.AppCompatActivity}")
+            Log.d(TAG, "✅ MainActivity theme initialized")
+            Log.d(TAG, "✅ Activity is AppCompatActivity: ${this is AppCompatActivity}") // AppCompatActivity check
             
             // Verify AppCompat theme attributes are available
-            val typedValue = android.util.TypedValue()
+            val typedValue = TypedValue()
             val resolved = theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
             if (resolved) {
                 Log.d(TAG, "✅ AppCompat theme attributes resolved successfully")
