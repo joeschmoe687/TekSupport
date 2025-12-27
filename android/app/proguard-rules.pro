@@ -15,6 +15,9 @@
 -dontwarn com.google.android.gms.wallet.**
 
 # AppCompat theme classes (CRITICAL for Stripe payment sheet)
+# Without these rules, ProGuard minification in release builds may strip AppCompat classes,
+# causing Stripe to fail with "Your theme isn't set to use Theme.AppCompat" error.
+# These rules ensure all AppCompat components remain intact in release builds.
 -keep class androidx.appcompat.app.AppCompatActivity { *; }
 -keep class androidx.appcompat.** { *; }
 -keep class android.support.** { *; }

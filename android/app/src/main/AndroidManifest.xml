@@ -51,6 +51,10 @@
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
             
+        <!-- MainActivity uses @style/LaunchTheme which MUST inherit from Theme.AppCompat.Light.NoActionBar
+             This is CRITICAL for Stripe Payment Sheet to work correctly.
+             See: android/app/src/main/res/values/styles.xml and values-night/styles.xml
+             Both light and night themes must use AppCompat for Stripe compatibility. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
