@@ -42,23 +42,27 @@ class _AuthScreenState extends State<AuthScreen> {
       final firestore = FirebaseFirestore.instance;
 
       UserCredential userCredential;
+      bool isNewUser = false;
+      
       if (isLogin) {
         userCredential = await auth.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
       } else {
+        // Enforce confirm password match
+        if (_confirmPasswordController.text.trim() != password) {
+          setState(() => errorMsg = 'Passwords do not match.');
+          return;
+        }
+        
         // Try to create user, if email exists, send reset email
         try {
-          // Optional: enforce confirm password match
-          if (_confirmPasswordController.text.trim() != password) {
-            setState(() => errorMsg = 'Passwords do not match.');
-            return;
-          }
           userCredential = await auth.createUserWithEmailAndPassword(
             email: email,
             password: password,
           );
+          isNewUser = true;
         } on FirebaseAuthException catch (e) {
           if (e.code == 'email-already-in-use') {
             await auth.sendPasswordResetEmail(email: email);
@@ -68,20 +72,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 content: Text('Reset email sent. Check your inbox.'),
               ),
             );
-            return; // Do not proceed to create user
+            return; // Do not proceed
           } else {
             rethrow;
           }
         }
-        // Optional: enforce confirm password match
-        if (_confirmPasswordController.text.trim() != password) {
-          setState(() => errorMsg = 'Passwords do not match.');
-          return;
-        }
-        userCredential = await auth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
 
         // Send email verification
         await userCredential.user?.sendEmailVerification();
@@ -103,9 +98,27 @@ class _AuthScreenState extends State<AuthScreen> {
       final user = userCredential.user;
       if (user == null) throw Exception('User creation failed');
 
-      // Fetch user role from Firestore
-      final userDoc = await firestore.collection('users').doc(user.uid).get();
-      final role = userDoc.data()?['role'] as String? ?? 'user';
+      // Create or fetch user document from Firestore
+      final userDocRef = firestore.collection('users').doc(user.uid);
+      final userDoc = await userDocRef.get();
+      
+      String role;
+      if (!userDoc.exists) {
+        // Create new user document with default role
+        role = 'user'; // Default role for new users
+        await userDocRef.set({
+          'email': email,
+          'role': role,
+          'isAdmin': false,
+          'createdAt': FieldValue.serverTimestamp(),
+          'displayName': user.displayName ?? email.split('@')[0],
+        }, SetOptions(merge: true));
+        debugPrint('✅ Created new user document for ${user.uid} with role: $role');
+      } else {
+        // Existing user - fetch role
+        role = userDoc.data()?['role'] as String? ?? 'user';
+        debugPrint('✅ Existing user ${user.uid} has role: $role');
+      }
 
       if (rememberMe) {
         final prefs = await SharedPreferences.getInstance();

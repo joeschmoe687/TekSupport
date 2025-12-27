@@ -1563,13 +1563,9 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     }
   }
 
+  /// Get TekMate guidance for current message
+  /// Shows TekMate dialog with AI-powered response suggestion
   Future<void> _getTekmateGuidance() async {
-    // Placeholder method for TekMate guidance
-    // Implementation would call TekMate AI service
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('TekMate AI feature coming soon')),
-      );
-    }
+    await _showTekMateDialog();
   }
 }
