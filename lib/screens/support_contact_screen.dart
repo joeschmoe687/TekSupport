@@ -170,6 +170,65 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
     }
   }
 
+  Future<void> _handleTextChatTap() async {
+    try {
+      debugPrint('💳 Text Chat tapped - Amount: \$${_getPrice('Text')}');
+      
+      // Verify user is authenticated
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Please sign in to use support features'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
+      
+      debugPrint('✅ User authenticated: ${user.email}');
+      
+      // Open payment screen for text chat
+      final result = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaymentScreen(
+            supportType: 'text',
+            amountCents: (_getPrice('Text') * 100).toInt(),
+            description: 'Text Chat Support - Chat with HVAC techs',
+          ),
+        ),
+      );
+
+      if (!mounted) return;
+
+      if (result == true) {
+        debugPrint('✅ Payment successful, opening chat');
+        // Open in-app chat after successful payment
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(onToggleTheme: () {}),
+          ),
+        );
+      } else if (result == false) {
+        debugPrint('❌ Payment failed or cancelled');
+      }
+    } catch (e) {
+      debugPrint('❌ Error in text chat flow: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _showVideoCallOptions() async {
     await showModalBottomSheet(
       context: context,
@@ -402,65 +461,9 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
                         icon: Icons.chat_bubble,
                         title: 'Text Chat',
                         price: messagePrice,
-                        onTap: !_isPricingLoaded ? null : () async {
-                          try {
-                            debugPrint('💳 Text Chat tapped - Amount: \$${messagePrice}');
-                            
-                            // Verify user is authenticated
-                            final user = FirebaseAuth.instance.currentUser;
-                            if (user == null) {
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please sign in to use support features'),
-                                    backgroundColor: Colors.orange,
-                                  ),
-                                );
-                              }
-                              return;
-                            }
-                            
-                            debugPrint('✅ User authenticated: ${user.email}');
-                            
-                            // Open payment screen for text chat
-                            final result = await Navigator.push<bool>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PaymentScreen(
-                                  supportType: 'text',
-                                  amountCents: (messagePrice * 100).toInt(),
-                                  description:
-                                      'Text Chat Support - Chat with HVAC techs',
-                                ),
-                              ),
-                            );
-
-                            if (!mounted) return;
-
-                            if (result == true) {
-                              debugPrint('✅ Payment successful, opening chat');
-                              // Open in-app chat after successful payment
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      ChatScreen(onToggleTheme: () {}),
-                                ),
-                              );
-                            } else if (result == false) {
-                              debugPrint('❌ Payment failed or cancelled');
-                            }
-                          } catch (e) {
-                            debugPrint('❌ Error in text chat flow: $e');
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Error: $e'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          }
+                        onTap: !_isPricingLoaded ? null : () {
+                          // Wrap async logic in a synchronous function
+                          _handleTextChatTap();
                         },
                       ),
                       const SizedBox(height: 12),
@@ -524,7 +527,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
     required IconData icon,
     required String title,
     required double price,
-    required VoidCallback onTap,
+    required VoidCallback? onTap,
     Color color = const Color(0xFF667EEA),
   }) {
     return GestureDetector(

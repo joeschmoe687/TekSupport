@@ -3,6 +3,7 @@ package com.tekneckjoe.tektool
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import io.flutter.embedding.android.FlutterActivity
@@ -20,6 +21,31 @@ class MainActivity : FlutterActivity() {
         private const val CHANNEL = "com.tekneckjoe.tektool/sms_autoresponder"
         // Request code for SMS permissions
         private const val SMS_PERMISSION_REQUEST_CODE = 101
+        // Log tag for theme debugging
+        private const val TAG = "MainActivity"
+    }
+
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        // Log theme configuration for Stripe debugging
+        try {
+            val theme = theme
+            val themeName = resources.getResourceName(theme.hashCode())
+            Log.d(TAG, "✅ MainActivity theme initialized: $themeName")
+            Log.d(TAG, "✅ Activity is AppCompatActivity: ${this is androidx.appcompat.app.AppCompatActivity}")
+            
+            // Verify AppCompat theme attributes are available
+            val typedValue = android.util.TypedValue()
+            val resolved = theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
+            if (resolved) {
+                Log.d(TAG, "✅ AppCompat theme attributes resolved successfully")
+            } else {
+                Log.w(TAG, "⚠️ AppCompat theme attributes not found - potential Stripe theme issue")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "❌ Error verifying theme configuration: ${e.message}")
+        }
     }
 
     // Sets up the MethodChannel for communication with Dart. Call this in configureFlutterEngine for FlutterActivity.
