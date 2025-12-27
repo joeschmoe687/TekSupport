@@ -22,11 +22,11 @@ class MainActivity : FlutterActivity() {
         private const val SMS_PERMISSION_REQUEST_CODE = 101
     }
 
-    // Sets up the MethodChannel for communication with Dart. Call this in onCreate for FlutterActivity.
-    override fun onCreate(savedInstanceState: android.os.Bundle?) {
-        super.onCreate(savedInstanceState)
+    // Sets up the MethodChannel for communication with Dart. Call this in configureFlutterEngine for FlutterActivity.
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
         // Set up MethodChannel after Flutter is initialized
-        MethodChannel(flutterEngine?.dartExecutor?.binaryMessenger ?: return, CHANNEL).setMethodCallHandler { call: MethodCall, result: MethodChannel.Result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call: MethodCall, result: MethodChannel.Result ->
             when (call.method) {
                 // Handles permission request from Flutter
                 "requestSmsPermissions" -> {
