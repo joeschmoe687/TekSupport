@@ -1,0 +1,5 @@
+[block device]
+device size: 106082299904, sector size: 4096, number of blocks: 25898999
+
+[filesystem]
+size: 109165150208, used: 6793146368(6%), avail: 102372003840, block size: 4096

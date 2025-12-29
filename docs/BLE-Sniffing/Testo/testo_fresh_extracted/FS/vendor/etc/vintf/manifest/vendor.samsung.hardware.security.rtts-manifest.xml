@@ -1,0 +1,10 @@
+<!--
+    Input:
+        vendor/samsung/hal-server/rtts/aidl/default/vendor.samsung.hardware.security.rtts-manifest.xml
+-->
+<manifest version="8.0" type="device">
+    <hal format="aidl">
+        <name>vendor.samsung.hardware.security.rtts</name>
+        <fqname>ISehRealTimeToken/default</fqname>
+    </hal>
+</manifest>

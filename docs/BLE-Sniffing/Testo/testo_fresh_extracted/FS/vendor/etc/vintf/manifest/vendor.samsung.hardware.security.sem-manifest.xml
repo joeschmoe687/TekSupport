@@ -1,0 +1,10 @@
+<!--
+    Input:
+        vendor/samsung/hal-server/sem/aidl/default/vendor.samsung.hardware.security.sem-manifest.xml
+-->
+<manifest version="8.0" type="device">
+    <hal format="aidl" override="true">
+        <name>vendor.samsung.hardware.security.sem</name>
+        <fqname>ISehSem/default</fqname>
+    </hal>
+</manifest>

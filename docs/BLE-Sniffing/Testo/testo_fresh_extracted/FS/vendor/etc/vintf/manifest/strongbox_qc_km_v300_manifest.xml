@@ -1,0 +1,10 @@
+<manifest version="1.0" type="device">
+    <hal format="aidl">
+        <name>android.hardware.security.keymint</name>
+        <version>3</version>
+        <interface>
+            <name>IKeyMintDevice</name>
+            <instance>strongbox</instance>
+        </interface>
+    </hal>
+</manifest>

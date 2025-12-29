@@ -1,0 +1,10 @@
+<!--
+    Input:
+        vendor/samsung/interfaces/security/hdcp/keyprovisioning/aidl/default/vendor.samsung.hardware.security.hdcp.keyprovisioning-default.xml
+-->
+<manifest version="8.0" type="device">
+    <hal format="aidl">
+        <name>vendor.samsung.hardware.security.hdcp.keyprovisioning</name>
+        <fqname>ISehHdcpKeyProvisioning/default</fqname>
+    </hal>
+</manifest>

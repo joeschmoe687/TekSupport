@@ -1,0 +1,807 @@
+[1102/115803.417960] [INFO:main.cc(55)] Using temp dir /data/misc/update_engine/tmp
+[1102/115803.418196] [INFO:main.cc(64)] A/B Update Engine starting
+[1102/115803.420318] [INFO:BootControlClient.cpp(416)] Using AIDL version of IBootControl
+[1102/115803.420528] [INFO:boot_control_android.cc(64)] Loaded boot control hal.
+[1102/115803.456795] [INFO:update_attempter_android.cc(1106)] Detected a slot switch, OTA succeeded, device updated from samsung/pa1qsqw/pa1q:16/BP2A.250605.031.A3/S931USQU5BYI3_OYN5BYI3:user/release-keys to samsung/pa1qsqw/pa1q:16/BP2A.250605.031.A3/S931USQS6BYIF_OYN6BYIF:user/release-keys, previous slot: 0 current slot: 1
+[1102/115803.456968] [INFO:update_attempter_android.cc(226)] OTAResult::OTA_SUCCESSFUL
+[1102/115803.457501] [INFO:update_attempter_android.cc(994)] Clearing update complete marker.
+[1102/115803.459115] [WARNING:metrics_utils.cc(375)] time_to_reboot is negative - system_updated_at: 1/8/1970 13:16:51 GMT current time: 1/1/1970 0:00:40 GMT
+[1102/115803.462623] [INFO:delta_performer.cc(1478)] Resetting recorded hash for prepared partitions.
+[1102/115803.462813] [INFO:update_attempter_android.cc(1479)] Scheduling CleanupPreviousUpdateAction.
+[1102/115803.462971] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1102/115803.463455] [INFO:action_processor.cc(51)] ActionProcessor: starting CleanupPreviousUpdateAction
+[1102/115803.463601] [INFO:cleanup_previous_update_action.cc(151)] Starting/resuming CleanupPreviousUpdateAction
+[1102/115823.486913] [INFO:cleanup_previous_update_action.cc(192)] Boot completed, waiting on markBootSuccessful()
+[1102/115823.493052] [INFO:snapshot.cpp(4240)] EnsureMetadataMounted does nothing in Android mode.
+[1102/115823.494626] [INFO:snapshot_stats.cpp(40)] Read merge statistics file failed: No such file or directory
+[1102/115823.508282] [INFO:cleanup_previous_update_action.cc(291)] Waiting for any previous merge request to complete. This can take up to several minutes.
+[1102/115823.516055] [INFO:boot_config.cpp(46)] [libfstab] Using Android DT directory /proc/device-tree/firmware/android/
+[1102/115823.519000] [INFO:snapshot.cpp(1806)] Update state is being processed while booting at target slot, taking no action.
+[1102/115823.520511] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Unverified
+[1102/115823.523115] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Unverified
+[1102/115823.525946] [INFO:cleanup_previous_update_action.cc(439)] Attempting to initiate merge.
+[1102/115823.534077] [INFO:BootControlClient.cpp(416)] Using AIDL version of IBootControl
+[1102/115823.621091] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for product_b returned: Merging
+[1102/115823.624828] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/115823.638565] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/115823.657990] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/115823.676909] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/115823.703249] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/115823.718127] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/115823.725490] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/115823.738966] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/115823.748003] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 11%.
+[1102/115759.836784] Waited one second for gsiservice (is service started? Number of threads started in the threadpool: 1. Are binder threads started and available?)
+[1102/115759.871276] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for product_b returned: MergeCompleted
+[1102/115759.873512] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/115759.874649] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/115759.876961] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/115759.878581] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/115759.879809] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/115759.881236] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/115759.883319] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/115759.884468] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/115759.889016] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 14%.
+[1102/115801.904001] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/115801.922604] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/115801.923812] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/115801.924821] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/115801.925811] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/115801.926882] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/115801.927965] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/115801.929015] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/115803.932106] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/115803.933650] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/115803.935111] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/115803.936505] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/115803.937831] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/115803.940578] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/115803.941877] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/115803.943338] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/115805.947463] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/115805.952632] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/115805.956322] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/115805.959308] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/115805.960912] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/115805.963494] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/115805.971759] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/115805.976635] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/115805.996718] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 15%.
+[1102/115808.054722] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/115808.058460] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/115808.083081] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/115808.099745] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/115808.104293] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/115808.112422] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/115808.132099] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/115808.139346] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/115810.151987] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/115810.173093] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/115810.181725] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/115810.196135] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/115810.197714] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/115810.202595] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/115810.204593] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/115810.212009] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/115812.222619] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/115812.231227] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/115812.236772] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/115812.238461] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/115812.239624] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/115812.240904] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/115812.243303] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/115812.248595] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/115852.088895] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/115852.095975] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/115852.097527] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/115852.099130] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/115852.103729] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/115852.105779] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/115852.107054] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/115852.108229] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/120043.152618] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/120043.160423] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/120043.162598] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/120043.164292] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/120043.165422] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/120043.166960] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/120043.168371] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/120043.171191] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/120103.764016] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/120103.775210] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/120103.776658] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/120103.777982] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/120103.779559] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/120103.780782] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/120103.786032] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/120103.790640] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/120121.381278] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/120121.391425] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/120121.394332] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/120121.396586] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/120121.398277] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/120121.399650] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/120121.401320] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/120121.402734] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/120202.986526] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/120202.995621] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/120202.996964] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/120202.998147] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/120203.000900] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/120203.001917] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/120203.007859] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/120203.013135] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/120203.014355] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 16%.
+[1102/120215.925223] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/120215.926867] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/120215.934912] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/120215.937813] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/120215.939115] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/120215.940468] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/120215.941832] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/120215.942990] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/120238.328456] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/120238.330490] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/120238.331818] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/120238.332954] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/120238.334061] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/120238.335202] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/120238.336233] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/120238.337265] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/120348.812286] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/120348.814085] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/120348.815363] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/120348.820666] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/120348.829396] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/120348.832465] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/120348.847632] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/120348.848876] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/120422.402463] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/120422.413179] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/120422.414634] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/120422.416121] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/120422.417444] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/120422.418722] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/120422.419781] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/120422.421176] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/121150.628136] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/121150.630486] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/121150.649932] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/121150.657879] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/121150.659250] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/121150.660962] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/121150.662496] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/121150.663651] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/121152.667426] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/121152.699076] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/121152.700500] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/121152.701731] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/121152.702923] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/121152.704176] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/121152.705405] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/121152.706598] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/121154.710392] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/121154.720956] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/121154.725501] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/121154.726697] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/121154.727824] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/121154.729067] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/121154.730353] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/121154.731469] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/121154.732686] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 17%.
+[1102/122251.684774] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/122251.693210] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/122251.694365] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/122251.695547] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/122251.696560] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/122251.697622] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/122251.698791] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/122251.699931] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/122253.703506] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/122253.705548] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/122253.706927] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/122253.708372] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/122253.716934] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/122253.723998] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/122253.731426] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/122253.732640] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/122255.736709] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/122255.738375] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/122255.739659] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/122255.741230] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/122255.742426] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/122255.743592] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/122255.744816] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/122255.745980] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/123404.412974] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/123404.414976] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/123404.423161] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/123404.430520] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/123404.432266] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/123404.433524] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/123404.434693] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/123404.435969] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124751.886015] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124751.888154] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124751.889433] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124751.890866] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124751.892250] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124751.893497] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124751.894689] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124751.896025] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124753.899963] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124753.906807] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124753.908462] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124753.909661] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124753.910949] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124753.912073] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124753.913199] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124753.914332] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124755.917968] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124755.919241] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124755.928517] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124755.929929] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124755.931524] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124755.932704] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124755.933796] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124755.935056] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124755.936322] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 18%.
+[1102/124757.940029] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124757.943633] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124757.944921] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124757.946281] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124757.947568] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124757.948725] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124757.949939] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124757.951218] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124759.954920] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124759.957102] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124759.958426] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124759.959640] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124759.964263] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124759.965578] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124759.966690] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124759.967893] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124801.980848] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124801.983546] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124801.984699] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124801.985969] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124801.987113] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124801.988308] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124801.989803] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124801.990868] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124803.994917] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124804.001889] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124804.028708] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124804.033480] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124804.034756] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124804.036141] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124804.037268] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124804.038523] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124806.042401] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124806.044438] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124806.045811] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124806.047023] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124806.048603] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124806.049838] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124806.051029] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124806.052360] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124808.055887] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124808.057931] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124808.059222] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124808.060802] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124808.062116] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124808.063429] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124808.065095] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124808.066312] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124808.067643] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 19%.
+[1102/124810.069710] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124810.071601] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124810.072900] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124810.074613] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124810.213926] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124810.224547] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124810.225644] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124810.226715] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124903.503700] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124903.509103] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124903.517018] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124903.520564] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124903.521843] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124903.523399] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124903.524814] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124903.526033] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124905.528755] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124905.530244] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124905.531600] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124905.532760] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124905.533967] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124905.535142] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124905.536260] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124905.537465] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124907.539624] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124907.549849] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124907.551367] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124907.552825] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124907.554381] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124907.555696] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124907.556863] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124907.558013] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124909.561914] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124909.575739] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124909.579450] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124909.587897] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124909.589187] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124909.590571] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124909.591629] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124909.592709] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124911.596411] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/124911.605150] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/124911.620743] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/124911.622158] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/124911.623343] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/124911.624535] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/124911.625771] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/124911.626975] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/124911.628239] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 20%.
+[1102/125402.359941] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/125402.361630] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/125402.362828] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/125402.364080] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/125402.365322] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/125402.366573] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/125402.367844] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/125402.369067] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/130003.560799] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/130003.563106] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/130003.564547] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/130003.566069] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/130003.567693] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/130003.568984] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/130003.570040] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/130003.571096] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/130030.173234] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/130030.175280] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/130030.176570] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/130030.187074] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/130030.196366] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/130030.197723] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/130030.198745] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/130030.199718] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/130040.582171] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/130040.587656] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/130040.589210] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/130040.591941] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/130040.602783] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/130040.604149] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/130040.610425] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/130040.615822] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/130044.117690] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/130044.127185] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/130044.132514] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/130044.133504] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/130044.134454] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/130044.135424] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/130044.136341] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/130044.137397] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/130046.140286] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/130046.149271] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/130046.156044] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/130046.157410] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/130046.158591] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/130046.159744] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/130046.160966] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/130046.162072] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/130048.165960] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/130048.168403] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/130048.169678] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/130048.170902] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/130048.172233] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/130048.173641] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/130048.174823] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/130048.176002] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/130048.177361] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 21%.
+[1102/130116.288915] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/130116.296234] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/130116.303518] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/130116.304562] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/130116.305674] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/130116.307160] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/130116.308482] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/130116.309556] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/130241.098899] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/130241.102914] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/130241.112126] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/130241.113488] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/130241.114630] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/130241.115718] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/130241.116908] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/130241.117966] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/130317.338279] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/130317.340224] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/130317.341417] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/130317.342886] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/130317.344129] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/130317.345283] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/130317.348446] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/130317.353738] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/131035.462113] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/131035.466301] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/131035.467759] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/131035.470937] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/131035.472362] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/131035.482552] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/131035.483902] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/131035.485030] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/131104.048109] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/131104.059713] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/131104.064930] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/131104.070378] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/131104.071711] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/131104.072888] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/131104.074464] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/131104.075659] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/131106.079410] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/131106.081135] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/131106.082333] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/131106.083586] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/131106.084752] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/131106.094824] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/131106.097651] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/131106.105185] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/131323.555580] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/131323.562985] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/131323.569850] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/131323.573731] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/131323.575344] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/131323.576480] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/131323.577558] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/131323.578546] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/131323.579669] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 22%.
+[1102/131703.989269] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/131703.997850] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/131703.999210] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/131704.000552] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/131704.001923] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/131704.003151] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/131704.004608] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/131704.005867] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/131718.985568] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/131718.987597] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/131718.991097] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/131718.992495] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/131718.993754] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/131718.994731] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/131718.995658] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/131718.996790] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/131810.841846] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/131810.854591] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/131810.855926] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/131810.857238] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/131810.858724] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/131810.860188] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/131810.861742] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/131810.862842] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133031.045197] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133031.055322] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133031.056998] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133031.058398] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133031.059731] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133031.061069] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133031.062587] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133031.063811] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133037.939240] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133037.949389] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133037.961368] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133037.962690] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133037.964096] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133037.965390] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133037.966539] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133037.967671] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133037.969285] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 23%.
+[1102/133039.971450] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133039.991655] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133039.992801] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133039.993961] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133039.995214] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133039.996321] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133039.997421] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133039.998884] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133042.002913] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133042.006090] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133042.007340] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133042.008510] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133042.009691] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133042.011248] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133042.012616] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133042.013954] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133548.450579] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133548.452891] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133548.454163] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133548.455440] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133548.456855] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133548.458134] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133548.459265] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133548.460580] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133751.421417] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133751.426138] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133751.441464] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133751.446209] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133801.282389] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133801.285275] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133801.287783] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133801.289353] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133803.293796] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133803.301890] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133803.303244] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133803.304452] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133803.305758] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133803.307000] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133803.308140] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133803.309349] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133805.313069] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133805.314666] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133805.326423] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133805.327898] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133805.335535] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133805.337042] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133805.340530] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133805.342470] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133805.344031] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 24%.
+[1102/133807.347478] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133807.349618] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133807.350897] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133807.352019] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133807.353318] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133807.354570] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133807.355651] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133807.356921] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133809.359447] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133809.363858] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133809.365157] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133809.366356] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133809.367667] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133809.368803] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133809.370007] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133809.371162] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133817.903628] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133817.907944] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133817.909859] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133817.911172] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133817.912204] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133817.913293] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133817.914767] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133817.915816] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/133912.280040] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/133912.281823] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/133912.283065] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/133912.284264] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/133912.285494] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/133912.286842] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/133912.288101] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/133912.289325] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134006.088588] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134006.095736] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134006.096982] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134006.098345] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134006.099519] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134006.100703] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134006.101877] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134006.103176] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134006.104429] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 25%.
+[1102/134008.108165] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134008.117892] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134008.119504] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134008.126551] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134008.128927] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134008.130301] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134008.131820] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134008.133028] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134010.136889] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134010.148123] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134010.149431] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134010.150900] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134010.152199] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134010.153402] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134010.154649] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134010.155804] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134012.159577] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134012.166494] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134012.167949] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134012.169405] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134012.170682] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134012.172019] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134012.173369] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134012.174567] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134014.178370] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134014.180245] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134014.197025] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134014.201880] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134014.204627] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134014.206009] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134014.207173] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134014.208349] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134234.526346] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134234.536006] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134234.543673] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134234.544987] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134234.546117] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134234.547363] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134234.548566] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134234.549710] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134243.158917] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134243.161058] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134243.162261] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134243.163473] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134243.175987] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134243.178787] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134253.478575] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134253.484744] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134253.487565] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 26%.
+[1102/134315.512163] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134315.520891] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134315.522271] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134315.523374] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134315.524394] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134315.525417] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134315.533323] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134315.535167] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134333.040443] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134333.044679] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134333.048106] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134333.049806] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134333.051183] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134333.054822] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134333.057920] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134333.061447] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134447.351131] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134447.358125] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134447.360141] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134447.361502] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134447.362729] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134447.363947] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134447.364974] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134447.367819] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/134644.301608] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/134644.305496] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/134644.306892] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/134644.315346] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/134644.316686] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/134644.317940] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/134644.319178] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/134644.320309] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135028.733717] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135028.743531] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135028.745244] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135028.746642] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135028.747871] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135028.748989] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135028.750254] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135028.751359] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135111.074685] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135111.076816] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135111.078171] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135111.079524] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135111.080965] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135111.082238] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135111.083333] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135111.084588] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135111.085873] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 27%.
+[1102/135113.089655] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135113.103293] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135113.104603] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135113.105908] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135113.107144] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135113.108380] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135113.109629] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135113.111208] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135115.114684] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135115.117163] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135115.118498] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135115.119663] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135115.120857] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135115.122065] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135115.123330] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135115.124506] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135117.995741] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135118.001000] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135118.002708] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135118.014391] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135118.020989] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135118.022279] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135118.024004] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135118.025134] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135131.646274] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135131.652421] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135131.656042] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135131.663183] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135131.664321] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135131.665417] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135131.666421] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135131.667445] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135136.265923] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135136.267251] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135136.268430] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135136.269664] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135136.277501] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135136.278820] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135136.283836] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135136.285102] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135136.286445] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 28%.
+[1102/135149.724382] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135149.733510] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135149.742990] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135149.744656] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135149.746269] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135149.747572] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135149.748910] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135149.750539] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135215.386063] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135215.387879] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135215.389247] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135215.390448] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135215.391722] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135215.392895] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135215.394064] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135215.395298] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135423.515139] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135423.550005] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135423.551495] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135423.552614] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135423.553929] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135423.555084] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135423.556061] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135423.557142] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/135756.262765] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: Merging
+[1102/135756.276990] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: Merging
+[1102/135756.278545] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: Merging
+[1102/135756.280396] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: Merging
+[1102/135756.282269] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: Merging
+[1102/135756.291542] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/135756.301338] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/135756.302484] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/140821.889524] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_b returned: MergeCompleted
+[1102/140821.962248] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_dlkm_b returned: MergeCompleted
+[1102/140822.037081] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for odm_b returned: MergeCompleted
+[1102/140822.111213] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_dlkm_b returned: MergeCompleted
+[1102/140822.290056] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for system_ext_b returned: MergeCompleted
+[1102/140822.291588] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: Merging
+[1102/140822.294546] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Merging
+[1102/140822.307632] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Merging
+[1102/140822.309162] [INFO:cleanup_previous_update_action.cc(403)] Waiting for merge to complete: 86%.
+[1102/140824.390013] [INFO:snapshot.cpp(1261)] CheckTargetMergeState for vendor_b returned: MergeCompleted
+[1102/140824.391630] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: MergeCompleted
+[1102/140824.392814] [INFO:snapshot.cpp(353)] Removing all update state.
+[1102/140824.400423] [INFO:dynamic_data.cpp(83)] [DDP] f2fsDDPReserveBlocks(): origin: 0, shrink_blocks : 0
+[1102/140824.401675] [INFO:dynamic_data.cpp(1039)] [DDP] reserve data blocks , size:0 took 1ms
+[1102/140824.524465] [INFO:snapshot.cpp(1613)] [ABCD] Discard success for /dev/block/by-name/prism_a, len: 419430400
+[1102/140824.527798] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: MergeCompleted
+[1102/140824.529243] [INFO:cleanup_previous_update_action.cc(361)] Merge finished with state MergeCompleted.
+[1102/140824.589214] [INFO:cleanup_previous_update_action.cc(133)] Stopping/suspending/completing CleanupPreviousUpdateAction
+[1102/140824.591309] [INFO:cleanup_previous_update_action.cc(545)] Reporting merge stats: MergeCompleted in 188074ms (resumed 0 times), using 0 bytes of COW image.
+[1102/140824.592598] [INFO:cleanup_previous_update_action.cc(133)] Stopping/suspending/completing CleanupPreviousUpdateAction
+[1102/140824.593774] [INFO:action_processor.cc(116)] ActionProcessor: finished last action CleanupPreviousUpdateAction with code ErrorCode::kSuccess
+[1102/140824.594917] [INFO:update_attempter_android.cc(742)] Processing Done.
+[1102/140824.613323] [INFO:dynamic_partition_control_android.cc(354)] Destroying [] from device mapper
+[1102/140824.614564] [INFO:dynamic_partition_control_android.cc(358)] UnmapAllPartitions done
+[1102/140824.615820] [INFO:update_attempter_android.cc(994)] Clearing update complete marker.
+[1102/140824.617001] [INFO:update_attempter_android.cc(891)] Terminating cleanup previous update.
+[1102/172907.522297] [INFO:binder_service_android.cc(271)] [cleanupSuccessfulUpdate] UID: 1000, PID: 15683
+[1102/172907.529159] [INFO:update_attempter_android.cc(1332)] CleanupSuccessfulUpdate has previously completed with ErrorCode::kSuccess
+[1102/172929.999754] [INFO:binder_service_android.cc(271)] [cancel] UID: 1000, PID: 24848
+[1102/172930.006273] [ERROR:update_attempter_android.cc(92)] Replying with failure: system/update_engine/aosp/update_attempter_android.cc 508: No ongoing update to cancel.
+[1102/172930.007712] [INFO:binder_service_android.cc(271)] [resetStatus] UID: 1000, PID: 24848
+[1102/172930.009538] [INFO:update_attempter_android.cc(514)] Attempting to reset state from UPDATE_STATUS_IDLE to UpdateStatus::IDLE
+[1102/172930.011452] [INFO:update_attempter_android.cc(534)] Cleaning up reserved space for compressed APEX (if any)
+[1102/172931.015851] Waited one second for apexservice (is service started? Number of threads started in the threadpool: 1. Are binder threads started and available?)
+[1102/172931.022910] [INFO:update_attempter_android.cc(994)] Clearing update complete marker.
+[1102/172931.028384] [INFO:dynamic_partition_control_android.cc(1375)] ResetUpdate resetting update state and deleting snapshots.
+[1102/172931.078719] [INFO:delta_performer.cc(1478)] Resetting recorded hash for prepared partitions.
+[1102/172931.081952] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1102/172931.085433] [INFO:snapshot.cpp(248)] Cancelling update from state: 0
+[1102/172931.087498] [INFO:snapshot.cpp(353)] Removing all update state.
+[1102/172931.098529] [INFO:BootControlClient.cpp(416)] Using AIDL version of IBootControl
+[1102/172931.109991] [INFO:dynamic_data.cpp(83)] [DDP] f2fsDDPReserveBlocks(): origin: 0, shrink_blocks : 0
+[1102/172931.111910] [INFO:dynamic_data.cpp(1039)] [DDP] reserve data blocks , size:0 took 4ms
+[1109/201358.633044] [INFO:main.cc(81)] A/B Update Engine terminating with exit code 0
+[1109/201358.747103] [INFO:dynamic_partition_control_android.cc(105)] Destroying [] from device mapper

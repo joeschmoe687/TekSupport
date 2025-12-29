@@ -1,0 +1,30 @@
+[1218/062110.803203] [INFO:main.cc(55)] Using temp dir /data/misc/update_engine/tmp
+[1218/062110.822418] [INFO:main.cc(64)] A/B Update Engine starting
+[1218/062110.839365] [INFO:BootControlClient.cpp(416)] Using AIDL version of IBootControl
+[1218/062110.842086] [INFO:boot_control_android.cc(64)] Loaded boot control hal.
+[1218/062110.850597] [ERROR:update_attempter_android.cc(1101)] prefs_->GetInt64(kPrefsPreviousSlot, &previous_slot) failed.
+[1218/062110.853196] [INFO:update_attempter_android.cc(226)] OTAResult::NOT_ATTEMPTED
+[1218/062110.868210] [INFO:update_attempter_android.cc(994)] Clearing update complete marker.
+[1218/062110.873966] [INFO:update_attempter_android.cc(1479)] Scheduling CleanupPreviousUpdateAction.
+[1218/062110.876220] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1218/062110.877732] [INFO:action_processor.cc(51)] ActionProcessor: starting CleanupPreviousUpdateAction
+[1218/062110.885263] [INFO:cleanup_previous_update_action.cc(151)] Starting/resuming CleanupPreviousUpdateAction
+[1218/062058.734121] [INFO:cleanup_previous_update_action.cc(192)] Boot completed, waiting on markBootSuccessful()
+[1218/062058.748786] [INFO:boot_config.cpp(46)] [libfstab] Using Android DT directory /proc/device-tree/firmware/android/
+[1218/062058.764677] [INFO:snapshot.cpp(4240)] EnsureMetadataMounted does nothing in Android mode.
+[1218/062058.784069] [INFO:snapshot_stats.cpp(40)] Read merge statistics file failed: No such file or directory
+[1218/062058.804617] [INFO:cleanup_previous_update_action.cc(291)] Waiting for any previous merge request to complete. This can take up to several minutes.
+[1218/062058.820096] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: Initiated
+[1218/062058.835088] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: Initiated
+[1218/062058.843929] [ERROR:cleanup_previous_update_action.cc(339)] Previous update has not been completed, not cleaning up
+[1218/062058.858297] [INFO:cleanup_previous_update_action.cc(133)] Stopping/suspending/completing CleanupPreviousUpdateAction
+[1218/062058.880791] [INFO:cleanup_previous_update_action.cc(513)] Not reporting merge stats because state is Initiated
+[1218/062058.891725] [INFO:cleanup_previous_update_action.cc(133)] Stopping/suspending/completing CleanupPreviousUpdateAction
+[1218/062058.906166] [INFO:action_processor.cc(116)] ActionProcessor: finished last action CleanupPreviousUpdateAction with code ErrorCode::kSuccess
+[1218/062058.913332] [INFO:update_attempter_android.cc(742)] Processing Done.
+[1218/062058.964786] [INFO:dynamic_partition_control_android.cc(354)] Destroying [] from device mapper
+[1218/062058.980714] [INFO:dynamic_partition_control_android.cc(358)] UnmapAllPartitions done
+[1218/062058.991754] [INFO:update_attempter_android.cc(994)] Clearing update complete marker.
+[1218/062059.002388] [INFO:update_attempter_android.cc(891)] Terminating cleanup previous update.
+[1218/062917.016885] [INFO:main.cc(81)] A/B Update Engine terminating with exit code 0
+[1218/062917.180162] [INFO:dynamic_partition_control_android.cc(105)] Destroying [] from device mapper

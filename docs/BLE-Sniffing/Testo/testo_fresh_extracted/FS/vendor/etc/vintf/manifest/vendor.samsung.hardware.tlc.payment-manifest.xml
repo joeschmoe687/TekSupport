@@ -1,0 +1,10 @@
+<!--
+    Input:
+        vendor/samsung/interfaces/tlc/payment/aidl/default/vendor.samsung.hardware.tlc.payment-manifest.xml
+-->
+<manifest version="8.0" type="device">
+    <hal format="aidl">
+        <name>vendor.samsung.hardware.tlc.payment</name>
+        <fqname>ISehPayment/default</fqname>
+    </hal>
+</manifest>

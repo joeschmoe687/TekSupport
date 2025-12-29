@@ -1,0 +1,2047 @@
+[1111/000212.341106] [INFO:main.cc(55)] Using temp dir /data/misc/update_engine/tmp
+[1111/000212.362824] [INFO:main.cc(64)] A/B Update Engine starting
+[1111/000212.368026] [INFO:BootControlClient.cpp(416)] Using AIDL version of IBootControl
+[1111/000212.382837] [INFO:boot_control_android.cc(64)] Loaded boot control hal.
+[1111/000212.400211] [ERROR:update_attempter_android.cc(1101)] prefs_->GetInt64(kPrefsPreviousSlot, &previous_slot) failed.
+[1111/000212.404295] [INFO:update_attempter_android.cc(226)] OTAResult::NOT_ATTEMPTED
+[1111/000212.421700] [INFO:update_attempter_android.cc(994)] Clearing update complete marker.
+[1111/000212.428873] [INFO:update_attempter_android.cc(1479)] Scheduling CleanupPreviousUpdateAction.
+[1111/000212.433010] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1111/000212.437811] [INFO:action_processor.cc(51)] ActionProcessor: starting CleanupPreviousUpdateAction
+[1111/000212.441910] [INFO:cleanup_previous_update_action.cc(151)] Starting/resuming CleanupPreviousUpdateAction
+[1111/000218.462591] [INFO:cleanup_previous_update_action.cc(192)] Boot completed, waiting on markBootSuccessful()
+[1111/000218.476233] [INFO:boot_config.cpp(46)] [libfstab] Using Android DT directory /proc/device-tree/firmware/android/
+[1111/000218.486605] [INFO:snapshot.cpp(4240)] EnsureMetadataMounted does nothing in Android mode.
+[1111/000218.503289] [INFO:snapshot_stats.cpp(40)] Read merge statistics file failed: No such file or directory
+[1111/000218.523568] [INFO:cleanup_previous_update_action.cc(291)] Waiting for any previous merge request to complete. This can take up to several minutes.
+[1111/000218.529912] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: None
+[1111/000218.535972] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: None
+[1111/000218.539587] [INFO:cleanup_previous_update_action.cc(328)] Can't find any snapshot to merge.
+[1111/000218.543903] [INFO:snapshot.cpp(248)] Cancelling update from state: 0
+[1111/000218.546613] [INFO:snapshot.cpp(353)] Removing all update state.
+[1111/000218.573420] [INFO:BootControlClient.cpp(416)] Using AIDL version of IBootControl
+[1111/000218.579326] [INFO:dynamic_data.cpp(83)] [DDP] f2fsDDPReserveBlocks(): origin: 0, shrink_blocks : 0
+[1111/000218.582519] [INFO:dynamic_data.cpp(1039)] [DDP] reserve data blocks , size:0 took 3ms
+[1111/000218.585382] [INFO:cleanup_previous_update_action.cc(133)] Stopping/suspending/completing CleanupPreviousUpdateAction
+[1111/000218.590916] [INFO:cleanup_previous_update_action.cc(513)] Not reporting merge stats because state is None
+[1111/000218.594213] [INFO:cleanup_previous_update_action.cc(133)] Stopping/suspending/completing CleanupPreviousUpdateAction
+[1111/000218.597831] [INFO:action_processor.cc(116)] ActionProcessor: finished last action CleanupPreviousUpdateAction with code ErrorCode::kSuccess
+[1111/000218.602159] [INFO:update_attempter_android.cc(742)] Processing Done.
+[1111/000218.641439] [INFO:dynamic_partition_control_android.cc(354)] Destroying [] from device mapper
+[1111/000218.643934] [INFO:dynamic_partition_control_android.cc(358)] UnmapAllPartitions done
+[1111/000218.646691] [INFO:update_attempter_android.cc(994)] Clearing update complete marker.
+[1111/000218.649358] [INFO:update_attempter_android.cc(891)] Terminating cleanup previous update.
+[1124/004228.163243] [INFO:binder_service_android.cc(271)] [allocateSpaceForPayload] UID: 1000, PID: 17881
+[1124/004228.168182] [INFO:binder_service_android.cc(221)] Received a request of allocating space for /data/fota/payload_metadata.bin.
+[1124/004228.198567] [INFO:update_attempter_android.cc(667)] Payload metadata hash check passed : E22F13906D99902E33EF77CBB564DACD2F0308ECE7C3BD07CE23D3D8892D63C4
+[1124/004228.219608] [INFO:payload_verifier.cc(101)] signature blob size = 267
+[1124/004228.221389] [INFO:payload_verifier.cc(117)] Truncating the signature to its unpadded size: 256.
+[1124/004228.224484] [INFO:payload_verifier.cc(128)] Verified correct signature 1 out of 1 signatures.
+[1124/004228.226276] [INFO:payload_metadata.cc(221)] Metadata hash signature matches value in Omaha response.
+[1124/004229.559107] Waited one second for apexservice (is service started? Number of threads started in the threadpool: 1. Are binder threads started and available?)
+[1124/004229.670661] [INFO:delta_performer.cc(912)] Preparing partitions for new update. last hash = , new hash = jDbxkdPJwcs3xuA74Bu+R1sYZHhb6LuTFWDZ22JLIfo=4i8TkG2ZkC4z73fLtWTazS8DCOznw70HziPT2IktY8Q=
+[1124/004230.212798] [INFO:delta_performer.cc(1478)] Resetting recorded hash for prepared partitions.
+[1124/004230.234824] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004230.274169] [INFO:snapshot.cpp(4240)] EnsureMetadataMounted does nothing in Android mode.
+[1124/004230.320810] [INFO:dynamic_partition_control_android.cc(830)] Erasing AVB footer of system_other partition before update.
+[1124/004230.370349] [INFO:dynamic_partition_control_android.cc(729)] AVB is not enabled on system_other. Skip erasing.
+[1124/004230.421189] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004230.485858] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004230.509062] [INFO:snapshot.cpp(248)] Cancelling update from state: 0
+[1124/004230.552807] [INFO:snapshot.cpp(353)] Removing all update state.
+[1124/004230.605634] [INFO:BootControlClient.cpp(416)] Using AIDL version of IBootControl
+[1124/004230.635051] [INFO:dynamic_data.cpp(83)] [DDP] f2fsDDPReserveBlocks(): origin: 0, shrink_blocks : 0
+[1124/004230.662746] [INFO:dynamic_data.cpp(1039)] [DDP] reserve data blocks , size:0 took 28ms
+[1124/004231.677950] Waited one second for gsiservice (is service started? Number of threads started in the threadpool: 1. Are binder threads started and available?)
+[1124/004231.697524] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004231.699043] [INFO:builder.cpp(1248)] [liblp] Partition system_a will resize from 8672518144 bytes to 8672464896 bytes
+[1124/004231.700065] [INFO:builder.cpp(1248)] [liblp] Partition system_dlkm_a will resize from 7581696 bytes to 7589888 bytes
+[1124/004231.701164] [INFO:builder.cpp(1248)] [liblp] Partition system_ext_a will resize from 152956928 bytes to 152965120 bytes
+[1124/004231.702231] [INFO:builder.cpp(1248)] [liblp] Partition vendor_a will resize from 3780194304 bytes to 3780198400 bytes
+[1124/004231.916782] [INFO:dynamic_data.cpp(83)] [DDP] super_used_sectors: 27437056, last_sector_exclude_dyndata: 27593328, end: 35840000
+[1124/004231.922667] [INFO:dynamic_data.cpp(238)] [DDP] available_range(): 29548544+6291456
+[1124/004231.923898] [INFO:dynamic_data.cpp(1123)] [DDP] ddp_try_grow_dyndata() target extdata: 29548544++6291456
+[1124/004231.924956] [INFO:dynamic_data.cpp(1143)] [DDP] ddp_try_grow_dyndata() target start: 29548544, cur start:29548544
+[1124/004231.926205] [INFO:snapshot.cpp(3630)] using compression algorithm: lz4, max compressible block size: 65536
+[1124/004231.927304] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 1081081856 bytes
+[1124/004231.928341] [INFO:snapshot.cpp(3837)] For partition system_a, device size = 8672464896, snapshot size = 8672464896, cow partition size = 511139840, cow file size = 0
+[1124/004231.931537] [INFO:builder.cpp(1248)] [liblp] Partition system_a-cow will resize from 0 bytes to 511139840 bytes
+[1124/004231.932660] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for system_a
+[1124/004231.933702] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 569376768 bytes
+[1124/004231.934734] [INFO:snapshot.cpp(3837)] For partition odm_a, device size = 1105920, snapshot size = 1105920, cow partition size = 4239360, cow file size = 0
+[1124/004231.937756] [INFO:builder.cpp(1248)] [liblp] Partition odm_a-cow will resize from 0 bytes to 4239360 bytes
+[1124/004231.938787] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for odm_a
+[1124/004231.939906] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 564133888 bytes
+[1124/004231.941341] [INFO:snapshot.cpp(3837)] For partition product_a, device size = 1399271424, snapshot size = 1399271424, cow partition size = 27521024, cow file size = 0
+[1124/004231.944254] [INFO:builder.cpp(1248)] [liblp] Partition product_a-cow will resize from 0 bytes to 27521024 bytes
+[1124/004231.945365] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for product_a
+[1124/004231.946403] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 535822336 bytes
+[1124/004231.947432] [INFO:snapshot.cpp(3837)] For partition system_dlkm_a, device size = 7589888, snapshot size = 7589888, cow partition size = 9326592, cow file size = 0
+[1124/004231.950372] [INFO:builder.cpp(1248)] [liblp] Partition system_dlkm_a-cow will resize from 0 bytes to 9326592 bytes
+[1124/004231.951429] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for system_dlkm_a
+[1124/004231.952592] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 526385152 bytes
+[1124/004231.953646] [INFO:snapshot.cpp(3837)] For partition system_ext_a, device size = 152965120, snapshot size = 152965120, cow partition size = 73682944, cow file size = 0
+[1124/004231.956613] [INFO:builder.cpp(1248)] [liblp] Partition system_ext_a-cow will resize from 0 bytes to 73682944 bytes
+[1124/004231.957663] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for system_ext_a
+[1124/004231.958759] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 451936256 bytes
+[1124/004231.959804] [INFO:snapshot.cpp(3837)] For partition vendor_a, device size = 3780198400, snapshot size = 3780198400, cow partition size = 100798464, cow file size = 0
+[1124/004231.962636] [INFO:builder.cpp(1248)] [liblp] Partition vendor_a-cow will resize from 0 bytes to 100798464 bytes
+[1124/004231.963674] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for vendor_a
+[1124/004231.964801] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 350224384 bytes
+[1124/004231.968977] [INFO:snapshot.cpp(3837)] For partition vendor_dlkm_a, device size = 28631040, snapshot size = 28631040, cow partition size = 6651904, cow file size = 0
+[1124/004231.977255] [INFO:builder.cpp(1248)] [liblp] Partition vendor_dlkm_a-cow will resize from 0 bytes to 6651904 bytes
+[1124/004231.978286] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for vendor_dlkm_a
+[1124/004231.979266] [INFO:snapshot.cpp(3909)] Allocating CoW images.
+[1124/004231.980355] [INFO:snapshot.cpp(3921)] Successfully created snapshot for odm_a
+[1124/004231.981330] [INFO:snapshot.cpp(3921)] Successfully created snapshot for product_a
+[1124/004231.982373] [INFO:snapshot.cpp(3921)] Successfully created snapshot for system_a
+[1124/004231.984074] [INFO:snapshot.cpp(3921)] Successfully created snapshot for system_dlkm_a
+[1124/004231.985070] [INFO:snapshot.cpp(3921)] Successfully created snapshot for system_ext_a
+[1124/004231.989202] [INFO:snapshot.cpp(3921)] Successfully created snapshot for vendor_a
+[1124/004231.990242] [INFO:snapshot.cpp(3921)] Successfully created snapshot for vendor_dlkm_a
+[1124/004231.991394] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_a
+[1124/004232.013247] [INFO:snapshot.cpp(2963)] Mapped COW device for system_a at /dev/block/dm-7
+[1124/004232.016328] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 511139840
+[1124/004232.017502] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004232.018563] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004232.048730] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot odm_a
+[1124/004232.071341] [INFO:snapshot.cpp(2963)] Mapped COW device for odm_a at /dev/block/dm-7
+[1124/004232.073093] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 4239360
+[1124/004232.074250] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004232.075342] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004232.100687] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot product_a
+[1124/004232.123512] [INFO:snapshot.cpp(2963)] Mapped COW device for product_a at /dev/block/dm-7
+[1124/004232.125161] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 27521024
+[1124/004232.126234] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004232.127434] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004232.152771] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_dlkm_a
+[1124/004232.176750] [INFO:snapshot.cpp(2963)] Mapped COW device for system_dlkm_a at /dev/block/dm-7
+[1124/004232.178604] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 9326592
+[1124/004232.179703] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004232.180772] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004232.224710] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_ext_a
+[1124/004232.249028] [INFO:snapshot.cpp(2963)] Mapped COW device for system_ext_a at /dev/block/dm-7
+[1124/004232.251260] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 73682944
+[1124/004232.252445] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004232.253531] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004232.288717] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_a
+[1124/004232.312288] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_a at /dev/block/dm-7
+[1124/004232.314404] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 100798464
+[1124/004232.315467] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004232.316574] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004232.344772] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_dlkm_a
+[1124/004232.368901] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_dlkm_a at /dev/block/dm-7
+[1124/004232.370956] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 6651904
+[1124/004232.372061] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004232.373133] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004232.404596] [INFO:dynamic_data.cpp(83)] [DDP] super_used_sectors: 27437056, last_sector_exclude_dyndata: 28877504, end: 35840000
+[1124/004232.406405] [INFO:dynamic_data.cpp(238)] [DDP] available_range(): 29548544+6291456
+[1124/004232.407691] [INFO:dynamic_data.cpp(1184)] [DDP] ddp_reserved_shrink_blocks() shrink_blocks: 0
+[1124/004232.410136] [INFO:writer.cpp(498)] [liblp] Updated logical partition table at slot 0 on device super
+[1124/004232.413329] [INFO:snapshot.cpp(3720)] Virtual A/B using userspace snapshots
+[1124/004232.414462] [INFO:snapuserd_client.cpp(84)] Daemon socket snapuserd does not exist, return without waiting.
+[1124/004232.419754] [INFO:snapshot.cpp(3773)] Successfully created all snapshots for target slot _a
+[1124/004232.424203] [INFO:delta_performer.cc(934)] PreparePartitionsForUpdate done. took 2188 ms
+[1124/004232.452555] [INFO:update_attempter_android.cc(1324)] Successfully allocated space for payload.
+[1124/004232.830918] [INFO:binder_service_android.cc(271)] [applyPayload] UID: 1000, PID: 17881
+[1124/004232.834093] [INFO:update_attempter_android.cc(269)] [FEN] Target verison : S931USQS7BYJ5/S931UOYN7BYJ5/S931USQS7BYJ5
+[1124/004232.836195] [WARNING:delta_performer.cc(1396)] Failed to resume update update-state-next-operation invalid: -1
+[1124/004232.837808] [INFO:update_attempter_android.cc(313)] Starting a new update http://fota-s3-dn.ospserver.net/firmware/TMB/SM-S931U/befb17c96aff4d77bb9b398007a1cdef.bin?px-hash=&px-wid=9112025-WSA251124064218&px-wctime=2025-11-24%2006:42:18&px-cc=TMB&px-mn=SM-S931U&Policy=eyJTdGF0ZW1lbnQiOiBbeyJSZXNvdXJjZSI6Imh0dHA6Ly9mb3RhLXMzLWRuLm9zcHNlcnZlci5uZXQvZmlybXdhcmUvVE1CL1NNLVM5MzFVL2JlZmIxN2M5NmFmZjRkNzdiYjliMzk4MDA3YTFjZGVmLmJpbj9weC1oYXNoPSZweC13aWQ9OTExMjAyNS1XU0EyNTExMjQwNjQyMTgmcHgtd2N0aW1lPTIwMjUtMTEtMjQlMjAwNjo0MjoxOCZweC1jYz1UTUImcHgtbW49U00tUzkzMVUqIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzY3NDIyNTQwfX19XX0_&Signature=Y4YdUFhuaaKLmrgXg43lGFMbYFkFf5-6afH6j-3ArPjuGxNJPCgV4Lp3B~I1wYc95IQxhYNxSVQuHEem9DZg1nrSgV5QHOfW0lDVPU34KGqmMxUF~cE1QraJ73BoHUwIvWRqsyHehUUwuFw~j8H~itcr976E2baB~d1R0ESYm3GSG3JtsaLOJs-1b4cHgAjCDYYbi6xF7bHv7wd-U3XSC8J4vbTfoGg5zvC0eh3teKPERqrX7ShJREgIizchJv6vz87XAnksVRrpDOuFA2ys~mThXrmRvTv445tqOP~yARTr61viIlkLD2KpV0AUhf3yKCQPivYACCOe6r9jr6gkuA__&Key-Pair-Id=APKAIGLPRCHE2BH6RZLQ&px-nb=rCOEar0KeBw0F+1WEC848g==&px-rmtime=2025-11-24%2006:42:32 size: 562876392 offset: 6486
+[1124/004232.839973] [INFO:dynamic_partition_control_android.cc(354)] Destroying [] from device mapper
+[1124/004232.841652] [INFO:dynamic_partition_control_android.cc(358)] UnmapAllPartitions done
+[1124/004232.842882] [INFO:dynamic_partition_control_android.cc(1375)] ResetUpdate resetting update state and deleting snapshots.
+[1124/004232.892281] [INFO:delta_performer.cc(1478)] Resetting recorded hash for prepared partitions.
+[1124/004232.894366] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004232.896723] [INFO:snapshot.cpp(248)] Cancelling update from state: 1
+[1124/004232.898243] [INFO:snapshot.cpp(353)] Removing all update state.
+[1124/004232.899758] [WARN:snapshot.cpp(2124)] Failed to get flashing status
+[1124/004232.902073] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot product_a
+[1124/004232.904599] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_a
+[1124/004232.909323] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_dlkm_a
+[1124/004232.911317] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot odm_a
+[1124/004232.913452] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_dlkm_a
+[1124/004232.916521] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_ext_a
+[1124/004232.918877] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_a
+[1124/004232.925947] [INFO:BootControlClient.cpp(416)] Using AIDL version of IBootControl
+[1124/004232.936548] [INFO:dynamic_data.cpp(83)] [DDP] f2fsDDPReserveBlocks(): origin: 0, shrink_blocks : 0
+[1124/004232.942221] [INFO:dynamic_data.cpp(1039)] [DDP] reserve data blocks , size:0 took 5ms
+[1124/004232.961550] [INFO:update_attempter_android.cc(369)] Using network ID: 0
+[1124/004232.962968] [INFO:update_attempter_android.cc(372)] Using this install plan:
+[1124/004232.964252] [INFO:install_plan.cc(79)] InstallPlan: 
+type: new_update
+version: 
+source_slot: B
+target_slot: A
+hash_checks_mandatory: true
+powerwash_required: false
+switch_slot_on_reboot: false
+run_post_install: true
+write_verity: true
+Payload: 0
+  size: 562876392
+  metadata_size: 31747086
+  metadata_signature: 
+  hash: 8C36F191D3C9C1CB37C6E03BE01BBE475B1864785BE8BB931560D9DB624B21FA
+  type: unknown
+  fingerprint: 
+  app_id: 
+  already_applied: false
+[1124/004232.966042] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004232.968290] [INFO:postinstall_runner_action.cc(94)] postinstall mount point: /postinstall
+[1124/004232.977355] [INFO:metrics_utils.cc(324)] Number of Reboots during current update attempt = 0
+[1124/004232.982699] [INFO:metrics_utils.cc(332)] Payload Attempt Number = 1
+[1124/004232.988163] [INFO:metrics_utils.cc(349)] Update Monotonic Timestamp Start = 1/2/1970 11:16:27 GMT
+[1124/004232.992518] [INFO:metrics_utils.cc(358)] Update Boot Timestamp Start = 1/14/1970 0:40:35 GMT
+[1124/004232.993493] [INFO:update_attempter_android.cc(994)] Clearing update complete marker.
+[1124/004232.994447] [INFO:update_attempter_android.cc(873)] Scheduling an action processor start.
+[1124/004232.995599] [INFO:action_processor.cc(51)] ActionProcessor: starting UpdateBootFlagsAction
+[1124/004232.997092] [INFO:update_boot_flags_action.cc(45)] Marking booted slot as good.
+[1124/004233.047854] [INFO:action_processor.cc(116)] ActionProcessor: finished UpdateBootFlagsAction with code ErrorCode::kSuccess
+[1124/004233.050529] [INFO:action_processor.cc(143)] ActionProcessor: starting CleanupPreviousUpdateAction
+[1124/004233.051666] [INFO:cleanup_previous_update_action.cc(151)] Starting/resuming CleanupPreviousUpdateAction
+[1124/004233.052931] [INFO:cleanup_previous_update_action.cc(192)] Boot completed, waiting on markBootSuccessful()
+[1124/004233.054919] [INFO:snapshot.cpp(4240)] EnsureMetadataMounted does nothing in Android mode.
+[1124/004233.056725] [INFO:snapshot_stats.cpp(40)] Read merge statistics file failed: No such file or directory
+[1124/004233.062981] [INFO:cleanup_previous_update_action.cc(291)] Waiting for any previous merge request to complete. This can take up to several minutes.
+[1124/004233.065029] [INFO:snapshot.cpp(1196)] CheckMergeState for snapshots returned: None
+[1124/004233.067336] [INFO:snapshot.cpp(1161)] ProcessUpdateState handling state: None
+[1124/004233.068345] [INFO:cleanup_previous_update_action.cc(328)] Can't find any snapshot to merge.
+[1124/004233.069452] [INFO:snapshot.cpp(248)] Cancelling update from state: 0
+[1124/004233.070555] [INFO:snapshot.cpp(353)] Removing all update state.
+[1124/004233.076993] [INFO:dynamic_data.cpp(83)] [DDP] f2fsDDPReserveBlocks(): origin: 0, shrink_blocks : 0
+[1124/004233.078788] [INFO:dynamic_data.cpp(1039)] [DDP] reserve data blocks , size:0 took 1ms
+[1124/004233.080291] [INFO:cleanup_previous_update_action.cc(133)] Stopping/suspending/completing CleanupPreviousUpdateAction
+[1124/004233.083669] [INFO:cleanup_previous_update_action.cc(513)] Not reporting merge stats because state is None
+[1124/004233.084914] [INFO:cleanup_previous_update_action.cc(133)] Stopping/suspending/completing CleanupPreviousUpdateAction
+[1124/004233.085911] [INFO:action_processor.cc(116)] ActionProcessor: finished CleanupPreviousUpdateAction with code ErrorCode::kSuccess
+[1124/004233.086904] [INFO:action_processor.cc(143)] ActionProcessor: starting InstallPlanAction
+[1124/004233.088526] [INFO:action_processor.cc(116)] ActionProcessor: finished InstallPlanAction with code ErrorCode::kSuccess
+[1124/004233.089754] [INFO:action_processor.cc(143)] ActionProcessor: starting DownloadAction
+[1124/004233.091353] [INFO:install_plan.cc(79)] InstallPlan: 
+type: new_update
+version: 
+source_slot: B
+target_slot: A
+hash_checks_mandatory: true
+powerwash_required: false
+switch_slot_on_reboot: false
+run_post_install: true
+write_verity: true
+Payload: 0
+  size: 562876392
+  metadata_size: 31747086
+  metadata_signature: 
+  hash: 8C36F191D3C9C1CB37C6E03BE01BBE475B1864785BE8BB931560D9DB624B21FA
+  type: unknown
+  fingerprint: 
+  app_id: 
+  already_applied: false
+[1124/004233.092613] [INFO:download_action.cc(82)] Marking new slot as unbootable
+[1124/004233.129057] [INFO:multi_range_http_fetcher.cc(43)] starting first transfer
+[1124/004233.130347] [INFO:multi_range_http_fetcher.cc(72)] starting transfer of range 6486+562876392
+[1124/004233.131408] [INFO:libcurl_http_fetcher.cc(137)] Starting/Resuming transfer
+[1124/004233.136527] [INFO:libcurl_http_fetcher.cc(156)] Using proxy: no
+[1124/004233.137875] [INFO:libcurl_http_fetcher.cc(281)] Setting up curl options for HTTP
+[1124/004233.280541] [INFO:delta_performer.cc(108)] Completed 0/? operations, 1344/562876392 bytes downloaded (0%), overall progress 0%
+[1124/004242.058729] [INFO:delta_performer.cc(342)] Manifest size in payload matches expected value from Omaha
+[1124/004242.115127] [INFO:delta_performer.cc(1071)] Verifying using certificates: /system/etc/security/otacerts.zip
+[1124/004242.192190] [INFO:payload_verifier.cc(101)] signature blob size = 267
+[1124/004242.214346] [INFO:payload_verifier.cc(117)] Truncating the signature to its unpadded size: 256.
+[1124/004242.225568] [INFO:payload_verifier.cc(128)] Verified correct signature 1 out of 1 signatures.
+[1124/004242.260721] [INFO:payload_metadata.cc(221)] Metadata hash signature matches value in Omaha response.
+[1124/004242.699868] [INFO:delta_performer.cc(1109)] Detected a 'delta' payload.
+[1124/004242.738398] [INFO:delta_performer.cc(1180)] apnhlos does't have version, skipping downgrade check.
+[1124/004242.743756] [INFO:delta_performer.cc(1180)] xbl_ramdump does't have version, skipping downgrade check.
+[1124/004242.749378] [INFO:delta_performer.cc(1180)] abl does't have version, skipping downgrade check.
+[1124/004242.757716] [INFO:delta_performer.cc(1180)] aop does't have version, skipping downgrade check.
+[1124/004242.763705] [INFO:delta_performer.cc(1180)] aop_config does't have version, skipping downgrade check.
+[1124/004242.776089] [INFO:delta_performer.cc(1180)] bksecapp does't have version, skipping downgrade check.
+[1124/004242.785112] [INFO:delta_performer.cc(1180)] cpucp does't have version, skipping downgrade check.
+[1124/004242.797819] [INFO:delta_performer.cc(1180)] cpucp_dtb does't have version, skipping downgrade check.
+[1124/004242.816825] [INFO:delta_performer.cc(1180)] soccp_dcd does't have version, skipping downgrade check.
+[1124/004242.828086] [INFO:delta_performer.cc(1180)] devcfg does't have version, skipping downgrade check.
+[1124/004242.837010] [INFO:delta_performer.cc(1180)] dsp does't have version, skipping downgrade check.
+[1124/004242.845819] [INFO:delta_performer.cc(1180)] dtbo does't have version, skipping downgrade check.
+[1124/004242.870675] [INFO:delta_performer.cc(1180)] em does't have version, skipping downgrade check.
+[1124/004242.889232] [INFO:delta_performer.cc(1180)] hyp does't have version, skipping downgrade check.
+[1124/004242.900702] [INFO:delta_performer.cc(1180)] imagefv does't have version, skipping downgrade check.
+[1124/004242.909536] [WARNING:utils.cc(1222)] One of old/new timestamp is empty, permit update anyway. Old:  New: 1762511790
+[1124/004242.913901] [INFO:delta_performer.cc(1180)] keymaster does't have version, skipping downgrade check.
+[1124/004242.924851] [INFO:delta_performer.cc(1180)] modem does't have version, skipping downgrade check.
+[1124/004242.948063] [INFO:delta_performer.cc(1180)] optics does't have version, skipping downgrade check.
+[1124/004242.954901] [INFO:delta_performer.cc(1180)] pdp does't have version, skipping downgrade check.
+[1124/004242.981509] [INFO:delta_performer.cc(1180)] pdp_cdb does't have version, skipping downgrade check.
+[1124/004243.002254] [INFO:delta_performer.cc(1180)] prism does't have version, skipping downgrade check.
+[1124/004243.005796] [INFO:delta_performer.cc(1180)] pvmfw does't have version, skipping downgrade check.
+[1124/004243.016938] [INFO:delta_performer.cc(1180)] qupfw does't have version, skipping downgrade check.
+[1124/004243.023538] [INFO:delta_performer.cc(1180)] qweslicstore does't have version, skipping downgrade check.
+[1124/004243.033751] [INFO:delta_performer.cc(1180)] soccp_debug does't have version, skipping downgrade check.
+[1124/004243.038925] [INFO:delta_performer.cc(1180)] shrm does't have version, skipping downgrade check.
+[1124/004243.053817] [INFO:delta_performer.cc(1180)] storsec does't have version, skipping downgrade check.
+[1124/004243.057295] [INFO:delta_performer.cc(1180)] tz does't have version, skipping downgrade check.
+[1124/004243.070263] [INFO:delta_performer.cc(1180)] hdm does't have version, skipping downgrade check.
+[1124/004243.079384] [INFO:delta_performer.cc(1180)] tziccc does't have version, skipping downgrade check.
+[1124/004243.094324] [INFO:delta_performer.cc(1180)] tz_kg does't have version, skipping downgrade check.
+[1124/004243.105146] [INFO:delta_performer.cc(1180)] uefi does't have version, skipping downgrade check.
+[1124/004243.113013] [INFO:delta_performer.cc(1180)] uefisecapp does't have version, skipping downgrade check.
+[1124/004243.122453] [INFO:delta_performer.cc(1180)] vk does't have version, skipping downgrade check.
+[1124/004243.126649] [INFO:delta_performer.cc(1180)] vbmeta does't have version, skipping downgrade check.
+[1124/004243.128805] [INFO:delta_performer.cc(1180)] vbmeta_system does't have version, skipping downgrade check.
+[1124/004243.130739] [INFO:delta_performer.cc(1180)] vendor_boot does't have version, skipping downgrade check.
+[1124/004243.137886] [INFO:delta_performer.cc(1180)] vm-bootsys does't have version, skipping downgrade check.
+[1124/004243.145336] [INFO:delta_performer.cc(1180)] xbl_config does't have version, skipping downgrade check.
+[1124/004243.150970] [INFO:delta_performer.cc(1180)] xbl does't have version, skipping downgrade check.
+[1124/004243.914007] [INFO:delta_performer.cc(912)] Preparing partitions for new update. last hash = , new hash = jDbxkdPJwcs3xuA74Bu+R1sYZHhb6LuTFWDZ22JLIfo=4i8TkG2ZkC4z73fLtWTazS8DCOznw70HziPT2IktY8Q=
+[1124/004244.017085] [INFO:delta_performer.cc(1478)] Resetting recorded hash for prepared partitions.
+[1124/004244.019899] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.021598] [INFO:snapshot.cpp(4240)] EnsureMetadataMounted does nothing in Android mode.
+[1124/004244.023110] [INFO:dynamic_partition_control_android.cc(830)] Erasing AVB footer of system_other partition before update.
+[1124/004244.028329] [INFO:dynamic_partition_control_android.cc(729)] AVB is not enabled on system_other. Skip erasing.
+[1124/004244.032346] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004244.034295] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.036540] [INFO:snapshot.cpp(248)] Cancelling update from state: 0
+[1124/004244.038073] [INFO:snapshot.cpp(353)] Removing all update state.
+[1124/004244.046553] [INFO:dynamic_data.cpp(83)] [DDP] f2fsDDPReserveBlocks(): origin: 0, shrink_blocks : 0
+[1124/004244.049172] [INFO:dynamic_data.cpp(1039)] [DDP] reserve data blocks , size:0 took 2ms
+[1124/004244.059309] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.062334] [INFO:builder.cpp(1248)] [liblp] Partition system_a will resize from 8672518144 bytes to 8672464896 bytes
+[1124/004244.065153] [INFO:builder.cpp(1248)] [liblp] Partition system_dlkm_a will resize from 7581696 bytes to 7589888 bytes
+[1124/004244.067399] [INFO:builder.cpp(1248)] [liblp] Partition system_ext_a will resize from 152956928 bytes to 152965120 bytes
+[1124/004244.069631] [INFO:builder.cpp(1248)] [liblp] Partition vendor_a will resize from 3780194304 bytes to 3780198400 bytes
+[1124/004244.071877] [INFO:dynamic_data.cpp(83)] [DDP] super_used_sectors: 27437056, last_sector_exclude_dyndata: 27593328, end: 35840000
+[1124/004244.073862] [INFO:dynamic_data.cpp(238)] [DDP] available_range(): 29548544+6291456
+[1124/004244.076240] [INFO:dynamic_data.cpp(1123)] [DDP] ddp_try_grow_dyndata() target extdata: 29548544++6291456
+[1124/004244.077856] [INFO:dynamic_data.cpp(1143)] [DDP] ddp_try_grow_dyndata() target start: 29548544, cur start:29548544
+[1124/004244.079575] [INFO:snapshot.cpp(3630)] using compression algorithm: lz4, max compressible block size: 65536
+[1124/004244.081967] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 1081081856 bytes
+[1124/004244.084386] [INFO:snapshot.cpp(3837)] For partition system_a, device size = 8672464896, snapshot size = 8672464896, cow partition size = 511139840, cow file size = 0
+[1124/004244.108087] [INFO:builder.cpp(1248)] [liblp] Partition system_a-cow will resize from 0 bytes to 511139840 bytes
+[1124/004244.116338] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for system_a
+[1124/004244.117953] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 569376768 bytes
+[1124/004244.120475] [INFO:snapshot.cpp(3837)] For partition odm_a, device size = 1105920, snapshot size = 1105920, cow partition size = 4239360, cow file size = 0
+[1124/004244.125955] [INFO:builder.cpp(1248)] [liblp] Partition odm_a-cow will resize from 0 bytes to 4239360 bytes
+[1124/004244.127582] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for odm_a
+[1124/004244.129353] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 564133888 bytes
+[1124/004244.131568] [INFO:snapshot.cpp(3837)] For partition product_a, device size = 1399271424, snapshot size = 1399271424, cow partition size = 27521024, cow file size = 0
+[1124/004244.136243] [INFO:builder.cpp(1248)] [liblp] Partition product_a-cow will resize from 0 bytes to 27521024 bytes
+[1124/004244.137878] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for product_a
+[1124/004244.140233] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 535822336 bytes
+[1124/004244.142406] [INFO:snapshot.cpp(3837)] For partition system_dlkm_a, device size = 7589888, snapshot size = 7589888, cow partition size = 9326592, cow file size = 0
+[1124/004244.147497] [INFO:builder.cpp(1248)] [liblp] Partition system_dlkm_a-cow will resize from 0 bytes to 9326592 bytes
+[1124/004244.149633] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for system_dlkm_a
+[1124/004244.151904] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 526385152 bytes
+[1124/004244.154272] [INFO:snapshot.cpp(3837)] For partition system_ext_a, device size = 152965120, snapshot size = 152965120, cow partition size = 73682944, cow file size = 0
+[1124/004244.159808] [INFO:builder.cpp(1248)] [liblp] Partition system_ext_a-cow will resize from 0 bytes to 73682944 bytes
+[1124/004244.162358] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for system_ext_a
+[1124/004244.165332] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 451936256 bytes
+[1124/004244.167843] [INFO:snapshot.cpp(3837)] For partition vendor_a, device size = 3780198400, snapshot size = 3780198400, cow partition size = 100798464, cow file size = 0
+[1124/004244.172935] [INFO:builder.cpp(1248)] [liblp] Partition vendor_a-cow will resize from 0 bytes to 100798464 bytes
+[1124/004244.174965] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for vendor_a
+[1124/004244.177970] [INFO:partition_cow_creator.cpp(253)] Remaining free space for COW: 350224384 bytes
+[1124/004244.179803] [INFO:snapshot.cpp(3837)] For partition vendor_dlkm_a, device size = 28631040, snapshot size = 28631040, cow partition size = 6651904, cow file size = 0
+[1124/004244.185914] [INFO:builder.cpp(1248)] [liblp] Partition vendor_dlkm_a-cow will resize from 0 bytes to 6651904 bytes
+[1124/004244.187755] [INFO:snapshot.cpp(3906)] Successfully created snapshot partition for vendor_dlkm_a
+[1124/004244.189892] [INFO:snapshot.cpp(3909)] Allocating CoW images.
+[1124/004244.192749] [INFO:snapshot.cpp(3921)] Successfully created snapshot for odm_a
+[1124/004244.194489] [INFO:snapshot.cpp(3921)] Successfully created snapshot for product_a
+[1124/004244.196245] [INFO:snapshot.cpp(3921)] Successfully created snapshot for system_a
+[1124/004244.200831] [INFO:snapshot.cpp(3921)] Successfully created snapshot for system_dlkm_a
+[1124/004244.203096] [INFO:snapshot.cpp(3921)] Successfully created snapshot for system_ext_a
+[1124/004244.205884] [INFO:snapshot.cpp(3921)] Successfully created snapshot for vendor_a
+[1124/004244.208281] [INFO:snapshot.cpp(3921)] Successfully created snapshot for vendor_dlkm_a
+[1124/004244.210564] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_a
+[1124/004244.233515] [INFO:snapshot.cpp(2963)] Mapped COW device for system_a at /dev/block/dm-7
+[1124/004244.235651] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 511139840
+[1124/004244.237743] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004244.241163] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004244.268802] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot odm_a
+[1124/004244.292160] [INFO:snapshot.cpp(2963)] Mapped COW device for odm_a at /dev/block/dm-7
+[1124/004244.294246] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 4239360
+[1124/004244.296763] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004244.299579] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004244.324937] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot product_a
+[1124/004244.348739] [INFO:snapshot.cpp(2963)] Mapped COW device for product_a at /dev/block/dm-7
+[1124/004244.353070] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 27521024
+[1124/004244.355883] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004244.359141] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004244.392845] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_dlkm_a
+[1124/004244.416640] [INFO:snapshot.cpp(2963)] Mapped COW device for system_dlkm_a at /dev/block/dm-7
+[1124/004244.419022] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 9326592
+[1124/004244.420881] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004244.423004] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004244.440880] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_ext_a
+[1124/004244.465698] [INFO:snapshot.cpp(2963)] Mapped COW device for system_ext_a at /dev/block/dm-7
+[1124/004244.468033] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 73682944
+[1124/004244.470239] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004244.472436] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004244.509671] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_a
+[1124/004244.538294] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_a at /dev/block/dm-7
+[1124/004244.541940] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 100798464
+[1124/004244.549258] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004244.551040] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004244.578047] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_dlkm_a
+[1124/004244.604049] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_dlkm_a at /dev/block/dm-7
+[1124/004244.607163] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-7 has size 6651904
+[1124/004244.609159] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004244.613995] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004244.645120] [INFO:dynamic_data.cpp(83)] [DDP] super_used_sectors: 27437056, last_sector_exclude_dyndata: 28877504, end: 35840000
+[1124/004244.648761] [INFO:dynamic_data.cpp(238)] [DDP] available_range(): 29548544+6291456
+[1124/004244.650996] [INFO:dynamic_data.cpp(1184)] [DDP] ddp_reserved_shrink_blocks() shrink_blocks: 0
+[1124/004244.654929] [INFO:writer.cpp(498)] [liblp] Updated logical partition table at slot 0 on device super
+[1124/004244.660487] [INFO:snapshot.cpp(3720)] Virtual A/B using userspace snapshots
+[1124/004244.662457] [INFO:snapuserd_client.cpp(84)] Daemon socket snapuserd does not exist, return without waiting.
+[1124/004244.672245] [INFO:snapshot.cpp(3773)] Successfully created all snapshots for target slot _a
+[1124/004244.684671] [INFO:delta_performer.cc(934)] PreparePartitionsForUpdate done. took 655 ms
+[1124/004244.746677] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.749237] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004244.750692] [WARNING:dynamic_partition_control_android.cc(1294)] system_b_ota is at current slot but it is not mapped. Now try to map it.
+[1124/004244.775022] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_b_ota on device /dev/block/dm-7
+[1124/004244.777897] [INFO:dynamic_partition_control_android.cc(240)] Succesfully mapped system_b to device mapper (force_writable = 1); device path at /dev/block/dm-7
+[1124/004244.781538] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.785768] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004244.788390] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.790843] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004244.792546] [WARNING:dynamic_partition_control_android.cc(1294)] odm_b_ota is at current slot but it is not mapped. Now try to map it.
+[1124/004244.815937] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition odm_b_ota on device /dev/block/dm-8
+[1124/004244.818634] [INFO:dynamic_partition_control_android.cc(240)] Succesfully mapped odm_b to device mapper (force_writable = 1); device path at /dev/block/dm-8
+[1124/004244.821202] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.824971] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.826831] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004244.829962] [WARNING:dynamic_partition_control_android.cc(1294)] product_b_ota is at current slot but it is not mapped. Now try to map it.
+[1124/004244.853931] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition product_b_ota on device /dev/block/dm-9
+[1124/004244.856361] [INFO:dynamic_partition_control_android.cc(240)] Succesfully mapped product_b to device mapper (force_writable = 1); device path at /dev/block/dm-9
+[1124/004244.858266] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.861171] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.863844] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004244.870435] [WARNING:dynamic_partition_control_android.cc(1294)] system_dlkm_b_ota is at current slot but it is not mapped. Now try to map it.
+[1124/004244.893884] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_dlkm_b_ota on device /dev/block/dm-10
+[1124/004244.895927] [INFO:dynamic_partition_control_android.cc(240)] Succesfully mapped system_dlkm_b to device mapper (force_writable = 1); device path at /dev/block/dm-10
+[1124/004244.901988] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.906181] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.909226] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004244.911457] [WARNING:dynamic_partition_control_android.cc(1294)] system_ext_b_ota is at current slot but it is not mapped. Now try to map it.
+[1124/004244.935110] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_ext_b_ota on device /dev/block/dm-11
+[1124/004244.937663] [INFO:dynamic_partition_control_android.cc(240)] Succesfully mapped system_ext_b to device mapper (force_writable = 1); device path at /dev/block/dm-11
+[1124/004244.939836] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.942714] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.945057] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004244.946302] [WARNING:dynamic_partition_control_android.cc(1294)] vendor_b_ota is at current slot but it is not mapped. Now try to map it.
+[1124/004244.968501] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_b_ota on device /dev/block/dm-12
+[1124/004244.970316] [INFO:dynamic_partition_control_android.cc(240)] Succesfully mapped vendor_b to device mapper (force_writable = 1); device path at /dev/block/dm-12
+[1124/004244.972014] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.974019] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004244.976111] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004244.977967] [WARNING:dynamic_partition_control_android.cc(1294)] vendor_dlkm_b_ota is at current slot but it is not mapped. Now try to map it.
+[1124/004245.001608] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_dlkm_b_ota on device /dev/block/dm-13
+[1124/004245.003751] [INFO:dynamic_partition_control_android.cc(240)] Succesfully mapped vendor_dlkm_b to device mapper (force_writable = 1); device path at /dev/block/dm-13
+[1124/004245.006870] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.013132] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.016461] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.017859] [INFO:dynamic_partition_control_android.cc(1279)] apnhlos_a is not in super partition metadata.
+[1124/004245.019264] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.020678] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.024798] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.025969] [INFO:dynamic_partition_control_android.cc(1279)] xbl_ramdump_a is not in super partition metadata.
+[1124/004245.027200] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.028443] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.029887] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.031404] [INFO:dynamic_partition_control_android.cc(1279)] abl_a is not in super partition metadata.
+[1124/004245.032943] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.034088] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.035420] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.036555] [INFO:dynamic_partition_control_android.cc(1279)] aop_a is not in super partition metadata.
+[1124/004245.037706] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.039319] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.041435] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.043302] [INFO:dynamic_partition_control_android.cc(1279)] aop_config_a is not in super partition metadata.
+[1124/004245.045800] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.048604] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.050086] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.051176] [INFO:dynamic_partition_control_android.cc(1279)] bksecapp_a is not in super partition metadata.
+[1124/004245.056257] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.058233] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.059843] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.060942] [INFO:dynamic_partition_control_android.cc(1279)] boot_a is not in super partition metadata.
+[1124/004245.062751] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.065391] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.066951] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.068079] [INFO:dynamic_partition_control_android.cc(1279)] cpucp_a is not in super partition metadata.
+[1124/004245.069491] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.070980] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.074260] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.075364] [INFO:dynamic_partition_control_android.cc(1279)] cpucp_dtb_a is not in super partition metadata.
+[1124/004245.077102] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.078350] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.083740] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.089245] [INFO:dynamic_partition_control_android.cc(1279)] soccp_dcd_a is not in super partition metadata.
+[1124/004245.091602] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.092968] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.094278] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.095388] [INFO:dynamic_partition_control_android.cc(1279)] devcfg_a is not in super partition metadata.
+[1124/004245.096655] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.098400] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.099903] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.101122] [INFO:dynamic_partition_control_android.cc(1279)] dsp_a is not in super partition metadata.
+[1124/004245.102317] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.103557] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.105612] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.106783] [INFO:dynamic_partition_control_android.cc(1279)] dtbo_a is not in super partition metadata.
+[1124/004245.107973] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.109296] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.110763] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.111948] [INFO:dynamic_partition_control_android.cc(1279)] em_a is not in super partition metadata.
+[1124/004245.113298] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.115324] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.116810] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.117943] [INFO:dynamic_partition_control_android.cc(1279)] hyp_a is not in super partition metadata.
+[1124/004245.121359] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.123186] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.124476] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.125504] [INFO:dynamic_partition_control_android.cc(1279)] imagefv_a is not in super partition metadata.
+[1124/004245.131687] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.137599] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.140822] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.141988] [INFO:dynamic_partition_control_android.cc(1279)] init_boot_a is not in super partition metadata.
+[1124/004245.143769] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.145326] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.146755] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.148027] [INFO:dynamic_partition_control_android.cc(1279)] keymaster_a is not in super partition metadata.
+[1124/004245.149270] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.150509] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.151664] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.153245] [INFO:dynamic_partition_control_android.cc(1279)] modem_a is not in super partition metadata.
+[1124/004245.154543] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.156557] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.157766] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.159069] [INFO:dynamic_partition_control_android.cc(1279)] optics_a is not in super partition metadata.
+[1124/004245.160380] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.161786] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.163245] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.165237] [INFO:dynamic_partition_control_android.cc(1279)] pdp_a is not in super partition metadata.
+[1124/004245.166514] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.167698] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.169579] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.170594] [INFO:dynamic_partition_control_android.cc(1279)] pdp_cdb_a is not in super partition metadata.
+[1124/004245.173510] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.175543] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.176874] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.178026] [INFO:dynamic_partition_control_android.cc(1279)] prism_b is not in super partition metadata.
+[1124/004245.179195] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.181004] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.182226] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.183530] [INFO:dynamic_partition_control_android.cc(1279)] prism_a is not in super partition metadata.
+[1124/004245.185359] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.186641] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.187827] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.189023] [INFO:dynamic_partition_control_android.cc(1279)] pvmfw_a is not in super partition metadata.
+[1124/004245.190253] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.191463] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.192675] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.194033] [INFO:dynamic_partition_control_android.cc(1279)] qupfw_a is not in super partition metadata.
+[1124/004245.195638] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.198100] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.199863] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.200845] [INFO:dynamic_partition_control_android.cc(1279)] qweslicstore_a is not in super partition metadata.
+[1124/004245.202061] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.203488] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.205091] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.206791] [INFO:dynamic_partition_control_android.cc(1279)] soccp_debug_a is not in super partition metadata.
+[1124/004245.208257] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.209488] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.210924] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.217303] [INFO:dynamic_partition_control_android.cc(1279)] shrm_a is not in super partition metadata.
+[1124/004245.218893] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.220308] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.222236] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.223330] [INFO:dynamic_partition_control_android.cc(1279)] storsec_a is not in super partition metadata.
+[1124/004245.224657] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.226097] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.227437] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.228733] [INFO:dynamic_partition_control_android.cc(1279)] tz_a is not in super partition metadata.
+[1124/004245.230656] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.231946] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.233279] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.234523] [INFO:dynamic_partition_control_android.cc(1279)] hdm_a is not in super partition metadata.
+[1124/004245.235721] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.236991] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.239276] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.240722] [INFO:dynamic_partition_control_android.cc(1279)] tziccc_a is not in super partition metadata.
+[1124/004245.242100] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.243274] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.244936] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.247902] [INFO:dynamic_partition_control_android.cc(1279)] tz_kg_a is not in super partition metadata.
+[1124/004245.249298] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.250529] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.252138] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.253192] [INFO:dynamic_partition_control_android.cc(1279)] uefi_a is not in super partition metadata.
+[1124/004245.254495] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.256330] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.257841] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.258819] [INFO:dynamic_partition_control_android.cc(1279)] uefisecapp_a is not in super partition metadata.
+[1124/004245.260062] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.261396] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.262856] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.264751] [INFO:dynamic_partition_control_android.cc(1279)] vk_a is not in super partition metadata.
+[1124/004245.266172] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.267651] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.269121] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.270468] [INFO:dynamic_partition_control_android.cc(1279)] vbmeta_a is not in super partition metadata.
+[1124/004245.271687] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.273571] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.274799] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.276004] [INFO:dynamic_partition_control_android.cc(1279)] vbmeta_system_a is not in super partition metadata.
+[1124/004245.277309] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.278807] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.280474] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.281533] [INFO:dynamic_partition_control_android.cc(1279)] vendor_boot_a is not in super partition metadata.
+[1124/004245.283466] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.285052] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.286270] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.287244] [INFO:dynamic_partition_control_android.cc(1279)] vm-bootsys_a is not in super partition metadata.
+[1124/004245.289112] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.290333] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.291555] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.292596] [INFO:dynamic_partition_control_android.cc(1279)] xbl_config_a is not in super partition metadata.
+[1124/004245.294212] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.295720] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.296912] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot A in /dev/block/by-name/super
+[1124/004245.298181] [INFO:dynamic_partition_control_android.cc(1279)] xbl_a is not in super partition metadata.
+[1124/004245.299565] [INFO:dynamic_partition_control_android.cc(389)] Loaded metadata from slot B in /dev/block/by-name/super
+[1124/004245.300609] [INFO:delta_performer.cc(859)] ParsePartitions done. took 554 ms
+[1124/004245.301643] [INFO:delta_performer.cc(267)] PartitionInfo old system sha256: 8845F7AD7EE6E716F970A37BF06BC9B8CE04A103AE0DB00EBE58B2938310C8AC size: 8672518144
+[1124/004245.302728] [INFO:delta_performer.cc(267)] PartitionInfo new system sha256: 2C6C5796AFBBEFBE511692245674E6361922461DB0EBA1F6BDF0FC276344850C size: 8672464896
+[1124/004245.303949] [INFO:delta_performer.cc(267)] PartitionInfo old odm sha256: E65F69A9F728FE8F71AF1D16EE450AE6BDA3892C4E72CA5A26CBAC32A659CAB4 size: 1105920
+[1124/004245.305217] [INFO:delta_performer.cc(267)] PartitionInfo new odm sha256: 9C8E491DA2183C0F34792983C1E265F9F0C97E1D8B83EB93B595C9CFB8731239 size: 1105920
+[1124/004245.306179] [INFO:delta_performer.cc(267)] PartitionInfo old product sha256: B894F11ADD43FDC1746735BAAB5D70992527445C387D046AF8054556C1D8F5A5 size: 1399271424
+[1124/004245.307164] [INFO:delta_performer.cc(267)] PartitionInfo new product sha256: 39E2B98916263A31D0F093DF468F6F625533FA6F1543E59D8D3C7675ACC7246C size: 1399271424
+[1124/004245.308119] [INFO:delta_performer.cc(267)] PartitionInfo old system_dlkm sha256: 991754A6D6F534844DD54D5770A47BEFF5C4BEAD6C8609B3C0FBA0E19B4E8E16 size: 7581696
+[1124/004245.309237] [INFO:delta_performer.cc(267)] PartitionInfo new system_dlkm sha256: FD22F2BFA616DFDC08C0E10B2892C2C451DC8263546488BCB99A7A558BA87690 size: 7589888
+[1124/004245.310150] [INFO:delta_performer.cc(267)] PartitionInfo old system_ext sha256: 53C09BF6F7BD0F175A6FB48538F7C90AC424FA435412C92422481ACEEA6F22C7 size: 152956928
+[1124/004245.311377] [INFO:delta_performer.cc(267)] PartitionInfo new system_ext sha256: 831331FC4E6A164747D62B4940E3BB104A16161801F4427EFCA16CBD95F69D46 size: 152965120
+[1124/004245.312562] [INFO:delta_performer.cc(267)] PartitionInfo old vendor sha256: 32792BDD17133B19E5D57BCF30918F8DC079B98F710AB5A3ADACA55A99EB97D2 size: 3780194304
+[1124/004245.313625] [INFO:delta_performer.cc(267)] PartitionInfo new vendor sha256: 5D103958DD2E687E7B0A2EF1BD4EC9D1B6701DF7F0518A27C7AFA29FA6D37D00 size: 3780198400
+[1124/004245.315160] [INFO:delta_performer.cc(267)] PartitionInfo old vendor_dlkm sha256: 56EEF1B50DEDAFDDE163F649FE5180BEA2F91BD92E8A57F13003BDA5DCBB2D50 size: 28631040
+[1124/004245.316389] [INFO:delta_performer.cc(267)] PartitionInfo new vendor_dlkm sha256: A041344A091993C263C5FE18F7D155209E02D4B42503D3919839FF11877F4318 size: 28631040
+[1124/004245.317417] [INFO:delta_performer.cc(267)] PartitionInfo new apnhlos sha256: 02F1E971973ED77085A5D5F091D5341B5B1B4C0690C075A201AFC2143AF1DEFE size: 125796352
+[1124/004245.318427] [INFO:delta_performer.cc(267)] PartitionInfo new xbl_ramdump sha256: 632DBA0A142CBFD82612EEE708B5C7520094F782359157F6AE600564B2F183AF size: 1740800
+[1124/004245.319400] [INFO:delta_performer.cc(267)] PartitionInfo new abl sha256: 180B70C7C44FBF15EA306D594958EA300E89CB211C16A99F02B7E5E2BEBB4BBA size: 2473984
+[1124/004245.320547] [INFO:delta_performer.cc(267)] PartitionInfo new aop sha256: C98C9F26CE3EE64135F2B8B96F7D704749C09DB327EE04FD4FA0E6531E191C37 size: 372736
+[1124/004245.321720] [INFO:delta_performer.cc(267)] PartitionInfo new aop_config sha256: 8557E6750EB5F2F1BCE5D6858AFD75A8386DDFC4C66842D7E97A7E23F5DB77BF size: 32768
+[1124/004245.322828] [INFO:delta_performer.cc(267)] PartitionInfo new bksecapp sha256: B01DB4B9174A59F432354D5C5DC80600FDB50A5561156C956D004069D2DD34A5 size: 73728
+[1124/004245.323857] [INFO:delta_performer.cc(267)] PartitionInfo new boot sha256: 811A1BF6DDFD6B69A166654BAEFBBCA5D86BC1F26CBE3A9FC22794DFA90CF7D4 size: 101122048
+[1124/004245.325021] [INFO:delta_performer.cc(267)] PartitionInfo new cpucp sha256: 868A36E1F84174CB539B2DDA72A30D807C7D370DB103C4F91D31FC332142C28F size: 319488
+[1124/004245.326595] [INFO:delta_performer.cc(267)] PartitionInfo new cpucp_dtb sha256: 2B989972B7A6BA54A02ED0B85DF850EAB53B22AA8D81E1404118D141C385F526 size: 16384
+[1124/004245.327521] [INFO:delta_performer.cc(267)] PartitionInfo new soccp_dcd sha256: B8698C6842C252B7CD1DE7A3546F7CDE7A5B5DA56694F5C98441779C31F0E4F5 size: 20480
+[1124/004245.328492] [INFO:delta_performer.cc(267)] PartitionInfo new devcfg sha256: 3E73FFFB254FAFEEBE13BA05B0293E9CA19F32CC6C44481B8D2AC8223355D3F2 size: 389120
+[1124/004245.329663] [INFO:delta_performer.cc(267)] PartitionInfo new dsp sha256: 94789F3AF49A48F60B9E0830509AEAC4755E2BE975C0CD55E9BFC5E69CD555CF size: 67108864
+[1124/004245.331066] [INFO:delta_performer.cc(267)] PartitionInfo new dtbo sha256: C640CAAF21062D9071FF76D1F4B3F480B9F2AB74136F33EDBBB0852153C45632 size: 20971520
+[1124/004245.332233] [INFO:delta_performer.cc(267)] PartitionInfo new em sha256: 4DACB81D2083D01DA759CC4BD2F4BC824EB05EFA98759E1EB12F63AF5BAA4BC8 size: 1560576
+[1124/004245.333231] [INFO:delta_performer.cc(267)] PartitionInfo new hyp sha256: EBE35F252A4F4F35994F255E6FC5FDAC240332FF5D9ACC6E81E7FABF066C3B31 size: 1548288
+[1124/004245.334409] [INFO:delta_performer.cc(267)] PartitionInfo new imagefv sha256: F518CCED95753D93C6219D94EC50FF00354EAA68AB087F3E189F5D8992E66C65 size: 8400896
+[1124/004245.335798] [INFO:delta_performer.cc(267)] PartitionInfo new init_boot sha256: 0FBFB9D6A611862709F1E67F8C0C38E99289B5658B93301390A7AB28982137F7 size: 8388608
+[1124/004245.336997] [INFO:delta_performer.cc(267)] PartitionInfo new keymaster sha256: 37B48443C4D16B627418E87D08BDF7704C2EC5904BC421E82539E2FE418386AF size: 458752
+[1124/004245.338208] [INFO:delta_performer.cc(267)] PartitionInfo new modem sha256: AAAEB9C0F77988B3A872698831BAD04BB0641ADD26A32D2AD23427A7F61938E4 size: 96632832
+[1124/004245.339131] [INFO:delta_performer.cc(267)] PartitionInfo new optics sha256: 2C07DAE6467E0204C03BD0D3BA7BC89BEA22B8C96867E9D335594FF859ABAB7B size: 20971520
+[1124/004245.340091] [INFO:delta_performer.cc(267)] PartitionInfo new pdp sha256: 81556228C44D4DDBA1E611B49DB05E5364DFBB188310F58A83066A97C1DE65BE size: 212992
+[1124/004245.341179] [INFO:delta_performer.cc(267)] PartitionInfo new pdp_cdb sha256: 6CB018B21183D5B60AC400918EAD1FF5F11FE985395D3E28A15071E8B8F96BA9 size: 16384
+[1124/004245.342359] [INFO:delta_performer.cc(267)] PartitionInfo old prism sha256: 11CCF6E4D6DE0D380F69C3BF409A920C7B9607032FB84C6F10770545D68CC1EA size: 419430400
+[1124/004245.343304] [INFO:delta_performer.cc(267)] PartitionInfo new prism sha256: 2A55375BE55D2B13DC0D6AA555ECE4118354A7A6424E000854B7423F1ECD98B7 size: 419430400
+[1124/004245.344585] [INFO:delta_performer.cc(267)] PartitionInfo new pvmfw sha256: 5DDEA688A095873864AA368E828044632FF1992A4072A1BCDBDCD652D36C62E3 size: 1048576
+[1124/004245.345927] [INFO:delta_performer.cc(267)] PartitionInfo new qupfw sha256: 8B0FED5DC50B79D5B8356A8E3CA8655780A05A7D4989174CFE1E0FCF1801FF99 size: 65536
+[1124/004245.347593] [INFO:delta_performer.cc(267)] PartitionInfo new qweslicstore sha256: C3F058D004BFDEC9E1BBF6455BD8BCD212839F05DC5AED497BD9EE190AD3E226 size: 266240
+[1124/004245.349109] [INFO:delta_performer.cc(267)] PartitionInfo new soccp_debug sha256: E61C384CEA5FEE2573D4876F69ACD06705A38E55146406457287B6BA3135942C size: 147456
+[1124/004245.350207] [INFO:delta_performer.cc(267)] PartitionInfo new shrm sha256: 9C6750CDB951CE6084736B2DAB47EAA923D8659BB547AABC6BA7C7179181E3FE size: 147456
+[1124/004245.351124] [INFO:delta_performer.cc(267)] PartitionInfo new storsec sha256: FCCCC7E46E0FB9733941E23CCA054A252A788B1284B9FDAB4E4FD93B8C9897C6 size: 36864
+[1124/004245.352193] [INFO:delta_performer.cc(267)] PartitionInfo new tz sha256: 22B0473E7C4508C0E158A7D005BEB29047C996C90507FA96DDBFC3A8E8CDA724 size: 4161536
+[1124/004245.353356] [INFO:delta_performer.cc(267)] PartitionInfo new hdm sha256: 84D682619EB896328A45E8F87D3D86E84E8977DA30B974603F317A689943653F size: 1564672
+[1124/004245.354260] [INFO:delta_performer.cc(267)] PartitionInfo new tziccc sha256: 8A412A774AF71D6F1BE00F16A7B0C665B32214F8F092E0C9B230257AC0CA6FAF size: 94208
+[1124/004245.355374] [INFO:delta_performer.cc(267)] PartitionInfo new tz_kg sha256: AE1D5E5DB6661A55C09F57EFF1B2E5778B9191FA6EC004D51E218F3BA1658564 size: 1699840
+[1124/004245.356563] [INFO:delta_performer.cc(267)] PartitionInfo new uefi sha256: CD40CD224BD09315C36C4CAB27342A10240EB3C46D72F7CD63A4A3CAFB654177 size: 2936832
+[1124/004245.357950] [INFO:delta_performer.cc(267)] PartitionInfo new uefisecapp sha256: 2094227C33F2905FF1107DB2B86417211F8EE50E91DDFC91741099B9195B78A5 size: 200704
+[1124/004245.359131] [INFO:delta_performer.cc(267)] PartitionInfo new vk sha256: 79DFC5DE1D4EC44E7D2E64C55EB7F73C92E97F462251F09E536DC9ACBB5F4744 size: 1388544
+[1124/004245.360490] [INFO:delta_performer.cc(267)] PartitionInfo new vbmeta sha256: 862B62CFD2D157934280BA1988A713E8DB4D2542E2B1FAAB701C266516CF2AAF size: 12288
+[1124/004245.361463] [INFO:delta_performer.cc(267)] PartitionInfo new vbmeta_system sha256: 837BAE7F20E8C70C338B2FA27AC9697550420EA87C42EEC092D9B4893C2C5705 size: 8192
+[1124/004245.362395] [INFO:delta_performer.cc(267)] PartitionInfo new vendor_boot sha256: B361C81D650CB15BE0DA07C3D54F3C3A11E8DFE110A550B039ADD408C3E51C2A size: 134217728
+[1124/004245.363523] [INFO:delta_performer.cc(267)] PartitionInfo new vm-bootsys sha256: 1DA092293138CB80F37AD21C905F4696B8E14199AED4F54F7C7E69CF1614E50B size: 284999680
+[1124/004245.364556] [INFO:delta_performer.cc(267)] PartitionInfo new xbl_config sha256: BB64D17B9C5B83A9A6A349CBF8F3E860E71EB4CADFDE5737875A5E89AC2D0836 size: 348160
+[1124/004245.365644] [INFO:delta_performer.cc(267)] PartitionInfo new xbl sha256: 71197084C9EE6376A48BBEF3E1C753FA9E2145CB3C91D8CF6A2347F10295D8BD size: 1179648
+[1124/004245.375658] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.376786] [INFO:partition_writer_factory_android.cc(36)] Virtual AB Compression Enabled, using VABC Partition Writer for `system`
+[1124/004245.568175] [INFO:vabc_partition_writer.cc(96)] Partition `system` has 1973556 copy blocks
+[1124/004245.574417] [INFO:vabc_partition_writer.cc(214)] Device supports Virtual AB compression with XOR, but OTA package does not.
+[1124/004245.577442] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004245.579115] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_a
+[1124/004245.601424] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_a-base on device /dev/block/dm-23
+[1124/004245.624161] [INFO:snapshot.cpp(2963)] Mapped COW device for system_a at /dev/block/dm-24
+[1124/004245.626363] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-24 has size 511139840
+[1124/004245.627596] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004245.628894] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004245.634975] [INFO:vabc_partition_writer.cc(262)] Snapuserd supports XOR and merge sequence, writing merge sequence and delay writing COPY operations
+[1124/004246.119358] [INFO:delta_performer.cc(715)] Starting to apply update payload operations
+[1124/004253.562573] [INFO:delta_performer.cc(108)] Completed 2886/24042 operations (12%), 46798080/562876392 bytes downloaded (8%), overall progress 10%
+[1124/004302.292154] [INFO:delta_performer.cc(108)] Completed 7694/24042 operations (32%), 52991232/562876392 bytes downloaded (9%), overall progress 20%
+[1124/004307.078550] [INFO:delta_performer.cc(108)] Completed 12502/24042 operations (52%), 53892352/562876392 bytes downloaded (9%), overall progress 30%
+[1124/004316.099245] [INFO:delta_performer.cc(108)] Completed 16349/24042 operations (68%), 72127744/562876392 bytes downloaded (12%), overall progress 40%
+[1124/004337.973019] [INFO:delta_performer.cc(108)] Completed 17859/24042 operations (74%), 146353536/562876392 bytes downloaded (26%), overall progress 50%
+[1124/004357.997337] [INFO:vabc_partition_writer.cc(416)] Finalizing system COW image
+[1124/004358.300686] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004358.302886] [INFO:partition_writer_factory_android.cc(36)] Virtual AB Compression Enabled, using VABC Partition Writer for `odm`
+[1124/004358.304170] [INFO:vabc_partition_writer.cc(96)] Partition `odm` has 244 copy blocks
+[1124/004358.305433] [INFO:vabc_partition_writer.cc(214)] Device supports Virtual AB compression with XOR, but OTA package does not.
+[1124/004358.341735] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004358.344466] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot odm_a
+[1124/004358.368529] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition odm_a-base on device /dev/block/dm-25
+[1124/004358.391980] [INFO:snapshot.cpp(2963)] Mapped COW device for odm_a at /dev/block/dm-38
+[1124/004358.395260] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-38 has size 4239360
+[1124/004358.396507] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004358.402588] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004358.408445] [INFO:vabc_partition_writer.cc(262)] Snapuserd supports XOR and merge sequence, writing merge sequence and delay writing COPY operations
+[1124/004358.609703] [INFO:vabc_partition_writer.cc(416)] Finalizing odm COW image
+[1124/004358.613695] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004358.614945] [INFO:partition_writer_factory_android.cc(36)] Virtual AB Compression Enabled, using VABC Partition Writer for `product`
+[1124/004358.616671] [INFO:vabc_partition_writer.cc(96)] Partition `product` has 335603 copy blocks
+[1124/004358.617730] [INFO:vabc_partition_writer.cc(214)] Device supports Virtual AB compression with XOR, but OTA package does not.
+[1124/004358.619528] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004358.620754] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot product_a
+[1124/004358.643309] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition product_a-base on device /dev/block/dm-41
+[1124/004358.665790] [INFO:snapshot.cpp(2963)] Mapped COW device for product_a at /dev/block/dm-47
+[1124/004358.669328] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-47 has size 27521024
+[1124/004358.670558] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004358.671924] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004358.678772] [INFO:vabc_partition_writer.cc(262)] Snapuserd supports XOR and merge sequence, writing merge sequence and delay writing COPY operations
+[1124/004402.398516] [INFO:vabc_partition_writer.cc(416)] Finalizing product COW image
+[1124/004402.563676] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004402.565910] [INFO:partition_writer_factory_android.cc(36)] Virtual AB Compression Enabled, using VABC Partition Writer for `system_dlkm`
+[1124/004402.567755] [INFO:vabc_partition_writer.cc(96)] Partition `system_dlkm` has 547 copy blocks
+[1124/004402.568904] [INFO:vabc_partition_writer.cc(214)] Device supports Virtual AB compression with XOR, but OTA package does not.
+[1124/004402.570767] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004402.572009] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_dlkm_a
+[1124/004402.594353] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_dlkm_a-base on device /dev/block/dm-48
+[1124/004402.617152] [INFO:snapshot.cpp(2963)] Mapped COW device for system_dlkm_a at /dev/block/dm-50
+[1124/004402.619401] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-50 has size 9326592
+[1124/004402.620960] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004402.621958] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004402.627398] [INFO:vabc_partition_writer.cc(262)] Snapuserd supports XOR and merge sequence, writing merge sequence and delay writing COPY operations
+[1124/004402.899709] [INFO:delta_performer.cc(108)] Completed 18997/24042 operations (79%), 236414656/562876392 bytes downloaded (42%), overall progress 60%
+[1124/004403.302381] [INFO:vabc_partition_writer.cc(416)] Finalizing system_dlkm COW image
+[1124/004403.306639] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004403.308071] [INFO:partition_writer_factory_android.cc(36)] Virtual AB Compression Enabled, using VABC Partition Writer for `system_ext`
+[1124/004403.309386] [INFO:vabc_partition_writer.cc(96)] Partition `system_ext` has 19685 copy blocks
+[1124/004403.310426] [INFO:vabc_partition_writer.cc(214)] Device supports Virtual AB compression with XOR, but OTA package does not.
+[1124/004403.312327] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004403.313943] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_ext_a
+[1124/004403.336782] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_ext_a-base on device /dev/block/dm-51
+[1124/004403.360477] [INFO:snapshot.cpp(2963)] Mapped COW device for system_ext_a at /dev/block/dm-53
+[1124/004403.362990] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-53 has size 73682944
+[1124/004403.364227] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004403.365301] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004403.371786] [INFO:vabc_partition_writer.cc(262)] Snapuserd supports XOR and merge sequence, writing merge sequence and delay writing COPY operations
+[1124/004407.907128] [INFO:vabc_partition_writer.cc(416)] Finalizing system_ext COW image
+[1124/004407.949578] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004407.953133] [INFO:partition_writer_factory_android.cc(36)] Virtual AB Compression Enabled, using VABC Partition Writer for `vendor`
+[1124/004408.222010] [INFO:vabc_partition_writer.cc(96)] Partition `vendor` has 901883 copy blocks
+[1124/004408.231431] [INFO:vabc_partition_writer.cc(214)] Device supports Virtual AB compression with XOR, but OTA package does not.
+[1124/004408.237984] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004408.239595] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_a
+[1124/004408.262365] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_a-base on device /dev/block/dm-54
+[1124/004408.286627] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_a at /dev/block/dm-55
+[1124/004408.289418] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-55 has size 100798464
+[1124/004408.290746] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004408.292036] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004408.298661] [INFO:vabc_partition_writer.cc(262)] Snapuserd supports XOR and merge sequence, writing merge sequence and delay writing COPY operations
+[1124/004417.900765] [INFO:delta_performer.cc(108)] Completed 22604/24042 operations (94%), 258929472/562876392 bytes downloaded (46%), overall progress 70%
+[1124/004426.926919] [INFO:vabc_partition_writer.cc(416)] Finalizing vendor COW image
+[1124/004427.194857] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004427.199320] [INFO:partition_writer_factory_android.cc(36)] Virtual AB Compression Enabled, using VABC Partition Writer for `vendor_dlkm`
+[1124/004427.200694] [INFO:vabc_partition_writer.cc(96)] Partition `vendor_dlkm` has 6358 copy blocks
+[1124/004427.201868] [INFO:vabc_partition_writer.cc(214)] Device supports Virtual AB compression with XOR, but OTA package does not.
+[1124/004427.203752] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004427.205507] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_dlkm_a
+[1124/004427.228164] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_dlkm_a-base on device /dev/block/dm-56
+[1124/004427.250994] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_dlkm_a at /dev/block/dm-61
+[1124/004427.253809] [INFO:writer_base.cpp(83)] COW image /dev/block/dm-61 has size 6651904
+[1124/004427.255198] [INFO:writer_v3.cpp(180)] Batch writes: enabled with batch size 1024
+[1124/004427.257103] [INFO:writer_v3.cpp(73)] Not creating new threads for compression.
+[1124/004427.262779] [INFO:vabc_partition_writer.cc(262)] Snapuserd supports XOR and merge sequence, writing merge sequence and delay writing COPY operations
+[1124/004428.183916] [INFO:vabc_partition_writer.cc(416)] Finalizing vendor_dlkm COW image
+[1124/004428.191755] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004428.193426] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `apnhlos`
+[1124/004428.195643] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/apnhlos_a partition without O_DSYNC
+[1124/004428.197111] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004428.198223] [INFO:partition_writer.cc(176)] Applying 60 operations to partition "apnhlos"
+[1124/004437.670834] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004437.677572] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `xbl_ramdump`
+[1124/004437.678973] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/xbl_ramdump_a partition without O_DSYNC
+[1124/004437.680673] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004437.681819] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "xbl_ramdump"
+[1124/004437.766503] [INFO:delta_performer.cc(108)] Completed 23391/24042 operations (97%), 360244032/562876392 bytes downloaded (64%), overall progress 80%
+[1124/004437.841873] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004437.845891] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `abl`
+[1124/004437.847146] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/abl_a partition without O_DSYNC
+[1124/004437.848718] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004437.849745] [INFO:partition_writer.cc(176)] Applying 2 operations to partition "abl"
+[1124/004437.962753] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004437.965195] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `aop`
+[1124/004437.966219] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/aop_a partition without O_DSYNC
+[1124/004437.967599] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004437.968683] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "aop"
+[1124/004438.065170] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004438.067773] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `aop_config`
+[1124/004438.069002] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/aop_config_a partition without O_DSYNC
+[1124/004438.070317] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004438.071395] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "aop_config"
+[1124/004438.146197] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004438.147597] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `bksecapp`
+[1124/004438.148629] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/bksecapp_a partition without O_DSYNC
+[1124/004438.149930] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004438.151011] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "bksecapp"
+[1124/004438.233486] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004438.235024] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `boot`
+[1124/004438.236036] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/boot_a partition without O_DSYNC
+[1124/004438.237535] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004438.238553] [INFO:partition_writer.cc(176)] Applying 49 operations to partition "boot"
+[1124/004440.231800] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004440.233579] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `cpucp`
+[1124/004440.234636] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/cpucp_a partition without O_DSYNC
+[1124/004440.236054] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004440.237128] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "cpucp"
+[1124/004440.335860] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004440.338472] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `cpucp_dtb`
+[1124/004440.339559] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/cpucp_dtb_a partition without O_DSYNC
+[1124/004440.340861] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004440.341845] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "cpucp_dtb"
+[1124/004440.416792] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004440.418113] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `soccp_dcd`
+[1124/004440.419255] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/soccp_dcd_a partition without O_DSYNC
+[1124/004440.420715] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004440.421755] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "soccp_dcd"
+[1124/004440.508063] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004440.509413] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `devcfg`
+[1124/004440.512318] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/devcfg_a partition without O_DSYNC
+[1124/004440.513971] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004440.515051] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "devcfg"
+[1124/004440.688544] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004440.689730] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `dsp`
+[1124/004440.690836] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/dsp_a partition without O_DSYNC
+[1124/004440.692195] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004440.693230] [INFO:partition_writer.cc(176)] Applying 32 operations to partition "dsp"
+[1124/004445.736629] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004445.739398] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `dtbo`
+[1124/004445.740705] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/dtbo_a partition without O_DSYNC
+[1124/004445.742299] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004445.744817] [INFO:partition_writer.cc(176)] Applying 10 operations to partition "dtbo"
+[1124/004445.948821] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004445.950183] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `em`
+[1124/004445.951256] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/em_a partition without O_DSYNC
+[1124/004445.952971] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004445.954238] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "em"
+[1124/004446.090270] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004446.094256] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `hyp`
+[1124/004446.095374] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/hyp_a partition without O_DSYNC
+[1124/004446.096779] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004446.098058] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "hyp"
+[1124/004446.337855] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004446.339053] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `imagefv`
+[1124/004446.340188] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/imagefv_a partition without O_DSYNC
+[1124/004446.341589] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004446.342628] [INFO:partition_writer.cc(176)] Applying 5 operations to partition "imagefv"
+[1124/004446.810027] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004446.812373] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `init_boot`
+[1124/004446.813783] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/init_boot_a partition without O_DSYNC
+[1124/004446.815206] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004446.816460] [INFO:partition_writer.cc(176)] Applying 4 operations to partition "init_boot"
+[1124/004447.430594] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004447.432606] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `keymaster`
+[1124/004447.435166] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/keymaster_a partition without O_DSYNC
+[1124/004447.439459] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004447.447830] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "keymaster"
+[1124/004447.542451] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004447.553351] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `modem`
+[1124/004447.554693] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/modem_a partition without O_DSYNC
+[1124/004447.556109] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004447.557221] [INFO:partition_writer.cc(176)] Applying 47 operations to partition "modem"
+[1124/004506.191012] [INFO:delta_performer.cc(108)] Completed 23541/24042 operations (97%), 472823488/562876392 bytes downloaded (84%), overall progress 90%
+[1124/004510.148612] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004510.151455] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `optics`
+[1124/004510.152481] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/optics_a partition without O_DSYNC
+[1124/004510.154105] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004510.155237] [INFO:partition_writer.cc(176)] Applying 10 operations to partition "optics"
+[1124/004510.358549] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004510.359678] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `pdp`
+[1124/004510.360833] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/pdp_a partition without O_DSYNC
+[1124/004510.362173] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004510.363165] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "pdp"
+[1124/004510.446694] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004510.449499] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `pdp_cdb`
+[1124/004510.450630] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/pdp_cdb_a partition without O_DSYNC
+[1124/004510.452149] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004510.453515] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "pdp_cdb"
+[1124/004510.529022] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004510.530438] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `prism`
+[1124/004510.531817] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/prism_a partition without O_DSYNC
+[1124/004510.533382] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004510.534540] [INFO:partition_writer.cc(176)] Applying 260 operations to partition "prism"
+[1124/004511.690869] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004511.694436] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `pvmfw`
+[1124/004511.695623] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/pvmfw_a partition without O_DSYNC
+[1124/004511.697362] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004511.698578] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "pvmfw"
+[1124/004511.813896] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004511.815221] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `qupfw`
+[1124/004511.816357] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/qupfw_a partition without O_DSYNC
+[1124/004511.817840] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004511.819764] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "qupfw"
+[1124/004511.904162] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004511.905510] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `qweslicstore`
+[1124/004511.906733] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/qweslicstore_a partition without O_DSYNC
+[1124/004511.908096] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004511.909306] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "qweslicstore"
+[1124/004511.984527] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004511.985667] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `soccp_debug`
+[1124/004511.986692] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/soccp_debug_a partition without O_DSYNC
+[1124/004511.988149] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004511.989186] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "soccp_debug"
+[1124/004512.067264] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004512.068812] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `shrm`
+[1124/004512.069916] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/shrm_a partition without O_DSYNC
+[1124/004512.071528] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004512.072600] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "shrm"
+[1124/004512.162800] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004512.165205] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `storsec`
+[1124/004512.166350] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/storsec_a partition without O_DSYNC
+[1124/004512.167850] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004512.168928] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "storsec"
+[1124/004512.239557] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004512.241854] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `tz`
+[1124/004512.242862] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/tz_a partition without O_DSYNC
+[1124/004512.244298] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004512.245374] [INFO:partition_writer.cc(176)] Applying 2 operations to partition "tz"
+[1124/004512.557107] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004512.563689] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `hdm`
+[1124/004512.565024] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/hdm_a partition without O_DSYNC
+[1124/004512.566552] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004512.567664] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "hdm"
+[1124/004512.700985] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004512.715439] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `tziccc`
+[1124/004512.716850] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/tziccc_a partition without O_DSYNC
+[1124/004512.718419] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004512.719549] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "tziccc"
+[1124/004512.802745] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004512.804354] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `tz_kg`
+[1124/004512.805557] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/tz_kg_a partition without O_DSYNC
+[1124/004512.807113] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004512.808240] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "tz_kg"
+[1124/004512.956010] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004512.960783] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `uefi`
+[1124/004512.963667] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/uefi_a partition without O_DSYNC
+[1124/004512.965359] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004512.967542] [INFO:partition_writer.cc(176)] Applying 2 operations to partition "uefi"
+[1124/004513.125908] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004513.130916] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `uefisecapp`
+[1124/004513.137092] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/uefisecapp_a partition without O_DSYNC
+[1124/004513.138906] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004513.140662] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "uefisecapp"
+[1124/004513.237687] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004513.245115] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `vk`
+[1124/004513.246308] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/vk_a partition without O_DSYNC
+[1124/004513.248074] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004513.249448] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "vk"
+[1124/004513.491802] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004513.492947] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `vbmeta`
+[1124/004513.494160] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/vbmeta_a partition without O_DSYNC
+[1124/004513.495471] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004513.496577] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "vbmeta"
+[1124/004513.580769] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004513.581986] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `vbmeta_system`
+[1124/004513.583147] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/vbmeta_system_a partition without O_DSYNC
+[1124/004513.584775] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004513.586077] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "vbmeta_system"
+[1124/004513.664083] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004513.665406] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `vendor_boot`
+[1124/004513.666594] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/vendor_boot_a partition without O_DSYNC
+[1124/004513.668134] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004513.669479] [INFO:partition_writer.cc(176)] Applying 64 operations to partition "vendor_boot"
+[1124/004520.397040] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004520.400289] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `vm-bootsys`
+[1124/004520.401660] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/vm-bootsys_a partition without O_DSYNC
+[1124/004520.403086] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004520.404120] [INFO:partition_writer.cc(176)] Applying 136 operations to partition "vm-bootsys"
+[1124/004529.658986] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004529.661117] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `xbl_config`
+[1124/004529.662253] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/xbl_config_a partition without O_DSYNC
+[1124/004529.663640] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004529.664682] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "xbl_config"
+[1124/004529.749873] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004529.751624] [INFO:partition_writer_factory_android.cc(42)] Virtual AB Compression disabled, using Partition Writer for `xbl`
+[1124/004529.752955] [INFO:partition_writer.cc(164)] Opening /dev/block/by-name/xbl_a partition without O_DSYNC
+[1124/004529.754960] [INFO:partition_writer.cc(98)] Caching writes.
+[1124/004529.756106] [INFO:partition_writer.cc(176)] Applying 1 operations to partition "xbl"
+[1124/004529.881936] [INFO:delta_performer.cc(108)] Completed 24042/24042 operations (100%), 562876392/562876392 bytes downloaded (100%), overall progress 100%
+[1124/004529.892624] [INFO:delta_performer.cc(1043)] Extracted signature data of size 267 at 531128772
+[1124/004529.971953] [INFO:multi_range_http_fetcher.cc(113)] Terminating transfer.
+[1124/004529.973168] [INFO:libcurl_http_fetcher.cc(608)] Requesting libcurl to terminate transfer.
+[1124/004529.977017] [INFO:multi_range_http_fetcher.cc(175)] Received transfer terminated.
+[1124/004529.978246] [INFO:multi_range_http_fetcher.cc(127)] TransferEnded w/ code 206
+[1124/004529.979348] [INFO:multi_range_http_fetcher.cc(161)] Done w/ all transfers
+[1124/004530.074031] [INFO:delta_performer.cc(1071)] Verifying using certificates: /system/etc/security/otacerts.zip
+[1124/004530.077681] [INFO:payload_verifier.cc(101)] signature blob size = 267
+[1124/004530.079523] [INFO:payload_verifier.cc(117)] Truncating the signature to its unpadded size: 256.
+[1124/004530.081726] [INFO:payload_verifier.cc(128)] Verified correct signature 1 out of 1 signatures.
+[1124/004530.082947] [INFO:delta_performer.cc(1373)] Payload hash matches value in payload.
+[1124/004530.085188] [INFO:download_action.cc(264)] Collections of histograms for UpdateEngine.DownloadAction.
+Histogram: UpdateEngine.DownloadAction.InstallOperation::BROTLI_BSDIFF.Duration recorded 5378 samples, mean = 3.2
+0     ------------------------------------------------------------------------O (5155 = 95.9%)
+10    -O                                                                        (85 = 1.6%) {95.9%}
+18    -O                                                                        (64 = 1.2%) {97.4%}
+32    -O                                                                        (40 = 0.7%) {98.6%}
+57    O                                                                         (17 = 0.3%) {99.4%}
+101   O                                                                         (7 = 0.1%) {99.7%}
+179   O                                                                         (5 = 0.1%) {99.8%}
+317   O                                                                         (4 = 0.1%) {99.9%}
+561   ... 
+1758  O                                                                         (1 = 0.0%) {100.0%}
+3112  ... 
+
+Histogram: UpdateEngine.DownloadAction.InstallOperation::REPLACE.Duration recorded 517 samples, mean = 31.7
+0    ------------------------------------------------------------------------O (257 = 49.7%)
+10   --------------O                                                           (50 = 9.7%) {49.7%}
+18   --------O                                                                 (29 = 5.6%) {59.4%}
+32   ----------------O                                                         (57 = 11.0%) {65.0%}
+57   ----------------------O                                                   (79 = 15.3%) {76.0%}
+101  -----------O                                                              (41 = 7.9%) {91.3%}
+179  -O                                                                        (4 = 0.8%) {99.2%}
+317  ... 
+
+Histogram: UpdateEngine.DownloadAction.InstallOperation::SOURCE_COPY.Duration recorded 13384 samples, mean = 1.6
+0   ------------------------------------------------------------------------O (13361 = 99.8%)
+10  O                                                                         (21 = 0.2%) {99.8%}
+18  O                                                                         (2 = 0.0%) {100.0%}
+32  ... 
+
+Histogram: UpdateEngine.DownloadAction.InstallOperation::ZERO_OR_DISCARD.Duration recorded 4763 samples, mean = 0.1
+0   ------------------------------------------------------------------------O (4760 = 99.9%)
+10  O                                                                         (2 = 0.0%) {99.9%}
+18  O                                                                         (1 = 0.0%) {100.0%}
+32  ... 
+
+
+[1124/004531.168868] [INFO:action_processor.cc(116)] ActionProcessor: finished DownloadAction with code ErrorCode::kSuccess
+[1124/004531.171748] [INFO:action_processor.cc(143)] ActionProcessor: starting FilesystemVerifierAction
+[1124/004531.174075] [INFO:install_plan.cc(79)] InstallPlan: 
+type: new_update
+version: 
+source_slot: B
+target_slot: A
+hash_checks_mandatory: true
+powerwash_required: false
+switch_slot_on_reboot: false
+run_post_install: true
+write_verity: false
+Partition: system
+  source_size: 8672518144
+  source_path: /dev/block/dm-7
+  source_hash: 8845F7AD7EE6E716F970A37BF06BC9B8CE04A103AE0DB00EBE58B2938310C8AC
+  target_size: 8672464896
+  target_path: 
+  target_hash: 2C6C5796AFBBEFBE511692245674E6361922461DB0EBA1F6BDF0FC276344850C
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/mapper/system_a
+  filesystem_type: 
+Partition: odm
+  source_size: 1105920
+  source_path: /dev/block/dm-8
+  source_hash: E65F69A9F728FE8F71AF1D16EE450AE6BDA3892C4E72CA5A26CBAC32A659CAB4
+  target_size: 1105920
+  target_path: 
+  target_hash: 9C8E491DA2183C0F34792983C1E265F9F0C97E1D8B83EB93B595C9CFB8731239
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/mapper/odm_a
+  filesystem_type: 
+Partition: product
+  source_size: 1399271424
+  source_path: /dev/block/dm-9
+  source_hash: B894F11ADD43FDC1746735BAAB5D70992527445C387D046AF8054556C1D8F5A5
+  target_size: 1399271424
+  target_path: 
+  target_hash: 39E2B98916263A31D0F093DF468F6F625533FA6F1543E59D8D3C7675ACC7246C
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/mapper/product_a
+  filesystem_type: 
+Partition: system_dlkm
+  source_size: 7581696
+  source_path: /dev/block/dm-10
+  source_hash: 991754A6D6F534844DD54D5770A47BEFF5C4BEAD6C8609B3C0FBA0E19B4E8E16
+  target_size: 7589888
+  target_path: 
+  target_hash: FD22F2BFA616DFDC08C0E10B2892C2C451DC8263546488BCB99A7A558BA87690
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/mapper/system_dlkm_a
+  filesystem_type: 
+Partition: system_ext
+  source_size: 152956928
+  source_path: /dev/block/dm-11
+  source_hash: 53C09BF6F7BD0F175A6FB48538F7C90AC424FA435412C92422481ACEEA6F22C7
+  target_size: 152965120
+  target_path: 
+  target_hash: 831331FC4E6A164747D62B4940E3BB104A16161801F4427EFCA16CBD95F69D46
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/mapper/system_ext_a
+  filesystem_type: 
+Partition: vendor
+  source_size: 3780194304
+  source_path: /dev/block/dm-12
+  source_hash: 32792BDD17133B19E5D57BCF30918F8DC079B98F710AB5A3ADACA55A99EB97D2
+  target_size: 3780198400
+  target_path: 
+  target_hash: 5D103958DD2E687E7B0A2EF1BD4EC9D1B6701DF7F0518A27C7AFA29FA6D37D00
+  run_postinstall: true
+  postinstall_path: bin/checkpoint_gc
+  readonly_target_path: /dev/block/mapper/vendor_a
+  filesystem_type: erofs
+Partition: vendor_dlkm
+  source_size: 28631040
+  source_path: /dev/block/dm-13
+  source_hash: 56EEF1B50DEDAFDDE163F649FE5180BEA2F91BD92E8A57F13003BDA5DCBB2D50
+  target_size: 28631040
+  target_path: 
+  target_hash: A041344A091993C263C5FE18F7D155209E02D4B42503D3919839FF11877F4318
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/mapper/vendor_dlkm_a
+  filesystem_type: 
+Partition: apnhlos
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 125796352
+  target_path: /dev/block/by-name/apnhlos_a
+  target_hash: 02F1E971973ED77085A5D5F091D5341B5B1B4C0690C075A201AFC2143AF1DEFE
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/apnhlos_a
+  filesystem_type: 
+Partition: xbl_ramdump
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 1740800
+  target_path: /dev/block/by-name/xbl_ramdump_a
+  target_hash: 632DBA0A142CBFD82612EEE708B5C7520094F782359157F6AE600564B2F183AF
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/xbl_ramdump_a
+  filesystem_type: 
+Partition: abl
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 2473984
+  target_path: /dev/block/by-name/abl_a
+  target_hash: 180B70C7C44FBF15EA306D594958EA300E89CB211C16A99F02B7E5E2BEBB4BBA
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/abl_a
+  filesystem_type: 
+Partition: aop
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 372736
+  target_path: /dev/block/by-name/aop_a
+  target_hash: C98C9F26CE3EE64135F2B8B96F7D704749C09DB327EE04FD4FA0E6531E191C37
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/aop_a
+  filesystem_type: 
+Partition: aop_config
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 32768
+  target_path: /dev/block/by-name/aop_config_a
+  target_hash: 8557E6750EB5F2F1BCE5D6858AFD75A8386DDFC4C66842D7E97A7E23F5DB77BF
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/aop_config_a
+  filesystem_type: 
+Partition: bksecapp
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 73728
+  target_path: /dev/block/by-name/bksecapp_a
+  target_hash: B01DB4B9174A59F432354D5C5DC80600FDB50A5561156C956D004069D2DD34A5
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/bksecapp_a
+  filesystem_type: 
+Partition: boot
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 101122048
+  target_path: /dev/block/by-name/boot_a
+  target_hash: 811A1BF6DDFD6B69A166654BAEFBBCA5D86BC1F26CBE3A9FC22794DFA90CF7D4
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/boot_a
+  filesystem_type: 
+Partition: cpucp
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 319488
+  target_path: /dev/block/by-name/cpucp_a
+  target_hash: 868A36E1F84174CB539B2DDA72A30D807C7D370DB103C4F91D31FC332142C28F
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/cpucp_a
+  filesystem_type: 
+Partition: cpucp_dtb
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 16384
+  target_path: /dev/block/by-name/cpucp_dtb_a
+  target_hash: 2B989972B7A6BA54A02ED0B85DF850EAB53B22AA8D81E1404118D141C385F526
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/cpucp_dtb_a
+  filesystem_type: 
+Partition: soccp_dcd
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 20480
+  target_path: /dev/block/by-name/soccp_dcd_a
+  target_hash: B8698C6842C252B7CD1DE7A3546F7CDE7A5B5DA56694F5C98441779C31F0E4F5
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/soccp_dcd_a
+  filesystem_type: 
+Partition: devcfg
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 389120
+  target_path: /dev/block/by-name/devcfg_a
+  target_hash: 3E73FFFB254FAFEEBE13BA05B0293E9CA19F32CC6C44481B8D2AC8223355D3F2
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/devcfg_a
+  filesystem_type: 
+Partition: dsp
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 67108864
+  target_path: /dev/block/by-name/dsp_a
+  target_hash: 94789F3AF49A48F60B9E0830509AEAC4755E2BE975C0CD55E9BFC5E69CD555CF
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/dsp_a
+  filesystem_type: 
+Partition: dtbo
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 20971520
+  target_path: /dev/block/by-name/dtbo_a
+  target_hash: C640CAAF21062D9071FF76D1F4B3F480B9F2AB74136F33EDBBB0852153C45632
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/dtbo_a
+  filesystem_type: 
+Partition: em
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 1560576
+  target_path: /dev/block/by-name/em_a
+  target_hash: 4DACB81D2083D01DA759CC4BD2F4BC824EB05EFA98759E1EB12F63AF5BAA4BC8
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/em_a
+  filesystem_type: 
+Partition: hyp
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 1548288
+  target_path: /dev/block/by-name/hyp_a
+  target_hash: EBE35F252A4F4F35994F255E6FC5FDAC240332FF5D9ACC6E81E7FABF066C3B31
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/hyp_a
+  filesystem_type: 
+Partition: imagefv
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 8400896
+  target_path: /dev/block/by-name/imagefv_a
+  target_hash: F518CCED95753D93C6219D94EC50FF00354EAA68AB087F3E189F5D8992E66C65
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/imagefv_a
+  filesystem_type: 
+Partition: init_boot
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 8388608
+  target_path: /dev/block/by-name/init_boot_a
+  target_hash: 0FBFB9D6A611862709F1E67F8C0C38E99289B5658B93301390A7AB28982137F7
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/init_boot_a
+  filesystem_type: 
+Partition: keymaster
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 458752
+  target_path: /dev/block/by-name/keymaster_a
+  target_hash: 37B48443C4D16B627418E87D08BDF7704C2EC5904BC421E82539E2FE418386AF
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/keymaster_a
+  filesystem_type: 
+Partition: modem
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 96632832
+  target_path: /dev/block/by-name/modem_a
+  target_hash: AAAEB9C0F77988B3A872698831BAD04BB0641ADD26A32D2AD23427A7F61938E4
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/modem_a
+  filesystem_type: 
+Partition: optics
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 20971520
+  target_path: /dev/block/by-name/optics_a
+  target_hash: 2C07DAE6467E0204C03BD0D3BA7BC89BEA22B8C96867E9D335594FF859ABAB7B
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/optics_a
+  filesystem_type: 
+Partition: pdp
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 212992
+  target_path: /dev/block/by-name/pdp_a
+  target_hash: 81556228C44D4DDBA1E611B49DB05E5364DFBB188310F58A83066A97C1DE65BE
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/pdp_a
+  filesystem_type: 
+Partition: pdp_cdb
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 16384
+  target_path: /dev/block/by-name/pdp_cdb_a
+  target_hash: 6CB018B21183D5B60AC400918EAD1FF5F11FE985395D3E28A15071E8B8F96BA9
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/pdp_cdb_a
+  filesystem_type: 
+Partition: prism
+  source_size: 419430400
+  source_path: /dev/block/by-name/prism_b
+  source_hash: 11CCF6E4D6DE0D380F69C3BF409A920C7B9607032FB84C6F10770545D68CC1EA
+  target_size: 419430400
+  target_path: /dev/block/by-name/prism_a
+  target_hash: 2A55375BE55D2B13DC0D6AA555ECE4118354A7A6424E000854B7423F1ECD98B7
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/prism_a
+  filesystem_type: 
+Partition: pvmfw
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 1048576
+  target_path: /dev/block/by-name/pvmfw_a
+  target_hash: 5DDEA688A095873864AA368E828044632FF1992A4072A1BCDBDCD652D36C62E3
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/pvmfw_a
+  filesystem_type: 
+Partition: qupfw
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 65536
+  target_path: /dev/block/by-name/qupfw_a
+  target_hash: 8B0FED5DC50B79D5B8356A8E3CA8655780A05A7D4989174CFE1E0FCF1801FF99
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/qupfw_a
+  filesystem_type: 
+Partition: qweslicstore
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 266240
+  target_path: /dev/block/by-name/qweslicstore_a
+  target_hash: C3F058D004BFDEC9E1BBF6455BD8BCD212839F05DC5AED497BD9EE190AD3E226
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/qweslicstore_a
+  filesystem_type: 
+Partition: soccp_debug
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 147456
+  target_path: /dev/block/by-name/soccp_debug_a
+  target_hash: E61C384CEA5FEE2573D4876F69ACD06705A38E55146406457287B6BA3135942C
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/soccp_debug_a
+  filesystem_type: 
+Partition: shrm
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 147456
+  target_path: /dev/block/by-name/shrm_a
+  target_hash: 9C6750CDB951CE6084736B2DAB47EAA923D8659BB547AABC6BA7C7179181E3FE
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/shrm_a
+  filesystem_type: 
+Partition: storsec
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 36864
+  target_path: /dev/block/by-name/storsec_a
+  target_hash: FCCCC7E46E0FB9733941E23CCA054A252A788B1284B9FDAB4E4FD93B8C9897C6
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/storsec_a
+  filesystem_type: 
+Partition: tz
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 4161536
+  target_path: /dev/block/by-name/tz_a
+  target_hash: 22B0473E7C4508C0E158A7D005BEB29047C996C90507FA96DDBFC3A8E8CDA724
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/tz_a
+  filesystem_type: 
+Partition: hdm
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 1564672
+  target_path: /dev/block/by-name/hdm_a
+  target_hash: 84D682619EB896328A45E8F87D3D86E84E8977DA30B974603F317A689943653F
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/hdm_a
+  filesystem_type: 
+Partition: tziccc
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 94208
+  target_path: /dev/block/by-name/tziccc_a
+  target_hash: 8A412A774AF71D6F1BE00F16A7B0C665B32214F8F092E0C9B230257AC0CA6FAF
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/tziccc_a
+  filesystem_type: 
+Partition: tz_kg
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 1699840
+  target_path: /dev/block/by-name/tz_kg_a
+  target_hash: AE1D5E5DB6661A55C09F57EFF1B2E5778B9191FA6EC004D51E218F3BA1658564
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/tz_kg_a
+  filesystem_type: 
+Partition: uefi
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 2936832
+  target_path: /dev/block/by-name/uefi_a
+  target_hash: CD40CD224BD09315C36C4CAB27342A10240EB3C46D72F7CD63A4A3CAFB654177
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/uefi_a
+  filesystem_type: 
+Partition: uefisecapp
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 200704
+  target_path: /dev/block/by-name/uefisecapp_a
+  target_hash: 2094227C33F2905FF1107DB2B86417211F8EE50E91DDFC91741099B9195B78A5
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/uefisecapp_a
+  filesystem_type: 
+Partition: vk
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 1388544
+  target_path: /dev/block/by-name/vk_a
+  target_hash: 79DFC5DE1D4EC44E7D2E64C55EB7F73C92E97F462251F09E536DC9ACBB5F4744
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/vk_a
+  filesystem_type: 
+Partition: vbmeta
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 12288
+  target_path: /dev/block/by-name/vbmeta_a
+  target_hash: 862B62CFD2D157934280BA1988A713E8DB4D2542E2B1FAAB701C266516CF2AAF
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/vbmeta_a
+  filesystem_type: 
+Partition: vbmeta_system
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 8192
+  target_path: /dev/block/by-name/vbmeta_system_a
+  target_hash: 837BAE7F20E8C70C338B2FA27AC9697550420EA87C42EEC092D9B4893C2C5705
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/vbmeta_system_a
+  filesystem_type: 
+Partition: vendor_boot
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 134217728
+  target_path: /dev/block/by-name/vendor_boot_a
+  target_hash: B361C81D650CB15BE0DA07C3D54F3C3A11E8DFE110A550B039ADD408C3E51C2A
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/vendor_boot_a
+  filesystem_type: 
+Partition: vm-bootsys
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 284999680
+  target_path: /dev/block/by-name/vm-bootsys_a
+  target_hash: 1DA092293138CB80F37AD21C905F4696B8E14199AED4F54F7C7E69CF1614E50B
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/vm-bootsys_a
+  filesystem_type: 
+Partition: xbl_config
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 348160
+  target_path: /dev/block/by-name/xbl_config_a
+  target_hash: BB64D17B9C5B83A9A6A349CBF8F3E860E71EB4CADFDE5737875A5E89AC2D0836
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/xbl_config_a
+  filesystem_type: 
+Partition: xbl
+  source_size: 0
+  source_path: 
+  source_hash: 
+  target_size: 1179648
+  target_path: /dev/block/by-name/xbl_a
+  target_hash: 71197084C9EE6376A48BBEF3E1C753FA9E2145CB3C91D8CF6A2347F10295D8BD
+  run_postinstall: false
+  postinstall_path: 
+  readonly_target_path: /dev/block/by-name/xbl_a
+  filesystem_type: 
+Payload: 0
+  size: 562876392
+  metadata_size: 31747086
+  metadata_signature: 
+  hash: 8C36F191D3C9C1CB37C6E03BE01BBE475B1864785BE8BB931560D9DB624B21FA
+  type: delta
+  fingerprint: 
+  app_id: 
+  already_applied: false
+[1124/004531.175733] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004531.177092] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004531.216665] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot product_a
+[1124/004531.240838] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition product_a-base on device /dev/block/dm-41
+[1124/004531.263988] [INFO:snapshot.cpp(2963)] Mapped COW device for product_a at /dev/block/dm-47
+[1124/004531.328816] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition product_a-src on device /dev/block/dm-63
+[1124/004531.376169] [INFO:snapshot.cpp(2859)] Mapped product_a as snapshot device at /dev/block/dm-64
+[1124/004531.416550] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_a
+[1124/004531.439715] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_a-base on device /dev/block/dm-23
+[1124/004531.462700] [INFO:snapshot.cpp(2963)] Mapped COW device for system_a at /dev/block/dm-24
+[1124/004531.485937] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_a-src on device /dev/block/dm-65
+[1124/004533.393462] [INFO:snapshot.cpp(2859)] Mapped system_a as snapshot device at /dev/block/dm-67
+[1124/004533.444738] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_dlkm_a
+[1124/004533.468522] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_dlkm_a-base on device /dev/block/dm-48
+[1124/004533.491705] [INFO:snapshot.cpp(2963)] Mapped COW device for system_dlkm_a at /dev/block/dm-50
+[1124/004533.514749] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_dlkm_a-src on device /dev/block/dm-68
+[1124/004533.542708] [INFO:snapshot.cpp(2859)] Mapped system_dlkm_a as snapshot device at /dev/block/dm-71
+[1124/004533.588782] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot odm_a
+[1124/004533.613372] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition odm_a-base on device /dev/block/dm-25
+[1124/004533.639014] [INFO:snapshot.cpp(2963)] Mapped COW device for odm_a at /dev/block/dm-38
+[1124/004533.665934] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition odm_a-src on device /dev/block/dm-72
+[1124/004533.694182] [INFO:snapshot.cpp(2859)] Mapped odm_a as snapshot device at /dev/block/dm-73
+[1124/004533.748867] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_dlkm_a
+[1124/004533.778155] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_dlkm_a-base on device /dev/block/dm-56
+[1124/004533.803570] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_dlkm_a at /dev/block/dm-61
+[1124/004533.828924] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_dlkm_a-src on device /dev/block/dm-74
+[1124/004533.856204] [INFO:snapshot.cpp(2859)] Mapped vendor_dlkm_a as snapshot device at /dev/block/dm-75
+[1124/004533.888825] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_ext_a
+[1124/004533.914965] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_ext_a-base on device /dev/block/dm-51
+[1124/004533.938888] [INFO:snapshot.cpp(2963)] Mapped COW device for system_ext_a at /dev/block/dm-53
+[1124/004533.965698] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_ext_a-src on device /dev/block/dm-76
+[1124/004533.995499] [INFO:snapshot.cpp(2859)] Mapped system_ext_a as snapshot device at /dev/block/dm-77
+[1124/004534.028760] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_a
+[1124/004534.053196] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_a-base on device /dev/block/dm-54
+[1124/004534.077359] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_a at /dev/block/dm-55
+[1124/004534.102916] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_a-src on device /dev/block/dm-78
+[1124/004534.828528] [INFO:snapshot.cpp(2859)] Mapped vendor_a as snapshot device at /dev/block/dm-79
+[1124/004534.832605] [INFO:snapshot.cpp(3108)] MapAllSnapshots succeeded.
+[1124/004534.835581] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004534.837490] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 0 (system) on device /dev/block/mapper/system_a
+[1124/004534.839534] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004534.841517] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition system
+[1124/004552.709010] [INFO:filesystem_verifier_action.cc(482)] Hash of system: 2C6C5796AFBBEFBE511692245674E6361922461DB0EBA1F6BDF0FC276344850C
+[1124/004553.046053] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004553.049912] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 1 (odm) on device /dev/block/mapper/odm_a
+[1124/004553.052206] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004553.053498] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition odm
+[1124/004553.057695] [INFO:filesystem_verifier_action.cc(482)] Hash of odm: 9C8E491DA2183C0F34792983C1E265F9F0C97E1D8B83EB93B595C9CFB8731239
+[1124/004553.059191] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004553.060378] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 2 (product) on device /dev/block/mapper/product_a
+[1124/004553.061647] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004553.062933] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition product
+[1124/004555.308488] [INFO:filesystem_verifier_action.cc(482)] Hash of product: 39E2B98916263A31D0F093DF468F6F625533FA6F1543E59D8D3C7675ACC7246C
+[1124/004555.467018] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004555.470863] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 3 (system_dlkm) on device /dev/block/mapper/system_dlkm_a
+[1124/004555.471935] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004555.473121] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition system_dlkm
+[1124/004555.496904] [INFO:filesystem_verifier_action.cc(482)] Hash of system_dlkm: FD22F2BFA616DFDC08C0E10B2892C2C451DC8263546488BCB99A7A558BA87690
+[1124/004555.499068] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004555.500446] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 4 (system_ext) on device /dev/block/mapper/system_ext_a
+[1124/004555.501512] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004555.502663] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition system_ext
+[1124/004555.802299] [INFO:filesystem_verifier_action.cc(482)] Hash of system_ext: 831331FC4E6A164747D62B4940E3BB104A16161801F4427EFCA16CBD95F69D46
+[1124/004555.825980] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004555.828012] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 5 (vendor) on device /dev/block/mapper/vendor_a
+[1124/004555.832990] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004555.835040] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition vendor
+[1124/004602.330470] [INFO:filesystem_verifier_action.cc(482)] Hash of vendor: 5D103958DD2E687E7B0A2EF1BD4EC9D1B6701DF7F0518A27C7AFA29FA6D37D00
+[1124/004602.554238] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.558938] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 6 (vendor_dlkm) on device /dev/block/mapper/vendor_dlkm_a
+[1124/004602.560038] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.561212] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition vendor_dlkm
+[1124/004602.619395] [INFO:filesystem_verifier_action.cc(482)] Hash of vendor_dlkm: A041344A091993C263C5FE18F7D155209E02D4B42503D3919839FF11877F4318
+[1124/004602.624913] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.626614] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 7 (apnhlos) on device /dev/block/by-name/apnhlos_a
+[1124/004602.627682] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.628873] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition apnhlos
+[1124/004602.794366] [INFO:filesystem_verifier_action.cc(482)] Hash of apnhlos: 02F1E971973ED77085A5D5F091D5341B5B1B4C0690C075A201AFC2143AF1DEFE
+[1124/004602.813801] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.817201] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 8 (xbl_ramdump) on device /dev/block/by-name/xbl_ramdump_a
+[1124/004602.818496] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.819871] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition xbl_ramdump
+[1124/004602.823825] [INFO:filesystem_verifier_action.cc(482)] Hash of xbl_ramdump: 632DBA0A142CBFD82612EEE708B5C7520094F782359157F6AE600564B2F183AF
+[1124/004602.825239] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.826342] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 9 (abl) on device /dev/block/by-name/abl_a
+[1124/004602.827535] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.828637] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition abl
+[1124/004602.833802] [INFO:filesystem_verifier_action.cc(482)] Hash of abl: 180B70C7C44FBF15EA306D594958EA300E89CB211C16A99F02B7E5E2BEBB4BBA
+[1124/004602.835335] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.836615] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 10 (aop) on device /dev/block/by-name/aop_a
+[1124/004602.837864] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.839172] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition aop
+[1124/004602.841187] [INFO:filesystem_verifier_action.cc(482)] Hash of aop: C98C9F26CE3EE64135F2B8B96F7D704749C09DB327EE04FD4FA0E6531E191C37
+[1124/004602.842637] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.844012] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 11 (aop_config) on device /dev/block/by-name/aop_config_a
+[1124/004602.845456] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.846683] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition aop_config
+[1124/004602.848208] [INFO:filesystem_verifier_action.cc(482)] Hash of aop_config: 8557E6750EB5F2F1BCE5D6858AFD75A8386DDFC4C66842D7E97A7E23F5DB77BF
+[1124/004602.850368] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.851626] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 12 (bksecapp) on device /dev/block/by-name/bksecapp_a
+[1124/004602.852846] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.854157] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition bksecapp
+[1124/004602.855759] [INFO:filesystem_verifier_action.cc(482)] Hash of bksecapp: B01DB4B9174A59F432354D5C5DC80600FDB50A5561156C956D004069D2DD34A5
+[1124/004602.856979] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.858485] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 13 (boot) on device /dev/block/by-name/boot_a
+[1124/004602.859727] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004602.861005] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition boot
+[1124/004602.993680] [INFO:filesystem_verifier_action.cc(482)] Hash of boot: 811A1BF6DDFD6B69A166654BAEFBBCA5D86BC1F26CBE3A9FC22794DFA90CF7D4
+[1124/004603.008200] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.010583] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 14 (cpucp) on device /dev/block/by-name/cpucp_a
+[1124/004603.012008] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.013365] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition cpucp
+[1124/004603.015443] [INFO:filesystem_verifier_action.cc(482)] Hash of cpucp: 868A36E1F84174CB539B2DDA72A30D807C7D370DB103C4F91D31FC332142C28F
+[1124/004603.016670] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.017888] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 15 (cpucp_dtb) on device /dev/block/by-name/cpucp_dtb_a
+[1124/004603.019199] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.020360] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition cpucp_dtb
+[1124/004603.021652] [INFO:filesystem_verifier_action.cc(482)] Hash of cpucp_dtb: 2B989972B7A6BA54A02ED0B85DF850EAB53B22AA8D81E1404118D141C385F526
+[1124/004603.022937] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.024194] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 16 (soccp_dcd) on device /dev/block/by-name/soccp_dcd_a
+[1124/004603.025357] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.026524] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition soccp_dcd
+[1124/004603.028188] [INFO:filesystem_verifier_action.cc(482)] Hash of soccp_dcd: B8698C6842C252B7CD1DE7A3546F7CDE7A5B5DA56694F5C98441779C31F0E4F5
+[1124/004603.029295] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.031317] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 17 (devcfg) on device /dev/block/by-name/devcfg_a
+[1124/004603.032597] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.033740] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition devcfg
+[1124/004603.035675] [INFO:filesystem_verifier_action.cc(482)] Hash of devcfg: 3E73FFFB254FAFEEBE13BA05B0293E9CA19F32CC6C44481B8D2AC8223355D3F2
+[1124/004603.036929] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.038091] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 18 (dsp) on device /dev/block/by-name/dsp_a
+[1124/004603.039184] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.040439] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition dsp
+[1124/004603.128108] [INFO:filesystem_verifier_action.cc(482)] Hash of dsp: 94789F3AF49A48F60B9E0830509AEAC4755E2BE975C0CD55E9BFC5E69CD555CF
+[1124/004603.138693] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.140598] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 19 (dtbo) on device /dev/block/by-name/dtbo_a
+[1124/004603.141852] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.143082] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition dtbo
+[1124/004603.170900] [INFO:filesystem_verifier_action.cc(482)] Hash of dtbo: C640CAAF21062D9071FF76D1F4B3F480B9F2AB74136F33EDBBB0852153C45632
+[1124/004603.174563] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.176350] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 20 (em) on device /dev/block/by-name/em_a
+[1124/004603.177575] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.178808] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition em
+[1124/004603.182418] [INFO:filesystem_verifier_action.cc(482)] Hash of em: 4DACB81D2083D01DA759CC4BD2F4BC824EB05EFA98759E1EB12F63AF5BAA4BC8
+[1124/004603.183796] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.185070] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 21 (hyp) on device /dev/block/by-name/hyp_a
+[1124/004603.186193] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.187340] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition hyp
+[1124/004603.191024] [INFO:filesystem_verifier_action.cc(482)] Hash of hyp: EBE35F252A4F4F35994F255E6FC5FDAC240332FF5D9ACC6E81E7FABF066C3B31
+[1124/004603.192379] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.193589] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 22 (imagefv) on device /dev/block/by-name/imagefv_a
+[1124/004603.194870] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.196023] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition imagefv
+[1124/004603.208134] [INFO:filesystem_verifier_action.cc(482)] Hash of imagefv: F518CCED95753D93C6219D94EC50FF00354EAA68AB087F3E189F5D8992E66C65
+[1124/004603.210568] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.211913] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 23 (init_boot) on device /dev/block/by-name/init_boot_a
+[1124/004603.213123] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.214416] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition init_boot
+[1124/004603.226304] [INFO:filesystem_verifier_action.cc(482)] Hash of init_boot: 0FBFB9D6A611862709F1E67F8C0C38E99289B5658B93301390A7AB28982137F7
+[1124/004603.228665] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.229879] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 24 (keymaster) on device /dev/block/by-name/keymaster_a
+[1124/004603.231109] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.232453] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition keymaster
+[1124/004603.234576] [INFO:filesystem_verifier_action.cc(482)] Hash of keymaster: 37B48443C4D16B627418E87D08BDF7704C2EC5904BC421E82539E2FE418386AF
+[1124/004603.237951] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.239140] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 25 (modem) on device /dev/block/by-name/modem_a
+[1124/004603.240282] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.241525] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition modem
+[1124/004603.368356] [INFO:filesystem_verifier_action.cc(482)] Hash of modem: AAAEB9C0F77988B3A872698831BAD04BB0641ADD26A32D2AD23427A7F61938E4
+[1124/004603.383725] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.386038] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 26 (optics) on device /dev/block/by-name/optics_a
+[1124/004603.387325] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.388544] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition optics
+[1124/004603.416962] [INFO:filesystem_verifier_action.cc(482)] Hash of optics: 2C07DAE6467E0204C03BD0D3BA7BC89BEA22B8C96867E9D335594FF859ABAB7B
+[1124/004603.420784] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.422319] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 27 (pdp) on device /dev/block/by-name/pdp_a
+[1124/004603.423654] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.424946] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition pdp
+[1124/004603.426711] [INFO:filesystem_verifier_action.cc(482)] Hash of pdp: 81556228C44D4DDBA1E611B49DB05E5364DFBB188310F58A83066A97C1DE65BE
+[1124/004603.427860] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.429162] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 28 (pdp_cdb) on device /dev/block/by-name/pdp_cdb_a
+[1124/004603.430283] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.431468] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition pdp_cdb
+[1124/004603.432807] [INFO:filesystem_verifier_action.cc(482)] Hash of pdp_cdb: 6CB018B21183D5B60AC400918EAD1FF5F11FE985395D3E28A15071E8B8F96BA9
+[1124/004603.433951] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.435114] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 29 (prism) on device /dev/block/by-name/prism_a
+[1124/004603.436216] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004603.437346] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition prism
+[1124/004603.972957] [INFO:filesystem_verifier_action.cc(482)] Hash of prism: 2A55375BE55D2B13DC0D6AA555ECE4118354A7A6424E000854B7423F1ECD98B7
+[1124/004604.031068] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.034573] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 30 (pvmfw) on device /dev/block/by-name/pvmfw_a
+[1124/004604.035968] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.037218] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition pvmfw
+[1124/004604.040502] [INFO:filesystem_verifier_action.cc(482)] Hash of pvmfw: 5DDEA688A095873864AA368E828044632FF1992A4072A1BCDBDCD652D36C62E3
+[1124/004604.043915] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.045347] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 31 (qupfw) on device /dev/block/by-name/qupfw_a
+[1124/004604.047820] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.050264] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition qupfw
+[1124/004604.051974] [INFO:filesystem_verifier_action.cc(482)] Hash of qupfw: 8B0FED5DC50B79D5B8356A8E3CA8655780A05A7D4989174CFE1E0FCF1801FF99
+[1124/004604.053246] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.054389] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 32 (qweslicstore) on device /dev/block/by-name/qweslicstore_a
+[1124/004604.055550] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.056958] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition qweslicstore
+[1124/004604.059181] [INFO:filesystem_verifier_action.cc(482)] Hash of qweslicstore: C3F058D004BFDEC9E1BBF6455BD8BCD212839F05DC5AED497BD9EE190AD3E226
+[1124/004604.060590] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.061787] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 33 (soccp_debug) on device /dev/block/by-name/soccp_debug_a
+[1124/004604.062888] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.064186] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition soccp_debug
+[1124/004604.065939] [INFO:filesystem_verifier_action.cc(482)] Hash of soccp_debug: E61C384CEA5FEE2573D4876F69ACD06705A38E55146406457287B6BA3135942C
+[1124/004604.067084] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.068376] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 34 (shrm) on device /dev/block/by-name/shrm_a
+[1124/004604.069524] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.071088] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition shrm
+[1124/004604.072920] [INFO:filesystem_verifier_action.cc(482)] Hash of shrm: 9C6750CDB951CE6084736B2DAB47EAA923D8659BB547AABC6BA7C7179181E3FE
+[1124/004604.074570] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.075956] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 35 (storsec) on device /dev/block/by-name/storsec_a
+[1124/004604.077192] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.078436] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition storsec
+[1124/004604.080124] [INFO:filesystem_verifier_action.cc(482)] Hash of storsec: FCCCC7E46E0FB9733941E23CCA054A252A788B1284B9FDAB4E4FD93B8C9897C6
+[1124/004604.081406] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.082872] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 36 (tz) on device /dev/block/by-name/tz_a
+[1124/004604.084180] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.085461] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition tz
+[1124/004604.092436] [INFO:filesystem_verifier_action.cc(482)] Hash of tz: 22B0473E7C4508C0E158A7D005BEB29047C996C90507FA96DDBFC3A8E8CDA724
+[1124/004604.093969] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.095107] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 37 (hdm) on device /dev/block/by-name/hdm_a
+[1124/004604.096328] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.097513] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition hdm
+[1124/004604.101081] [INFO:filesystem_verifier_action.cc(482)] Hash of hdm: 84D682619EB896328A45E8F87D3D86E84E8977DA30B974603F317A689943653F
+[1124/004604.102750] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.103895] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 38 (tziccc) on device /dev/block/by-name/tziccc_a
+[1124/004604.105139] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.106311] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition tziccc
+[1124/004604.107868] [INFO:filesystem_verifier_action.cc(482)] Hash of tziccc: 8A412A774AF71D6F1BE00F16A7B0C665B32214F8F092E0C9B230257AC0CA6FAF
+[1124/004604.111641] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.112889] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 39 (tz_kg) on device /dev/block/by-name/tz_kg_a
+[1124/004604.113999] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.115222] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition tz_kg
+[1124/004604.118882] [INFO:filesystem_verifier_action.cc(482)] Hash of tz_kg: AE1D5E5DB6661A55C09F57EFF1B2E5778B9191FA6EC004D51E218F3BA1658564
+[1124/004604.120195] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.121578] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 40 (uefi) on device /dev/block/by-name/uefi_a
+[1124/004604.122828] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.124199] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition uefi
+[1124/004604.130096] [INFO:filesystem_verifier_action.cc(482)] Hash of uefi: CD40CD224BD09315C36C4CAB27342A10240EB3C46D72F7CD63A4A3CAFB654177
+[1124/004604.131735] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.133113] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 41 (uefisecapp) on device /dev/block/by-name/uefisecapp_a
+[1124/004604.134581] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.135925] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition uefisecapp
+[1124/004604.138205] [INFO:filesystem_verifier_action.cc(482)] Hash of uefisecapp: 2094227C33F2905FF1107DB2B86417211F8EE50E91DDFC91741099B9195B78A5
+[1124/004604.139624] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.142082] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 42 (vk) on device /dev/block/by-name/vk_a
+[1124/004604.143364] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.144722] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition vk
+[1124/004604.148205] [INFO:filesystem_verifier_action.cc(482)] Hash of vk: 79DFC5DE1D4EC44E7D2E64C55EB7F73C92E97F462251F09E536DC9ACBB5F4744
+[1124/004604.149733] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.151102] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 43 (vbmeta) on device /dev/block/by-name/vbmeta_a
+[1124/004604.152339] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.153762] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition vbmeta
+[1124/004604.155196] [INFO:filesystem_verifier_action.cc(482)] Hash of vbmeta: 862B62CFD2D157934280BA1988A713E8DB4D2542E2B1FAAB701C266516CF2AAF
+[1124/004604.156560] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.158258] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 44 (vbmeta_system) on device /dev/block/by-name/vbmeta_system_a
+[1124/004604.159502] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.160819] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition vbmeta_system
+[1124/004604.162370] [INFO:filesystem_verifier_action.cc(482)] Hash of vbmeta_system: 837BAE7F20E8C70C338B2FA27AC9697550420EA87C42EEC092D9B4893C2C5705
+[1124/004604.164692] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.166243] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 45 (vendor_boot) on device /dev/block/by-name/vendor_boot_a
+[1124/004604.167510] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.168771] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition vendor_boot
+[1124/004604.345085] [INFO:filesystem_verifier_action.cc(482)] Hash of vendor_boot: B361C81D650CB15BE0DA07C3D54F3C3A11E8DFE110A550B039ADD408C3E51C2A
+[1124/004604.368902] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.370864] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 46 (vm-bootsys) on device /dev/block/by-name/vm-bootsys_a
+[1124/004604.372006] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.373399] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition vm-bootsys
+[1124/004604.742161] [INFO:filesystem_verifier_action.cc(482)] Hash of vm-bootsys: 1DA092293138CB80F37AD21C905F4696B8E14199AED4F54F7C7E69CF1614E50B
+[1124/004604.783139] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.785422] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 47 (xbl_config) on device /dev/block/by-name/xbl_config_a
+[1124/004604.786630] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.787801] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition xbl_config
+[1124/004604.789785] [INFO:filesystem_verifier_action.cc(482)] Hash of xbl_config: BB64D17B9C5B83A9A6A349CBF8F3E860E71EB4CADFDE5737875A5E89AC2D0836
+[1124/004604.791794] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.793089] [INFO:filesystem_verifier_action.cc(377)] Hashing partition 48 (xbl) on device /dev/block/by-name/xbl_a
+[1124/004604.794347] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.795657] [INFO:filesystem_verifier_action.cc(427)] Verity writes disabled on partition xbl
+[1124/004604.798863] [INFO:filesystem_verifier_action.cc(482)] Hash of xbl: 71197084C9EE6376A48BBEF3E1C753FA9E2145CB3C91D8CF6A2347F10295D8BD
+[1124/004604.800455] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.802092] [INFO:filesystem_verifier_action.cc(140)] Not writing verity and VABC is enabled, unmapping all partitions
+[1124/004604.803659] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004604.804992] [INFO:snapshot.cpp(3120)] Lock acquired for UnmapAllSnapshots
+[1124/004604.806327] [INFO:snapshot.cpp(3125)] Found 7 partitions with snapshots
+[1124/004604.868535] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot product_a
+[1124/004604.952635] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_a
+[1124/004605.052642] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_dlkm_a
+[1124/004605.148585] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot odm_a
+[1124/004605.236558] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_dlkm_a
+[1124/004605.328669] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_ext_a
+[1124/004605.432549] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_a
+[1124/004605.436865] [INFO:snapshot.cpp(3133)] Unmapped 7 partitions with snapshots
+[1124/004605.438000] [INFO:snapshot.cpp(3139)] Shutdown snapuserd daemon
+[1124/004605.539499] [INFO:dynamic_partition_control_android.cc(345)] Destroying [] from device mapper
+[1124/004605.552344] [INFO:action_processor.cc(116)] ActionProcessor: finished FilesystemVerifierAction with code ErrorCode::kSuccess
+[1124/004605.554045] [INFO:action_processor.cc(143)] ActionProcessor: starting PostinstallRunnerAction
+[1124/004605.555508] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004605.558457] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot product_a
+[1124/004605.581047] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition product_a-base on device /dev/block/dm-23
+[1124/004605.604286] [INFO:snapshot.cpp(2963)] Mapped COW device for product_a at /dev/block/dm-24
+[1124/004605.628147] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition product_a-src on device /dev/block/dm-25
+[1124/004605.665882] [INFO:snapshot.cpp(2859)] Mapped product_a as snapshot device at /dev/block/dm-38
+[1124/004605.668695] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_a
+[1124/004605.691034] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_a-base on device /dev/block/dm-41
+[1124/004605.714214] [INFO:snapshot.cpp(2963)] Mapped COW device for system_a at /dev/block/dm-47
+[1124/004605.738154] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_a-src on device /dev/block/dm-48
+[1124/004607.550853] [INFO:snapshot.cpp(2859)] Mapped system_a as snapshot device at /dev/block/dm-50
+[1124/004607.558431] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_dlkm_a
+[1124/004607.581140] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_dlkm_a-base on device /dev/block/dm-51
+[1124/004607.603649] [INFO:snapshot.cpp(2963)] Mapped COW device for system_dlkm_a at /dev/block/dm-53
+[1124/004607.627029] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_dlkm_a-src on device /dev/block/dm-54
+[1124/004607.653275] [INFO:snapshot.cpp(2859)] Mapped system_dlkm_a as snapshot device at /dev/block/dm-55
+[1124/004607.655813] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot odm_a
+[1124/004607.678232] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition odm_a-base on device /dev/block/dm-56
+[1124/004607.701819] [INFO:snapshot.cpp(2963)] Mapped COW device for odm_a at /dev/block/dm-61
+[1124/004607.727085] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition odm_a-src on device /dev/block/dm-63
+[1124/004607.753572] [INFO:snapshot.cpp(2859)] Mapped odm_a as snapshot device at /dev/block/dm-64
+[1124/004607.756093] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_dlkm_a
+[1124/004607.780621] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_dlkm_a-base on device /dev/block/dm-65
+[1124/004607.808599] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_dlkm_a at /dev/block/dm-67
+[1124/004607.836428] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_dlkm_a-src on device /dev/block/dm-68
+[1124/004607.862718] [INFO:snapshot.cpp(2859)] Mapped vendor_dlkm_a as snapshot device at /dev/block/dm-71
+[1124/004607.865103] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_ext_a
+[1124/004607.888748] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_ext_a-base on device /dev/block/dm-72
+[1124/004607.911496] [INFO:snapshot.cpp(2963)] Mapped COW device for system_ext_a at /dev/block/dm-73
+[1124/004607.935650] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_ext_a-src on device /dev/block/dm-74
+[1124/004607.984248] [INFO:snapshot.cpp(2859)] Mapped system_ext_a as snapshot device at /dev/block/dm-75
+[1124/004607.987078] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_a
+[1124/004608.010666] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_a-base on device /dev/block/dm-76
+[1124/004608.035009] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_a at /dev/block/dm-77
+[1124/004608.063160] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_a-src on device /dev/block/dm-78
+[1124/004608.727471] [INFO:snapshot.cpp(2859)] Mapped vendor_a as snapshot device at /dev/block/dm-79
+[1124/004608.733372] [INFO:snapshot.cpp(3108)] MapAllSnapshots succeeded.
+[1124/004608.737785] [INFO:postinstall_runner_action.cc(64)] Trying to read /postinstall/build.prop
+[1124/004608.740275] [INFO:postinstall_runner_action.cc(69)] ro.build.ab_update=true
+[1124/004608.742554] [INFO:postinstall_runner_action.cc(64)] Trying to read /postinstall/etc/build.prop
+[1124/004608.745208] [INFO:postinstall_runner_action.cc(64)] Trying to read /postinstall/system/build.prop
+[1124/004608.746663] [INFO:postinstall_runner_action.cc(273)] Performing postinst (bin/checkpoint_gc at /postinstall/bin/checkpoint_gc) installed on mountable device /dev/block/mapper/vendor_a
+[1124/004608.748563] [INFO:postinstall_runner_action.cc(280)] Format file for new bin/checkpoint_gc is: data
+[1124/004608.750038] [INFO:subprocess.cc(101)] Running "/postinstall/bin/checkpoint_gc 0 3"
+[1124/004608.974538] [INFO:subprocess.cc(161)] Subprocess output:
+
+Parse error: bad token
+    <stdin>:1
+
+
+[1124/004609.181815] [INFO:postinstall_runner_action.cc(482)] All post-install commands succeeded
+[1124/004609.211605] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004609.213068] [INFO:snapshot.cpp(3120)] Lock acquired for UnmapAllSnapshots
+[1124/004609.214494] [INFO:snapshot.cpp(3125)] Found 7 partitions with snapshots
+[1124/004609.292542] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot product_a
+[1124/004609.536712] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_a
+[1124/004609.621236] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_dlkm_a
+[1124/004609.713204] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot odm_a
+[1124/004609.812779] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_dlkm_a
+[1124/004609.889165] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_ext_a
+[1124/004610.084945] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_a
+[1124/004610.091451] [INFO:snapshot.cpp(3133)] Unmapped 7 partitions with snapshots
+[1124/004610.093475] [INFO:snapshot.cpp(3139)] Shutdown snapuserd daemon
+[1124/004610.196896] [INFO:dynamic_partition_control_android.cc(345)] Destroying [] from device mapper
+[1124/004610.202776] [INFO:postinstall_runner_action.cc(446)] Unmapped all partitions.
+[1124/004610.206597] [INFO:action_processor.cc(116)] ActionProcessor: finished last action PostinstallRunnerAction with code ErrorCode::kUpdatedButNotActive
+[1124/004610.212750] [INFO:update_attempter_android.cc(742)] Processing Done.
+[1124/004610.229881] [INFO:dynamic_partition_control_android.cc(354)] Destroying [odm_b_ota, product_b_ota, system_b_ota, system_dlkm_b_ota, system_ext_b_ota, vendor_b_ota, vendor_dlkm_b_ota] from device mapper
+[1124/004610.256633] [INFO:fs_mgr_dm_linear.cpp(346)] [libfs_mgr] Unmapped logical partition odm_b_ota
+[1124/004610.259068] [INFO:dynamic_partition_control_android.cc(316)] Skip UnmapUpdateSnapshot(odm_b_ota)
+[1124/004610.260622] [INFO:dynamic_partition_control_android.cc(323)] Successfully unmapped odm_b_ota from device mapper.
+[1124/004610.276845] [INFO:fs_mgr_dm_linear.cpp(346)] [libfs_mgr] Unmapped logical partition product_b_ota
+[1124/004610.280273] [INFO:dynamic_partition_control_android.cc(316)] Skip UnmapUpdateSnapshot(product_b_ota)
+[1124/004610.283730] [INFO:dynamic_partition_control_android.cc(323)] Successfully unmapped product_b_ota from device mapper.
+[1124/004610.304833] [INFO:fs_mgr_dm_linear.cpp(346)] [libfs_mgr] Unmapped logical partition system_b_ota
+[1124/004610.309463] [INFO:dynamic_partition_control_android.cc(316)] Skip UnmapUpdateSnapshot(system_b_ota)
+[1124/004610.313606] [INFO:dynamic_partition_control_android.cc(323)] Successfully unmapped system_b_ota from device mapper.
+[1124/004610.332746] [INFO:fs_mgr_dm_linear.cpp(346)] [libfs_mgr] Unmapped logical partition system_dlkm_b_ota
+[1124/004610.336125] [INFO:dynamic_partition_control_android.cc(316)] Skip UnmapUpdateSnapshot(system_dlkm_b_ota)
+[1124/004610.337969] [INFO:dynamic_partition_control_android.cc(323)] Successfully unmapped system_dlkm_b_ota from device mapper.
+[1124/004610.364807] [INFO:fs_mgr_dm_linear.cpp(346)] [libfs_mgr] Unmapped logical partition system_ext_b_ota
+[1124/004610.367696] [INFO:dynamic_partition_control_android.cc(316)] Skip UnmapUpdateSnapshot(system_ext_b_ota)
+[1124/004610.373438] [INFO:dynamic_partition_control_android.cc(323)] Successfully unmapped system_ext_b_ota from device mapper.
+[1124/004610.396965] [INFO:fs_mgr_dm_linear.cpp(346)] [libfs_mgr] Unmapped logical partition vendor_b_ota
+[1124/004610.399885] [INFO:dynamic_partition_control_android.cc(316)] Skip UnmapUpdateSnapshot(vendor_b_ota)
+[1124/004610.402012] [INFO:dynamic_partition_control_android.cc(323)] Successfully unmapped vendor_b_ota from device mapper.
+[1124/004610.428611] [INFO:fs_mgr_dm_linear.cpp(346)] [libfs_mgr] Unmapped logical partition vendor_dlkm_b_ota
+[1124/004610.431166] [INFO:dynamic_partition_control_android.cc(316)] Skip UnmapUpdateSnapshot(vendor_dlkm_b_ota)
+[1124/004610.433048] [INFO:dynamic_partition_control_android.cc(323)] Successfully unmapped vendor_dlkm_b_ota from device mapper.
+[1124/004610.434624] [INFO:dynamic_partition_control_android.cc(358)] UnmapAllPartitions done
+[1124/004610.441984] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/004610.444670] [INFO:metrics_reporter_android.cc(156)] Current update attempt downloads 536 bytes data
+[1124/165250.788416] [INFO:binder_service_android.cc(271)] [setShouldSwitchSlotOnReboot] UID: 1000, PID: 17881
+[1124/165250.793896] [INFO:update_attempter_android.cc(1352)] setShouldSwitchSlotOnReboot(/data/fota/payload_metadata.bin)
+[1124/165250.859241] [INFO:payload_verifier.cc(101)] signature blob size = 267
+[1124/165250.862611] [INFO:payload_verifier.cc(117)] Truncating the signature to its unpadded size: 256.
+[1124/165250.867977] [INFO:payload_verifier.cc(128)] Verified correct signature 1 out of 1 signatures.
+[1124/165250.869271] [INFO:payload_metadata.cc(221)] Metadata hash signature matches value in Omaha response.
+[1124/165251.294340] [INFO:postinstall_runner_action.cc(94)] postinstall mount point: /postinstall
+[1124/165251.305047] [INFO:update_attempter_android.cc(873)] Scheduling an action processor start.
+[1124/165251.599974] [INFO:action_processor.cc(51)] ActionProcessor: starting InstallPlanAction
+[1124/165251.603071] [INFO:action_processor.cc(116)] ActionProcessor: finished InstallPlanAction with code ErrorCode::kSuccess
+[1124/165251.606228] [INFO:action_processor.cc(143)] ActionProcessor: starting PostinstallRunnerAction
+[1124/165251.609629] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/165252.625920] Waited one second for gsiservice (is service started? Number of threads started in the threadpool: 1. Are binder threads started and available?)
+[1124/165252.631518] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot product_a
+[1124/165252.654715] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition product_a-base on device /dev/block/dm-7
+[1124/165252.677117] [INFO:snapshot.cpp(2963)] Mapped COW device for product_a at /dev/block/dm-8
+[1124/165252.733195] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition product_a-src on device /dev/block/dm-9
+[1124/165252.777029] [INFO:snapshot.cpp(2859)] Mapped product_a as snapshot device at /dev/block/dm-10
+[1124/165252.779622] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_a
+[1124/165252.802465] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_a-base on device /dev/block/dm-11
+[1124/165252.825080] [INFO:snapshot.cpp(2963)] Mapped COW device for system_a at /dev/block/dm-12
+[1124/165252.847330] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_a-src on device /dev/block/dm-13
+[1124/165254.472578] [INFO:snapshot.cpp(2859)] Mapped system_a as snapshot device at /dev/block/dm-23
+[1124/165254.493490] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_dlkm_a
+[1124/165254.526149] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_dlkm_a-base on device /dev/block/dm-24
+[1124/165254.552625] [INFO:snapshot.cpp(2963)] Mapped COW device for system_dlkm_a at /dev/block/dm-25
+[1124/165254.574839] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_dlkm_a-src on device /dev/block/dm-38
+[1124/165254.601377] [INFO:snapshot.cpp(2859)] Mapped system_dlkm_a as snapshot device at /dev/block/dm-41
+[1124/165254.602827] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot odm_a
+[1124/165254.625173] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition odm_a-base on device /dev/block/dm-47
+[1124/165254.647495] [INFO:snapshot.cpp(2963)] Mapped COW device for odm_a at /dev/block/dm-48
+[1124/165254.670402] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition odm_a-src on device /dev/block/dm-50
+[1124/165254.694650] [INFO:snapshot.cpp(2859)] Mapped odm_a as snapshot device at /dev/block/dm-51
+[1124/165254.697457] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_dlkm_a
+[1124/165254.722897] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_dlkm_a-base on device /dev/block/dm-53
+[1124/165254.745255] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_dlkm_a at /dev/block/dm-54
+[1124/165254.767725] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_dlkm_a-src on device /dev/block/dm-55
+[1124/165254.793167] [INFO:snapshot.cpp(2859)] Mapped vendor_dlkm_a as snapshot device at /dev/block/dm-56
+[1124/165254.795337] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot system_ext_a
+[1124/165254.817925] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_ext_a-base on device /dev/block/dm-61
+[1124/165254.840798] [INFO:snapshot.cpp(2963)] Mapped COW device for system_ext_a at /dev/block/dm-63
+[1124/165254.862978] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition system_ext_a-src on device /dev/block/dm-64
+[1124/165254.891866] [INFO:snapshot.cpp(2859)] Mapped system_ext_a as snapshot device at /dev/block/dm-65
+[1124/165254.893955] [INFO:snapshot.cpp(2892)] Successfully unmapped snapshot vendor_a
+[1124/165254.916996] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_a-base on device /dev/block/dm-67
+[1124/165254.939740] [INFO:snapshot.cpp(2963)] Mapped COW device for vendor_a at /dev/block/dm-68
+[1124/165254.962157] [INFO:fs_mgr_dm_linear.cpp(319)] [libfs_mgr] Created logical partition vendor_a-src on device /dev/block/dm-71
+[1124/165255.413722] [INFO:snapshot.cpp(2859)] Mapped vendor_a as snapshot device at /dev/block/dm-72
+[1124/165255.421461] [INFO:snapshot.cpp(3108)] MapAllSnapshots succeeded.
+[1124/165255.430578] [INFO:postinstall_runner_action.cc(208)] Skipping post-install
+[1124/165255.431914] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/165255.433633] [INFO:dynamic_partition_control_android.cc(1139)] Snapshot writes are done.
+[1124/165255.434967] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/165255.436587] [INFO:snapshot.cpp(4522)] Wipe is not scheduled. Deleting forward merge indicator.
+[1124/165255.441722] [INFO:BootControlClient.cpp(416)] Using AIDL version of IBootControl
+[1124/165255.460225] [INFO:hardware_android.cc(109)] vbmeta digest for target slot: 1BAD90209ED96820766CCEF897035DD285D22C6F7BC25A0B18A7D3673AACE3B2
+[1124/165255.461588] [INFO:postinstall_runner_action.cc(482)] All post-install commands succeeded
+[1124/165255.466197] [INFO:action_processor.cc(116)] ActionProcessor: finished last action PostinstallRunnerAction with code ErrorCode::kSuccess
+[1124/165255.473714] [INFO:update_attempter_android.cc(742)] Processing Done.
+[1124/165255.480966] [INFO:update_attempter_android.cc(984)] Writing update complete marker, slot 1, boot id: 98eaaf9d-b57e-40be-9f7f-0b0a559a5331
+[1124/165255.490408] [INFO:update_attempter_android.cc(758)] Update successfully applied, waiting to reboot.
+[1124/165255.491341] [INFO:dynamic_partition_control_android.cc(354)] Destroying [] from device mapper
+[1124/165255.492353] [INFO:dynamic_partition_control_android.cc(358)] UnmapAllPartitions done
+[1124/165255.495008] [INFO:dynamic_partition_control_android.cc(1006)] SnapshotManager initialized.
+[1124/165255.496715] [INFO:metrics_reporter_android.cc(156)] Current update attempt downloads 0 bytes data
+[1124/165255.504351] [INFO:metrics_utils.cc(341)] Updated Marker = 1/2/1970 13:31:37 GMT
+[1124/165259.417856] [INFO:main.cc(81)] A/B Update Engine terminating with exit code 0
+[1124/165259.525591] [INFO:dynamic_partition_control_android.cc(105)] Destroying [] from device mapper

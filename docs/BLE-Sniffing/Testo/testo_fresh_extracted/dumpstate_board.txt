@@ -1,0 +1,2317 @@
+verbose logging: disabled
+[default] Hello, world!
+dumpFlags : -1
+------ POWER ON INFO (/proc/boot_stat) ------
+Boot Events                                           time        ktime        delta
+-----------------------------------------------------------------------------------
+!@Boot: Bootloader start                             2765            0            0
+!@Boot: Bootloader display                           3740            0            0
+!@Boot: Bootloader load kernel                       3762            0            0
+!@Boot: Bootloader end                               5381            0            0
+!@Boot: start init process                           7321         1414         1414
+!@Boot: Begin of preload()                          12709         6802         5388
+!@Boot: End of preload()                            13404         7497          695
+!@Boot: Entered the Android system server!          13782         7875          377
+!@Boot: Start PackageManagerService                 14347         8440          564
+!@Boot: End PackageManagerService                   15550         9643         1202
+!@Boot_SVC : SIM fetchSimRecords                    18000        12093         2450
+!@Boot_DEBUG: start networkManagement               18450        12543          449
+!@Boot_DEBUG: end networkManagement                 18450        12543            0
+!@Boot: Loop forever                                18739        12832          288
+!@Boot: Voice SVC is acquired                       19551        13644          811
+!@Boot_SVC : SIM onAllRecordsLoaded                 19560        13653            9
+!@Boot: Enabling Screen!                            19709        13802          148
+!@Boot: bootcomplete                                19767        13860           57
+!@Boot_SVC : setupDataCall                          20306        14399          539
+!@Boot: Data SVC is acquired                        20995        15088          689
+-----------------------------------------------------------------------------------
+SystemServer services that took long time
+
+2699ms : startOtherServices
+1269ms : StartActivityManagerReadyPhase
+1269ms : OnBootPhase_550
+1159ms : OnBootPhase_550_com.android.server.om.OverlayManag
+1159ms : (550) com.android.server.om.OverlayManagerService
+1830ms : startBootstrapServices
+408ms : StartOverlayManagerService
+1203ms : StartPackageManagerService
+410ms : InitBeforeStartServices
+
+------ ENHANCED BOOT STAT (/proc/enhanced_boot_stat) ------
+Boot Events                                                                                  time  ktime  delta
+-----------------------------------------------------------------------------------
+BOOTLOADER
+-----------------------------------------------------------------------------------
+!@Boot_EBS_B: Bootloader start                                                               2765      0   2765
+!@Boot_EBS_B: Bootloader display                                                             3740      0    974
+!@Boot_EBS_B: Bootloader load kernel                                                         3762      0     21
+!@Boot_EBS_B: Bootloader end                                                                 5381      0   1619
+-----------------------------------------------------------------------------------
+FRAMEWORK
+-----------------------------------------------------------------------------------
+!@Boot_EBS_F: FirstStageMain Init                                                            7321   1414   1414
+!@Boot_EBS_F: SELinux Setup                                                                  7945   2038    624
+!@Boot_EBS_F: SecondStageMain Init                                                           8536   2629    590
+  Took 192ms by Service 'apexd-bootstrap'                                                    8795   2888
+  Took 225ms by Coldboot                                                                     8834   2927
+  Took 193ms by Service 'gki.modprobe'                                                       9028   3121
+!@Boot_EBS_F: processing action (wait_for_coldboot_done) from (<Builtin Action>:0)           9130   3223    594
+!@Boot_EBS_F: processing action (init) from (/system/etc/init/hw/init.rc:112)                9134   3227      3
+  Took 85ms by Command 'copy_per_line /dev/cpuctl/tasks /dev/cpuctl/general/tasks'           9688   3781
+!@Boot_EBS_F: processing action (fs) from (/vendor/etc/init/hw/init.target.rc:141)           9820   3913    686
+  Took 114ms by Command 'mount_all /vendor/etc/fstab.qcom --early'                           9935   4028
+!@Boot_EBS_F: processing action (post-fs) from (/system/etc/init/hw/init.rc:751)            10009   4102    188
+  Took 98ms by Service 'system_aconfigd_platform_init'                                      10142   4235
+  Took 463ms by Command 'mount_all /vendor/etc/fstab.qcom --late'                           10687   4780
+!@Boot_EBS_F: processing action (post-fs-data) from (/system/etc/init/hw/init.rc:877)       10694   4787    685
+  Took 149ms by Service 'exec 6 (/system/bin/vdc --wait cryptfs enablefilecrypto)'          10857   4950
+  Took 63ms by Service 'exec 7 (/system/bin/vdc keymaster earlyBootEnded)'                  10946   5039
+  Took 61ms by wait for property 'apexd.status=activated'                                   11050   5143
+  Took 172ms by Service 'mainline_aconfigd_init'                                            11273   5366
+  Took 77ms by Service 'exec 10 (/system/bin/vdc --wait cryptfs init_user0)'                11361   5454
+  Took 87ms by wait for property 'odsign.key.done=1'                                        11475   5568
+  Took 239ms by Service 'bpfloader'                                                         11829   5922
+!@Boot_EBS_F: starting service 'zygote'...                                                  11844   5937   1149
+!@Boot_EBS_F: start zygote from appmain                                                     12398   6491    554
+!@Boot_EBS_F: boot_progress_preload_start                                                   12709   6802    311
+!@Boot_EBS_F: Preload Classes                                                               12776   6869     66
+!@Boot_EBS_F: Preload Resources                                                             13178   7271    402
+!@Boot_EBS_F: boot_progress_preload_end                                                     13404   7497    226
+!@Boot_EBS_F: zygote forkSystemServer                                                       13442   7535     37
+!@Boot_EBS_F: SYSTEM_SERVER_START                                                           13782   7875    339
+!@Boot_EBS_F: BOOT_PROGRESS_SYSTEM_RUN                                                      13782   7875      0
+  Took 410ms by 'InitBeforeStartServices'                                                   14187   8280
+!@Boot_EBS_F: startBootstrapServices                                                        14187   8280    404
+!@Boot_EBS_D: PHASE_WAIT_FOR_DEFAULT_DISPLAY                                                14341   8434    153
+!@Boot_EBS_F: boot_progress_pms_start                                                       14347   8440      6
+!@Boot_EBS_F: boot_progress_pms_system_scan_start                                           14506   8599    158
+!@Boot_EBS_F: Finished scanning system apps (620 ms), packageCount: 448, cached: 558        15126   9219    619
+!@Boot_EBS_F: boot_progress_pms_data_scan_start                                             15126   9219      0
+!@Boot_EBS_F: Finished scanning non-system apps (171 ms), packageCount: 140 , cached: 140   15297   9390    170
+!@Boot_EBS_F: boot_progress_pms_end                                                         15303   9396      6
+!@Boot_EBS_F: boot_progress_pms_ready                                                       15539   9632    236
+  Took 1203ms by 'StartPackageManagerService'                                               15550   9643
+!@Boot_EBS_D: InitWatchdog                                                                  15595   9688     55
+  Took 408ms by 'StartOverlayManagerService'                                                16003  10096
+  Took 1830ms by 'startBootstrapServices'                                                   16017  10110
+!@Boot_EBS_F: startCoreServices                                                             16017  10110    422
+!@Boot_EBS_F: startOtherServices                                                            16031  10124     13
+!@Boot_EBS_F: Start WindowManagerService                                                    16234  10327    202
+!@Boot_EBS_D: detectSafeMode                                                                16287  10380     53
+!@Boot_EBS_D: UpdatePackagesIfNeeded                                                        16318  10410     30
+!@Boot_EBS_D: PHASE_LOCK_SETTINGS_READY                                                     17029  11122    711
+!@Boot_EBS_D: PHASE_SYSTEM_SERVICES_READY                                                   17034  11127      4
+!@Boot_EBS_D: PHASE_DEVICE_SPECIFIC_SERVICES_READY                                          17143  11236    109
+!@Boot_EBS_F: boot_progress_ams_ready                                                       17173  11266     30
+!@Boot_EBS_N: addAppLocked com.android.phone                                                17178  11271      4
+!@Boot_EBS_D: PHASE_ACTIVITY_MANAGER_READY                                                  17179  11272      0
+!@Boot_EBS_N: callApplicationOnCreate com.android.phone                                     17307  11400    128
+!@Boot_EBS_N: PhoneApp OnCreate                                                             17308  11401      0
+  Took 1159ms by 'com.android.server.om.OverlayManagerService' (550)                        18340  12432
+  Took 1159ms by 'OnBootPhase_550_com.android.server.om.OverlayManag'                       18340  12433
+  Took 1269ms by 'OnBootPhase_550'                                                          18448  12541
+  Took 1269ms by 'StartActivityManagerReadyPhase'                                           18448  12541
+!@Boot_EBS_D: start networkManagement                                                       18450  12543   1141
+!@Boot_EBS_D: end networkManagement                                                         18450  12543      0
+!@Boot_EBS_D: PHASE_THIRD_PARTY_APPS_CAN_START                                              18534  12627     83
+!@Boot_EBS_F: StartSystemUI                                                                 18727  12820    193
+  Took 2699ms by 'startOtherServices'                                                       18729  12822
+!@Boot_EBS_D: Loop forever                                                                  18739  12832     12
+!@Boot_EBS_N: GPRS Attached                                                                 19123  13216    383
+!@Boot_EBS_N : SIM onAllRecordsLoaded                                                       19560  13653    437
+!@Boot_EBS_F: wm_boot_animation_done                                                        19709  13802    148
+!@Boot_EBS_F: bootcomplete                                                                  19767  13860     57
+!@Boot_EBS_N: CS Registered                                                                 22200  16293   2433
+!@Boot_EBS_D: Launcher.onCreate()                                                           27464  21557   5264
+!@Boot_EBS_D: Launcher.onStart()                                                            27568  21661    103
+!@Boot_EBS_D: Launcher.onResume()                                                           27568  21661      0
+!@Boot_EBS_D: Launcher.onPause()                                                            30353  24446   2785
+!@Boot_EBS_D: Launcher.onStop()                                                             32298  26391   1944
+
+------ MEMSIZE INFO (/proc/memsize) ------
+0x0000000000000000-0x0000000000000000 0x19000000 (  409600 KB )   map reusable rbin
+0x0000000000000000-0x0000000000000000 0x06e40000 (  112896 KB ) nomap unusable unknown
+0x0000000000000000-0x0000000000000000 0x00200000 (    2048 KB ) nomap unusable unknown
+0x0000000000000000-0x0000000000000000 0x00700000 (    7168 KB ) nomap unusable unknown
+0x0000000000000000-0x0000000000000000 0x00010000 (      64 KB )   map unusable dump_mem_region
+0x0000000000000000-0x0000000000000000 0x00000000 (       0 KB )   map unusable sec_rdx_bootdev_region
+0x0000000000000000-0x0000000000000000 0x00001000 (       4 KB ) nomap unusable hdm_region
+0x0000000000000000-0x0000000000000000 0x00200000 (    2048 KB )   map unusable sec_pmsg_region
+0x0000000000000000-0x0000000000000000 0x00500000 (    5120 KB ) nomap unusable sec_debug_bl_region
+0x0000000000000000-0x0000000000000000 0x00200000 (    2048 KB )   map unusable sec_log_buf_region
+0x0000000000000000-0x0000000000000000 0x00001000 (       4 KB ) nomap unusable sec_rst_ex_info_region
+0x0000000000000000-0x0000000000000000 0x00001000 (       4 KB ) nomap unusable google_debug_kinfo_region
+0x0000000000000000-0x0000000000000000 0x00001000 (       4 KB )   map unusable sec_debug_region_pool
+0x0000000000000000-0x0000000000000000 0x00800000 (    8192 KB ) nomap unusable llcc_lpi_region
+0x0000000000000000-0x0000000000000000 0x00400000 (    4096 KB )   map reusable cdsp_eva_region
+0x0000000000000000-0x0000000000000000 0x00000000 (       0 KB )   map unusable splash_region
+0x0000000000000000-0x0000000000000000 0x01000000 (   16384 KB )   map reusable sp_region
+0x0000000000000000-0x0000000000000000 0x01c00000 (   28672 KB )   map reusable qseecom_region
+0x0000000000000000-0x0000000000000000 0x00c00000 (   12288 KB )   map reusable vm_comm_mem_region
+0x0000000000000000-0x0000000000000000 0x00c00000 (   12288 KB )   map reusable adsp_heap_region
+0x0000000000000000-0x0000000000000000 0x00400000 (    4096 KB ) nomap unusable rmtfs_region
+0x0000000000000000-0x0000000000000000 0x04400000 (   69632 KB )   map reusable trust_ui_vm_region
+0x0000000000000000-0x0000000000000000 0x00001000 (       4 KB ) nomap unusable trust_ui_vm_dump
+0x0000000000000000-0x0000000000000000 0x04400000 (   69632 KB )   map reusable qseecom_ta_region
+0x0000000000000000-0x0000000000000000 0x03000000 (   49152 KB )   map reusable linux,cma
+0x0000000000000000-0x0000000000000000 0x01000000 (   16384 KB )   map reusable va_md_mem_region
+0x0000000000000000-0x0000000000000000 0x01000000 (   16384 KB )   map reusable qmc_dma_region
+0x0000000000000000-0x0000000000000000 0x04800000 (   73728 KB )   map reusable secure_cdsp_region
+0x0000000000000000-0x0000000000000000 0x02000000 (   32768 KB )   map reusable cnss_wlan_region
+0x0000000000000000-0x0000000000000000 0x0a660000 (  170368 KB ) nomap unusable unknown
+0x0000000000000000-0x0000000000000000 0x00600000 (    6144 KB ) nomap unusable tz_merged_region
+0x0000000000000000-0x0000000000000000 0x00002000 (       8 KB ) nomap unusable reg_dump_region
+0x0000000000000000-0x0000000000000000 0x002dd000 (    2932 KB ) nomap unusable hwfence-shmem
+0x0000000000000000-0x0000000000000000 0x0c800000 (  204800 KB )   map reusable non_secure_display_region
+0x0000000000000000-0x0000000000000000 0x001c0000 (    1792 KB ) nomap unusable xbl_ramdump_region
+0x0000000000000000-0x0000000000000000 0x03600000 (   55296 KB )   map unusable uh_guest_region
+0x0000000000000000-0x0000000000000000 0x00044000 (     272 KB )   map unusable uh_heap_region
+0x0000000000000000-0x0000000000000000 0x00300000 (    3072 KB ) nomap unusable sec_xbl_ramdump
+0x0000000000000000-0x0000000000000000 0x05c00000 (   94208 KB ) nomap unusable adspslpi_region
+0x0000000000000000-0x0000000000000000 0x00080000 (     512 KB ) nomap unusable q6_adsp_dtb_region
+0x0000000000000000-0x0000000000000000 0x00180000 (    1536 KB ) nomap unusable soccp_region
+0x0000000000000000-0x0000000000000000 0x00080000 (     512 KB ) nomap unusable lost_reg_mem2
+0x0000000000000000-0x0000000000000000 0x00080000 (     512 KB ) nomap unusable q6_cdsp_dtb_region
+0x0000000000000000-0x0000000000000000 0x01900000 (   25600 KB ) nomap unusable cdsp_region
+0x0000000000000000-0x0000000000000000 0x00700000 (    7168 KB ) nomap unusable cvp_region
+0x0000000000000000-0x0000000000000000 0x00800000 (    8192 KB ) nomap unusable video_region
+0x0000000000000000-0x0000000000000000 0x00800000 (    8192 KB ) nomap unusable camera_2_region
+0x0000000000000000-0x0000000000000000 0x00800000 (    8192 KB ) nomap unusable camera_region
+0x0000000000000000-0x0000000000000000 0x00040000 (     256 KB ) nomap unusable spu_secure_shared_memory_region
+0x0000000000000000-0x0000000000000000 0x00040000 (     256 KB ) nomap unusable spu_secure_shared_memory_region
+0x0000000000000000-0x0000000000000000 0x001e0000 (    1920 KB ) nomap unusable spss_region_region
+0x0000000000000000-0x0000000000000000 0x00004000 (      16 KB ) nomap unusable lost_reg_mem
+0x0000000000000000-0x0000000000000000 0x00002000 (       8 KB ) nomap unusable gpu_microcode_region
+0x0000000000000000-0x0000000000000000 0x0000a000 (      40 KB ) nomap unusable ipa_gsi_region
+0x0000000000000000-0x0000000000000000 0x00010000 (      64 KB ) nomap unusable ipa_fw_region
+0x0000000000000000-0x0000000000000000 0x00080000 (     512 KB ) nomap unusable q6_mpss_dtb_region
+0x0000000000000000-0x0000000000000000 0x0f600000 (  251904 KB ) nomap unusable mpss_region
+0x0000000000000000-0x0000000000000000 0x00a80000 (   10752 KB ) nomap unusable dsm_partition_2_region
+0x0000000000000000-0x0000000000000000 0x04900000 (   74752 KB ) nomap unusable dsm_partition_1_region
+0x0000000000000000-0x0000000000000000 0x02000000 (   32768 KB )   map reusable qdss_apps_region
+0x0000000000000000-0x0000000000000000 0x00100000 (    1024 KB ) nomap unusable tz_stat_region
+0x0000000000000000-0x0000000000000000 0x00100000 (    1024 KB ) nomap unusable global_sync_region
+0x0000000000000000-0x0000000000000000 0x00060000 (     384 KB ) nomap unusable unknown
+0x0000000000000000-0x0000000000000000 0x00100000 (    1024 KB ) nomap unusable pvm_fw_region
+0x0000000000000000-0x0000000000000000 0x00080000 (     512 KB ) nomap unusable pmic_minii_dump_region
+0x0000000000000000-0x0000000000000000 0x00040000 (     256 KB ) nomap unusable soccp_sdi_region
+0x0000000000000000-0x0000000000000000 0x00020000 (     128 KB ) nomap unusable adsp_mhi_region
+0x0000000000000000-0x0000000000000000 0x00380000 (    3584 KB ) nomap unusable cpucp_scandump_region
+0x0000000000000000-0x0000000000000000 0x00100000 (    1024 KB ) nomap unusable pdp_ns_shared_region
+0x0000000000000000-0x0000000000000000 0x00200000 (    2048 KB ) nomap unusable smem_region
+0x0000000000000000-0x0000000000000000 0x00074000 (     464 KB ) nomap unusable aop_tme_uefi_merged_region
+0x0000000000000000-0x0000000000000000 0x00020000 (     128 KB ) nomap unusable aop_cmd_db_region
+0x0000000000000000-0x0000000000000000 0x00060000 (     384 KB ) nomap unusable aop_image_region
+0x0000000000000000-0x0000000000000000 0x00040000 (     256 KB ) nomap unusable xbl_dtlog_region
+0x0000000000000000-0x0000000000000000 0x00560000 (    5504 KB ) nomap unusable unknown
+0x0000000000000000-0x0000000000000000 0x00200000 (    2048 KB ) nomap unusable cpucp_pdp_region
+0x0000000000000000-0x0000000000000000 0x01200000 (   18432 KB ) nomap unusable gunyah_hyp_region
+
+Reserved    : 1201348 KB
+ .kernel    :  284436 KB
+  .text     :   17408 KB
+  .rwdata   :    2075 KB
+  .rodata   :   12852 KB
+  .bss      :    2369 KB
+  .memmap   :  190464 KB
+  .etc      :   59270 KB
+ .unusable  :  916912 KB
+System      : 11381576 KB
+ .common    : 10333000 KB
+ .reusable  : 1048576 KB
+Total       : 12582924 KB ( 12288.01 MB )
+
+*** Error dumping /proc/memsize/kernel (MEMSIZE INFO KERNEL): Not a directory
+*** Error dumping /proc/memsize/reserved (MEMSIZE INFO RESERVED): Not a directory
+*** Error dumping /proc/sys/vm/mmap_readaround_limit (Read Around Limit (pages)): No such file or directory
+------ Read Around Limit (pages) (/sys/kernel/sec_mm/mmap_readaround_limit) ------
+16
+
+------ Multi-Gen LRU (/sys/kernel/mm/lru_gen/enabled) ------
+0x0003
+
+*** Error dumping /sys/kernel/mm/rbincache/stats (RBIN STAT): No such file or directory
+*** Error dumping /proc/ion/heaps/ion_noncontig_heap (ION INFO): No such file or directory
+*** Error dumping /sys/kernel/tracing/instances/kgsl-fence/trace (DUMP KGSL EVENT TRACE): Permission denied
+------ Copy GPU snapshot (/vendor/bin/cp -F /sys/class/kgsl/kgsl-3d0/snapshot/dump /data/vendor/log/gpu/kgsl_snapshot_-1) ------
+------ THERMAL DUMP (/proc/sec_pm_log/thermal_log) ------
+[     1.811685] sec_pm_proc_log_init done
+[     4.549445] qmi: cdsp_hw, 0
+[     4.549656] qmi: cdsp_ss, 0
+[     4.554472] qmi: cdsp, 0
+[     4.565458] qmi: cdsp_sw_hvx, 0
+[     4.571708] qmi: cdsp_sw_hmx, 0
+[     8.066993] qmi: modem_vdd, 0
+[     8.072208] qmi: modem_lte_dsc, 0
+[     8.079077] qmi: modem_lte_sub1_dsc, 0
+[     8.085204] qmi: modem_nr_dsc, 0
+[     8.095007] qmi: modem_nr_sub1_dsc, 0
+[     8.101537] qmi: modem_nr_scg_dsc, 0
+[     8.109341] qmi: modem_nr_scg_sub1_dsc, 0
+[     8.115913] qmi: pa_lte_sdr0_dsc, 0
+[     8.122642] qmi: pa_lte_sdr0_sub1_dsc, 0
+[     8.129248] qmi: pa_nr_sdr0_dsc, 0
+[     8.132784] qmi: pa_nr_sdr0_sub1_dsc, 0
+[     8.136512] qmi: pa_nr_sdr0_scg_dsc, 0
+[     8.140537] qmi: pa_nr_sdr0_scg_sub1_dsc, 0
+[     8.144219] qmi: mmw0_dsc, 0
+[     8.148219] qmi: mmw0_sub1_dsc, 0
+[     8.151906] qmi: mmw1_dsc, 0
+[     8.155644] qmi: mmw1_sub1_dsc, 0
+[     8.159339] qmi: mmw2_dsc, 0
+[     8.163077] qmi: mmw2_sub1_dsc, 0
+[     8.167020] qmi: mmw3_dsc, 0
+[     8.170846] qmi: mmw3_sub1_dsc, 0
+[     8.174548] qmi: modem_bcl, 0
+[    14.495032] ocp_warn: 1, 1
+[    14.495049] ocp_warn: 0, accu(0 ms)
+[    14.507664] ocp_warn: 1, 2
+[    14.507685] ocp_warn: 0, accu(0 ms)
+[    14.516247] ocp_warn: 1, 3
+[    14.516329] ocp_warn: 0, accu(0 ms)
+[    14.516423] ocp_warn: 1, 4
+[    14.516525] ocp_warn: 0, accu(0 ms)
+[    14.566537] ocp_warn: 1, 5
+[    14.566569] ocp_warn: 0, accu(0 ms)
+
+------ POWER DUMP (/proc/sec_pm_log/power_log) ------
+
+
+------ DCVSH DUMP (/proc/sec_pm_log/dcvsh_log) ------
+[     1.811686] sec_pm_proc_log_init done
+[     2.796474] Start lmh cpu6 @4281
+[     2.820473] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 23
+[     2.822491] Start lmh cpu6 @4089
+[     2.828485] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 28
+[     2.834472] Start lmh cpu6 @3840
+[     2.848473] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 42
+[     2.850470] Start lmh cpu6 @3840
+[     2.872470] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 63
+[     2.955524] Start lmh cpu6 @4281
+[     2.957524] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 64
+[     2.965527] Start lmh cpu6 @4089
+[     2.971529] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 70
+[     3.758476] Start lmh cpu6 @4089
+[     3.774511] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 86
+[     3.776506] Start lmh cpu6 @4089
+[     3.782470] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 91
+[     3.786471] Start lmh cpu6 @3840
+[     3.802506] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 107
+[     3.808532] Start lmh cpu6 @3840
+[     3.823186] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 121
+[     3.824471] Start lmh cpu6 @3513
+[     3.826472] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 122
+[     3.906474] Start lmh cpu6 @4089
+[     3.908475] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 124
+[     4.004472] Start lmh cpu6 @4281
+[     4.014475] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 134
+[     4.016471] Start lmh cpu6 @3840
+[     4.020470] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 137
+[     4.046469] Start lmh cpu6 @4089
+[     4.048470] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 139
+[     4.056471] Start lmh cpu6 @4281
+[     4.064476] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 147
+[     4.066470] Start lmh cpu6 @4089
+[     4.072470] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 152
+[     4.076471] Start lmh cpu6 @4089
+[     4.078473] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 154
+[     4.084471] Start lmh cpu6 @4089
+[     4.092469] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 161
+[     4.094470] Start lmh cpu6 @4089
+[     4.100470] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 166
+[     4.102474] Start lmh cpu6 @3840
+[     4.108472] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 171
+[     4.110469] Start lmh cpu6 @3840
+[     4.112471] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 173
+[     4.126472] Start lmh cpu6 @4089
+[     4.128470] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 174
+[     4.130470] Start lmh cpu6 @4089
+[     4.136471] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 180
+[     4.144471] Start lmh cpu6 @3840
+[     4.148471] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 183
+[     4.154471] Start lmh cpu6 @4281
+[     4.156473] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 185
+[     4.158472] Start lmh cpu6 @3840
+[     4.208470] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 234
+[     4.212501] Start lmh cpu6 @3840
+[     4.234475] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 255
+[     4.240473] Start lmh cpu6 @4089
+[     4.258471] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 272
+[     4.260485] Start lmh cpu6 @3840
+[     4.270471] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 281
+[     4.430473] Start lmh cpu6 @4281
+[     4.444485] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 295
+[     4.446472] Start lmh cpu6 @3840
+[     4.464473] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 312
+[     4.470476] Start lmh cpu6 @4281
+[     4.472477] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 314
+[     4.480484] Start lmh cpu6 @4281
+[     4.484473] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 317
+[     4.490472] Start lmh cpu6 @4089
+[     4.492472] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 318
+[     4.498492] Start lmh cpu6 @4281
+[     4.516492] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 335
+[     4.518482] Start lmh cpu6 @4089
+[     4.652478] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 468
+[     4.654473] Start lmh cpu6 @4089
+[     4.656473] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 469
+[     4.658491] Start lmh cpu6 @4281
+[     4.672472] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 482
+[     4.676472] Start lmh cpu6 @4089
+[     4.784477] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 590
+[     4.845527] Start lmh cpu6 @4089
+[     4.875538] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 620
+[     4.937526] Start lmh cpu6 @4281
+[     4.949544] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 632
+[     4.951529] Start lmh cpu6 @4089
+[     4.955525] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 635
+[     4.957528] Start lmh cpu6 @3840
+[     4.959525] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 636
+[     5.140472] Start lmh cpu6 @4089
+[     5.152470] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 647
+[     5.766472] Start lmh cpu6 @4089
+[     5.776478] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 657
+[     5.825526] Start lmh cpu6 @4281
+[     5.827543] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 659
+[     6.282482] Start lmh cpu6 @4281
+[     6.284478] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 660
+[     6.286471] Start lmh cpu6 @4089
+[     6.292470] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 665
+[     6.304472] Start lmh cpu6 @4089
+[     6.318473] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 678
+[     6.423533] Start lmh cpu6 @4281
+[     6.425541] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 680
+[     6.437525] Start lmh cpu6 @3840
+[     6.439526] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 682
+[     6.449528] Start lmh cpu6 @4281
+[     6.451528] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 683
+[     6.496472] Start lmh cpu6 @4281
+[     6.498486] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 685
+[     6.629547] Start lmh cpu6 @4089
+[     6.631546] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 686
+[     6.633540] Start lmh cpu6 @4281
+[     6.635559] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 688
+[     6.643538] Start lmh cpu6 @4281
+[     6.653525] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 697
+[     6.671528] Start lmh cpu6 @4089
+[     6.685532] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 711
+[     6.691530] Start lmh cpu6 @4281
+[     6.695541] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 715
+[     6.699525] Start lmh cpu6 @3840
+[     6.703541] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 719
+[     6.721529] Start lmh cpu6 @3840
+[     6.725524] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 722
+[     6.727534] Start lmh cpu6 @4089
+[     6.743525] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 737
+[     6.745529] Start lmh cpu6 @4089
+[     6.763560] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 755
+[     6.771567] Start lmh cpu6 @4089
+[     6.837526] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 820
+[     6.847527] Start lmh cpu6 @3840
+[     6.849528] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 821
+[     6.853529] Start lmh cpu6 @3513
+[     6.855524] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 822
+[     6.857551] Start lmh cpu6 @4281
+[     6.859529] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 823
+[     6.984479] Start lmh cpu6 @4281
+[     6.988493] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 827
+[     6.998471] Start lmh cpu6 @4281
+[     7.000485] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 829
+[     7.010471] Start lmh cpu6 @4281
+[     7.018475] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 837
+[     7.279530] Start lmh cpu6 @3840
+[     7.281531] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 838
+[     7.348473] Start lmh cpu6 @3840
+[     7.352471] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 841
+[     7.360470] Start lmh cpu6 @3840
+[     7.374474] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 855
+[     7.378471] Start lmh cpu6 @4089
+[     7.380475] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 857
+[     7.382484] Start lmh cpu6 @4089
+[     7.384497] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 859
+[     7.394494] Start lmh cpu6 @4281
+[     7.396511] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 861
+[     7.517534] Start lmh cpu6 @4089
+[     7.521528] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 864
+[     7.523531] Start lmh cpu6 @3283
+[     7.533524] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 873
+[     7.539524] Start lmh cpu6 @4089
+[     7.541523] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 874
+[     7.543533] Start lmh cpu6 @4281
+[     7.545530] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 875
+[     7.555542] Start lmh cpu6 @4089
+[     7.567586] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 887
+[     7.569528] Start lmh cpu6 @3840
+[     7.593542] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 911
+[     7.597534] Start lmh cpu6 @3840
+[     7.601534] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 914
+[     7.603528] Start lmh cpu6 @4281
+[     7.611531] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 922
+[     7.613588] Start lmh cpu6 @3840
+[     7.617525] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 925
+[     7.619528] Start lmh cpu6 @4089
+[     7.621530] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 927
+[     7.623526] Start lmh cpu6 @4089
+[     7.635527] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 938
+[     7.641527] Start lmh cpu6 @4281
+[     7.653525] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 949
+[     7.655530] Start lmh cpu6 @3840
+[     7.661525] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 954
+[     7.663541] Start lmh cpu6 @4089
+[     7.673525] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 963
+[     7.675529] Start lmh cpu6 @3283
+[     7.725530] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1013
+[     7.729529] Start lmh cpu6 @3840
+[     7.731524] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1014
+[     7.737527] Start lmh cpu6 @4089
+[     7.739524] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1015
+[     7.747530] Start lmh cpu6 @3840
+[     7.749526] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1016
+[     7.753542] Start lmh cpu6 @4281
+[     7.763524] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1025
+[     7.771544] Start lmh cpu6 @4281
+[     7.773548] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1027
+[     7.855531] Start lmh cpu6 @4281
+[     7.859526] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1030
+[     7.865542] Start lmh cpu6 @4281
+[     7.869528] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1033
+[     7.873530] Start lmh cpu6 @4281
+[     7.877525] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1036
+[     7.879537] Start lmh cpu6 @4281
+[     7.897537] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1053
+[     7.909532] Start lmh cpu6 @4281
+[     7.915553] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1059
+[     7.919548] Start lmh cpu6 @3840
+[     7.923526] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1062
+[     7.925545] Start lmh cpu6 @3840
+[     7.927536] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1063
+[     7.931541] Start lmh cpu6 @3840
+[     7.935533] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1066
+[     7.939530] Start lmh cpu6 @4089
+[     7.943526] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1069
+[     7.998487] Start lmh cpu6 @4281
+[     8.000471] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1070
+[     8.015525] Start lmh cpu6 @4089
+[     8.017528] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1072
+[     8.021528] Start lmh cpu6 @4281
+[     8.025529] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1075
+[     8.081527] Start lmh cpu6 @4089
+[     8.083529] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1077
+[     8.087533] Start lmh cpu6 @3513
+[     8.089530] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1078
+[     8.093526] Start lmh cpu6 @3840
+[     8.099525] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1083
+[     8.103530] Start lmh cpu6 @3840
+[     8.107532] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1087
+[     8.111524] Start lmh cpu6 @3513
+[     8.113529] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1089
+[     8.117531] Start lmh cpu6 @3840
+[     8.119528] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1090
+[     8.121525] Start lmh cpu6 @4281
+[     8.129523] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1097
+[     8.131529] Start lmh cpu6 @4089
+[     8.133523] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1098
+[     8.135524] Start lmh cpu6 @4089
+[     8.163542] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1126
+[     8.165525] Start lmh cpu6 @4089
+[     8.179529] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1140
+[     8.973527] Start lmh cpu6 @3840
+[     8.981527] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1147
+[     8.987545] Start lmh cpu6 @3840
+[     8.991528] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1150
+[     9.148473] Start lmh cpu6 @4281
+[     9.196472] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1197
+[     9.202470] Start lmh cpu6 @4281
+[     9.242472] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1237
+[     9.293527] Start lmh cpu6 @4089
+[     9.313529] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1257
+[     9.837526] Start lmh cpu6 @4089
+[     9.839525] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1258
+[     9.848475] Start lmh cpu6 @4281
+[     9.850471] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1259
+[     9.905530] Start lmh cpu6 @4089
+[     9.921556] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1275
+[    10.080473] Start lmh cpu6 @3840
+[    10.084470] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1278
+[    10.318474] Start lmh cpu6 @4089
+[    10.322473] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1281
+[    10.404474] Start lmh cpu6 @4089
+[    10.406475] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1282
+[    10.408471] Start lmh cpu6 @4089
+[    10.410471] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1283
+[    10.601531] Start lmh cpu6 @3840
+[    10.617524] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1298
+[    10.892472] Start lmh cpu6 @3513
+[    10.894472] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1299
+[    10.896476] Start lmh cpu6 @4089
+[    11.048922] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 1451
+[    11.147528] Start lmh cpu6 @4281
+[    11.161528] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1464
+[    11.292475] Start lmh cpu0 @3321
+[    11.294471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1
+[    11.296477] Start lmh cpu0 @3321
+[    11.298471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 2
+[    11.306471] Start lmh cpu0 @3321
+[    11.306477] Start lmh cpu6 @4089
+[    11.308473] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 4
+[    11.312471] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1469
+[    11.393529] Start lmh cpu6 @3840
+[    11.397524] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1472
+[    11.535540] Start lmh cpu6 @4089
+[    11.537524] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1473
+[    12.239527] Start lmh cpu6 @3840
+[    12.243525] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1476
+[    12.463537] Start lmh cpu6 @4281
+[    12.467552] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1480
+[    12.484484] Start lmh cpu6 @3840
+[    12.498471] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1493
+[    12.568472] Start lmh cpu0 @3321
+[    12.576473] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 11
+[    12.594478] Start lmh cpu0 @3321
+[    12.596471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 12
+[    12.598471] Start lmh cpu0 @3321
+[    12.602471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 15
+[    12.700476] Start lmh cpu6 @3840
+[    12.710473] Start lmh cpu0 @3321
+[    12.712473] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 16
+[    12.714541] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1507
+[    12.720473] Start lmh cpu0 @3072
+[    12.722475] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 18
+[    12.724486] Start lmh cpu0 @3321
+[    12.726478] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 19
+[    12.730472] Start lmh cpu0 @3321
+[    12.732476] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 21
+[    12.736497] Start lmh cpu0 @3072
+[    12.738476] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 22
+[    12.742475] Start lmh cpu0 @3321
+[    12.750475] Start lmh cpu6 @3513
+[    12.756488] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1513
+[    12.780474] Start lmh cpu6 @4281
+[    12.784477] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1517
+[    12.796471] Start lmh cpu6 @4089
+[    12.802478] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1523
+[    12.806472] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 85
+[    12.808473] Start lmh cpu0 @3321
+[    12.812473] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 88
+[    12.814478] Start lmh cpu6 @4281
+[    12.816479] Start lmh cpu0 @3072
+[    12.816484] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1525
+[    12.818477] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 89
+[    12.820474] Start lmh cpu0 @3321
+[    12.822472] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 90
+[    12.822475] Start lmh cpu6 @4281
+[    12.824474] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1526
+[    12.828486] Start lmh cpu0 @3072
+[    12.834472] Start lmh cpu6 @4089
+[    12.836477] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 97
+[    12.836483] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1528
+[    12.838470] Start lmh cpu0 @3321
+[    12.842479] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 101
+[    12.844472] Start lmh cpu0 @3321
+[    12.848476] Start lmh cpu6 @4281
+[    12.854481] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 111
+[    12.858475] Start lmh cpu0 @3321
+[    12.872473] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 124
+[    12.874472] Start lmh cpu0 @3321
+[    12.884474] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 134
+[    12.890477] Start lmh cpu0 @3321
+[    12.892472] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 135
+[    12.894482] Start lmh cpu0 @3321
+[    12.898470] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 138
+[    12.902474] Start lmh cpu0 @3072
+[    12.906475] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 1585
+[    12.912475] Start lmh cpu6 @4281
+[    12.930472] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 165
+[    12.932471] Start lmh cpu0 @3321
+[    12.932477] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1605
+[    12.936525] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 169
+[    12.940486] Start lmh cpu6 @4281
+[    12.942476] Start lmh cpu0 @3072
+[    12.942480] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1606
+[    12.950481] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 177
+[    12.958474] Start lmh cpu0 @3321
+[    12.962476] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 180
+[    12.966470] Start lmh cpu0 @3321
+[    12.970470] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 183
+[    12.972482] Start lmh cpu6 @4089
+[    12.980471] Start lmh cpu0 @3072
+[    12.980477] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1613
+[    12.984470] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 186
+[    12.984476] Start lmh cpu6 @3283
+[    12.986478] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1615
+[    12.990490] Start lmh cpu6 @4281
+[    12.998498] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1623
+[    13.000473] Start lmh cpu6 @4281
+[    13.002473] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1624
+[    13.032479] Start lmh cpu6 @4281
+[    13.036472] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1627
+[    13.040473] Start lmh cpu6 @3283
+[    13.048475] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1635
+[    13.052475] Start lmh cpu0 @3321
+[    13.056478] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 190
+[    13.060477] Start lmh cpu6 @4281
+[    13.062486] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1637
+[    13.070474] Start lmh cpu0 @3321
+[    13.072469] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 191
+[    13.074470] Start lmh cpu0 @3072
+[    13.076471] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 192
+[    13.080485] Start lmh cpu0 @3321
+[    13.080491] Start lmh cpu6 @4281
+[    13.084478] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 195
+[    13.090473] Start lmh cpu0 @3321
+[    13.096541] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1653
+[    13.098485] Start lmh cpu6 @4281
+[    13.100479] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1654
+[    13.112473] Start lmh cpu6 @3840
+[    13.118476] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1660
+[    13.132477] Start lmh cpu6 @3840
+[    13.136473] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 240
+[    13.138471] Start lmh cpu0 @3321
+[    13.152485] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 254
+[    13.156477] Start lmh cpu0 @3321
+[    13.174471] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 271
+[    13.178472] Start lmh cpu0 @3321
+[    13.182474] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 274
+[    13.182479] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 1709
+[    13.186471] Start lmh cpu6 @4281
+[    13.192474] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1715
+[    13.202471] Start lmh cpu0 @3321
+[    13.204472] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 275
+[    13.204478] Start lmh cpu6 @3840
+[    13.206486] Start lmh cpu0 @3321
+[    13.208493] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 277
+[    13.212471] Start lmh cpu0 @3072
+[    13.224496] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 289
+[    13.228476] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1738
+[    13.230471] Start lmh cpu6 @3840
+[    13.234472] Start lmh cpu0 @2918
+[    13.236474] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 291
+[    13.240472] Start lmh cpu0 @3321
+[    13.242484] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 293
+[    13.242494] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1750
+[    13.248474] Start lmh cpu6 @3840
+[    13.252489] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1754
+[    13.270475] Start lmh cpu6 @4281
+[    13.278488] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1762
+[    13.292476] Start lmh cpu6 @4281
+[    13.296591] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1766
+[    13.298477] Start lmh cpu6 @4281
+[    13.316474] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1783
+[    13.318528] Start lmh cpu0 @3321
+[    13.318536] Start lmh cpu6 @4089
+[    13.322481] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 296
+[    13.324471] Start lmh cpu0 @3072
+[    13.328473] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 300
+[    13.330476] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 1794
+[    13.338475] Start lmh cpu0 @3321
+[    13.340475] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 301
+[    13.350486] Start lmh cpu6 @3840
+[    13.354474] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1797
+[    13.366476] Start lmh cpu6 @4281
+[    13.370471] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1800
+[    13.374471] Start lmh cpu6 @4089
+[    13.382473] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1808
+[    13.384472] Start lmh cpu6 @3283
+[    13.388473] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1811
+[    13.392472] Start lmh cpu6 @3513
+[    13.396608] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1815
+[    13.430486] Start lmh cpu6 @4281
+[    13.432471] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1816
+[    13.444475] Start lmh cpu6 @4089
+[    13.446476] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1818
+[    13.452479] Start lmh cpu6 @4089
+[    13.466471] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 4473, accu 1831
+[    13.468471] Start lmh cpu6 @4089
+[    13.484472] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1847
+[    13.486472] Start lmh cpu6 @4281
+[    13.488475] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1849
+[    13.500473] Start lmh cpu6 @4281
+[    13.502495] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 1851
+[    13.504471] Start lmh cpu6 @3513
+[    13.506471] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1852
+[    13.510473] Start lmh cpu6 @4281
+[    13.518480] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 1860
+[    13.520476] Start lmh cpu6 @4089
+[    13.526474] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1865
+[    13.528476] Start lmh cpu6 @3513
+[    13.556474] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 1892
+[    13.560473] Start lmh cpu6 @3840
+[    13.564485] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1896
+[    13.578472] Start lmh cpu6 @4281
+[    13.582471] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1899
+[    13.586471] Start lmh cpu6 @3840
+[    13.594473] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1907
+[    13.606476] Start lmh cpu6 @4281
+[    13.610475] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 1910
+[    13.612471] Start lmh cpu6 @4281
+[    13.624473] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 1922
+[    13.632478] Start lmh cpu6 @4089
+[    13.638486] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1928
+[    13.642489] Start lmh cpu6 @4089
+[    13.676472] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 1961
+[    13.678481] Start lmh cpu6 @3840
+[    13.690471] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 1972
+[    13.692509] Start lmh cpu6 @4089
+[    13.696479] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 1975
+[    13.698471] Start lmh cpu6 @4089
+[    13.736478] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 2013
+[    13.742563] Start lmh cpu6 @4089
+[    13.746677] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 2017
+[    13.748473] Start lmh cpu6 @3283
+[    13.750473] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 2018
+[    13.752477] Start lmh cpu6 @3840
+[    13.768480] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 2034
+[    13.772471] Start lmh cpu6 @4281
+[    13.774473] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 2036
+[    13.776474] Start lmh cpu6 @4089
+[    13.778472] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 2037
+[    13.790475] Start lmh cpu6 @2841
+[    13.794470] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 2040
+[    13.796478] Start lmh cpu6 @3840
+[    13.798477] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 2041
+[    13.808476] Start lmh cpu6 @2841
+[    13.810479] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 2043
+[    13.816482] Start lmh cpu6 @4089
+[    13.820484] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 2047
+[    13.822476] Start lmh cpu6 @4089
+[    13.862472] Start lmh cpu0 @3321
+[    13.868474] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 307
+[    13.872488] Start lmh cpu0 @3321
+[    13.874475] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 308
+[    13.876472] Start lmh cpu0 @3321
+[    13.878472] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 309
+[    13.880472] Start lmh cpu0 @3072
+[    13.900472] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 328
+[    13.902470] Start lmh cpu0 @3321
+[    13.916473] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 342
+[    13.918473] Start lmh cpu0 @3072
+[    13.934471] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 357
+[    13.938472] Start lmh cpu0 @3321
+[    13.948498] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 367
+[    13.950491] Start lmh cpu0 @3321
+[    13.952470] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 368
+[    13.954474] Start lmh cpu0 @3072
+[    13.956476] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 369
+[    13.960472] Start lmh cpu0 @2918
+[    13.964473] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 372
+[    13.968472] Start lmh cpu0 @3321
+[    13.982518] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 386
+[    13.986485] Start lmh cpu0 @2918
+[    13.990491] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 390
+[    14.004474] Start lmh cpu0 @3321
+[    14.006489] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 392
+[    14.008473] Start lmh cpu0 @3321
+[    14.014492] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 398
+[    14.026470] Start lmh cpu0 @3321
+[    14.046478] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 418
+[    14.070486] Start lmh cpu0 @3321
+[    14.074471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 421
+[    14.076473] Start lmh cpu0 @3072
+[    14.076477] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 4473, accu 2300
+[    14.078495] Start lmh cpu6 @3283
+[    14.080471] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 424
+[    14.084471] Start lmh cpu0 @3321
+[    14.086469] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 425
+[    14.090474] Start lmh cpu0 @3321
+[    14.096470] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 430
+[    14.112479] Start lmh cpu0 @3072
+[    14.114481] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 431
+[    14.120472] Start lmh cpu0 @3321
+[    14.124482] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 435
+[    14.128501] Start lmh cpu0 @3072
+[    14.134475] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 440
+[    14.138486] Start lmh cpu0 @3321
+[    14.140487] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 441
+[    14.162471] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 2383
+[    14.166474] Start lmh cpu0 @3072
+[    14.166479] Start lmh cpu6 @3840
+[    14.168474] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 442
+[    14.170472] Start lmh cpu0 @3321
+[    14.172482] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 2745, accu 444
+[    14.196485] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 2413
+[    14.206473] Start lmh cpu6 @3840
+[    14.224472] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 2430
+[    14.226471] Start lmh cpu6 @3840
+[    14.234283] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 2437
+[    14.236474] Start lmh cpu6 @3283
+[    14.240474] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 2440
+[    14.244487] Start lmh cpu6 @4281
+[    14.250486] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 2445
+[    14.252474] Start lmh cpu6 @3840
+[    14.270474] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 2462
+[    14.272473] Start lmh cpu6 @3840
+[    14.280483] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 2470
+[    14.282472] Start lmh cpu6 @3283
+[    14.352473] Start lmh cpu0 @3321
+[    14.356474] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 2745, accu 447
+[    14.360474] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 2547
+[    14.362474] Start lmh cpu6 @4281
+[    14.392473] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 3283, accu 2576
+[    14.436476] Start lmh cpu6 @4089
+[    14.454479] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 3840, accu 2593
+[    14.458475] Start lmh cpu6 @3840
+[    14.470475] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 3840, accu 2604
+[    14.472472] Start lmh cpu6 @3840
+[    14.486478] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4089, accu 2618
+[    14.488473] Start lmh cpu6 @4281
+[    14.492473] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 2621
+[    14.496471] Start lmh cpu6 @3513
+[    14.498476] Start lmh cpu0 @3321
+[    14.510480] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 459
+[    14.510485] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 2635
+[    14.512476] Start lmh cpu0 @3321
+[    14.512480] Start lmh cpu6 @3513
+[    14.518471] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 2640
+[    14.520493] Start lmh cpu6 @3513
+[    14.566470] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 512
+[    14.568475] Start lmh cpu0 @3321
+[    14.624481] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 2743
+[    14.626487] Start lmh cpu6 @3513
+[    14.636486] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 2752
+[    14.654474] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 597
+[    14.656472] Start lmh cpu0 @3321
+[    14.658469] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 598
+[    14.660473] Start lmh cpu0 @3321
+[    14.662474] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 600
+[    14.702473] Start lmh cpu0 @3321
+[    14.704472] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 601
+[    14.706475] Start lmh cpu0 @3321
+[    14.708471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 602
+[    14.722474] Start lmh cpu0 @3321
+[    14.730471] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 609
+[    14.732471] Start lmh cpu0 @3321
+[    14.734478] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 611
+[    14.740474] Start lmh cpu0 @3321
+[    14.742474] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 612
+[    14.758479] Start lmh cpu0 @3321
+[    14.760479] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 613
+[    14.786477] Start lmh cpu0 @3321
+[    14.790474] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 616
+[    14.796533] Start lmh cpu0 @3072
+[    14.800474] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 619
+[    14.802471] Start lmh cpu0 @3321
+[    14.806471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 622
+[    14.812472] Start lmh cpu0 @3321
+[    14.814469] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 623
+[    14.820471] Start lmh cpu0 @3321
+[    14.822474] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 625
+[    14.824472] Start lmh cpu0 @3321
+[    14.834471] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 634
+[    14.836474] Start lmh cpu0 @3072
+[    14.840471] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 637
+[    14.842473] Start lmh cpu0 @3321
+[    14.846472] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 640
+[    14.848472] Start lmh cpu0 @3321
+[    14.856474] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 648
+[    14.858471] Start lmh cpu0 @3321
+[    14.866471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 655
+[    14.868471] Start lmh cpu0 @3321
+[    14.882478] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 669
+[    14.884476] Start lmh cpu0 @3072
+[    14.888472] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 672
+[    14.890473] Start lmh cpu0 @2918
+[    14.894471] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 675
+[    14.898470] Start lmh cpu0 @3321
+[    14.908471] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 684
+[    14.910470] Start lmh cpu0 @3072
+[    14.920472] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 694
+[    14.952474] Start lmh cpu0 @3072
+[    14.956472] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 697
+[    14.958476] Start lmh cpu6 @3840
+[    14.962471] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 2755
+[    14.968477] Start lmh cpu6 @4089
+[    14.970480] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 2757
+[    14.982473] Start lmh cpu6 @3840
+[    14.998474] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 2772
+[    15.004518] Start lmh cpu6 @3840
+[    15.006473] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 2773
+[    15.010519] Start lmh cpu6 @3513
+[    15.016470] Start lmh cpu0 @3321
+[    15.018471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 698
+[    15.032475] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 2794
+[    15.036475] Start lmh cpu6 @3840
+[    15.044475] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 2801
+[    15.066489] Start lmh cpu0 @3321
+[    15.068473] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 699
+[    15.070472] Start lmh cpu6 @4089
+[    15.072474] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 2803
+[    15.076472] Start lmh cpu0 @3321
+[    15.082474] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 705
+[    15.086482] Start lmh cpu0 @3321
+[    15.094473] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 712
+[    15.094478] Start lmh cpu6 @3513
+[    15.096475] Start lmh cpu0 @3072
+[    15.096479] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 2804
+[    15.152472] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 767
+[    15.156471] Start lmh cpu0 @3321
+[    15.160470] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 770
+[    15.164471] Start lmh cpu0 @3072
+[    15.172476] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 778
+[    15.174471] Start lmh cpu0 @2918
+[    15.188484] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 792
+[    15.190475] Start lmh cpu0 @3321
+[    15.256477] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 857
+[    15.258486] Start lmh cpu0 @3321
+[    15.270472] Start lmh cpu6 @4089
+[    15.272497] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 2806
+[    15.286471] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 884
+[    15.288470] Start lmh cpu0 @3321
+[    15.314474] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 910
+[    15.316470] Start lmh cpu0 @2918
+[    15.342469] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 935
+[    15.344475] Start lmh cpu0 @3321
+[    15.346487] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 937
+[    15.410481] Start lmh cpu0 @3321
+[    15.412471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 938
+[    15.432480] Start lmh cpu0 @3072
+[    15.440475] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 945
+[    15.448474] Start lmh cpu0 @3321
+[    15.454479] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 951
+[    15.460473] Start lmh cpu0 @3072
+[    15.466471] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 956
+[    15.474472] Start lmh cpu0 @2745
+[    15.476474] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 957
+[    15.478469] Start lmh cpu0 @3072
+[    15.480471] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 959
+[    15.482470] Start lmh cpu0 @3321
+[    15.500471] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 976
+[    15.502471] Start lmh cpu0 @3321
+[    15.508470] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 2918, accu 981
+[    15.656474] Start lmh cpu0 @3321
+[    15.660474] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 984
+[    15.662469] Start lmh cpu0 @3321
+[    15.664474] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 986
+[    15.668472] Start lmh cpu0 @3072
+[    15.672473] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 989
+[    15.676473] Start lmh cpu0 @3321
+[    15.678471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 990
+[    15.698474] Start lmh cpu0 @3321
+[    15.700471] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 991
+[    21.742109] Start lmh cpu6 @4089
+[    21.744102] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 2807
+[    21.768092] Start lmh cpu6 @4281
+[    21.776108] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 2815
+[    21.780093] Start lmh cpu6 @3840
+[    21.782091] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 2816
+[    21.786099] Start lmh cpu6 @4089
+[    21.794103] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 2824
+[    21.830120] Start lmh cpu6 @4089
+[    21.836098] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 2829
+[    21.988100] Start lmh cpu6 @4281
+[    21.989054] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 2829
+[    22.007094] Start lmh cpu6 @4281
+[    22.009038] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 2830
+[    22.013043] Start lmh cpu6 @3513
+[    22.033041] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 2849
+[    22.045039] Start lmh cpu6 @3840
+[    22.057040] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 2860
+[    22.059037] Start lmh cpu6 @4281
+[    22.061054] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 2862
+[    22.073040] Start lmh cpu6 @3840
+[    22.119039] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 2907
+[    22.121038] Start lmh cpu6 @3840
+[    22.123038] Start lmh cpu0 @3321
+[    22.125035] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 992
+[    22.131039] Start lmh cpu0 @3072
+[    22.133048] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 994
+[    22.179038] Start lmh cpu0 @3072
+[    22.181040] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 995
+[    22.191037] Start lmh cpu0 @3321
+[    22.195036] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 998
+[    22.203037] Start lmh cpu0 @3321
+[    22.205050] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1000
+[    22.211037] Start lmh cpu0 @3321
+[    22.213039] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1001
+[    22.217041] Start lmh cpu0 @3321
+[    22.239037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1022
+[    22.241049] Start lmh cpu0 @2918
+[    22.243035] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1023
+[    22.245036] Start lmh cpu0 @3321
+[    22.253036] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1030
+[    22.265036] Start lmh cpu0 @3321
+[    22.277049] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1042
+[    22.283036] Start lmh cpu0 @3072
+[    22.287036] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1045
+[    22.293038] Start lmh cpu0 @3072
+[    22.299037] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1050
+[    22.303040] Start lmh cpu0 @3321
+[    22.305040] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1051
+[    22.309037] Start lmh cpu0 @3321
+[    22.311041] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1053
+[    22.315037] Start lmh cpu0 @3321
+[    22.323036] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1060
+[    22.325041] Start lmh cpu0 @3321
+[    22.339035] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1073
+[    22.341036] Start lmh cpu0 @3072
+[    22.343035] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1074
+[    22.345038] Start lmh cpu0 @3321
+[    22.347042] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1076
+[    22.349047] Start lmh cpu0 @2918
+[    22.359037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1085
+[    22.365037] Start lmh cpu0 @3321
+[    22.369043] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1089
+[    22.373036] Start lmh cpu0 @3321
+[    22.377036] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1092
+[    22.379037] Start lmh cpu0 @3321
+[    22.381036] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1093
+[    22.383036] Start lmh cpu0 @3321
+[    22.393041] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1103
+[    22.395036] Start lmh cpu0 @3321
+[    22.397036] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1104
+[    22.401036] Start lmh cpu0 @3321
+[    22.427037] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1129
+[    22.429037] Start lmh cpu0 @3321
+[    22.433040] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 3218
+[    22.435045] Start lmh cpu6 @4089
+[    22.439051] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 3222
+[    22.441037] Start lmh cpu6 @3513
+[    22.459037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1158
+[    22.461039] Start lmh cpu0 @3321
+[    22.465037] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1161
+[    22.467037] Start lmh cpu0 @3072
+[    22.481036] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1174
+[    22.483039] Start lmh cpu0 @3321
+[    22.495038] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1185
+[    22.497038] Start lmh cpu0 @3321
+[    22.501042] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1189
+[    22.503054] Start lmh cpu0 @3321
+[    22.515036] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1200
+[    22.519036] Start lmh cpu0 @3072
+[    22.531038] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1211
+[    22.537037] Start lmh cpu0 @3072
+[    22.539052] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1213
+[    22.541038] Start lmh cpu0 @3321
+[    22.543037] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1214
+[    22.545039] Start lmh cpu0 @3321
+[    22.547048] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1216
+[    22.551038] Start lmh cpu0 @3321
+[    22.593038] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1257
+[    22.595037] Start lmh cpu0 @3321
+[    22.621036] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1282
+[    22.623036] Start lmh cpu0 @3321
+[    22.647037] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1305
+[    22.649037] Start lmh cpu0 @3321
+[    22.653038] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1308
+[    22.655053] Start lmh cpu0 @3321
+[    22.681038] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1333
+[    22.683037] Start lmh cpu0 @3321
+[    22.697039] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1346
+[    22.701037] Start lmh cpu0 @3072
+[    22.705037] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1349
+[    22.709048] Start lmh cpu0 @3321
+[    22.715037] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1354
+[    22.719036] Start lmh cpu0 @3321
+[    22.721039] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1356
+[    22.723036] Start lmh cpu0 @3321
+[    22.755041] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1388
+[    22.761039] Start lmh cpu0 @3072
+[    22.767038] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1393
+[    22.769037] Start lmh cpu0 @3072
+[    22.779038] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1402
+[    22.781047] Start lmh cpu0 @3321
+[    22.811036] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1431
+[    22.815037] Start lmh cpu0 @3321
+[    22.817050] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1433
+[    22.819037] Start lmh cpu0 @3321
+[    22.821040] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1435
+[    22.825037] Start lmh cpu0 @3321
+[    22.843045] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1453
+[    22.845039] Start lmh cpu0 @3321
+[    22.881036] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1488
+[    22.883038] Start lmh cpu0 @3321
+[    22.929037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1533
+[    22.931040] Start lmh cpu0 @3321
+[    22.937041] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1538
+[    22.939037] Start lmh cpu0 @3321
+[    22.963043] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1562
+[    22.965041] Start lmh cpu0 @3321
+[    23.025045] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 3806
+[    23.027039] Start lmh cpu6 @3840
+[    23.031037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1627
+[    23.033052] Start lmh cpu0 @3072
+[    23.061037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1654
+[    23.063037] Start lmh cpu0 @3321
+[    23.079036] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1669
+[    23.083038] Start lmh cpu0 @3321
+[    23.085037] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1670
+[    23.089037] Start lmh cpu0 @2918
+[    23.123052] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1704
+[    23.131037] Start lmh cpu0 @3321
+[    23.135040] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 1708
+[    23.137039] Start lmh cpu0 @3072
+[    23.163037] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1733
+[    23.165036] Start lmh cpu0 @3072
+[    23.179040] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1747
+[    23.181037] Start lmh cpu0 @3321
+[    23.221036] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1786
+[    23.223036] Start lmh cpu0 @3072
+[    23.293041] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1856
+[    23.295042] Start lmh cpu0 @3321
+[    23.301055] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 1862
+[    23.303049] Start lmh cpu0 @2918
+[    23.331037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 1889
+[    23.333037] Start lmh cpu0 @3321
+[    23.401036] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 1956
+[    23.403040] Start lmh cpu0 @3072
+[    23.731037] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 2283
+[    23.733040] Start lmh cpu0 @3072
+[    23.747039] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 2296
+[    23.749038] Start lmh cpu0 @3321
+[    23.785037] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 2331
+[    23.787036] Start lmh cpu0 @3072
+[    23.957037] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 2500
+[    23.959036] Start lmh cpu0 @3321
+[    24.151042] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 2692
+[    24.153035] Start lmh cpu0 @3072
+[    24.155038] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 2694
+[    24.157036] Start lmh cpu0 @3072
+[    24.261046] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 3513, accu 5040
+[    24.271037] Start lmh cpu6 @4089
+[    24.317036] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3072, accu 2853
+[    24.319035] Start lmh cpu0 @3321
+[    24.327047] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3072, accu 2861
+[    24.331037] Start lmh cpu0 @3321
+[    24.333035] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3072, accu 2862
+[    24.333041] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 3513, accu 5102
+[    24.335040] Start lmh cpu0 @3072
+[    24.335043] Start lmh cpu6 @3072
+[    24.345042] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 3513, accu 5111
+[    24.347050] Start lmh cpu6 @4281
+[    24.349042] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 3513, accu 5112
+[    24.351036] Start lmh cpu6 @4281
+[    24.361039] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3072, accu 2887
+[    24.365056] Start lmh cpu0 @3321
+[    24.373037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3072, accu 2894
+[    24.375037] Start lmh cpu0 @3321
+[    24.377036] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3072, accu 2895
+[    24.381036] Start lmh cpu0 @3072
+[    24.383050] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 3513, accu 5144
+[    24.387040] Start lmh cpu6 @4281
+[    24.389040] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 3513, accu 5145
+[    24.391038] Start lmh cpu6 @4281
+[    24.405037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3072, accu 2918
+[    24.407037] Start lmh cpu0 @2918
+[    24.421054] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 3513, accu 5175
+[    24.423036] Start lmh cpu6 @3513
+[    24.435035] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 2945
+[    24.437054] Start lmh cpu0 @3072
+[    24.467037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 2974
+[    24.469037] Start lmh cpu0 @3072
+[    24.473052] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 2978
+[    24.475043] Start lmh cpu0 @2918
+[    24.575036] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 3077
+[    24.577036] Start lmh cpu0 @3072
+[    24.613041] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 3113
+[    24.615037] Start lmh cpu0 @3321
+[    24.755042] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 3253
+[    24.757072] Start lmh cpu0 @3072
+[    24.773036] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 3268
+[    24.775035] Start lmh cpu0 @3072
+[    24.797051] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 3290
+[    24.799037] Start lmh cpu0 @3072
+[    25.005037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 3495
+[    25.007037] Start lmh cpu0 @3072
+[    25.271040] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 3759
+[    25.273040] Start lmh cpu0 @3321
+[    25.329038] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 3814
+[    25.331035] Start lmh cpu0 @3072
+[    25.641036] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 4123
+[    25.643048] Start lmh cpu0 @3072
+[    25.927038] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 4473, accu 6679
+[    25.933041] Start lmh cpu6 @4281
+[    25.939037] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 6684
+[    25.941039] Start lmh cpu6 @4089
+[    26.033039] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 4512
+[    26.035036] Start lmh cpu0 @3072
+[    26.069039] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 4473, accu 6811
+[    26.073038] Start lmh cpu6 @3283
+[    26.099042] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 6837
+[    26.101040] Start lmh cpu6 @3840
+[    26.187038] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 6922
+[    26.193040] Start lmh cpu6 @4089
+[    26.195043] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 6924
+[    26.197045] Start lmh cpu6 @4281
+[    26.201057] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 6928
+[    26.203040] Start lmh cpu6 @4281
+[    26.309055] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 7034
+[    26.313037] Start lmh cpu6 @4089
+[    26.317042] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 7038
+[    26.319035] Start lmh cpu6 @4281
+[    26.343042] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 7062
+[    26.357042] Start lmh cpu6 @4281
+[    26.359039] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 7063
+[    26.361045] Start lmh cpu6 @4281
+[    26.423039] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 7124
+[    26.427040] Start lmh cpu6 @4281
+[    26.429040] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 7125
+[    26.431044] Start lmh cpu6 @3513
+[    26.459042] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 7152
+[    26.495042] Start lmh cpu6 @3840
+[    26.497038] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 7153
+[    26.501038] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 4978
+[    26.515036] Start lmh cpu0 @3321
+[    26.519035] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 4981
+[    26.523036] Start lmh cpu0 @3321
+[    26.525047] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 4983
+[    26.527042] Start lmh cpu0 @3321
+[    26.529040] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 4984
+[    26.539039] Start lmh cpu0 @3321
+[    26.541038] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 4985
+[    26.551045] Start lmh cpu0 @3321
+[    26.553051] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 4987
+[    26.561059] Start lmh cpu0 @3321
+[    26.565038] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 4990
+[    26.603048] Start lmh cpu0 @3321
+[    26.605042] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 4991
+[    26.609053] Start lmh cpu0 @3321
+[    26.643039] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 5024
+[    26.645038] Start lmh cpu0 @3321
+[    26.665040] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5043
+[    26.671045] Start lmh cpu0 @3321
+[    26.677037] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5048
+[    26.679042] Start lmh cpu0 @3321
+[    26.683044] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5052
+[    26.685040] Start lmh cpu0 @3321
+[    26.687090] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5054
+[    26.691040] Start lmh cpu0 @3321
+[    26.701041] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5063
+[    26.703050] Start lmh cpu0 @3321
+[    26.705038] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5064
+[    26.709042] Start lmh cpu0 @3321
+[    26.711046] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5066
+[    26.713041] Start lmh cpu0 @3321
+[    26.715040] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5067
+[    26.721037] Start lmh cpu0 @3321
+[    26.725042] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5071
+[    26.727037] Start lmh cpu0 @3321
+[    26.739039] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5083
+[    26.741037] Start lmh cpu0 @3321
+[    26.743037] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5084
+[    26.747040] Start lmh cpu0 @3321
+[    26.755043] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5092
+[    26.757040] Start lmh cpu0 @3321
+[    26.759050] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5094
+[    26.761043] Start lmh cpu0 @3321
+[    26.763049] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5096
+[    26.769048] Start lmh cpu0 @3321
+[    26.771041] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5097
+[    26.779037] Start lmh cpu0 @3321
+[    26.783037] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5100
+[    26.785038] Start lmh cpu0 @3321
+[    26.791042] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5106
+[    26.793039] Start lmh cpu0 @3321
+[    26.795036] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 5107
+[    26.799058] Start lmh cpu0 @3072
+[    26.807062] Start lmh cpu6 @3840
+[    26.813044] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 7158
+[    26.815037] Start lmh cpu6 @4089
+[    26.817039] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 7160
+[    26.819039] Start lmh cpu6 @3513
+[    26.829038] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 7169
+[    26.835044] Start lmh cpu6 @3283
+[    26.837039] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 7170
+[    26.841075] Start lmh cpu6 @3072
+[    26.851055] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 7179
+[    26.853041] Start lmh cpu6 @3840
+[    26.857057] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 7183
+[    26.859038] Start lmh cpu6 @3513
+[    26.867039] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 7190
+[    26.869040] Start lmh cpu6 @3840
+[    26.871040] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 7191
+[    26.913042] Start lmh cpu6 @4089
+[    26.915050] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 2438, accu 7193
+[    26.923049] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 5230
+[    26.925036] Start lmh cpu0 @3072
+[    26.931043] Start lmh cpu6 @3513
+[    26.963040] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 7224
+[    26.967043] Start lmh cpu6 @3840
+[    27.077046] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 7334
+[    27.079043] Start lmh cpu6 @4089
+[    27.167053] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 7422
+[    27.169041] Start lmh cpu6 @3513
+[    28.327040] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 3283, accu 8579
+[    28.333068] Start lmh cpu6 @4089
+[    28.383050] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 3840, accu 8628
+[    28.385037] Start lmh cpu6 @4281
+[    28.387047] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 2246, accu 8630
+[    28.417042] Start lmh cpu6 @4089
+[    28.421040] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4281, accu 8633
+[    28.437053] Start lmh cpu6 @4281
+[    28.439042] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 8634
+[    28.441048] Start lmh cpu6 @4089
+[    28.519043] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 3283, accu 8711
+[    28.667040] Start lmh cpu6 @4281
+[    28.679037] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 8722
+[    28.691037] Start lmh cpu6 @4281
+[    28.693037] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 8723
+[    28.695049] Start lmh cpu6 @4089
+[    28.699040] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 8726
+[    28.701039] Start lmh cpu6 @3840
+[    28.703041] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 8728
+[    28.705040] Start lmh cpu6 @4281
+[    28.715041] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 8737
+[    28.717038] Start lmh cpu6 @4281
+[    28.731054] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 8751
+[    28.735045] Start lmh cpu6 @3840
+[    28.743040] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3283, accu 8758
+[    28.749059] Start lmh cpu6 @3513
+[    28.753040] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4089, accu 8761
+[    28.787041] Start lmh cpu6 @3513
+[    28.791041] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 8764
+[    28.811036] Start lmh cpu6 @4281
+[    28.819037] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 8771
+[    28.823036] Start lmh cpu6 @3840
+[    28.833041] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 8781
+[    28.835039] Start lmh cpu6 @4089
+[    28.837047] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 2438, accu 8783
+[    28.917060] Start lmh cpu6 @4089
+[    28.921065] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 8787
+[    28.969056] Start lmh cpu6 @4089
+[    29.333040] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 9150
+[    29.335058] Start lmh cpu6 @3840
+[    29.345077] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 9160
+[    29.347045] Start lmh cpu6 @4089
+[    29.385040] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 9197
+[    29.387043] Start lmh cpu6 @4089
+[    29.401058] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 9211
+[    29.403040] Start lmh cpu6 @3072
+[    29.443038] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 9250
+[    29.445041] Start lmh cpu6 @3840
+[    30.357038] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 4473, accu 10161
+[    30.359042] Start lmh cpu6 @3513
+[    30.479053] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 4473, accu 10281
+[    30.483039] Start lmh cpu6 @3840
+[    30.507040] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 3840, accu 10304
+[    30.551059] Start lmh cpu6 @4089
+[    30.559039] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 10311
+[    30.561041] Start lmh cpu6 @3513
+[    30.657038] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 10406
+[    30.661042] Start lmh cpu6 @4089
+[    30.663044] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 10408
+[    30.673040] Start lmh cpu6 @3513
+[    30.731042] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 10465
+[    30.733038] Start lmh cpu6 @3283
+[    30.747036] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 3513, accu 10478
+[    30.765037] Start lmh cpu6 @4281
+[    30.775037] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3283, accu 10487
+[    30.785044] Start lmh cpu6 @4089
+[    30.793041] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3513, accu 10494
+[    30.795044] Start lmh cpu6 @3840
+[    30.825040] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 10523
+[    30.827058] Start lmh cpu6 @4089
+[    30.863053] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 10558
+[    30.865040] Start lmh cpu6 @4281
+[    30.871041] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3283, accu 10564
+[    30.891040] Start lmh cpu6 @4281
+[    31.025050] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 4473, accu 10698
+[    31.067044] Start lmh cpu6 @3840
+[    31.073038] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 10703
+[    31.075036] Start lmh cpu6 @3283
+[    31.085038] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 10713
+[    31.087041] Start lmh cpu6 @4281
+[    31.089038] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 10714
+[    31.129041] Start lmh cpu6 @3513
+[    31.139039] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4089, accu 10723
+[    31.245036] Fin. lmh cpu0, lowest 2400, f_lim 3532, dcvsh 3532, accu 9549
+[    31.247055] Start lmh cpu0 @3321
+[    31.257066] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 9559
+[    31.259035] Start lmh cpu0 @2918
+[    31.291036] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 9590
+[    31.293035] Start lmh cpu0 @3321
+[    31.341040] Start lmh cpu6 @3840
+[    31.385040] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 10766
+[    31.401052] Start lmh cpu6 @4089
+[    31.407038] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 10771
+[    31.605037] Start lmh cpu6 @3840
+[    31.607044] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 10773
+[    31.613039] Start lmh cpu6 @3513
+[    31.623040] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4281, accu 10782
+[    31.625038] Start lmh cpu6 @3283
+[    31.629038] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 10785
+[    31.635039] Start lmh cpu6 @4281
+[    31.647039] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 2438, accu 10796
+[    31.651036] Start lmh cpu6 @4089
+[    31.653043] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 3283, accu 10798
+[    31.719042] Start lmh cpu6 @4089
+[    31.721039] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 10799
+[    31.731042] Start lmh cpu6 @4281
+[    31.733042] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4089, accu 10800
+[    31.735052] Start lmh cpu6 @4281
+[    31.739040] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 10803
+[    31.741050] Start lmh cpu6 @4089
+[    31.827038] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 4473, accu 10888
+[    31.829041] Start lmh cpu6 @3513
+[    31.835038] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 2438, accu 10893
+[    31.871039] Start lmh cpu6 @4089
+[    31.875040] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 10896
+[    31.895045] Start lmh cpu6 @3283
+[    31.905040] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 10905
+[    31.907039] Start lmh cpu6 @4089
+[    31.917044] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 10915
+[    31.921038] Start lmh cpu6 @4281
+[    31.923039] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 10916
+[    31.929040] Start lmh cpu6 @3513
+[    31.933037] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4473, accu 10919
+[    31.935042] Start lmh cpu6 @3513
+[    31.981052] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 10965
+[    31.983046] Start lmh cpu6 @4281
+[    31.993064] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 10975
+[    31.999054] Start lmh cpu6 @3840
+[    32.103040] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 11078
+[    32.105040] Start lmh cpu6 @4281
+[    32.113040] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 11085
+[    32.117040] Start lmh cpu6 @4281
+[    32.201040] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 3283, accu 11168
+[    32.205040] Start lmh cpu6 @4281
+[    32.217038] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4473, accu 11179
+[    32.233049] Start lmh cpu6 @4089
+[    32.235038] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 3513, accu 11180
+[    32.347041] Start lmh cpu6 @4281
+[    32.353049] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 4473, accu 11186
+[    32.417045] Start lmh cpu6 @4281
+[    32.439042] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 4089, accu 11207
+[    32.443039] Start lmh cpu6 @3840
+[    32.445050] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 2246, accu 11209
+[    32.481039] Start lmh cpu6 @3513
+[    32.495039] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 11222
+[    32.597041] Start lmh cpu6 @3283
+[    32.599048] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4089, accu 11224
+[    32.601041] Start lmh cpu6 @3513
+[    32.737041] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 4473, accu 11359
+[    32.741049] Start lmh cpu6 @3513
+[    32.789047] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 4089, accu 11406
+[    32.839039] Fin. lmh cpu0, lowest 2400, f_lim 3532, dcvsh 3532, accu 11136
+[    32.841044] Start lmh cpu0 @3072
+[    32.903038] Start lmh cpu6 @3513
+[    32.905037] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 4089, accu 11407
+[    32.919059] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3532, accu 11214
+[    32.921035] Start lmh cpu0 @3321
+[    32.943035] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3532, accu 11235
+[    32.945035] Start lmh cpu0 @3321
+[    32.975039] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 11265
+[    32.977035] Start lmh cpu0 @3321
+[    32.985036] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3532, accu 11272
+[    32.993039] Start lmh cpu0 @3321
+[    32.997036] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 11275
+[    32.999036] Start lmh cpu0 @3321
+[    33.027037] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 11302
+[    33.029040] Start lmh cpu0 @3321
+[    33.079036] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3532, accu 11351
+[    33.081035] Start lmh cpu0 @3072
+[    33.081040] Start lmh cpu6 @3513
+[    33.095049] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 4473, accu 11421
+[    33.109035] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3072, accu 11378
+[    33.111035] Start lmh cpu0 @2918
+[    33.111042] Start lmh cpu6 @4281
+[    33.115039] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 3840, accu 11424
+[    33.125038] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3072, accu 11392
+[    33.127042] Start lmh cpu0 @3321
+[    33.167051] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3072, accu 11432
+[    33.171060] Start lmh cpu0 @3321
+[    33.173037] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3072, accu 11433
+[    33.175036] Start lmh cpu0 @3321
+[    33.181038] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3072, accu 11439
+[    33.183036] Start lmh cpu0 @3072
+[    33.191039] Start lmh cpu6 @3283
+[    33.195037] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 3840, accu 11427
+[    33.197038] Start lmh cpu6 @3513
+[    33.215042] Fin. lmh cpu6, lowest 2649, f_lim 4473, dcvsh 3840, accu 11445
+[    33.285039] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3072, accu 11540
+[    33.317037] Start lmh cpu0 @3321
+[    33.319038] Fin. lmh cpu0, lowest 3321, f_lim 3532, dcvsh 3072, accu 11541
+[    33.325042] Start lmh cpu0 @3321
+[    33.345037] Fin. lmh cpu0, lowest 3072, f_lim 3532, dcvsh 3072, accu 11560
+[    33.359046] Start lmh cpu0 @3321
+[    33.367037] Fin. lmh cpu0, lowest 2918, f_lim 3532, dcvsh 3072, accu 11567
+[    33.375038] Start lmh cpu0 @3072
+[    33.383046] Fin. lmh cpu0, lowest 2745, f_lim 3532, dcvsh 3072, accu 11575
+[    34.090098] Start lmh cpu6 @4281
+[    34.092091] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 3840, accu 11446
+[    34.114097] Start lmh cpu6 @4089
+[    34.118089] Fin. lmh cpu6, lowest 3840, f_lim 4473, dcvsh 3840, accu 11449
+[    34.150102] Start lmh cpu6 @4281
+[    34.154089] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3840, accu 11452
+[    34.164104] Start lmh cpu6 @4281
+[    34.166097] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 3840, accu 11453
+[    34.215039] Start lmh cpu6 @4281
+[    34.229055] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3840, accu 11467
+[    34.241038] Start lmh cpu6 @4281
+[    34.245037] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 3840, accu 11470
+[    34.261041] Start lmh cpu6 @3283
+[    34.269037] Fin. lmh cpu6, lowest 3072, f_lim 4473, dcvsh 3840, accu 11477
+[    34.293046] Start lmh cpu6 @3513
+[    34.297037] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3840, accu 11480
+[    34.299035] Start lmh cpu6 @3840
+[    34.339040] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3840, accu 11520
+[    34.402095] Start lmh cpu6 @3513
+[    34.404090] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3840, accu 11521
+[    34.406093] Start lmh cpu6 @4089
+[    34.418103] Fin. lmh cpu6, lowest 2841, f_lim 4473, dcvsh 3840, accu 11533
+[    34.424097] Start lmh cpu6 @4089
+[    34.428090] Fin. lmh cpu6, lowest 3513, f_lim 4473, dcvsh 3840, accu 11536
+[    34.440099] Start lmh cpu6 @4281
+[    34.468096] Fin. lmh cpu6, lowest 3283, f_lim 4473, dcvsh 2438, accu 11563
+[    34.663039] Start lmh cpu6 @4089
+[    34.667045] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 3840, accu 11567
+[    99.653050] Start lmh cpu6 @4281
+[    99.657051] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11571
+[    99.681047] Start lmh cpu6 @4281
+[    99.683048] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11572
+[    99.689060] Start lmh cpu6 @4281
+[    99.691047] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11573
+[    99.713049] Start lmh cpu6 @4281
+[    99.715046] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11574
+[    99.721051] Start lmh cpu6 @4281
+[    99.723048] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11575
+[    99.729050] Start lmh cpu6 @4281
+[    99.731046] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11576
+[    99.733048] Start lmh cpu6 @4281
+[    99.735067] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11578
+[    99.746101] Start lmh cpu6 @4281
+[    99.748097] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11579
+[    99.750095] Start lmh cpu6 @4281
+[    99.752141] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11581
+[    99.767048] Start lmh cpu6 @4281
+[    99.771046] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11584
+[    99.779060] Start lmh cpu6 @4281
+[    99.787068] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11592
+[    99.789048] Start lmh cpu6 @4089
+[    99.795046] Fin. lmh cpu6, lowest 4089, f_lim 4473, dcvsh 4473, accu 11597
+[    99.799047] Start lmh cpu6 @4281
+[    99.801047] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11598
+[    99.805048] Start lmh cpu6 @4281
+[    99.807048] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11599
+[   102.604100] Start lmh cpu6 @4281
+[   102.612092] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11606
+[   102.805051] Start lmh cpu6 @4281
+[   102.807080] Fin. lmh cpu6, lowest 4281, f_lim 4473, dcvsh 4473, accu 11608
+
+------ TSP MSG (/proc/tsp_msg) ------
+[    3.908250] 747:modprobe NULL : haechitech_init
+[    3.908313] 747:modprobe haechitech 51-0010 : haechitech_probe
+[    3.908324] 747:modprobe haechitech 51-0010 : haechitech_parse_dt: bop_y: 420, brp_y: 280
+[    3.908326] 747:modprobe haechitech 51-0010 : haechitech_parse_dt: not_cal_device: 1
+[    3.908327] 747:modprobe haechitech 51-0010 : haechitech_probe: client slave addr: 0x10
+[    3.908460] 754:modprobe stm_ts_spi spi1.0 : stm_ts_spi_probe
+[    3.908467] 754:modprobe stm_ts_spi spi1.0 : stm_ts_spi_init: spi setup: 0
+[    3.908471] 754:modprobe stm_ts_spi spi1.0 : sec_input_multi_device_parse_dt: device_count:0
+[    3.908473] 754:modprobe stm_ts_spi spi1.0 : sec_input_get_lcd_id: foldable NONE
+[    3.908475] 754:modprobe stm_ts_spi spi1.0 : sec_input_get_lcd_id: lcdtype 0x00A10008
+[    3.908477] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt: lcdtype 0xA10008
+[    3.908487] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt: irq gpio requested. sec,stm_ts_spi [674]
+[    3.908508] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt: gpio_spi_cs: 563, ret: 0
+[    3.908513] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt: get dvdd: tsp_io_ldo
+[    3.908603] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt: get avdd: tsp_avdd_ldo
+[    3.908668] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt : zone's size - indicator:133, navigation:266, edge:341
+[    3.908670] 747:modprobe haechitech 51-0010 : haechitech_probe: haechitech_probe_work
+[    3.908671] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt: ss_touch_num:1
+[    3.908673] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt: i2c buffer limit: 65535, lcd_id:A10008, bringup:0,
+[    3.909608] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_power_control: on++: dvdd:on
+[    3.909610] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_power_control: on--: dvdd:on
+[    3.910982] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt: set sec_input_handler_wait_resume_work
+[    3.911333] 754:modprobe stm_ts_spi spi1.0 : sec_input_parse_dt: set sec_input_probe_work
+[    3.912167] 754:modprobe stm_ts_spi spi1.0 : sec_input_support_feature_parse_dt: Prox LP Scan enabled OFF
+[    3.912169] 754:modprobe stm_ts_spi spi1.0 : sec_input_support_feature_parse_dt: Sysinput enabled ON
+[    3.912171] 754:modprobe stm_ts_spi spi1.0 : sec_input_support_feature_parse_dt: report rawdata ON
+[    3.912173] 754:modprobe stm_ts_spi spi1.0 : sec_input_support_feature_parse_dt: motion aivf OFF
+[    3.912175] 754:modprobe stm_ts_spi spi1.0 : sec_input_support_feature_parse_dt: motion palm OFF
+[    3.912176] 754:modprobe stm_ts_spi spi1.0 : sec_input_support_feature_parse_dt: pocket detect OFF
+[    3.912178] 754:modprobe stm_ts_spi spi1.0 : sec_input_support_feature_parse_dt: awd OFF
+[    3.912179] 754:modprobe stm_ts_spi spi1.0 : dex:1, max(4095/4095), FOD:1, AOT:1, ED:1, FLM:0, COB:0
+[    3.912181] 754:modprobe stm_ts_spi spi1.0 : not_support_temp_noti:0, support_vbus_notifier:1 support_always_on:0
+[    3.912186] 754:modprobe stm_ts_spi spi1.0 : stm_ts_parse_dt: lpmode_change_delay:5, support_mutual_raw:0, support_grip_cmd_v2:0
+[    3.912189] 754:modprobe stm_ts_spi spi1.0 : sec_tclm_parse_dt: tclm_level 2, sec_afe_base 0010
+[    3.912667] 754:modprobe stm_ts_spi spi1.0 : stm_ts_init: init resource
+[    3.912684] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_probe
+[    3.912686] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_pinctrl_configure: ACTIVE
+[    3.918468] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_power: on: avdd:on, dvdd:on
+[    3.954879] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_set_spi_mode: cs gpio: 1
+[    3.954882] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_set_spi_mode: mode: 0, max_speed_hz: 10000000: cs: 563
+[    3.954883] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_set_spi_mode: chip_select: 0, bits_per_word: 8
+[    3.954885] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_disable: irq is not requested yet.
+[    3.954887] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_systemreset
+[    3.954887] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_disable: irq is not requested yet.
+[    3.965570] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_wait_for_ready: 49, 00, 10, 00, 00, 00, 00, 00
+[    3.965573] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_enable: irq is not requested yet.
+[    3.965621] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_enable: irq is not requested yet.
+[    3.965715] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_get_version_info: [IC] Code Ver: 0x0063, Config Ver: 0x0014, Main Ver: 0x0014
+[    3.965717] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_get_version_info: [IC] Project ID: 0x30, IC Name: 0x07, Module Ver: 0x00
+[    3.965807] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_read_chip_id: S T 40 36 03 (403603)
+[    3.965810] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_fw_update_on_probe: Load firmware : tsp_stm/fst2ba61c_pa1.bin
+[    4.110852] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_i2c_init
+[    4.110861] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_pinctrl_configure: failed to get pinctrl
+[    4.110863] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_power_control: already power on:1
+[    4.111698] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control: ret: 2, device id 21 21
+[    4.112554] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; CNTL1: 00 00 00
+[    4.113289] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 1, (1) CNTL1: 2C 04 4A
+[    4.114291] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 2, (2) CNTL1: 2C 04 4A
+[    4.115040] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; CNTL5: 00
+[    4.115458] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 1, (1) CNTL5: 80
+[    4.116916] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 2, (2) CNTL5: 00
+[    4.117841] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 2, X: 00 00 00 00
+[    4.118660] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 1, (1) X: 00 00 00 00
+[    4.119641] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 2, (2) X: 00 00 00 00
+[    4.120591] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 2, Y: 00 00 00 00
+[    4.121410] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 1, (1) Y: 01 A4 01 18
+[    4.122324] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 2, (2) Y: 01 A4 01 18
+[    4.123388] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 2, Z: 00 00 00 00
+[    4.124177] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 1, (1) Z: FE A2 FE 02
+[    4.125103] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_setup_device_control; ret: 2, (2) Z: FE A2 FE 02
+[    4.125130] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_i2c_init: hall ic register
+[    4.125132] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_send_event_to_user: time:TIMESTAMP=4118, feature:FEATURE=TSP, test:TEST=NULL, result:RESULT=PROBE_DONE
+[    4.125139] 1024:kworker/u16:4 haechitech 51-0010 : haechitech_i2c_init: done
+[    4.125139] FIX LOG!
+[    4.163415] 164:kworker/7:6 haechitech 51-0010 : haechitech_hall_ic_notify: back_cover
+[    4.212260] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_need_fw_update: [BIN] 07300014 | [IC] 07300014 | bringup 0
+[    4.212262] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_need_fw_update: no need to update
+[    4.212265] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_fw_update_on_probe: skip fw update
+[    4.212267] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_tclm_root_of_cal: root - 0(NONE)
+[    4.212440] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_get_channel_info: RX:Sense(39) TX:Force(18) resolution:(IC)x:4095 y:4095, (DT)x:4095,y:4095
+[    4.222512] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_disable: irq is not requested yet.
+[    4.243070] 263:kworker/0:3 stm_ts_spi spi1.0 : stm_ts_get_touch_function: touch_functions:61 ic_status:0
+[    4.323026] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 30, 61, 00, 00, 00, 03, 00, 00, 00, 00, 00, 00, 00, 00
+[    4.347388] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 05, 02, 00, 00, 00, 00, 02, 00, 00, 00, 00, 00, 00, 00, 00
+[    4.371185] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 15, 01, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    4.395124] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 13, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    4.395126] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_enable: irq is not requested yet.
+[    4.395127] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_disable: irq is not requested yet.
+[    4.499045] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 62, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    4.499047] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_enable: irq is not requested yet.
+[    4.499049] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_disable: irq is not requested yet.
+[    4.523032] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 05, 01, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    4.551567] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A0, 00, 01, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    4.551569] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_enable: irq is not requested yet.
+[    4.551570] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_set_scanmode: 0x01
+[    4.551572] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_hw_init: Initialized
+[    4.551812] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_get_custom_library: aod_active_area - top:174, edge:75, bottom:174
+[    4.552050] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_set_fod_info: vi_event:0, x:18, y:19, size:43
+[    4.552217] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_get_custom_library: sponge_mode 00
+[    4.552219] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge (0x00)
+[    4.552429] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge_01 (0x00)
+[    4.553153] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_set_custom_library: sponge_inf_dump:1, sponge_dump_format:10, sponge_dump_event:37
+[    4.553155] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_probe: request_irq = 343
+[    4.553589] 1039:kworker/u16:5 sec tsp : sec_cmd_init create sec_fac_attr_group: done
+[    4.553596] 1039:kworker/u16:5 sec tsp : sec_cmd_init: create vendor_attr_group: done
+[    4.553598] 1039:kworker/u16:5 sec tsp : sec_cmd_init: create sec_fac_common_attr_group: done
+[    4.553600] 1039:kworker/u16:5 sec tsp : sec_cmd_enabled_sysfs_create: make 'enabled' node
+[    4.553627] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_cmd_io_init: misc_register: ret: 0
+[    4.553629] 1039:kworker/u16:5 sec tsp : sec_cmd_init: done
+[    4.553631] 1039:kworker/u16:5 sec tsp : sec_cmd_send_event_to_user: time:TIMESTAMP=4546, feature:FEATURE=TSP, test:TEST=NULL, result:RESULT=PROBE_DONE
+[    4.553656] 1039:kworker/u16:5 stm_ts_spi spi1.0 : secure_touch_init
+[    4.553675] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread:  event 43 15 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+[    4.553718] 1039:kworker/u16:5 stm_ts_spi spi1.0 : Selected trusted touch mode to VM mode
+[    4.553720] 1039:kworker/u16:5 stm_ts_spi spi1.0 : Trusted touch environment:pvm
+[    4.553784] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_trusted_touch_init: core_clk is not defined
+[    4.554145] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_register_vbus_notifier
+[    4.554149] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_register_vbus_notifier: register ccic notification
+[    4.554201] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_vbus_notification: cmd=2, vbus_type=2, otg_flag:0
+[    4.554218] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_register_vbus_notifier: register vbus notification
+[    4.554220] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_probe: done
+[    4.554222] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_rawdata_init: sysfs_create_group: ret: 0
+[    4.554243] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_rawdata_init: misc_register: ret: 0
+[    4.554245] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_read_rawdata_address: alloc rawdata buffer
+[    4.554250] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_read_rawdata_address
+[    4.554252] 1069:kworker/u16:7 stm_ts_spi spi1.0 : sec_input_vbus_notification_work: charger_flag:1
+[    4.554263] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    4.554545] 1069:kworker/u16:7 stm_ts_spi spi1.0 : stm_ts_set_wirecharger_mode: enabled
+[    4.611093] 1039:kworker/u16:5 stm_ts_spi spi1.0 : stm_ts_read_rawdata_address: rawdata address 0x82 0x86
+[    4.612361] 1039:kworker/u16:5 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    4.612362] FIX LOG!
+[    4.612505] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 3F 01 00 00 00 01 00 00 00 00 00 00 00 00
+[    4.612508] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 A4 06 01 00 00 00 00 00 00 00 00 00 00 00
+[    4.666949] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    4.691001] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A0, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    4.691012] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    4.691014] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_scanmode: 0x00
+[    4.930851] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    5.034944] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 62, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.034956] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    5.034967] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    5.090933] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A4, 06, 90, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.090942] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    5.091032] stm_ts_spi : get_nvm_data_by_size: offset [0], length [31]
+[    5.091035] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_tclm_check_cal_case: cal_count value [1]
+[    5.294897] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    5.398933] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 62, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.398943] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    5.398953] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    5.454910] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A4, 06, 90, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.454919] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    5.455002] stm_ts_spi : get_nvm_data_by_size: offset [0], length [31]
+[    5.455006] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_tclm_get_nvm_all: cal_count:1, pos:4(LCIA), hist_count:1, lastp:0
+[    5.455008] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_tclm_position_history: [Now] LCIA1
+[    5.455010] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_tclm_position_history: [Old] O1
+[    5.455012] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_read_info_work: sec_tclm_check_cal_case ret: 0 
+[    5.658888] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    5.762939] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 62, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.762950] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    5.762960] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    5.822994] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A4, 06, 90, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.823011] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    5.823081] stm_ts_spi : get_nvm_data_by_size: offset [0], length [1]
+[    5.823084] stm_ts_spi : stm_ts_read_info_work: fac test result 00
+[    5.823094] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    5.851009] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 05, 01, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.875024] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A0, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.875036] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    5.875037] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_scanmode: 0x01
+[    5.875041] stm_ts_spi : run_rawdata_read_all: start (noise:0, wet:0, tc:0)##
+[    5.875043] stm_ts_spi : run_high_frequency_rawcap_read
+[    5.875051] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    5.898956] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 15, 01, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.922945] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A0, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    5.922954] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    5.922955] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_scanmode: 0x00
+[    5.958865] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    6.062913] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 03, 00, 00, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    6.086907] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A4, 04, FF, 01, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    6.086915] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    6.086917] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_read_nonsync_frame
+[    6.087121] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 A4 06 01 00 00 00 00 00 00 00 00 00 00 00
+[    6.144191] stm_ts_spi :     Rx00  Rx01  Rx02  Rx03  Rx04  Rx05  Rx06  Rx07  Rx08  Rx09  Rx10  Rx11  Rx12  Rx13  Rx14  Rx15  Rx16  Rx17  Rx18  Rx19  Rx20  Rx21  Rx22  Rx23  Rx24  Rx25  Rx26  Rx27  Rx28  Rx29  Rx30  Rx31  Rx32  Rx33  Rx34  Rx35  Rx36  Rx37  Rx38  
+[    6.144195] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[    6.144200] stm_ts_spi : Tx00 |   825   894   921   920   926   918   926   917   908   921   927   917   911   906   904   909   902   899   900   877   961   968   933   932   937   930   935   927   930   931   922   922   922   931   912   919   915   874   705 
+[    6.144205] stm_ts_spi : Tx01 |   881   985   974   971   979   970   979   972   960   975   982   970   963   959   955   961   950   948   949   924   950   971   943   946   953   946   952   945   945   948   939   939   937   947   927   933   928   919   795 
+[    6.144210] stm_ts_spi : Tx02 |   890   984   975   972   980   973   980   970   960   974   981   971   964   959   955   961   951   950   949   924   943   966   939   942   948   943   949   942   943   944   937   935   935   944   922   929   925   914   809 
+[    6.144215] stm_ts_spi : Tx03 |   901   992   982   981   987   979   987   979   967   983   991   979   972   966   964   969   961   957   959   934   949   972   944   950   956   951   957   950   952   953   944   944   942   952   930   935   930   920   815 
+[    6.144219] stm_ts_spi : Tx04 |   894   989   977   974   982   974   983   971   961   977   986   973   967   963   959   964   955   953   955   931   943   965   937   944   949   943   950   943   945   946   938   938   937   946   925   929   926   914   810 
+[    6.144224] stm_ts_spi : Tx05 |   896   988   976   973   981   973   981   972   962   978   985   973   966   960   958   963   957   954   955   931   939   962   933   938   947   941   946   939   943   945   935   935   933   944   921   927   923   913   808 
+[    6.144229] stm_ts_spi : Tx06 |   903   986   975   974   978   971   980   970   959   976   982   969   963   957   953   962   953   949   952   930   936   959   931   936   941   936   945   937   941   941   932   933   931   941   919   927   921   911   810 
+[    6.144233] stm_ts_spi : Tx07 |   917   992   981   980   986   977   984   976   965   981   989   975   969   963   960   969   960   957   959   936   940   962   935   941   946   942   949   942   944   947   939   939   937   946   925   931   929   919   821 
+[    6.144238] stm_ts_spi : Tx08 |   914   983   973   970   976   966   975   965   952   969   975   964   956   952   947   955   948   946   946   922   925   948   919   924   930   925   931   924   926   930   921   919   917   928   907   913   906   747   634 
+[    6.144243] stm_ts_spi : Tx09 |   928  1000   989   985   992   984   992   981   970   984   993   981   974   970   967   973   966   964   964   941   941   962   934   940   945   939   946   940   943   945   936   937   933   943   923   929   922   762   646 
+[    6.144248] stm_ts_spi : Tx10 |   924  1001   990   989   994   986   995   983   973   988   996   984   976   973   969   977   967   968   968   943   941   963   936   941   946   941   948   941   945   947   937   938   934   947   923   932   930   920   818 
+[    6.144252] stm_ts_spi : Tx11 |   909   992   982   980   988   979   986   978   966   983   988   977   970   965   962   968   960   958   959   935   930   953   927   931   937   931   937   931   933   934   927   926   923   934   913   920   916   907   803 
+[    6.144257] stm_ts_spi : Tx12 |   910  1000   987   988   993   986   994   985   974   990   996   986   977   974   970   976   967   966   968   943   934   960   933   938   943   937   943   937   939   941   932   932   929   940   919   927   922   912   806 
+[    6.144262] stm_ts_spi : Tx13 |   906   993   981   979   986   980   987   977   965   980   988   977   970   965   961   967   957   956   958   932   923   948   920   925   930   925   930   922   924   925   916   916   914   925   902   909   905   896   791 
+[    6.144267] stm_ts_spi : Tx14 |   994   998  1032   985   993   985   995   984   973   988   996   983   976   972   967   973   964   965   963   937   928   951   924   929   935   928   936   927   929   929   921   920   917   930   907   914   912   901   792 
+[    6.144271] stm_ts_spi : Tx15 |   920  1070  1046   984   991   982   991   980   968   983   992   978   970   965   962   967   961   957   958   931   919   943   915   921   926   921   926   919   920   923   912   911   908   920   898   904   901   891   784 
+[    6.144276] stm_ts_spi : Tx16 |   929   998  1026   982   994   980   989   979   966   980   987   974   966   962   959   965   957   953   954   928   913   937   910   914   920   915   920   912   914   915   906   904   902   912   889   896   895   884   761 
+[    6.144281] stm_ts_spi : Tx17 |   915   943   985   948   975   942   950   938   929   943   949   938   931   927   924   931   924   922   926   902   866   889   863   866   872   868   872   866   867   869   860   859   858   867   846   851   849   813   646 
+[    6.144283] stm_ts_spi : stm_ts_print_frame, min:634, max:1070
+[    6.144294] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    6.172239] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 05, 01, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    6.195018] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A0, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    6.195045] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    6.195047] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_scanmode: 0x01
+[    6.195051] stm_ts_spi : run_high_frequency_rawcap_read: rawcap:747,1070 rawcap_edge:634,994
+[    6.196679] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread:  event 43 15 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+[    6.252251] stm_ts_spi : [Raw Data]
+[    6.252258] stm_ts_spi :     Rx00  Rx01  Rx02  Rx03  Rx04  Rx05  Rx06  Rx07  Rx08  Rx09  Rx10  Rx11  Rx12  Rx13  Rx14  Rx15  Rx16  Rx17  Rx18  Rx19  Rx20  Rx21  Rx22  Rx23  Rx24  Rx25  Rx26  Rx27  Rx28  Rx29  Rx30  Rx31  Rx32  Rx33  Rx34  Rx35  Rx36  Rx37  Rx38  
+[    6.252261] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[    6.252267] stm_ts_spi : Tx00 |   -10   128   -73  -143    95   111     1  -210  -135  -107   229   259   257    50   166   114   123   145   330   108   151   -59   265   287   196    10  -289   -42   -42    14  -301  -190  -109  -245   -33   236   236   247   189 
+[    6.252273] stm_ts_spi : Tx01 |  -110   114   105   137   -93   -69   -11    70    25   169   241   165    63    48   154   206   195   143    70    70   -13  -105  -143   -55    28   204    85    58  -136   -82  -207  -184  -133    33   137   136   112   109   -11 
+[    6.252278] stm_ts_spi : Tx02 |   -48    56   141   325    -3  -151   -11   -24   -49     1   -29    73    81   234   170   208   201   151   162   100   127    93  -135  -315  -154    40   177    64    66     4    -3   -96  -117  -155   153   132   -56   109   -81 
+[    6.252283] stm_ts_spi : Tx03 |   -24    54   123    49     1    33    -7    64   123   -87   -21   159   259   240   162   124   109   141    90    90   -89    99   -35  -125  -154    46    -9   156   -16   -84  -109   -86  -117   -61   135   228   212   195    23 
+[    6.252288] stm_ts_spi : Tx04 |  -140   155   -15   125   -50   -16  -107    97   180   225   160   161   189    56   106   252   153   103   119    28  -100  -163  -187    12    76    75    41   104   159   -90  -298  -226  -122   -20   169   258   245   201    29 
+[    6.252293] stm_ts_spi : Tx05 |    -6   123   -29   -47   140  -108  -109    19    98   127   248   259   193   234   110    70   167    93   217   312    60  -267  -293  -176   -12   -15    33   198  -131   -80  -118  -128  -130   -18    83   268   253   199    37 
+[    6.252298] stm_ts_spi : Tx06 |    60    15   -17    41    46   -16    93  -163   172   129    70   171   109   242   218    84   169   193   235    58  -208   -85    11    20  -200    -9   147   120  -119   -66   -10   -42  -118  -110   101    92   173    35   -81 
+[    6.252316] stm_ts_spi : Tx07 |   -10   123   173  -127  -148    68    91   -69   270   231   -22    73   113    52   214   270   175   195   125   -38   -40    23   -79  -176  -116    77   151    22   155   -60  -202  -136  -110  -108   187    94    -3    45   -69 
+[    6.252321] stm_ts_spi : Tx08 |   -43    70   -23   -44   220   -67    72   -28   -73   100    99   107   260   147   109   177    71   149   166    31   102   112   -11   -47   -68   -44    77   167   111    30   -33  -156   -86   -50  -105  -129    -7    71    18 
+[    6.252326] stm_ts_spi : Tx09 |    -1   -12    65    34   126    25  -100   -44    41    80   103    19   162   153   201   171    67    53   166   131   174   102   169    53  -164    24    -5   -23    11   112    63   -54   -94  -240  -189  -139    -9   139    -8 
+[    6.252331] stm_ts_spi : Tx10 |   -21    78    71    52   132    39  -110   -26    27    -8    13    31   -12   161   211   177   257   171   166   143   108   110    93   -39  -160   -52   185   -23    25   -70    77   -52  -172   -38  -179  -209   -51    55    26 
+[    6.252354] stm_ts_spi : Tx11 |   105  -128   -17   -34   230   -61    78   -22   -55    -4     9   127    74   147   111   179   253   259   174   235   188   108   -83    45   124    32  -105   -21   -67    16   -15  -142  -172   -56  -267  -207   -61   139    -8 
+[    6.252359] stm_ts_spi : Tx12 |   -89   181    -7   -52   -43  -158   173   162   399   177   -77    32   150   193   243   177    61  -207  -159  -151    19   114   245   137    69    80   127   150   -38   -73  -163  -197  -124  -143    83   204    69    56   -36 
+[    6.252364] stm_ts_spi : Tx13 |   -85    87   159   -54   -49  -152   173   146    19   177   109   386   244   189   253   165   255  -125  -151  -249   -81    24   -41  -133    61    68   215   -26   -48   -87  -157   -99  -216   -65   185    96   165    58   -50 
+[    6.252368] stm_ts_spi : Tx14 |   -47    77   127    98   149    40   -93   -36   -61    91   201   128    66   109    65    77   167   163   209    41   -49   -82   -31   157   -29   -12    39    68   -46    15  -159  -189  -128    45    93    16   179   170   -42 
+[    6.252393] stm_ts_spi : Tx15 |   -59    99   121   -52   127    34   -97   -28   291   267   223   114   168   105    63    81   -19    57   209   135    31  -176  -137  -113  -217     0   127    56   148  -163  -153  -107   -32   -49    11   104    83   164   -40 
+[    6.252398] stm_ts_spi : Tx16 |  -105    95   307    75   134    19   -91  -185   -16    77     1   211   199   193    23   164   237   201    25   112     5   -22  -100  -190  -118   -57  -109    97    58   253    14  -244   -86    38    43     7    83   -29  -128 
+[    6.252402] stm_ts_spi : Tx17 |    89    59   175    29     6   -87  -101   195    74  -101    -7   297   301   103    11    -6    77   101   127   244  -117   -32  -188   -94  -112   311    73   105    60   153  -170  -244  -174  -146  -229    99   181    85     6 
+[    6.252405] stm_ts_spi : stm_ts_print_frame, min:-315, max:399
+[    6.252409] 203:kworker/0:2 stm_ts_spi spi1.0 : run_rawcap_read: -315,399
+[    6.252410] stm_ts_spi : run_self_raw_read
+[    6.252853] stm_ts_spi :  TX    00    01    02    03    04    05    06    07    08    09    10    11    12    13    14    15    16    17
+[    6.252855] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------
+[    6.252858] stm_ts_spi :  |   4961 -1986  -884  -258   389  -752   245  -618   357  2360  -586  -524   451  -138   437   129   737  1795
+[    6.252861] stm_ts_spi :  RX    00    01    02    03    04    05    06    07    08    09    10    11    12    13    14    15    16    17
+[    6.252864] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------
+[    6.252867] stm_ts_spi :  |   1267   -86  -212  -136   159    89  -246   417  -400    63   -80   225    13   -58  -166   183  -296  -174
+[    6.252870] stm_ts_spi :  |    -36   151  -876   -68  -296   103    15  -178   -48  -144    91   -64  -312    91    49   201    -6   249
+[    6.252872] stm_ts_spi :  |    181   335   835
+[    6.252876] stm_ts_spi : stm_ts_read_self_raw_frame: MIN_TX_SELF_RAW: -1986 MAX_TX_SELF_RAW : 2360
+[    6.252878] stm_ts_spi : stm_ts_read_self_raw_frame: MIN_RX_SELF_RAW : -876 MIN_RX_SELF_RAW : 835
+[    6.252880] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_read_self_raw_frame: -1986,2360,-876,835
+[    6.252882] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_systemreset
+[    6.252895] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    6.263156] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_ready: 49, 00, 10, 00, 00, 00, 00, 00
+[    6.263170] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    6.263179] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    6.316575] 1837:vendor.samsung. haechitech 51-0010 : haechitech_thd_show: THD: 0,0,420,280,-350,-510,
+[    6.367004] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 62, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    6.367020] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    6.470242] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread:  event 03 C0 5E 00 00 00 01 01 00 00 00 00 00 00 00 00
+[    6.470245] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 C7 02 00 00 00 00 00 00 00 00 00 00 00 00
+[    6.690875] stm_ts_spi : stm_ts_checking_miscal: [miscal diff data]
+[    6.690878] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_read_nonsync_frame
+[    6.691193] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 A4 06 01 00 00 00 00 00 00 00 00 00 00 00
+[    6.752240] stm_ts_spi :     Rx00  Rx01  Rx02  Rx03  Rx04  Rx05  Rx06  Rx07  Rx08  Rx09  Rx10  Rx11  Rx12  Rx13  Rx14  Rx15  Rx16  Rx17  Rx18  Rx19  Rx20  Rx21  Rx22  Rx23  Rx24  Rx25  Rx26  Rx27  Rx28  Rx29  Rx30  Rx31  Rx32  Rx33  Rx34  Rx35  Rx36  Rx37  Rx38  
+[    6.752244] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[    6.752250] stm_ts_spi : Tx00 |     0    32   -22    -3    -8    -1     0    -2    -1    -2     0    -2    -2    -1     1     3    -4    -1    -2    -3    16    -1    -2    -2    -1    -5    -1    -2    -1    -9     1    -4    -3    -1     0    -1     1    13   -46 
+[    6.752255] stm_ts_spi : Tx01 |     0   -70   -33   -11    -7     1    -4    -3     0     1     0     2     2    -2     2     0    -1     1    -1    -4     6     4     8    -3     2     1     0     2     4     0    -2     0    -2    -4     1     4    11    33    63 
+[    6.752260] stm_ts_spi : Tx02 |     0   -47   -33   -14    -7    -2    -7    -1     2    -1    -2     0    -3    -2     1    -7     2     1    -2     0    11     1     1    -5     3    -4     2    -1    -3    -3     0    -2    -3    -3     1    11    10    36    79 
+[    6.752265] stm_ts_spi : Tx03 |     0   -40   -32   -17    -8    -6    -5     2     1     1    -3     6    -4     1    -3     3     2     2    -2    -4    14    -2     2    -2    -2     2     0     7     2    -6    -4    -2    -1     2     8     8    11    38    76 
+[    6.752269] stm_ts_spi : Tx04 |     0   -56   -32   -13    -3    -3    -1     1    -3     4    -3     2     4     0     2     3    -1     2    -1     3     0     1     5     0     0    -4    -3     0     0     0    -4    -3    -6     2     4     7    17    37    91 
+[    6.752274] stm_ts_spi : Tx05 |     0   -56   -32   -12    -8    -5    -2    -1     0    -1     5    -3     4     1     0     1    -2    -2     2    -2     4    -1     1    -3     0     0    -6    -2    -2    -5    -1     1    -3    -1     2     8    21    39    91 
+[    6.752279] stm_ts_spi : Tx06 |     0   -39   -28    -9    -4    -4    -3     2     3     4     2    -2     6    -1     0     0     0     6    -1    -5    20     4     1     3     1     0    -5    -2    -9    -8    -4    -4    -2    -2     4     8    22    36    72 
+[    6.752283] stm_ts_spi : Tx07 |     0   -42   -35   -10    -5     0    -1     1     1     1     1    -3     5     0     1    -5     0    -1    -5    -6    17     2     1    -3    -5     1    -1    -5    -6    -2    -4    -5    -4     0     5    12    24    47    68 
+[    6.752288] stm_ts_spi : Tx08 |     0   -53   -33   -10    -4    -1    -5    -1     2     3     0    -2     4     4    -2    -5     3    -2    -1     3     9    -2     4     1     3    -3    -4    -2    -3    -8     0    -3    -4     0     6    18    40    52    48 
+[    6.752292] stm_ts_spi : Tx09 |     0   -53   -32    -9    -4    -7     0    -1     1     4     3     0     4     0     0    -2    -1     2    -4     1     6    -2     3     1     1    -3    -2    -2    -4     5    -7     1    -7     2     4    17    35    55    44 
+[    6.752297] stm_ts_spi : Tx10 |     0   -39   -35   -11    -1    -2    -3    -3     4     3     2     1     3    -3    -3     0    -1    -3    -4    -4    15    -1    -1     6     1    -5    -1    -4    -4     0    -7    -5    -5    -5     2    10    24    44    70 
+[    6.752302] stm_ts_spi : Tx11 |     0   -45   -28   -13    -7    -3     1     3     1     5     1    -1     0    -1     5     1     1     1    -2    -7    19     9     2    -1    -4     0    -1    -3    -2    -8     0     0     0     3     3     4    15    41    67 
+[    6.752306] stm_ts_spi : Tx12 |     0   -57   -35   -13    -4     2    -2     0     2     2    -1     0     3     1     0    -3     0     1    -1    -1     8    -1     6     6     1    -3    -1     0     0     1     0    -4    -3     1     6     9    14    41    80 
+[    6.752311] stm_ts_spi : Tx13 |     0   -54   -29    -8    -6    -6    -1     6     5     7     3    -2     2     3    -2     2    -2     1    -1    -1    15     0     8     4     1     2     0     1     2    -5     2     2    -2    -1    -1     9    17    42    83 
+[    6.752316] stm_ts_spi : Tx14 |     0   -58   -23   -21    -1    -2     2    -1     4     2     1     2     0     6     4    -2    -3     0     2    -5    19     8     2     0     0     2     1     3    -1     0    -4     2    -3    -3     0     0    10    37    67 
+[    6.752320] stm_ts_spi : Tx15 |     0   -37   -40   -25    -6     1    -4    -3    -2     1    -6     1     3     0     1    -2     1    -4    -1    -4    17     1     3     5     3    -2    -3     0     0    -2    -3    -2    -5    -6     2     1     7    34    67 
+[    6.752325] stm_ts_spi : Tx16 |     0   -75   -27   -13    -3    -2     1    -3    -2    -1    -1    -1     3     4     1    -1    -1    -1    -3     2    10     3     4     0     1     5    -2     3    -2    -1     3     1    -1     0     0     5    10    31    59 
+[    6.752330] stm_ts_spi : Tx17 |     0    32   -16   -19     5    -5    -3    -3    -6     1    -3    -8    -4    -4    -6     0    -6    -3    -3    -5    21    -2     1     2    -1     0     0    -1     2    -1     3    -1    -1    -1     0    -6     4    16   -42 
+[    6.752332] stm_ts_spi : stm_ts_print_frame, min:-75, max:91
+[    6.752346] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    6.778934] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 05, 01, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    6.803015] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A0, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    6.803027] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    6.803030] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_scanmode: 0x01
+[    6.803033] stm_ts_spi : stm_ts_checking_miscal: mis cal min/max :-75/91
+[    6.803036] stm_ts_spi : run_cx_data_read: start
+[    6.803046] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    6.823090] 143:kworker/4:1 haechitech 51-0010 : haechitech_hall_ic_notify: back_cover
+[    6.911005] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 62, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    6.911018] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    6.934942] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    6.940193] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A4, 06, 11, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    6.940205] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    6.940937] stm_ts_spi : Tx00 |   21  23  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  22  24  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  22  17
+[    6.940942] stm_ts_spi : Tx01 |   22  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  23  24  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  20
+[    6.940947] stm_ts_spi : Tx02 |   23  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  23  23  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  21
+[    6.940951] stm_ts_spi : Tx03 |   23  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  24  23  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  21
+[    6.940955] stm_ts_spi : Tx04 |   23  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  24  23  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  20
+[    6.940960] stm_ts_spi : Tx05 |   23  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  23  23  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  21
+[    6.940964] stm_ts_spi : Tx06 |   23  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  23  23  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  20
+[    6.940968] stm_ts_spi : Tx07 |   23  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  23  23  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  20
+[    6.940972] stm_ts_spi : Tx08 |   23  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  23  23  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  19  16
+[    6.940976] stm_ts_spi : Tx09 |   24  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  23  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  19  16
+[    6.940981] stm_ts_spi : Tx10 |   23  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  23  23  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  21
+[    6.940985] stm_ts_spi : Tx11 |   23  25  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  20
+[    6.940989] stm_ts_spi : Tx12 |   23  25  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  20
+[    6.940993] stm_ts_spi : Tx13 |   23  25  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  22  22  20
+[    6.940998] stm_ts_spi : Tx14 |   25  25  26  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  22  22  20
+[    6.941002] stm_ts_spi : Tx15 |   24  27  27  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  22  22  22  22  22  22  20
+[    6.941006] stm_ts_spi : Tx16 |   24  25  26  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  22  22  22  22  19
+[    6.941010] stm_ts_spi : Tx17 |   24  24  26  25  25  24  24  24  24  24  24  24  24  24  24  24  23  23  23  23  22  22  22  22  22  22  22  22  22  22  22  22  22  22  22  21  21  20  16
+[    6.941012] stm_ts_spi : cx min:16, cx max:27
+[    6.941028] 203:kworker/0:2 stm_ts_spi spi1.0 : run_cx_data_read: OK
+[    6.941029] stm_ts_spi : run_ix_data_read
+[    6.941039] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    7.047043] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 62, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    7.047060] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    7.047073] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    7.052247] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A4, 06, 52, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    7.052259] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    7.052670] stm_ts_spi :  TX    00    01    02    03    04    05    06    07    08    09    10    11    12    13    14    15    16    17
+[    7.052673] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------
+[    7.052677] stm_ts_spi :  |    304   304   304   304   304   304   320   320   320   320   320   320   320   320   320   320   320   320
+[    7.052679] stm_ts_spi :  RX    00    01    02    03    04    05    06    07    08    09    10    11    12    13    14    15    16    17
+[    7.052682] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------
+[    7.052684] stm_ts_spi :  |    320   304   304   304   304   304   304   304   304   304   304   304   304   304   304   304   320   320
+[    7.052687] stm_ts_spi :  |    320   320   304   304   304   304   304   304   304   304   304   304   304   304   304   304   304   304
+[    7.052689] stm_ts_spi :  |    320   320   320
+[    7.052704] stm_ts_spi : stm_ts_read_ix_data: MIN_TX_IX_SUM : 304 MAX_TX_IX_SUM : 320
+[    7.052706] stm_ts_spi : stm_ts_read_ix_data: MIN_RX_IX_SUM : 304 MAX_RX_IX_SUM : 320
+[    7.052709] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_read_ix_data: 304,320,304,320
+[    7.052711] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_systemreset
+[    7.052721] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    7.062981] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_ready: 49, 00, 10, 00, 00, 00, 00, 00
+[    7.062992] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    7.063001] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    7.063003] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    7.170945] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, 62, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    7.170961] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    7.192730] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread:  event 03 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00
+[    7.192733] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 A4 04 FF 01 00 00 00 00 00 00 00 00 00 00
+[    8.583042] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_panel_ito_test: Time over - wait for result of ITO test
+[    8.583045] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_systemreset
+[    8.583062] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    8.593236] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_ready: 49, 00, 10, 00, 00, 00, 00, 00
+[    8.593252] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    8.593455] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 30 61 00 00 00 00 00 00 00 00 00 00 00 00
+[    8.603338] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    8.623097] 7:kworker/0:0 stm_ts_spi spi1.0 : stm_ts_get_touch_function: touch_functions:61 ic_status:0
+[    8.631172] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 05, 01, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    8.654935] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A0, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    8.654949] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    8.654951] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_scanmode: 0x01
+[    8.654954] stm_ts_spi : stm_ts_panel_ito_test: mode:4 [FAIL] 00 00 00 00
+[    8.654958] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_systemreset
+[    8.654969] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    8.665834] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_ready: 49, 00, 10, 00, 00, 00, 00, 00
+[    8.665848] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    8.665856] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    8.665859] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    8.665917] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_fix_active_mode: 1 STM_TS_ACTIVE_TRUE
+[    8.681084] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_get_jitter_result: event 43, 05, 01, 00, 00, 00, 00, 01
+[    8.706958] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_get_jitter_result: event 43, 01, A0, 03, 00, 00, 00, 00
+[    8.730983] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_get_jitter_result: event 43, 15, 01, 00, 00, 00, 00, 00
+[    9.551024] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_get_jitter_result: event 49, 03, 01, FF, FE, 05, 05, 02
+[    9.551027] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_get_jitter_result: Mutual max jitter Strength : 34, RX:5, TX:5
+[    9.574912] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_get_jitter_result: event 49, 03, 02, FF, DC, 26, 03, 01
+[    9.574914] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_get_jitter_result: Mutual min jitter Strength : -36, RX:38, TX:3
+[    9.574974] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    9.574976] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_systemreset
+[    9.575040] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_status_event: STATUS 49 3 3 ff ec 26 3 0
+[    9.575047] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    9.585191] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_ready: 49, 00, 10, 00, 00, 00, 00, 00
+[    9.585201] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    9.585209] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    9.606920] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 05, 01, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    9.631002] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A0, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    9.631014] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    9.631016] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_scanmode: 0x01
+[    9.631019] stm_ts_spi : run_mutual_jitter: -36,34
+[    9.631022] stm_ts_spi : run_rawdata_read_all: 
+[    9.631025] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_systemreset
+[    9.631034] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    9.641194] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_ready: 49, 00, 10, 00, 00, 00, 00, 00
+[    9.641209] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    9.641212] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_reinit: charger=1, wc=0x0, touch_functions=0x61, Power mode=2
+[    9.641423] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_wirecharger_mode: enabled
+[    9.641425] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_cover_type: 0
+[    9.641557] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 62 00 00 00 00 01 00 00 00 00 00 00 00 00
+[    9.641560] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 3F 01 00 00 00 00 00 00 00 00 00 00 00 00
+[    9.641633] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge (0x00)
+[    9.641865] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge_01 (0x00)
+[    9.641920] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 30 61 00 00 00 00 00 00 00 00 00 00 00 00
+[    9.642344] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_custom_library: sponge_inf_dump:1, sponge_dump_format:10, sponge_dump_event:37
+[    9.642524] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_press_property: 0
+[    9.642525] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_fod_finger_merge: 0
+[    9.642580] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_set_grip_type: re-init grip(0), edh:0, edg:0, lan:0
+[    9.642582] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_external_noise_mode: disable 0
+[    9.642595] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_disable: depth: 1
+[    9.662934] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 05, 01, 00, 00, 00, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00
+[    9.670974] 7:kworker/0:0 stm_ts_spi spi1.0 : stm_ts_get_touch_function: touch_functions:61 ic_status:0
+[    9.689264] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_wait_for_echo_event: event 43, 01, A0, 00, 01, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
+[    9.689278] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_irq_enable: depth: 0
+[    9.689280] 203:kworker/0:2 stm_ts_spi spi1.0 : stm_ts_set_scanmode: 0x01
+[    9.689294] 203:kworker/0:2 stm_ts_spi spi1.0 : tc:0 noise:0/0 ext_n:0 wet:0 chg:1 wc:0(f:0) lp:0 fn:0061/0000 irqd:0 int:1 ED:0 PK:0 LS:0// v:ST07300014 C01T0014.LCIA.L Cal_flag:1 fail_cnt:0 chk:0 // tmp:0 // #1 1
+[    9.689440] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_set_temperature_data set temperature:27
+[    9.695010] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread:  event 43 15 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+[    9.795183] 944:kworker/5:12 haechitech 51-0010 : haechitech_hall_ic_notify: back_cover
+[   10.078988] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread:  event 43 11 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   10.112398] 1733:android.hardwar stm_ts_spi spi1.0 : ear_detect_enable_store: set ear detect disable, ret = 0
+[   10.112886] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 41 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   10.374084] 1838:vendor.samsung. stm_ts_spi spi1.0 : support_feature_show: 262945 aot openshort miscal SE RAW
+[   10.851536] 164:kworker/7:6 haechitech 51-0010 : haechitech_hall_ic_notify: back_cover
+[   10.959315] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = aod_enable param = 1 
+[   10.959320] 1838:vendor.samsung. stm_ts_spi spi1.0 : aod_enable_save: on, 04
+[   10.959323] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge (0x04)
+[   10.959766] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge_01 (0x04)
+[   10.960200] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: sponge_inf_dump:1, sponge_dump_format:10, sponge_dump_event:37
+[   10.960202] 1838:vendor.samsung. stm_ts_spi spi1.0 : aod_enable: 1
+[   10.961218] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = singletap_enable param = 1 
+[   10.961221] 1838:vendor.samsung. stm_ts_spi spi1.0 : singletap_enable_save: on, 0C
+[   10.961223] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge (0x0c)
+[   10.961524] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge_01 (0x04)
+[   10.962021] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: sponge_inf_dump:1, sponge_dump_format:10, sponge_dump_event:37
+[   10.962022] 1838:vendor.samsung. stm_ts_spi spi1.0 : singletap_enable: 1
+[   10.969176] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = get_x_num param = none (wait)
+[   10.969180] 1838:vendor.samsung. stm_ts_spi spi1.0 : get_x_num: 18
+[   10.970207] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = get_y_num param = none (wait)
+[   10.970211] 1838:vendor.samsung. stm_ts_spi spi1.0 : get_y_num: 39
+[   10.971455] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = glove_mode param = 0 
+[   10.971627] 1838:vendor.samsung. stm_ts_spi spi1.0 : glove_mode: OK
+[   10.971785] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 30 61 00 00 00 00 00 00 00 00 00 00 00 00
+[   10.971933] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = aot_enable param = 1 
+[   10.971936] 1838:vendor.samsung. stm_ts_spi spi1.0 : aot_enable_save: on, 2C
+[   10.971938] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge (0x2c)
+[   10.972353] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge_01 (0x04)
+[   10.973108] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: sponge_inf_dump:1, sponge_dump_format:10, sponge_dump_event:37
+[   10.973110] 1838:vendor.samsung. stm_ts_spi spi1.0 : aot_enable: 1
+[   11.007680] 1209:kworker/2:13 stm_ts_spi spi1.0 : stm_ts_get_touch_function: touch_functions:61 ic_status:0
+[   11.140567] 1838:vendor.samsung. stm_ts_spi spi1.0 : enabled_store: DISPLAY_STATE_ON
+[   11.140569] 1838:vendor.samsung. stm_ts_spi spi1.0 : enabled_store: device already enabled
+[   12.499315] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = fod_enable param = 1 1 0 0 
+[   12.499321] 1838:vendor.samsung. stm_ts_spi spi1.0 : fod_enable_save: on, fast:on, strict:off, control:0x00, lp:0x3C
+[   12.499323] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge (0x3c)
+[   12.501680] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge_01 (0x04)
+[   12.502184] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: sponge_inf_dump:1, sponge_dump_format:10, sponge_dump_event:37
+[   12.502397] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_press_property: 1
+[   12.502398] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_fod_finger_merge: 1
+[   12.502757] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_fod_rect param = 418 1646 661 1888 
+[   12.502760] 1838:vendor.samsung. stm_ts_spi spi1.0 : set_fod_rect_save: l:418, t:1646, r:661, b:1888
+[   12.502761] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_fod_rect: l:418, t:1646, r:661, b:1888
+[   12.941649] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_sip_mode param = 0 
+[   12.941654] 1838:vendor.samsung. stm_ts_spi spi1.0 : set_sip_mode_save: disable
+[   12.941655] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_sip_mode_enable: disable
+[   12.942220] 1838:vendor.samsung. stm_ts_spi spi1.0 : set_sip_mode: OK
+[   13.083428] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = glove_mode param = 0 
+[   13.083702] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 30 61 00 00 00 00 00 00 00 00 00 00 00 00
+[   13.083718] 1838:vendor.samsung. stm_ts_spi spi1.0 : glove_mode: OK
+[   13.085445] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = aot_enable param = 1 
+[   13.085448] 1838:vendor.samsung. stm_ts_spi spi1.0 : aot_enable_save: on, 3C
+[   13.085451] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge (0x3c)
+[   13.085713] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: Sponge_01 (0x04)
+[   13.086536] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_set_custom_library: sponge_inf_dump:1, sponge_dump_format:10, sponge_dump_event:37
+[   13.086538] 1838:vendor.samsung. stm_ts_spi spi1.0 : aot_enable: 1
+[   13.093323] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_grip_data param = 0 0 0 0 
+[   13.093328] 1838:vendor.samsung. stm_ts_spi spi1.0 : sec_input_store_grip_data_edge: [edge handler] clear
+[   13.093331] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: flag: 01 (clr,lan,nor,edg,han)
+[   13.093460] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: 0x0C 00,00,00,00
+[   13.093599] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 C1 0C 00 00 00 00 00 00 00 00 00 00 00 00
+[   13.115073] 164:kworker/7:6 stm_ts_spi spi1.0 : stm_ts_get_touch_function: touch_functions:61 ic_status:0
+[   14.254424] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_note_mode param = 0 
+[   14.254429] 1838:vendor.samsung. stm_ts_spi spi1.0 : set_note_mode_save: disable
+[   14.254430] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_ts_note_mode_enable: disable
+[   14.255356] 1838:vendor.samsung. stm_ts_spi spi1.0 : set_note_mode: OK
+[   14.257005] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_grip_data param = 1 45 7 24 702 
+[   14.257013] 1838:vendor.samsung. stm_ts_spi spi1.0 : sec_input_store_grip_data_portrait: [portrait] grip:45 | reject w:7/24/0, h:702/0
+[   14.257016] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: flag: 06 (clr,lan,nor,edg,han)
+[   14.257695] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: 0x07 00,2D,00,2D
+[   14.257792] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: 0x08 07,18,02,BE,00,00,00
+[   14.257923] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 C1 07 00 00 00 01 00 2D 00 2D 00 00 00 00
+[   14.257927] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 C1 08 00 00 00 00 07 18 02 BE 00 00 00 00
+[   17.921412] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.0 z:7 major:6 minor:4 loc:C.C tc:1 type:0 noise:(0,00), nlvl:3, maxS:54, hid:0, fid:0 fod:b
+[   17.921418] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : EVENT_STATUS: WET:0 GLOVE:0 GAME:0 NOISE:0 COVER:0 NOTE:0 TA:1 WIRELESS:0 SIP:0 LS:0 PK:0 CALL:0 (id:0)
+[   17.998523] 1255:irq/343-stm_ts sec tsp : sec_cmd_send_event_to_user: time:TIMESTAMP=17991, feature:FEATURE=TSP, test:GESTURE=15, result:POS=676,1864
+[   17.998750] 1255:irq/343-stm_ts sec tsp : sec_cmd_send_gesture_uevent: FOD PRESS
+[   17.998754] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_gesture_event: FOD PRESS
+[   18.064260] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:-122,-961 mc:17 tc:0 p:0 noise:(0,00) nlvl:4, maxS:73, hid:0, fid:0 fod:9
+[   18.590352] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_grip_data param = 1 45 36 36 0 
+[   18.590358] 1838:vendor.samsung. stm_ts_spi spi1.0 : sec_input_store_grip_data_portrait: [portrait] grip:45 | reject w:36/36/0, h:0/0
+[   18.590361] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: flag: 04 (clr,lan,nor,edg,han)
+[   18.590645] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: 0x08 24,24,00,00,00,00,00
+[   18.590781] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 C1 08 00 00 00 00 24 24 00 00 00 00 00 00
+[   18.912897] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.1 z:15 major:12 minor:8 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:72, hid:0, fid:0 fod:9
+[   18.955853] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:2,-1 mc:5 tc:0 p:0 noise:(0,00) nlvl:4, maxS:74, hid:0, fid:0 fod:9
+[   19.621340] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.2 z:7 major:8 minor:4 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:56, hid:0, fid:0 fod:9
+[   19.688997] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:2,-4 mc:8 tc:0 p:0 noise:(0,00) nlvl:4, maxS:66, hid:0, fid:0 fod:9
+[   19.872873] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.3 z:8 major:8 minor:6 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:64, hid:0, fid:0 fod:b
+[   19.923112] 1255:irq/343-stm_ts sec tsp : sec_cmd_send_event_to_user: time:TIMESTAMP=19916, feature:FEATURE=TSP, test:GESTURE=15, result:POS=580,1638
+[   19.923266] 1255:irq/343-stm_ts sec tsp : sec_cmd_send_gesture_uevent: FOD PRESS
+[   19.923283] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_gesture_event: FOD PRESS
+[   19.963960] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:-15,9 mc:10 tc:0 p:0 noise:(0,00) nlvl:4, maxS:73, hid:0, fid:0 fod:b
+[   20.122892] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.4 z:8 major:7 minor:5 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:67, hid:0, fid:0 fod:9
+[   20.197221] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:-20,-1 mc:8 tc:0 p:0 noise:(0,00) nlvl:4, maxS:73, hid:0, fid:0 fod:9
+[   20.447900] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.5 z:8 major:9 minor:4 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:63, hid:0, fid:0 fod:b
+[   20.522190] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:-16,14 mc:8 tc:0 p:0 noise:(0,00) nlvl:4, maxS:68, hid:0, fid:0 fod:b
+[   20.614553] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.6 z:12 major:11 minor:6 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:71, hid:0, fid:0 fod:b
+[   20.688883] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:5,-7 mc:8 tc:0 p:0 noise:(0,00) nlvl:4, maxS:72, hid:0, fid:0 fod:b
+[   22.189061] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_grip_data param = 1 45 7 24 702 
+[   22.189067] 1838:vendor.samsung. stm_ts_spi spi1.0 : sec_input_store_grip_data_portrait: [portrait] grip:45 | reject w:7/24/0, h:702/0
+[   22.189069] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: flag: 04 (clr,lan,nor,edg,han)
+[   22.189386] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: 0x08 07,18,02,BE,00,00,00
+[   22.189528] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 C1 08 00 00 00 00 07 18 02 BE 00 00 00 00
+[   22.460877] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = low_sensitivity_mode_enable param = 0 
+[   22.460882] 1838:vendor.samsung. stm_ts_spi spi1.0 : low_sensitivity_mode_enable_save: disable
+[   22.460969] 1838:vendor.samsung. stm_ts_spi spi1.0 : low_sensitivity_mode_enable: OK
+[   22.461123] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 40 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   22.692546] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.7 z:9 major:7 minor:5 loc:e.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:66, hid:0, fid:0 fod:9
+[   22.805197] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:-1804,162 mc:13 tc:0 p:0 noise:(0,00) nlvl:4, maxS:74, hid:0, fid:0 fod:b
+[   23.628672] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.8 z:10 major:8 minor:6 loc:C.C tc:1 type:0 noise:(0,00), nlvl:3, maxS:72, hid:0, fid:0 fod:9
+[   23.738388] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:-1731,258 mc:13 tc:0 p:0 noise:(0,00) nlvl:4, maxS:73, hid:0, fid:0 fod:b
+[   24.362005] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.9 z:12 major:11 minor:6 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:68, hid:0, fid:0 fod:9
+[   24.421646] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:-13,0 mc:7 tc:0 p:0 noise:(0,00) nlvl:4, maxS:71, hid:0, fid:0 fod:9
+[   26.993350] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_grip_data param = 1 45 7 15 702 
+[   26.993356] 1838:vendor.samsung. stm_ts_spi spi1.0 : sec_input_store_grip_data_portrait: [portrait] grip:45 | reject w:7/15/0, h:702/0
+[   26.993359] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: flag: 04 (clr,lan,nor,edg,han)
+[   26.993782] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: 0x08 07,0F,02,BE,00,00,00
+[   26.993934] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 C1 08 00 00 00 00 07 0F 02 BE 00 00 00 00
+[   28.969426] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.10 z:6 major:7 minor:5 loc:C.C tc:1 type:0 noise:(0,00), nlvl:3, maxS:46, hid:0, fid:0 fod:9
+[   29.037353] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:0,6 mc:8 tc:0 p:0 noise:(0,00) nlvl:4, maxS:70, hid:0, fid:0 fod:9
+[   32.010469] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.11 z:9 major:9 minor:4 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:67, hid:0, fid:0 fod:9
+[   32.086750] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:-37,-4 mc:9 tc:0 p:0 noise:(0,00) nlvl:4, maxS:72, hid:0, fid:0 fod:9
+[   34.084969] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.12 z:9 major:8 minor:6 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:67, hid:0, fid:0 fod:9
+[   34.144574] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:1,0 mc:7 tc:0 p:0 noise:(0,00) nlvl:4, maxS:73, hid:0, fid:0 fod:9
+[   39.906993] 203:kworker/0:2 stm_ts_spi spi1.0 : tc:0 noise:0/0 ext_n:0 wet:0 chg:1 wc:0(f:0) lp:3c fn:0061/0000 irqd:0 int:1 ED:0 PK:0 LS:0// v:ST07300014 C01T0014.LCIA.L Cal_flag:1 fail_cnt:0 chk:0 // tmp:27 // #2 1
+[   39.907392] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_set_temperature_data set temperature:32
+[   51.505463] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_grip_data param = 0 2 307 649 
+[   51.505474] 1838:vendor.samsung. stm_ts_spi spi1.0 : sec_input_store_grip_data_edge: [edge handler] dir:2, range:307,649
+[   51.505479] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: flag: 01 (clr,lan,nor,edg,han)
+[   51.506101] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: 0x0C 13,32,89,02
+[   51.506308] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 C1 0C 00 00 00 00 13 32 89 02 00 00 00 00
+[   64.555597] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.13 z:5 major:6 minor:4 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:55, hid:0, fid:0 fod:9
+[   64.615214] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:4,0 mc:6 tc:0 p:0 noise:(0,00) nlvl:4, maxS:63, hid:0, fid:0 fod:9
+[   70.627116] 203:kworker/0:2 stm_ts_spi spi1.0 : tc:0 noise:0/0 ext_n:0 wet:0 chg:1 wc:0(f:0) lp:3c fn:0061/0000 irqd:0 int:1 ED:0 PK:0 LS:0// v:ST07300014 C01T0014.LCIA.L Cal_flag:1 fail_cnt:0 chk:0 // tmp:32 // #3 1
+[   70.627128] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_set_temperature_data skip temperature:32
+[   80.454878] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.14 z:8 major:7 minor:5 loc:C.C tc:1 type:0 noise:(0,00), nlvl:3, maxS:69, hid:0, fid:0 fod:9
+[   80.547525] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:-5,14 mc:11 tc:0 p:0 noise:(0,00) nlvl:4, maxS:71, hid:0, fid:0 fod:9
+[   83.085274] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.15 z:8 major:7 minor:5 loc:C.N tc:1 type:0 noise:(0,00), nlvl:4, maxS:65, hid:0, fid:0 fod:9
+[   83.138927] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.N dd:-3,-5 mc:6 tc:0 p:0 noise:(0,00) nlvl:4, maxS:67, hid:0, fid:0 fod:9
+[   84.108832] 1838:vendor.samsung. sec tsp : cmd_store_function: cmd = set_grip_data param = 1 45 7 24 702 
+[   84.108845] 1838:vendor.samsung. stm_ts_spi spi1.0 : sec_input_store_grip_data_portrait: [portrait] grip:45 | reject w:7/24/0, h:702/0
+[   84.108851] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: flag: 04 (clr,lan,nor,edg,han)
+[   84.109314] 1838:vendor.samsung. stm_ts_spi spi1.0 : stm_set_grip_data_to_ic: 0x08 07,18,02,BE,00,00,00
+[   84.109551] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : stm_ts_irq_thread: echo event 43 01 C1 08 00 00 00 00 07 18 02 BE 00 00 00 00
+[   87.369034] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [P] tID:0.16 z:6 major:6 minor:4 loc:C.C tc:1 type:0 noise:(0,00), nlvl:4, maxS:67, hid:0, fid:0 fod:9
+[   87.453491] 1255:irq/343-stm_ts stm_ts_spi spi1.0 : [R] tID:0 loc:C.C dd:2,3 mc:10 tc:0 p:0 noise:(0,00) nlvl:4, maxS:72, hid:0, fid:0 fod:9
+[  101.351609] 203:kworker/0:2 stm_ts_spi spi1.0 : tc:0 noise:0/0 ext_n:0 wet:0 chg:1 wc:0(f:0) lp:3c fn:0061/0000 irqd:0 int:1 ED:0 PK:0 LS:0// v:ST07300014 C01T0014.LCIA.L Cal_flag:1 fail_cnt:0 chk:0 // tmp:32 // #4 1
+[  101.352004] 203:kworker/0:2 stm_ts_spi spi1.0 : sec_input_set_temperature_data set temperature:31
+
+------ TSP RAW DATA (/proc/tsp_raw_data) ------
+[    5.875041] stm_ts_spi : run_rawdata_read_all: start (noise:0, wet:0, tc:0)##
+[    5.875043] stm_ts_spi : run_high_frequency_rawcap_read
+[    6.144191] stm_ts_spi :     Rx00  Rx01  Rx02  Rx03  Rx04  Rx05  Rx06  Rx07  Rx08  Rx09  Rx10  Rx11  Rx12  Rx13  Rx14  Rx15  Rx16  Rx17  Rx18  Rx19  Rx20  Rx21  Rx22  Rx23  Rx24  Rx25  Rx26  Rx27  Rx28  Rx29  Rx30  Rx31  Rx32  Rx33  Rx34  Rx35  Rx36  Rx37  Rx38  
+[    6.144195] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[    6.144201] stm_ts_spi : Tx00 |   825   894   921   920   926   918   926   917   908   921   927   917   911   906   904   909   902   899   900   877   961   968   933   932   937   930   935   927   930   931   922   922   922   931   912   919   915   874   705 
+[    6.144205] stm_ts_spi : Tx01 |   881   985   974   971   979   970   979   972   960   975   982   970   963   959   955   961   950   948   949   924   950   971   943   946   953   946   952   945   945   948   939   939   937   947   927   933   928   919   795 
+[    6.144210] stm_ts_spi : Tx02 |   890   984   975   972   980   973   980   970   960   974   981   971   964   959   955   961   951   950   949   924   943   966   939   942   948   943   949   942   943   944   937   935   935   944   922   929   925   914   809 
+[    6.144215] stm_ts_spi : Tx03 |   901   992   982   981   987   979   987   979   967   983   991   979   972   966   964   969   961   957   959   934   949   972   944   950   956   951   957   950   952   953   944   944   942   952   930   935   930   920   815 
+[    6.144220] stm_ts_spi : Tx04 |   894   989   977   974   982   974   983   971   961   977   986   973   967   963   959   964   955   953   955   931   943   965   937   944   949   943   950   943   945   946   938   938   937   946   925   929   926   914   810 
+[    6.144224] stm_ts_spi : Tx05 |   896   988   976   973   981   973   981   972   962   978   985   973   966   960   958   963   957   954   955   931   939   962   933   938   947   941   946   939   943   945   935   935   933   944   921   927   923   913   808 
+[    6.144229] stm_ts_spi : Tx06 |   903   986   975   974   978   971   980   970   959   976   982   969   963   957   953   962   953   949   952   930   936   959   931   936   941   936   945   937   941   941   932   933   931   941   919   927   921   911   810 
+[    6.144234] stm_ts_spi : Tx07 |   917   992   981   980   986   977   984   976   965   981   989   975   969   963   960   969   960   957   959   936   940   962   935   941   946   942   949   942   944   947   939   939   937   946   925   931   929   919   821 
+[    6.144239] stm_ts_spi : Tx08 |   914   983   973   970   976   966   975   965   952   969   975   964   956   952   947   955   948   946   946   922   925   948   919   924   930   925   931   924   926   930   921   919   917   928   907   913   906   747   634 
+[    6.144243] stm_ts_spi : Tx09 |   928  1000   989   985   992   984   992   981   970   984   993   981   974   970   967   973   966   964   964   941   941   962   934   940   945   939   946   940   943   945   936   937   933   943   923   929   922   762   646 
+[    6.144248] stm_ts_spi : Tx10 |   924  1001   990   989   994   986   995   983   973   988   996   984   976   973   969   977   967   968   968   943   941   963   936   941   946   941   948   941   945   947   937   938   934   947   923   932   930   920   818 
+[    6.144253] stm_ts_spi : Tx11 |   909   992   982   980   988   979   986   978   966   983   988   977   970   965   962   968   960   958   959   935   930   953   927   931   937   931   937   931   933   934   927   926   923   934   913   920   916   907   803 
+[    6.144258] stm_ts_spi : Tx12 |   910  1000   987   988   993   986   994   985   974   990   996   986   977   974   970   976   967   966   968   943   934   960   933   938   943   937   943   937   939   941   932   932   929   940   919   927   922   912   806 
+[    6.144262] stm_ts_spi : Tx13 |   906   993   981   979   986   980   987   977   965   980   988   977   970   965   961   967   957   956   958   932   923   948   920   925   930   925   930   922   924   925   916   916   914   925   902   909   905   896   791 
+[    6.144267] stm_ts_spi : Tx14 |   994   998  1032   985   993   985   995   984   973   988   996   983   976   972   967   973   964   965   963   937   928   951   924   929   935   928   936   927   929   929   921   920   917   930   907   914   912   901   792 
+[    6.144272] stm_ts_spi : Tx15 |   920  1070  1046   984   991   982   991   980   968   983   992   978   970   965   962   967   961   957   958   931   919   943   915   921   926   921   926   919   920   923   912   911   908   920   898   904   901   891   784 
+[    6.144277] stm_ts_spi : Tx16 |   929   998  1026   982   994   980   989   979   966   980   987   974   966   962   959   965   957   953   954   928   913   937   910   914   920   915   920   912   914   915   906   904   902   912   889   896   895   884   761 
+[    6.144281] stm_ts_spi : Tx17 |   915   943   985   948   975   942   950   938   929   943   949   938   931   927   924   931   924   922   926   902   866   889   863   866   872   868   872   866   867   869   860   859   858   867   846   851   849   813   646 
+[    6.144283] stm_ts_spi : stm_ts_print_frame, min:634, max:1070
+[    6.195051] stm_ts_spi : run_high_frequency_rawcap_read: rawcap:747,1070 rawcap_edge:634,994
+[    6.252252] stm_ts_spi : [Raw Data]
+[    6.252258] stm_ts_spi :     Rx00  Rx01  Rx02  Rx03  Rx04  Rx05  Rx06  Rx07  Rx08  Rx09  Rx10  Rx11  Rx12  Rx13  Rx14  Rx15  Rx16  Rx17  Rx18  Rx19  Rx20  Rx21  Rx22  Rx23  Rx24  Rx25  Rx26  Rx27  Rx28  Rx29  Rx30  Rx31  Rx32  Rx33  Rx34  Rx35  Rx36  Rx37  Rx38  
+[    6.252262] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[    6.252268] stm_ts_spi : Tx00 |   -10   128   -73  -143    95   111     1  -210  -135  -107   229   259   257    50   166   114   123   145   330   108   151   -59   265   287   196    10  -289   -42   -42    14  -301  -190  -109  -245   -33   236   236   247   189 
+[    6.252273] stm_ts_spi : Tx01 |  -110   114   105   137   -93   -69   -11    70    25   169   241   165    63    48   154   206   195   143    70    70   -13  -105  -143   -55    28   204    85    58  -136   -82  -207  -184  -133    33   137   136   112   109   -11 
+[    6.252278] stm_ts_spi : Tx02 |   -48    56   141   325    -3  -151   -11   -24   -49     1   -29    73    81   234   170   208   201   151   162   100   127    93  -135  -315  -154    40   177    64    66     4    -3   -96  -117  -155   153   132   -56   109   -81 
+[    6.252283] stm_ts_spi : Tx03 |   -24    54   123    49     1    33    -7    64   123   -87   -21   159   259   240   162   124   109   141    90    90   -89    99   -35  -125  -154    46    -9   156   -16   -84  -109   -86  -117   -61   135   228   212   195    23 
+[    6.252288] stm_ts_spi : Tx04 |  -140   155   -15   125   -50   -16  -107    97   180   225   160   161   189    56   106   252   153   103   119    28  -100  -163  -187    12    76    75    41   104   159   -90  -298  -226  -122   -20   169   258   245   201    29 
+[    6.252293] stm_ts_spi : Tx05 |    -6   123   -29   -47   140  -108  -109    19    98   127   248   259   193   234   110    70   167    93   217   312    60  -267  -293  -176   -12   -15    33   198  -131   -80  -118  -128  -130   -18    83   268   253   199    37 
+[    6.252298] stm_ts_spi : Tx06 |    60    15   -17    41    46   -16    93  -163   172   129    70   171   109   242   218    84   169   193   235    58  -208   -85    11    20  -200    -9   147   120  -119   -66   -10   -42  -118  -110   101    92   173    35   -81 
+[    6.252316] stm_ts_spi : Tx07 |   -10   123   173  -127  -148    68    91   -69   270   231   -22    73   113    52   214   270   175   195   125   -38   -40    23   -79  -176  -116    77   151    22   155   -60  -202  -136  -110  -108   187    94    -3    45   -69 
+[    6.252321] stm_ts_spi : Tx08 |   -43    70   -23   -44   220   -67    72   -28   -73   100    99   107   260   147   109   177    71   149   166    31   102   112   -11   -47   -68   -44    77   167   111    30   -33  -156   -86   -50  -105  -129    -7    71    18 
+[    6.252326] stm_ts_spi : Tx09 |    -1   -12    65    34   126    25  -100   -44    41    80   103    19   162   153   201   171    67    53   166   131   174   102   169    53  -164    24    -5   -23    11   112    63   -54   -94  -240  -189  -139    -9   139    -8 
+[    6.252331] stm_ts_spi : Tx10 |   -21    78    71    52   132    39  -110   -26    27    -8    13    31   -12   161   211   177   257   171   166   143   108   110    93   -39  -160   -52   185   -23    25   -70    77   -52  -172   -38  -179  -209   -51    55    26 
+[    6.252354] stm_ts_spi : Tx11 |   105  -128   -17   -34   230   -61    78   -22   -55    -4     9   127    74   147   111   179   253   259   174   235   188   108   -83    45   124    32  -105   -21   -67    16   -15  -142  -172   -56  -267  -207   -61   139    -8 
+[    6.252359] stm_ts_spi : Tx12 |   -89   181    -7   -52   -43  -158   173   162   399   177   -77    32   150   193   243   177    61  -207  -159  -151    19   114   245   137    69    80   127   150   -38   -73  -163  -197  -124  -143    83   204    69    56   -36 
+[    6.252364] stm_ts_spi : Tx13 |   -85    87   159   -54   -49  -152   173   146    19   177   109   386   244   189   253   165   255  -125  -151  -249   -81    24   -41  -133    61    68   215   -26   -48   -87  -157   -99  -216   -65   185    96   165    58   -50 
+[    6.252369] stm_ts_spi : Tx14 |   -47    77   127    98   149    40   -93   -36   -61    91   201   128    66   109    65    77   167   163   209    41   -49   -82   -31   157   -29   -12    39    68   -46    15  -159  -189  -128    45    93    16   179   170   -42 
+[    6.252393] stm_ts_spi : Tx15 |   -59    99   121   -52   127    34   -97   -28   291   267   223   114   168   105    63    81   -19    57   209   135    31  -176  -137  -113  -217     0   127    56   148  -163  -153  -107   -32   -49    11   104    83   164   -40 
+[    6.252398] stm_ts_spi : Tx16 |  -105    95   307    75   134    19   -91  -185   -16    77     1   211   199   193    23   164   237   201    25   112     5   -22  -100  -190  -118   -57  -109    97    58   253    14  -244   -86    38    43     7    83   -29  -128 
+[    6.252403] stm_ts_spi : Tx17 |    89    59   175    29     6   -87  -101   195    74  -101    -7   297   301   103    11    -6    77   101   127   244  -117   -32  -188   -94  -112   311    73   105    60   153  -170  -244  -174  -146  -229    99   181    85     6 
+[    6.252405] stm_ts_spi : stm_ts_print_frame, min:-315, max:399
+[    6.252410] stm_ts_spi : run_self_raw_read
+[    6.252853] stm_ts_spi :  TX    00    01    02    03    04    05    06    07    08    09    10    11    12    13    14    15    16    17
+[    6.252856] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------
+[    6.252859] stm_ts_spi :  |   4961 -1986  -884  -258   389  -752   245  -618   357  2360  -586  -524   451  -138   437   129   737  1795
+[    6.252862] stm_ts_spi :  RX    00    01    02    03    04    05    06    07    08    09    10    11    12    13    14    15    16    17
+[    6.252864] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------
+[    6.252867] stm_ts_spi :  |   1267   -86  -212  -136   159    89  -246   417  -400    63   -80   225    13   -58  -166   183  -296  -174
+[    6.252870] stm_ts_spi :  |    -36   151  -876   -68  -296   103    15  -178   -48  -144    91   -64  -312    91    49   201    -6   249
+[    6.252872] stm_ts_spi :  |    181   335   835
+[    6.252876] stm_ts_spi : stm_ts_read_self_raw_frame: MIN_TX_SELF_RAW: -1986 MAX_TX_SELF_RAW : 2360
+[    6.252878] stm_ts_spi : stm_ts_read_self_raw_frame: MIN_RX_SELF_RAW : -876 MIN_RX_SELF_RAW : 835
+[    6.690876] stm_ts_spi : stm_ts_checking_miscal: [miscal diff data]
+[    6.752241] stm_ts_spi :     Rx00  Rx01  Rx02  Rx03  Rx04  Rx05  Rx06  Rx07  Rx08  Rx09  Rx10  Rx11  Rx12  Rx13  Rx14  Rx15  Rx16  Rx17  Rx18  Rx19  Rx20  Rx21  Rx22  Rx23  Rx24  Rx25  Rx26  Rx27  Rx28  Rx29  Rx30  Rx31  Rx32  Rx33  Rx34  Rx35  Rx36  Rx37  Rx38  
+[    6.752245] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[    6.752251] stm_ts_spi : Tx00 |     0    32   -22    -3    -8    -1     0    -2    -1    -2     0    -2    -2    -1     1     3    -4    -1    -2    -3    16    -1    -2    -2    -1    -5    -1    -2    -1    -9     1    -4    -3    -1     0    -1     1    13   -46 
+[    6.752255] stm_ts_spi : Tx01 |     0   -70   -33   -11    -7     1    -4    -3     0     1     0     2     2    -2     2     0    -1     1    -1    -4     6     4     8    -3     2     1     0     2     4     0    -2     0    -2    -4     1     4    11    33    63 
+[    6.752260] stm_ts_spi : Tx02 |     0   -47   -33   -14    -7    -2    -7    -1     2    -1    -2     0    -3    -2     1    -7     2     1    -2     0    11     1     1    -5     3    -4     2    -1    -3    -3     0    -2    -3    -3     1    11    10    36    79 
+[    6.752265] stm_ts_spi : Tx03 |     0   -40   -32   -17    -8    -6    -5     2     1     1    -3     6    -4     1    -3     3     2     2    -2    -4    14    -2     2    -2    -2     2     0     7     2    -6    -4    -2    -1     2     8     8    11    38    76 
+[    6.752270] stm_ts_spi : Tx04 |     0   -56   -32   -13    -3    -3    -1     1    -3     4    -3     2     4     0     2     3    -1     2    -1     3     0     1     5     0     0    -4    -3     0     0     0    -4    -3    -6     2     4     7    17    37    91 
+[    6.752274] stm_ts_spi : Tx05 |     0   -56   -32   -12    -8    -5    -2    -1     0    -1     5    -3     4     1     0     1    -2    -2     2    -2     4    -1     1    -3     0     0    -6    -2    -2    -5    -1     1    -3    -1     2     8    21    39    91 
+[    6.752279] stm_ts_spi : Tx06 |     0   -39   -28    -9    -4    -4    -3     2     3     4     2    -2     6    -1     0     0     0     6    -1    -5    20     4     1     3     1     0    -5    -2    -9    -8    -4    -4    -2    -2     4     8    22    36    72 
+[    6.752284] stm_ts_spi : Tx07 |     0   -42   -35   -10    -5     0    -1     1     1     1     1    -3     5     0     1    -5     0    -1    -5    -6    17     2     1    -3    -5     1    -1    -5    -6    -2    -4    -5    -4     0     5    12    24    47    68 
+[    6.752288] stm_ts_spi : Tx08 |     0   -53   -33   -10    -4    -1    -5    -1     2     3     0    -2     4     4    -2    -5     3    -2    -1     3     9    -2     4     1     3    -3    -4    -2    -3    -8     0    -3    -4     0     6    18    40    52    48 
+[    6.752293] stm_ts_spi : Tx09 |     0   -53   -32    -9    -4    -7     0    -1     1     4     3     0     4     0     0    -2    -1     2    -4     1     6    -2     3     1     1    -3    -2    -2    -4     5    -7     1    -7     2     4    17    35    55    44 
+[    6.752298] stm_ts_spi : Tx10 |     0   -39   -35   -11    -1    -2    -3    -3     4     3     2     1     3    -3    -3     0    -1    -3    -4    -4    15    -1    -1     6     1    -5    -1    -4    -4     0    -7    -5    -5    -5     2    10    24    44    70 
+[    6.752302] stm_ts_spi : Tx11 |     0   -45   -28   -13    -7    -3     1     3     1     5     1    -1     0    -1     5     1     1     1    -2    -7    19     9     2    -1    -4     0    -1    -3    -2    -8     0     0     0     3     3     4    15    41    67 
+[    6.752307] stm_ts_spi : Tx12 |     0   -57   -35   -13    -4     2    -2     0     2     2    -1     0     3     1     0    -3     0     1    -1    -1     8    -1     6     6     1    -3    -1     0     0     1     0    -4    -3     1     6     9    14    41    80 
+[    6.752311] stm_ts_spi : Tx13 |     0   -54   -29    -8    -6    -6    -1     6     5     7     3    -2     2     3    -2     2    -2     1    -1    -1    15     0     8     4     1     2     0     1     2    -5     2     2    -2    -1    -1     9    17    42    83 
+[    6.752316] stm_ts_spi : Tx14 |     0   -58   -23   -21    -1    -2     2    -1     4     2     1     2     0     6     4    -2    -3     0     2    -5    19     8     2     0     0     2     1     3    -1     0    -4     2    -3    -3     0     0    10    37    67 
+[    6.752321] stm_ts_spi : Tx15 |     0   -37   -40   -25    -6     1    -4    -3    -2     1    -6     1     3     0     1    -2     1    -4    -1    -4    17     1     3     5     3    -2    -3     0     0    -2    -3    -2    -5    -6     2     1     7    34    67 
+[    6.752325] stm_ts_spi : Tx16 |     0   -75   -27   -13    -3    -2     1    -3    -2    -1    -1    -1     3     4     1    -1    -1    -1    -3     2    10     3     4     0     1     5    -2     3    -2    -1     3     1    -1     0     0     5    10    31    59 
+[    6.752330] stm_ts_spi : Tx17 |     0    32   -16   -19     5    -5    -3    -3    -6     1    -3    -8    -4    -4    -6     0    -6    -3    -3    -5    21    -2     1     2    -1     0     0    -1     2    -1     3    -1    -1    -1     0    -6     4    16   -42 
+[    6.752332] stm_ts_spi : stm_ts_print_frame, min:-75, max:91
+[    6.803033] stm_ts_spi : stm_ts_checking_miscal: mis cal min/max :-75/91
+[    6.803036] stm_ts_spi : run_cx_data_read: start
+[    6.940938] stm_ts_spi : Tx00 |   21  23  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  22  24  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  22  17
+[    6.940943] stm_ts_spi : Tx01 |   22  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  23  24  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  20
+[    6.940947] stm_ts_spi : Tx02 |   23  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  23  23  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  21
+[    6.940951] stm_ts_spi : Tx03 |   23  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  24  23  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  21
+[    6.940956] stm_ts_spi : Tx04 |   23  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  24  23  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  20
+[    6.940960] stm_ts_spi : Tx05 |   23  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  23  23  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  21
+[    6.940964] stm_ts_spi : Tx06 |   23  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  23  23  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  20
+[    6.940968] stm_ts_spi : Tx07 |   23  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  23  23  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  20
+[    6.940973] stm_ts_spi : Tx08 |   23  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  23  23  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  19  16
+[    6.940977] stm_ts_spi : Tx09 |   24  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  23  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  19  16
+[    6.940981] stm_ts_spi : Tx10 |   23  25  25  25  25  25  25  24  24  24  24  24  24  24  24  24  24  24  24  23  23  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  21
+[    6.940985] stm_ts_spi : Tx11 |   23  25  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  20
+[    6.940990] stm_ts_spi : Tx12 |   23  25  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  20
+[    6.940994] stm_ts_spi : Tx13 |   23  25  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  22  22  20
+[    6.940998] stm_ts_spi : Tx14 |   25  25  26  25  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  22  22  20
+[    6.941002] stm_ts_spi : Tx15 |   24  27  27  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  22  22  22  22  22  22  20
+[    6.941006] stm_ts_spi : Tx16 |   24  25  26  25  25  25  25  25  25  25  25  25  24  24  24  24  24  24  24  23  23  23  23  23  23  23  23  23  23  23  23  23  23  23  22  22  22  22  19
+[    6.941011] stm_ts_spi : Tx17 |   24  24  26  25  25  24  24  24  24  24  24  24  24  24  24  24  23  23  23  23  22  22  22  22  22  22  22  22  22  22  22  22  22  22  22  21  21  20  16
+[    6.941013] stm_ts_spi : cx min:16, cx max:27
+[    6.941030] stm_ts_spi : run_ix_data_read
+[    7.052671] stm_ts_spi :  TX    00    01    02    03    04    05    06    07    08    09    10    11    12    13    14    15    16    17
+[    7.052674] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------
+[    7.052677] stm_ts_spi :  |    304   304   304   304   304   304   320   320   320   320   320   320   320   320   320   320   320   320
+[    7.052680] stm_ts_spi :  RX    00    01    02    03    04    05    06    07    08    09    10    11    12    13    14    15    16    17
+[    7.052682] stm_ts_spi :  +------------------------------------------------------------------------------------------------------------
+[    7.052685] stm_ts_spi :  |    320   304   304   304   304   304   304   304   304   304   304   304   304   304   304   304   320   320
+[    7.052688] stm_ts_spi :  |    320   320   304   304   304   304   304   304   304   304   304   304   304   304   304   304   304   304
+[    7.052689] stm_ts_spi :  |    320   320   320
+[    7.052704] stm_ts_spi : stm_ts_read_ix_data: MIN_TX_IX_SUM : 304 MAX_TX_IX_SUM : 320
+[    7.052706] stm_ts_spi : stm_ts_read_ix_data: MIN_RX_IX_SUM : 304 MAX_RX_IX_SUM : 320
+[    8.654954] stm_ts_spi : stm_ts_panel_ito_test: mode:4 [FAIL] 00 00 00 00
+[    9.631019] stm_ts_spi : run_mutual_jitter: -36,34
+[    9.631022] stm_ts_spi : run_rawdata_read_all: 
+
+------ TSP LP DUMP (/sys/class/sec/tsp/get_lp_dump) ------
+length 0
+
+*** Error dumping /sys/class/sec/tsp1/get_lp_dump (TSP1 LP DUMP): No such file or directory
+*** Error dumping /sys/class/sec/tsp2/get_lp_dump (TSP2 LP DUMP): No such file or directory
+------ TSP SPONGE LOG (/proc/tsp_sponge_log) ------
+
+
+------ TSP FAIL HISTORY ALL DUMP (/proc/tsp_fail_hist_all) ------
+
+
+------ TSP DEBUG INFO DUMP (/sys/class/sec/tsp/debug_info) ------
+FW: (I)07300014 / (B)07300014
+C01T0014.LCIA.L Cal_flag:1 fail_cnt:0
+ic_reset_count 0
+checksum bit 0
+EVENT_STATUS: WET:0 GLOVE:0 GAME:0 NOISE:0 COVER:0 NOTE:0 TA:1 WIRELESS:0 SIP:0 LS:0 PK:0 CALL:0
+
+*** Error dumping /sys/class/sec/tsp1/debug_info (TSP1 DEBUG INFO DUMP): No such file or directory
+*** Error dumping /sys/class/sec/tsp2/debug_info (TSP2 DEBUG INFO DUMP): No such file or directory
+------ TSP COMMAND HISTORY (/proc/tsp_cmd_hist) ------
+
+[1838:vendor.samsung.:tsp]aod_enable,1[q:10.959304][r:10.960203]
+[1838:vendor.samsung.:tsp]singletap_enable,1[q:10.961118][r:10.962023]
+[1838:vendor.samsung.:tsp]glove_mode,0[q:10.971448][r:10.971627]
+[1838:vendor.samsung.:tsp]aot_enable,1[q:10.971925][r:10.973111]
+[1838:vendor.samsung.:tsp]glove_mode,0[q:13.083409][r:13.083719]
+[1838:vendor.samsung.:tsp]aot_enable,1[q:13.085434][r:13.086539]
+
+*** Error dumping /sys/class/sec/sec_epen/epen_ble_hist (WACOM BLE CHARGING HISTORY): No such file or directory
+*** Error dumping /sys/class/sec/sec_epen/debug_info (WACOM DEBUG INFO DUMP): No such file or directory
+------ DIGITAL_HALL info (/sys/class/sec/digital_hall/digital_hall_info) ------
+digital_hall: ST: 00
+digital_hall: cal: 0, 0, 420, 280, -350, -510: CAL NOT
+
+------ DIGITAL_HALL status (/sys/class/sec/digital_hall/digital_hall_status) ------
+-344,751,-382
+
+------ DIGITAL_HALL threshold (/sys/class/sec/digital_hall/digital_hall_thd) ------
+0,0,420,280,-350,-510,
+
+------ DIGITAL_HALL debug (/sys/class/sec/digital_hall/digital_hall_dbg) ------
+digital_hall: dbg: 85 FE AC 02 E1 FE 8A
+digital_hall: dbg: 2C 04 4A
+
+*** Error dumping /efs/FactoryApp/digital_hall (DIGITAL_HALL factory cal): No such file or directory
+------ TSP TAAS HISTORY (/mnt/vendor/efs/taas/taaslog: 2025-11-02 21:10:31) ------
+
+2025/0731/16:46:00 A com.example.hvac_support_app.MainActivity com.example.hvac_support_app                                                                                           
+2025/0731/16:46:12 A com.example.hvac_support_app.MainActivity com.example.hvac_support_app                                                                                           
+2025/0811/20:07:13 A com.samsung.android.dialer.DialtactsActivity com.samsung.android.dialer                                                                                          
+2025/0811/20:07:54 A com.samsung.android.dialer.DialtactsActivity com.samsung.android.dialer                                                                                          
+2025/1102/21:10:31 A com.samsung.android.dialer.DialtactsActivity com.samsung.android.dialer                                                                                          
+2025/1102/21:10:31 A com.samsung.android.dialer.DialtactsActivity com.samsung.android.dialer                                                                                          
+

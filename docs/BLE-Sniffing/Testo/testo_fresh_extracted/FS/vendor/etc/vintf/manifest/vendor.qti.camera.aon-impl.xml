@@ -1,0 +1,5 @@
+<!--
+    Input:
+        vendor/qcom/proprietary/chi-cdk/core/chiaonservice/vendor.qti.camera.aon-impl.xml
+-->
+<manifest version="8.0" type="device"/>

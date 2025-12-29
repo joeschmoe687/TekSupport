@@ -1,0 +1,16 @@
+<!--
+    Input:
+        hardware/interfaces/security/keymint/aidl/default/vendor.samsung.hardware.keymint-service_V3.xml
+-->
+<manifest version="8.0" type="device">
+    <hal format="aidl">
+        <name>vendor.samsung.hardware.keymint</name>
+        <version>3</version>
+        <fqname>ISehKeyMintExtension/default</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.samsung.hardware.keymint</name>
+        <version>3</version>
+        <fqname>ISehKeyMintFactory/default</fqname>
+    </hal>
+</manifest>

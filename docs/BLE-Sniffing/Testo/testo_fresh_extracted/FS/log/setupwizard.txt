@@ -1,0 +1,1129 @@
+04-28 05:34:37:452 SetupWizardApplication : onCreate
+04-28 05:34:37:461 SetupWizardPreActionActivity : onCreate
+04-28 05:34:37:462 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+04-28 05:34:37:462 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+04-28 05:34:37:465 Utils : getSharedPreferences() : SharedPreferences(pref) is created.
+04-28 05:34:37:465 Utils : getSharedPreferencesEdit() : SharedPreferences.Editor is created.
+04-28 05:34:37:466 Utils : put Boolean in SharedPreferences [UseWizardScript] : true
+04-28 05:34:37:468 Utils : put Int in SharedPreferences [ACCELEROMETER_ROTATION] : 1
+04-28 05:34:37:468 Utils : put Boolean in SharedPreferences [isBackupOrientation] : true
+04-28 05:34:37:469 Utils : backupDefaultScreenOrientation, set auto rotate 0
+04-28 05:34:37:472 WizardSystemBarHelper : disableNotifications disable : 61145088
+04-28 05:34:37:476 Utils : put Int in SharedPreferences [currentStep] : 0
+04-28 05:34:40:555 SetupWizardPreActionActivity : maybeNext : run processSetupWizardPreAction
+04-28 05:34:40:581 SetupWizardPreActionActivity : [SET] disable com.sec.android.app.setupwizard.OemPostSetupActivity
+04-28 05:34:40:583 Utils : [SET] Component is enable : com.sec.android.app.SecSetupWizard.SecureInterceptActivity
+04-28 05:34:40:585 SetupWizardPreActionActivity : [DB] get mobile_data : true
+04-28 05:34:40:586 SetupWizardPreActionActivity : [DB] set device_provisioning_mobile_data to 1
+04-28 05:34:40:586 SetupWizardPreActionActivity : processSetupWizardPreAction, isActivatedServerAID false, isSupportLanguageSelection false, isSupportCountrySelectionStep false
+04-28 05:34:40:594 SetupWizardPreActionActivity : For smart switch - action  : com.sec.android.easyMover.Agent.ACTION_SSM_POST_POSITION
+04-28 05:34:40:892 SetupWizardPreActionActivity : call com.android.wizard.NEXT and finish
+04-28 05:34:40:892 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId oem_pre_setup, mIsSetupFlow true, mIsSetupComplete false
+04-28 05:34:40:893 TSSutils : getActivationStatus: 0
+04-28 05:34:40:893 TSSutils : ActivationRebootFlow: 0
+04-28 05:34:40:893 TSSutils : isSupportCountrySelectionActivationRebootFlow: false
+04-28 05:34:40:893 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_welcome, resultCode -1
+04-28 05:34:40:893 SetupWizardPreActionActivity : start SettingsObserverService
+04-28 05:34:40:934 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+04-28 05:34:40:937 SystemActivity : disableSetupWizardComponentsForSoftwareUpdate()
+04-28 05:34:40:938 Utils : [SET] Component is disable : com.sec.android.app.SecSetupWizard.fota.SoftwareUpdateFor70Wrapper
+04-28 05:34:40:938 LogHelper : onActivityResuming, com.google.android.setupwizard
+04-28 05:34:40:940 SettingsObserverService : onCreate
+04-28 05:34:40:940 SettingsObserverService : registerRotationObserver
+04-28 05:34:40:941 SettingsObserverService : registerDeviceProvisionedObserver
+04-28 05:34:40:941 SettingsObserverService : startForeground
+04-28 05:34:41:155 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.WELCOME pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.UI.IntroLanguageSpinnerActivity }, com.sec.android.app.SecSetupWizard
+04-28 05:34:41:179 IntroLanguageActivity : start Intro page
+04-28 05:34:41:181 Utils : [INFO] Timeout alarm pending event setted
+04-28 05:34:41:182 LocaleManager : initialize LocaleManager
+04-28 05:34:41:173 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+04-28 05:34:41:182 IntroLanguageActivity : Call from SecSetupWizard false
+04-28 05:34:41:354 LocaleManager : getLocales() START, localeInfos size : 12
+04-28 05:34:41:355 LocaleManager : getLocales() END, size of mLocales : 12
+04-28 05:34:41:355 IntroLanguageActivity : initViews : mCurrentLocale en_US, mCurrentLocaleIndex 1, localeMatchDetection true
+04-28 05:34:41:355 Utils : fontScale=1.0, maxFontScale=1.3, textSize=15, text=English
+04-28 05:34:41:357 Utils : fontScale=1.0, maxFontScale=1.0, textSize=45, text=Welcome
+04-28 05:34:41:357 IntroLanguageActivity : initViews : mWelcomeTitle Welcome
+04-28 05:34:41:357 Utils : fontScale=1.0, maxFontScale=1.3, textSize=17, text=Start
+04-28 05:34:41:357 Utils : fontScale=1.0, maxFontScale=1.3, textSize=17, text=
+04-28 05:34:41:367 Utils : fontScale=1.0, maxFontScale=1.3, textSize=15, text=Emergency call
+04-28 05:34:41:367 Utils : fontScale=1.0, maxFontScale=1.3, textSize=15, text=Accessibility
+04-28 05:34:41:367 Utils : SetupWizard isSupportEmergencyButton : true
+04-28 05:34:41:631 IntroHelper : updateBackgroundView
+04-28 05:34:41:677 IntroHelper : [-864.0, 0.0], [0, 0, 2808, 2340]
+04-28 05:34:41:678 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DTVariantNoSimLock> : false
+04-28 05:34:41:678 Utils : A model with eSIM activation don't block no sim in welcome step.
+04-28 05:34:41:678 Utils : put Boolean in SharedPreferences [EsimActivationLock] : true
+04-28 05:34:42:001 KmeManager :  checkDeviceSupportsKme true
+04-28 05:34:42:001 IntroLanguageActivity : Initializing Plus Gesture Detector
+04-28 05:34:42:003 IntroLanguageActivity : onResume : IsStartedAnimation false
+04-28 05:34:42:003 IntroLanguageActivity : DevicePolicyManager getUserProvisioningState : 0
+04-28 05:34:42:003 IntroHelper : playVideoIn
+04-28 05:34:42:003 IntroLanguageActivity : startAnimation
+04-28 05:34:42:004 IntroLanguageActivity : startSpreadingCircleAnimation
+04-28 05:34:42:004 IntroLanguageActivity : startSpreadingCircleAnimation : display size getting from WindowMetrics is (1080, 2340)
+04-28 05:34:42:004 IntroSpreadingCircleAnimation : playTitleAnimation : str = Welcome
+04-28 05:34:42:112 IntroHelper : playVideoIn onPrepared : mp4 play start
+04-28 05:34:44:126 IntroHelper : playVideoIn onCompletion : mp4 play done
+04-28 05:34:44:149 IntroLanguageActivity : mHandler msg what : 100
+04-28 05:34:44:149 SetupWizardApplication : setSALoggingConfiguration
+04-28 05:34:46:099 IntroLanguageActivity : animationHandler msg what : 1000
+04-28 05:34:46:099 IntroLanguageActivity : animationHandler : playStartButtonAnimation
+04-28 12:34:52:482 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+04-28 12:34:52:485 SecSetupWizardIntentReceiver : isAllSetupWizardDone : enabled suw activity =com.sec.android.app.SecSetupWizard.SecSetupWizardActivity
+04-28 12:34:52:485 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=false
+01-01 00:00:03:652 LogHelper : onActivityStarting, Intent { cmp=com.sem.factoryapp/com.sem.factory.SemFactoryActivity }, com.sem.factoryapp
+01-01 00:00:03:666 IntroLanguageActivity : onPause
+01-01 00:00:03:976 IntroLanguageActivity : onResume : IsStartedAnimation true
+01-01 00:00:03:977 IntroLanguageActivity : DevicePolicyManager getUserProvisioningState : 0
+01-01 00:00:09:839 LogHelper : onActivityStarting, Intent { cmp=com.sem.factoryapp/com.sem.factory.SemFactoryActivity }, com.sem.factoryapp
+01-01 00:00:09:851 IntroLanguageActivity : onPause
+01-01 00:00:10:677 IntroLanguageActivity : onResume : IsStartedAnimation true
+01-01 00:00:10:678 IntroLanguageActivity : DevicePolicyManager getUserProvisioningState : 0
+01-01 00:00:48:363 IntroLanguageActivity : onPause
+04-28 12:34:28:264 SetupWizardApplication : onCreate
+04-28 12:34:28:280 SetupWizardPreActionActivity : onCreate
+04-28 12:34:28:281 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+04-28 12:34:28:281 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+04-28 12:34:28:284 Utils : getSharedPreferences() : SharedPreferences(pref) is created.
+04-28 12:34:28:284 Utils : getSharedPreferencesEdit() : SharedPreferences.Editor is created.
+04-28 12:34:28:286 Utils : put Boolean in SharedPreferences [UseWizardScript] : true
+04-28 12:34:28:287 WizardSystemBarHelper : disableNotifications disable : 61145088
+04-28 12:34:28:311 Utils : put Int in SharedPreferences [currentStep] : 0
+04-28 12:34:31:133 SetupWizardPreActionActivity : maybeNext : run processSetupWizardPreAction
+04-28 12:34:31:134 SetupWizardPreActionActivity : [SET] disable com.sec.android.app.setupwizard.OemPostSetupActivity
+04-28 12:34:31:135 Utils : [SET] Component is enable : com.sec.android.app.SecSetupWizard.SecureInterceptActivity
+04-28 12:34:31:139 SetupWizardPreActionActivity : [DB] get mobile_data : true
+04-28 12:34:31:139 SetupWizardPreActionActivity : [DB] set device_provisioning_mobile_data to 1
+04-28 12:34:31:139 SetupWizardPreActionActivity : processSetupWizardPreAction, isActivatedServerAID false, isSupportLanguageSelection false, isSupportCountrySelectionStep false
+04-28 12:34:31:145 SetupWizardPreActionActivity : For smart switch - action  : com.sec.android.easyMover.Agent.ACTION_SSM_POST_POSITION
+04-28 12:34:31:444 SetupWizardPreActionActivity : call com.android.wizard.NEXT and finish
+04-28 12:34:31:444 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId oem_pre_setup, mIsSetupFlow true, mIsSetupComplete false
+04-28 12:34:31:444 TSSutils : getActivationStatus: 0
+04-28 12:34:31:444 TSSutils : ActivationRebootFlow: 0
+04-28 12:34:31:444 TSSutils : isSupportCountrySelectionActivationRebootFlow: false
+04-28 12:34:31:444 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_welcome, resultCode -1
+04-28 12:34:31:444 SetupWizardPreActionActivity : start SettingsObserverService
+04-28 12:34:31:455 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+04-28 12:34:31:459 SystemActivity : disableSetupWizardComponentsForSoftwareUpdate()
+04-28 12:34:31:460 Utils : [SET] Component is disable : com.sec.android.app.SecSetupWizard.fota.SoftwareUpdateFor70Wrapper
+04-28 12:34:31:461 LogHelper : onActivityResuming, com.google.android.setupwizard
+04-28 12:34:31:462 SettingsObserverService : onCreate
+04-28 12:34:31:462 SettingsObserverService : registerRotationObserver
+04-28 12:34:31:462 SettingsObserverService : registerDeviceProvisionedObserver
+04-28 12:34:31:462 SettingsObserverService : startForeground
+04-28 12:34:31:519 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.WELCOME pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.UI.IntroLanguageSpinnerActivity }, com.sec.android.app.SecSetupWizard
+04-28 12:34:31:531 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+04-28 12:34:31:543 IntroLanguageActivity : start Intro page
+04-28 12:34:31:544 Utils : [INFO] Timeout alarm pending event setted
+04-28 12:34:31:547 LocaleManager : initialize LocaleManager
+04-28 12:34:31:547 IntroLanguageActivity : Call from SecSetupWizard false
+04-28 12:34:31:613 LocaleManager : getLocales() START, localeInfos size : 12
+04-28 12:34:31:613 LocaleManager : getLocales() END, size of mLocales : 12
+04-28 12:34:31:613 IntroLanguageActivity : initViews : mCurrentLocale en_US, mCurrentLocaleIndex 1, localeMatchDetection true
+04-28 12:34:31:614 Utils : fontScale=1.0, maxFontScale=1.3, textSize=15, text=English
+04-28 12:34:31:616 Utils : fontScale=1.0, maxFontScale=1.0, textSize=45, text=Welcome
+04-28 12:34:31:616 IntroLanguageActivity : initViews : mWelcomeTitle Welcome
+04-28 12:34:31:616 Utils : fontScale=1.0, maxFontScale=1.3, textSize=17, text=Start
+04-28 12:34:31:616 Utils : fontScale=1.0, maxFontScale=1.3, textSize=17, text=
+04-28 12:34:31:616 Utils : fontScale=1.0, maxFontScale=1.3, textSize=15, text=Emergency call
+04-28 12:34:31:616 Utils : fontScale=1.0, maxFontScale=1.3, textSize=15, text=Accessibility
+04-28 12:34:31:616 Utils : SetupWizard isSupportEmergencyButton : true
+04-28 12:34:31:692 IntroHelper : updateBackgroundView
+04-28 12:34:31:733 IntroHelper : [-864.0, 0.0], [0, 0, 2808, 2340]
+04-28 12:34:31:733 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DTVariantNoSimLock> : false
+04-28 12:34:31:733 Utils : A model with eSIM activation don't block no sim in welcome step.
+04-28 12:34:31:733 Utils : put Boolean in SharedPreferences [EsimActivationLock] : true
+04-28 12:34:31:860 KmeManager :  checkDeviceSupportsKme true
+04-28 12:34:31:861 IntroLanguageActivity : Initializing Plus Gesture Detector
+04-28 12:34:31:871 IntroLanguageActivity : onResume : IsStartedAnimation false
+04-28 12:34:31:872 IntroLanguageActivity : DevicePolicyManager getUserProvisioningState : 0
+04-28 12:34:31:872 IntroHelper : playVideoIn
+04-28 12:34:31:872 IntroLanguageActivity : startAnimation
+04-28 12:34:31:872 IntroLanguageActivity : startSpreadingCircleAnimation
+04-28 12:34:31:873 IntroLanguageActivity : startSpreadingCircleAnimation : display size getting from WindowMetrics is (1080, 2340)
+04-28 12:34:31:873 IntroSpreadingCircleAnimation : playTitleAnimation : str = Welcome
+04-28 12:34:31:969 IntroHelper : playVideoIn onPrepared : mp4 play start
+04-28 12:34:33:912 IntroHelper : playVideoIn onCompletion : mp4 play done
+04-28 12:34:33:932 IntroLanguageActivity : mHandler msg what : 100
+04-28 12:34:33:933 SetupWizardApplication : setSALoggingConfiguration
+04-28 12:34:34:916 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+04-28 12:34:34:917 SecSetupWizardIntentReceiver : isAllSetupWizardDone : enabled suw activity =com.sec.android.app.SecSetupWizard.SecSetupWizardActivity
+04-28 12:34:34:917 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=false
+04-28 12:34:35:961 IntroLanguageActivity : animationHandler msg what : 1000
+04-28 12:34:35:962 IntroLanguageActivity : animationHandler : playStartButtonAnimation
+04-28 12:35:04:384 IntroLanguageActivity : onPause
+04-28 12:36:19:053 IntroLanguageActivity : onResume : IsStartedAnimation true
+04-28 12:36:19:057 IntroLanguageActivity : DevicePolicyManager getUserProvisioningState : 0
+04-28 12:36:20:241 Utils : kernel: 6.6.30-android15-8-30455426-abogkis931usqs3aydg-4k
+04-28 12:36:20:241 Utils : kernel is Samsung
+04-28 12:36:20:242 Utils : Package not found : com.samsung.android.activation
+04-28 12:36:20:242 IntroLanguageActivity : Language is applied for the first time: en-US
+04-28 12:36:20:264 Utils : put Boolean in SharedPreferences [isLanguageSetByUser] : true
+04-28 12:36:20:265 Utils : INFO : The toast about no sim is not provided in models that supports eSIM step.
+04-28 12:36:20:265 Utils : INFO : isSimMissingToastRequired : false
+04-28 12:36:20:283 Utils : [SET] persist.sys.knox.provisioning_in_progress : 0
+04-28 12:36:20:779 IntroLanguageActivity : finishAnimation onAnimationEnd
+04-28 12:36:20:780 IntroHelper : playVideoOut
+04-28 12:36:20:806 IntroHelper : playVideoOut onPrepared : mp4 play start
+04-28 12:36:22:505 IntroHelper : playVideoOut onCompletion : mp4 play done
+04-28 12:36:22:506 IntroLanguageActivity : mHandler msg what : 300
+04-28 12:36:22:511 Utils : put Int in SharedPreferences [currentStep] : 1
+04-28 12:36:22:512 Utils : Timeout alarm pending event canceled
+04-28 12:36:22:512 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_welcome, mIsSetupFlow true, mIsSetupComplete false
+04-28 12:36:22:512 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_eula, resultCode -1
+04-28 12:36:22:514 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+04-28 12:36:22:524 IntroLanguageActivity : onPause
+04-28 12:36:22:533 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.TERMS pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.UI.TermsAndConditionActivity }, com.sec.android.app.SecSetupWizard
+04-28 12:36:22:537 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+04-28 12:36:22:558 ChildrenAgreement : ChildrenAgreement, state = INIT
+04-28 12:36:22:558 ChildrenAgreement : [false, false, 2131820688, 9]
+04-28 12:36:22:558 ChildrenAgreement : ChildrenAgreement, state = INIT
+04-28 12:36:22:559 ChildrenAgreement : [false, false, 2131820688, 9]
+04-28 12:36:22:559 EULAPPMainActivity : countryCode=null
+04-28 12:36:22:559 ChildrenAgreement : ChildrenAgreement, state = INIT
+04-28 12:36:22:559 ChildrenAgreement : [false, false, 2131820688, 9]
+04-28 12:36:22:559 EULAPPMainActivity : Call from setupWizard false
+04-28 12:36:22:559 EULAPPMainActivity : The sentence of 'I agree to samsung TnC' is used in North America.
+04-28 12:36:22:569 EULAPPMainActivity : NorthAmericaOperator : change eulaTitle.
+04-28 12:36:22:636 EULAPPMainActivity : If Auto Update is supported or not : true
+04-28 12:36:22:638 TnCutils : isDisablePrivacyPolicyAgreement : return false, countryiso_code = US
+04-28 12:36:22:638 TnCutils : getTncSummaryType: TNC summaryType 0
+04-28 12:36:22:638 TnCutils : isSupportAntiMalware : false
+04-28 12:36:22:639 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+04-28 12:36:22:639 EULAPPMainActivity : IntroLanguageSpinnerActivity  KME bindToKmeService
+04-28 12:36:22:639 KmeManager : KME_Analysis: Binding to KmeService Elapsed Time: 125136 mIsBoundToKmeService = false
+04-28 12:36:22:640 KmeManager : Binding to KmeService: true
+04-28 12:36:22:686 KmeManager : KME_Analysis: Connected to IEnrollmentCheckService Elapsed Time: 125183 mCurrentKmeStatus = CHECK_NOT_STARTED
+04-28 12:36:25:292 EULAPPMainActivity : EULA is saved
+04-28 12:36:25:297 EULAPPMainActivity : PP is saved
+04-28 12:36:25:297 EULAPPMainActivity : [DB-LOG] put samsung_eula_agree_hqm DB to 1
+04-28 12:36:25:306 EULAPPMainActivity : DIAG is saved
+04-28 12:36:25:310 TnCutils : sendBroadcastForEulaAgreement is Done
+04-28 12:36:25:310 TnCutils : isSupportAntiMalware : false
+04-28 12:36:25:310 Utils : [GET] persist.sys.knox.provisioning_in_progress : 0
+04-28 12:36:25:310 Utils : put Int in SharedPreferences [currentStep] : 2
+04-28 12:36:25:310 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_eula, mIsSetupFlow true, mIsSetupComplete false
+04-28 12:36:25:310 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <VZW_ACT> : false
+04-28 12:36:25:311 CustomerRegionChecker : isVzwActivationStepOnlyDevice:false
+04-28 12:36:25:311 Utils : Quick Start is NOT : before SIM based TSS activation
+04-28 12:36:25:311 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+04-28 12:36:25:312 Utils : isNetworkConnected : No Network
+04-28 12:36:25:312 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_wifi_setup, resultCode 203
+04-28 12:36:25:314 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+04-28 12:36:25:327 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.SECWIFISETUP pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.SecWifiSetupWrapper }, com.sec.android.app.SecSetupWizard
+04-28 12:36:25:331 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+04-28 12:36:25:339 SecWifiSetupWrapper : isQuickStart=false, isWifiConnected = false
+04-28 12:36:25:339 SecWifiSetupWrapper : Start WIFI...
+04-28 12:36:25:339 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+04-28 12:36:25:339 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+04-28 12:36:25:342 KmeManager :  isB2bDeviceBeforeFactoryReset false
+04-28 12:36:25:342 Utils : isGoogleFrpEnabled() ret : false
+04-28 12:36:25:342 SecWifiSetupWrapper : [googleFRPFlag] = false
+04-28 12:36:25:342 Utils : put Boolean in SharedPreferences [frp_init_value] : false
+04-28 12:36:25:343 LogHelper : onActivityStarting, Intent { act=com.samsung.android.net.wifi.SECSETUP_WIFI_NETWORK cmp=com.android.settings/com.samsung.android.settings.wifi.WifiSetupWizardActivity }, com.android.settings
+04-28 12:36:25:424 WifiSetupWizard : onCreate
+04-28 12:36:25:449 WifiSetupWizard : isVendorSupportTSS : false SalesCode : XAU
+04-28 12:36:25:449 WifiSetupWizard : isTSSAndOperatorNotFixed = falsemIsKmeSupported = true, mIsNetworkRequiredByKme = false, mAllowCaptiveByKme = false, mIsNetworkRequiredByFrp = false, mIsNetworkRequiredByCustomer = false, mIsFrpChallengeRequired = false, mIsUsedSprintNewSetupWizard = false
+04-28 12:36:25:456 WifiSetupWizard : isVendorSupportTSS : false SalesCode : XAU
+04-28 12:36:25:459 WifiSetupWizard : isVendorSupportTSS : false SalesCode : XAU
+04-28 12:36:25:460 WifiSetupWizard : JIG Info No VPS /  / 
+04-28 12:36:25:460 WifiSetupWizard : JIG Wrong value
+04-28 12:36:25:460 WifiSetupWizard : isVendorSupportTSS : false SalesCode : XAU
+04-28 12:36:25:461 WifiSetupWizard : updateButton isNext:false, viewEnable:true
+04-28 12:36:25:466 WifiSetupWizard : isVendorSupportTSS : false SalesCode : XAU
+04-28 12:36:26:462 WifiSetupWizard : WIFI_STATE_CHANGED_ACTION 1 2
+04-28 12:36:26:463 WifiSetupWizard : isVendorSupportTSS : false SalesCode : XAU
+04-28 12:36:26:464 WifiSetupWizard : JIG Info No VPS /  / 
+04-28 12:36:26:464 WifiSetupWizard : JIG Wrong value
+04-28 12:36:26:466 WifiSetupWizard : isVendorSupportTSS : false SalesCode : XAU
+04-28 12:36:26:466 WifiSetupWizard : updateButton isNext:false, viewEnable:true
+04-28 12:36:26:581 WifiSetupWizard : onClick MainAction isWifiNetworkConnected() = false isNetworkAvailable() = false mIsSkipButtonEnabled = true
+04-28 12:36:26:581 WifiSetupWizard : EsimSupported = true, eSIM detected = false, pSIM detected = false
+04-28 12:36:26:648 WifiSetupWizard : WIFI_STATE_CHANGED_ACTION 2 3
+04-28 12:36:26:649 WifiSetupWizard : isVendorSupportTSS : false SalesCode : XAU
+04-28 12:36:26:650 WifiSetupWizard : JIG Info No VPS /  / 
+04-28 12:36:26:650 WifiSetupWizard : JIG Wrong value
+04-28 12:36:26:650 WifiSetupWizard : isVendorSupportTSS : false SalesCode : XAU
+04-28 12:36:26:650 WifiSetupWizard : updateButton isNext:false, viewEnable:true
+04-28 12:36:27:729 WifiSetupWizard : onClick MainAction isWifiNetworkConnected() = false isNetworkAvailable() = false mIsSkipButtonEnabled = true
+04-28 12:36:27:730 WifiSetupWizard : finish with RESULT_SKIP
+04-28 12:36:27:731 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+04-28 12:36:27:743 SecWifiSetupWrapper : onActivityResult : 20
+04-28 12:36:27:743 SecWifiSetupWrapper : onActivityResult finishAction
+04-28 12:36:27:743 SecWifiSetupWrapper : start Service - com.sec.android.easyMover.Agent.UpdatePackageOnSuwService
+04-28 12:36:27:744 SecWifiSetupWrapper : call com.android.wizard.NEXT and finish
+04-28 12:36:27:744 Utils : put Int in SharedPreferences [currentStep] : 3
+04-28 12:36:27:744 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_wifi_setup, mIsSetupFlow true, mIsSetupComplete false
+04-28 12:36:27:745 Utils : gid1 : NULL
+04-28 12:36:27:745 Utils : A inserted SIM is TMO family SIM : 1
+04-28 12:36:27:745 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+04-28 12:36:27:746 Utils : isNetworkConnected : No Network
+04-28 12:36:27:746 KmeManager : KME_Analysis: Binding to KmeService Elapsed Time: 130243 mIsBoundToKmeService = true
+04-28 12:36:27:746 Utils : isNetworkConnected : No Network
+04-28 12:36:27:746 TSSutils : getActivationStatus: 0
+04-28 12:36:27:828 TSSutils : This device is not Network based TSS.
+04-28 12:36:27:829 Utils : Package not found : com.samsung.android.app.deviceownersetup
+04-28 12:36:27:829 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_esim_setup, resultCode 105
+04-28 12:36:27:830 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+04-28 12:36:27:852 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.ESIM_SETUP pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.SecEsimSetupWrapper }, com.sec.android.app.SecSetupWizard
+04-28 12:36:27:855 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+04-28 12:36:27:864 SecEsimSetupWrapper : onCreate
+04-28 12:36:27:865 SecEsimSetupWrapper : isEnabledSimDetected : no pSIM
+04-28 12:36:27:865 SecEsimSetupWrapper : isESimDetected : no eSim
+04-28 12:36:27:865 Utils : isNetworkConnected : No Network
+04-28 12:36:27:866 SecEsimSetupWrapper : Start e-SIM setup ...
+04-28 12:36:27:866 LogHelper : onActivityStarting, Intent { act=com.samsung.android.app.telephonyui.action.SUW_ADD_MOBILE_PLAN cmp=com.samsung.android.app.telephonyui/.netsettings.ui.esim.SuwAddMobilePlanActivity }, com.samsung.android.app.telephonyui
+07-30 17:08:52:401 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:08:52:430 SecEsimSetupWrapper : onActivityResult : -1
+07-30 17:08:52:430 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_esim_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:08:52:431 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <VZW_ACT> : false
+07-30 17:08:52:431 CustomerRegionChecker : isVzwActivationStepOnlyDevice:false
+07-30 17:08:52:431 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_esim_post_setup, resultCode -1
+07-30 17:08:52:432 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:08:52:461 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.POST_ESIM_SETUP pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.PostESimSetup }, com.sec.android.app.SecSetupWizard
+07-30 17:08:52:461 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:08:52:468 PostESimSetup : call com.android.wizard.NEXT and finish
+07-30 17:08:52:468 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_esim_post_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:08:52:468 Utils : isGoogleFrpEnabled() ret : false
+07-30 17:08:52:469 Utils : isNetworkConnected : No Network
+07-30 17:08:52:469 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId no_network_flow, resultCode 201
+07-30 17:08:52:470 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:08:52:483 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:08:52:486 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:08:52:493 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.CHECK_SMART_SWITCH_CONDITION pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.google.SmartSwitchConditionCheckActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:08:52:494 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:08:52:498 SmartSwitchConditionCheckActivity : call com.android.wizard.NEXT and finish
+07-30 17:08:52:499 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId check_smart_switch_condition, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:08:52:499 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId unified_restore_flow, resultCode 204
+07-30 17:08:52:500 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:08:52:510 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:08:52:513 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:08:52:518 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.USB_MIGRATION pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.restore.D2dMigrationWrapper }, com.google.android.setupwizard
+07-30 17:08:52:519 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:08:52:530 LogHelper : onActivityStarting, Intent { act=com.google.android.apps.restore.ACTION_FLOW_CHOICE pkg=com.google.android.apps.restore cmp=com.google.android.apps.restore/com.google.android.apps.pixelmigrate.component.FlowChoiceActivity }, com.google.android.apps.restore
+07-30 17:09:30:297 SetupWizardApplication : onCreate
+07-30 17:09:30:319 SetupWizardPreActionActivity : onCreate
+07-30 17:09:30:320 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+07-30 17:09:30:320 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+07-30 17:09:30:323 Utils : getSharedPreferences() : SharedPreferences(pref) is created.
+07-30 17:09:30:324 Utils : getSharedPreferencesEdit() : SharedPreferences.Editor is created.
+07-30 17:09:30:326 Utils : put Boolean in SharedPreferences [UseWizardScript] : true
+07-30 17:09:30:328 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:09:30:338 SetupWizardPreActionActivity : Before TSS activation the step is run by 3
+07-30 17:09:30:340 NetworkCallbackUtils : registerNetworkCallback
+07-30 17:09:33:352 NetworkCallbackUtils : unregisterNetworkCallback
+07-30 17:09:36:306 NetworkCallbackUtils : registerNetworkCallback
+07-30 17:09:39:295 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+07-30 17:09:39:296 SecSetupWizardIntentReceiver : isAllSetupWizardDone : enabled suw activity =com.sec.android.app.SecSetupWizard.SecSetupWizardActivity
+07-30 17:09:39:296 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=false
+07-30 17:09:41:627 NetworkCallbackUtils : onAvailable 100
+07-30 17:09:41:637 SetupWizardPreActionActivity : maybeNext : run processSetupWizardPreAction
+07-30 17:09:41:642 SetupWizardPreActionActivity : [SET] disable com.sec.android.app.setupwizard.OemPostSetupActivity
+07-30 17:09:41:644 Utils : [SET] Component is enable : com.sec.android.app.SecSetupWizard.SecureInterceptActivity
+07-30 17:09:41:647 SetupWizardPreActionActivity : [DB] get mobile_data : true
+07-30 17:09:41:647 SetupWizardPreActionActivity : [DB] set device_provisioning_mobile_data to 1
+07-30 17:09:41:648 SetupWizardPreActionActivity : processSetupWizardPreAction, isActivatedServerAID true, isSupportLanguageSelection false, isSupportCountrySelectionStep false
+07-30 17:09:41:650 SetupWizardPreActionActivity : For smart switch - action  : com.sec.android.easyMover.Agent.ACTION_SSM_POST_POSITION
+07-30 17:09:41:947 SetupWizardPreActionActivity : call com.android.wizard.NEXT and finish
+07-30 17:09:41:947 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId oem_pre_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:09:41:949 TSSutils : getActivationStatus: 0
+07-30 17:09:41:949 TSSutils : ActivationRebootFlow: 0
+07-30 17:09:41:949 TSSutils : isSupportCountrySelectionActivationRebootFlow: false
+07-30 17:09:41:949 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_welcome, resultCode -1
+07-30 17:09:41:949 SetupWizardPreActionActivity : start SettingsObserverService
+07-30 17:09:41:955 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:41:958 SystemActivity : disableSetupWizardComponentsForSoftwareUpdate()
+07-30 17:09:41:959 Utils : [SET] Component is disable : com.sec.android.app.SecSetupWizard.fota.SoftwareUpdateFor70Wrapper
+07-30 17:09:41:959 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:41:959 SettingsObserverService : onCreate
+07-30 17:09:41:960 SettingsObserverService : registerRotationObserver
+07-30 17:09:41:960 SettingsObserverService : registerDeviceProvisionedObserver
+07-30 17:09:41:960 SettingsObserverService : startForeground
+07-30 17:09:41:963 NetworkCallbackUtils : unregisterNetworkCallback
+07-30 17:09:41:984 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.WELCOME pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.UI.IntroLanguageSpinnerActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:09:41:990 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:09:42:003 IntroLanguageActivity : start Intro page
+07-30 17:09:42:003 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_welcome, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:09:42:003 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_eula, resultCode -1
+07-30 17:09:42:004 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:42:027 LocaleManager : initialize LocaleManager
+07-30 17:09:42:027 IntroLanguageActivity : Call from SecSetupWizard false
+07-30 17:09:42:112 LocaleManager : getLocales() START, localeInfos size : 12
+07-30 17:09:42:112 LocaleManager : getLocales() END, size of mLocales : 12
+07-30 17:09:42:113 IntroLanguageActivity : [Locale] updateLocale en-US
+07-30 17:09:42:139 IntroLanguageActivity : initViews : mCurrentLocale en_US, mCurrentLocaleIndex 1, localeMatchDetection true
+07-30 17:09:42:139 Utils : fontScale=1.0, maxFontScale=1.3, textSize=15, text=English
+07-30 17:09:42:142 Utils : fontScale=1.0, maxFontScale=1.0, textSize=45, text=Welcome
+07-30 17:09:42:142 IntroLanguageActivity : initViews : mWelcomeTitle Welcome
+07-30 17:09:42:143 Utils : fontScale=1.0, maxFontScale=1.3, textSize=17, text=Start
+07-30 17:09:42:143 Utils : fontScale=1.0, maxFontScale=1.3, textSize=17, text=
+07-30 17:09:42:148 Utils : fontScale=1.0, maxFontScale=1.3, textSize=15, text=Emergency call
+07-30 17:09:42:149 Utils : fontScale=1.0, maxFontScale=1.3, textSize=15, text=Accessibility
+07-30 17:09:42:149 Utils : SetupWizard isSupportEmergencyButton : true
+07-30 17:09:42:195 IntroHelper : updateBackgroundView
+07-30 17:09:42:232 IntroHelper : [-864.0, 0.0], [0, 0, 2808, 2340]
+07-30 17:09:42:232 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DTVariantNoSimLock> : false
+07-30 17:09:42:368 KmeManager :  checkDeviceSupportsKme true
+07-30 17:09:42:369 IntroLanguageActivity : Initializing Plus Gesture Detector
+07-30 17:09:42:370 IntroLanguageActivity : onResume : IsStartedAnimation false
+07-30 17:09:42:370 IntroLanguageActivity : DevicePolicyManager getUserProvisioningState : 0
+07-30 17:09:42:370 IntroHelper : playVideoIn
+07-30 17:09:42:370 IntroLanguageActivity : startAnimation
+07-30 17:09:42:370 IntroLanguageActivity : startSpreadingCircleAnimation
+07-30 17:09:42:370 IntroLanguageActivity : startSpreadingCircleAnimation : display size getting from WindowMetrics is (1080, 2340)
+07-30 17:09:42:370 IntroSpreadingCircleAnimation : playTitleAnimation : str = Welcome
+07-30 17:09:42:412 IntroLanguageActivity : onPause
+07-30 17:09:42:434 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.TERMS pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.UI.TermsAndConditionActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:09:42:442 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:09:42:443 IntroHelper : playVideoIn onPrepared : mp4 play start
+07-30 17:09:42:475 ChildrenAgreement : ChildrenAgreement, state = INIT
+07-30 17:09:42:475 ChildrenAgreement : [false, false, 2131820688, 9]
+07-30 17:09:42:475 ChildrenAgreement : ChildrenAgreement, state = INIT
+07-30 17:09:42:475 ChildrenAgreement : [false, false, 2131820688, 9]
+07-30 17:09:42:475 EULAPPMainActivity : countryCode=null
+07-30 17:09:42:475 ChildrenAgreement : ChildrenAgreement, state = INIT
+07-30 17:09:42:475 ChildrenAgreement : [false, false, 2131820688, 9]
+07-30 17:09:42:475 EULAPPMainActivity : Call from setupWizard false
+07-30 17:09:42:475 EULAPPMainActivity : The sentence of 'I agree to samsung TnC' is used in North America.
+07-30 17:09:42:475 Utils : [GET] persist.sys.knox.provisioning_in_progress : 0
+07-30 17:09:42:475 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_eula, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:09:42:475 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <VZW_ACT> : false
+07-30 17:09:42:475 CustomerRegionChecker : isVzwActivationStepOnlyDevice:false
+07-30 17:09:42:475 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+07-30 17:09:42:484 KmeManager :  isB2bDeviceBeforeFactoryReset false
+07-30 17:09:42:485 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId check_quick_start, resultCode 106
+07-30 17:09:42:486 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:42:494 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+07-30 17:09:42:494 EULAPPMainActivity : IntroLanguageSpinnerActivity  KME bindToKmeService
+07-30 17:09:42:494 KmeManager : KME_Analysis: Binding to KmeService Elapsed Time: 23405 mIsBoundToKmeService = false
+07-30 17:09:42:496 KmeManager : Binding to KmeService: true
+07-30 17:09:42:525 LogHelper : onActivityStarting, Intent { act=com.android.setupwizard.CHECK_QUICK_START pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.quickstart.CheckQuickStartActivity }, com.google.android.setupwizard
+07-30 17:09:42:544 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:42:544 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:42:548 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:42:562 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:42:566 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:42:571 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.CHECK_FRP pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.account.CheckFrp }, com.google.android.setupwizard
+07-30 17:09:42:573 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:42:621 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:42:622 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:42:632 KmeManager : KME_Analysis: Connected to IEnrollmentCheckService Elapsed Time: 23543 mCurrentKmeStatus = CHECK_NOT_STARTED
+07-30 17:09:42:640 LogHelper : onActivityStarting, Intent { act=com.android.setupwizard.DEVICE_PAIRING pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.pairing.DevicePairingWrapper }, com.google.android.setupwizard
+07-30 17:09:42:643 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:42:658 LogHelper : onActivityStarting, Intent { act=com.google.android.gms.smartdevice.quickstart.TARGET_DEVICE_SETUP cmp=com.google.android.gms/.smartdevice.quickstart.ui.TargetQuickStartActivity }, com.google.android.gms
+07-30 17:09:55:946 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:55:966 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:55:992 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.SECWIFISETUP pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.SecWifiSetupWrapper }, com.sec.android.app.SecSetupWizard
+07-30 17:09:55:998 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:09:56:023 SecWifiSetupWrapper : isQuickStart=false, isWifiConnected = false
+07-30 17:09:56:023 SecWifiSetupWrapper : call com.android.wizard.NEXT and finish
+07-30 17:09:56:023 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_wifi_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:09:56:023 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+07-30 17:09:56:023 Utils : isNetworkConnected : Mobile Network
+07-30 17:09:56:023 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId kme_check_dialog, resultCode 302
+07-30 17:09:56:025 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:56:042 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.B2B_CHECK_PROGRESS pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.kme.B2bDeviceCheckActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:09:56:057 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:09:56:062 B2bDeviceCheckActivity : KME_Analysis: B2B check dialog: onCreatefalse
+07-30 17:09:56:062 B2bDeviceCheckActivity : KME_Analysis: B2B check dialog: onCreatecom.sec.android.app.secsetupwizard.B2B_CHECK_PROGRESS
+07-30 17:09:56:066 KmeManager : Adding listener: B2bDeviceCheckActivity
+07-30 17:09:56:066 Utils : [GET] persist.sys.knox.provisioning_in_progress : 0
+07-30 17:09:56:066 Poller : Step: 1
+07-30 17:09:56:066 Poller : poller started
+07-30 17:09:56:066 B2bDeviceCheckActivity : Small width : 360
+07-30 17:09:56:066 KmeManager : Starting b2b device check ...
+07-30 17:09:56:067 B2bDeviceCheckActivity : KME_Analysis: B2B check dialog:Start Elapsed Time : 36978
+07-30 17:09:56:067 Utils : isNetworkConnected : Mobile Network
+07-30 17:09:56:067 KmeManager : isNetworkAvailable: true
+07-30 17:09:56:067 KmeManager : KME_Analysis: startEnrollmentCheck() Elapsed Time: 36978
+07-30 17:09:56:937 KmeManager : KME_Analysis: onEnrollmentStatusReceived: false mSwipeEnrollStatus =false Elapsed Time: 37848
+07-30 17:09:56:938 KmeManager : KME_Analysis: updateB2BDeviceStatus: false mSwipeEnrollStatus =false
+07-30 17:09:56:938 B2bDeviceCheckActivity : Receiving result: NOT_B2B_DEVICE from class com.sec.android.app.SecSetupWizard.kme.B2bDeviceCheckActivity
+07-30 17:09:56:938 Poller : poller stopped
+07-30 17:09:56:938 KmeManager : KME_Analysis: updateB2BDeviceStatus: false mSwipeEnrollStatus =false
+07-30 17:09:56:938 KmeManager : Removing listener: B2bDeviceCheckActivity
+07-30 17:09:56:939 Utils : isGoogleFrpEnabled() ret : false
+07-30 17:09:56:939 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId kme_check_dialog, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:09:56:940 Utils : isNetworkConnected : Mobile Network
+07-30 17:09:56:940 TSSutils : getActivationStatus: 0
+07-30 17:09:57:078 TSSutils : This device is not Network based TSS.
+07-30 17:09:57:079 KmeManager : KME_Analysis: Binding to KmeService Elapsed Time: 37990 mIsBoundToKmeService = true
+07-30 17:09:57:079 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_esim_setup, resultCode 105
+07-30 17:09:57:080 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:57:089 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:57:094 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.ESIM_SETUP pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.SecEsimSetupWrapper }, com.sec.android.app.SecSetupWizard
+07-30 17:09:57:099 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:09:57:110 SecEsimSetupWrapper : onCreate
+07-30 17:09:57:110 SecEsimSetupWrapper : isEnabledSimDetected : no pSIM
+07-30 17:09:57:111 SecEsimSetupWrapper : isESimDetected : enabled or disabled eSIM is detected
+07-30 17:09:57:111 SecEsimSetupWrapper : pSIM or eSIM is detected. eSIM activation is skipped.
+07-30 17:09:57:111 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_esim_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:09:57:112 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <VZW_ACT> : false
+07-30 17:09:57:112 CustomerRegionChecker : isVzwActivationStepOnlyDevice:false
+07-30 17:09:57:112 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_esim_post_setup, resultCode -1
+07-30 17:09:57:116 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:57:131 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.POST_ESIM_SETUP pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.PostESimSetup }, com.sec.android.app.SecSetupWizard
+07-30 17:09:57:135 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:09:57:140 PostESimSetup : call com.android.wizard.NEXT and finish
+07-30 17:09:57:140 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_esim_post_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:09:57:140 Utils : isGoogleFrpEnabled() ret : false
+07-30 17:09:57:141 Utils : isNetworkConnected : Mobile Network
+07-30 17:09:57:141 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId check_frp, resultCode 200
+07-30 17:09:57:141 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:57:152 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.CHECK_FRP pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.account.CheckFrp }, com.google.android.setupwizard
+07-30 17:09:57:158 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:57:172 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:57:174 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:57:182 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:57:184 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:57:193 LogHelper : onActivityStarting, Intent { act=com.android.setupwizard.PROV_PROFILE_CHECKING pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.network.ProvisioningProfileCheckerFragment }, com.google.android.setupwizard
+07-30 17:09:57:195 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:57:208 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:09:57:220 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:57:220 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.PRE_CHECKIN_AND_UPDATE pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.network.CompatCheckinAndEarlyUpdate }, com.google.android.setupwizard
+07-30 17:09:57:222 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:09:57:765 B2bDeviceCheckActivity : KME_Analysis: B2B check dialog: Stop
+07-30 17:10:11:374 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:11:386 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:409 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.POST_CHECKIN_AND_UPDATE pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.update.PostCheckinAndUpdateActivity }, com.google.android.setupwizard
+07-30 17:10:11:415 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:434 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:11:437 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:446 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.NETWORK_CHECK pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.network.NetworkCheck }, com.google.android.setupwizard
+07-30 17:10:11:451 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:472 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:11:475 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:486 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:11:490 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:497 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.ZERO_TOUCH_SETUP pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.user.ZeroTouchWrapper }, com.google.android.setupwizard
+07-30 17:10:11:499 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:524 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:11:528 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:538 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.RESTORE_ID_SELECTION pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.google.RestoreIdSelectionActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:10:11:542 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:11:548 RestoreIdSelectionActivity : call com.android.wizard.NEXT and finish
+07-30 17:10:11:548 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId restore_id_selection, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:10:11:548 Utils : isGoogleFrpEnabled() ret : false
+07-30 17:10:11:548 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId unified_restore_flow, resultCode 204
+07-30 17:10:11:554 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:11:569 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:11:573 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:581 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.USB_MIGRATION pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.restore.D2dMigrationWrapper }, com.google.android.setupwizard
+07-30 17:10:11:584 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:11:598 LogHelper : onActivityStarting, Intent { act=com.google.android.apps.restore.ACTION_FLOW_CHOICE pkg=com.google.android.apps.restore cmp=com.google.android.apps.restore/com.google.android.apps.pixelmigrate.component.FlowChoiceActivity }, com.google.android.apps.restore
+07-30 17:10:15:994 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:16:010 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:16:030 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.SEC_RESTORE pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.SecRestoreDataWrapper }, com.sec.android.app.SecSetupWizard
+07-30 17:10:16:035 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:16:040 SecRestoreDataWrapper : onCreate : SecRestoreDataWrapper
+07-30 17:10:16:041 SecRestoreDataWrapper : Start launchSecRestore...
+07-30 17:10:16:044 LogHelper : onActivityStarting, Intent { act=com.sec.android.easyMover.agent.SETUP_WIZARD_SMART_SWITCH cmp=com.sec.android.easyMover.Agent/.FastTrackActivity }, com.sec.android.easyMover.Agent
+07-30 17:10:16:119 LogHelper : onActivityStarting, Intent { act=com.sec.android.easyMover.SETUP_WIZARD_SMART_SWITCH_UNIFIED pkg=com.sec.android.easyMover cmp=com.sec.android.easyMover/.ui.OOBELauncherActivity }, com.sec.android.easyMover
+07-30 17:10:16:123 LogHelper : onActivityResuming, com.sec.android.easyMover
+07-30 17:10:16:132 LogHelper : onActivityStarting, Intent { cmp=com.sec.android.easyMover/.ui.WelcomeActivity }, com.sec.android.easyMover
+07-30 17:10:18:655 LogHelper : onActivityStarting, Intent { cmp=com.sec.android.easyMover/.ui.RuntimePermissionActivity }, com.sec.android.easyMover
+07-30 17:10:18:663 LogHelper : onActivityResuming, com.sec.android.easyMover
+07-30 17:10:20:239 LogHelper : onActivityStarting, Intent { cmp=com.sec.android.easyMover/.ui.OSSelectionActivity }, com.sec.android.easyMover
+07-30 17:10:20:248 LogHelper : onActivityResuming, com.sec.android.easyMover
+07-30 17:10:22:751 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:22:765 SecRestoreDataWrapper : onActivityResult : requestCode 2, resultCode 0
+07-30 17:10:22:766 SecRestoreDataWrapper : finishAction: isBack true
+07-30 17:10:22:766 Utils : put Boolean in SharedPreferences [selectSmartSwitch] : false
+07-30 17:10:22:766 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:22:767 KmeManager : KME_Analysis: Binding to KmeService Elapsed Time: 63679 mIsBoundToKmeService = true
+07-30 17:10:22:778 LogHelper : onActivityStarting, Intent { act=com.google.android.apps.restore.ACTION_FLOW_CHOICE pkg=com.google.android.apps.restore cmp=com.google.android.apps.restore/com.google.android.apps.pixelmigrate.component.FlowChoiceActivity }, com.google.android.apps.restore
+07-30 17:10:23:527 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:23:533 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:23:544 RestoreIdSelectionActivity : onActivityResult: requestCode 10000, resultCode 0
+07-30 17:10:23:544 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:23:552 PostESimSetup : onActivityResult: requestCode 10000, resultCode 0
+07-30 17:10:23:553 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:23:559 SecEsimSetupWrapper : onActivityResult : 0
+07-30 17:10:23:560 SecEsimSetupWrapper : isEnabledSimDetected : no pSIM
+07-30 17:10:23:561 SecEsimSetupWrapper : isESimDetected : enabled or disabled eSIM is detected
+07-30 17:10:23:561 SecEsimSetupWrapper : pSIM or eSIM is detected. eSIM activation is skipped.
+07-30 17:10:23:562 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:23:569 SecWifiSetupWrapper : onActivityResult : 0
+07-30 17:10:23:569 KmeManager : KME_Analysis: Binding to KmeService Elapsed Time: 64481 mIsBoundToKmeService = true
+07-30 17:10:23:569 SecWifiSetupWrapper : Start WIFI...
+07-30 17:10:23:569 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+07-30 17:10:23:570 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+07-30 17:10:23:573 KmeManager :  isB2bDeviceBeforeFactoryReset false
+07-30 17:10:23:573 Utils : isGoogleFrpEnabled() ret : false
+07-30 17:10:23:573 SecWifiSetupWrapper : [googleFRPFlag] = false
+07-30 17:10:23:574 Utils : put Boolean in SharedPreferences [frp_init_value] : false
+07-30 17:10:23:575 LogHelper : onActivityStarting, Intent { act=com.samsung.android.net.wifi.SECSETUP_WIFI_NETWORK cmp=com.android.settings/com.samsung.android.settings.wifi.WifiSetupWizardActivity }, com.android.settings
+07-30 17:10:23:628 WifiSetupWizard : onCreate
+07-30 17:10:23:653 WifiSetupWizard : isVendorSupportTSS : false SalesCode : TMB
+07-30 17:10:23:654 WifiSetupWizard : isTSSAndOperatorNotFixed = falsemIsKmeSupported = true, mIsNetworkRequiredByKme = false, mAllowCaptiveByKme = false, mIsNetworkRequiredByFrp = false, mIsNetworkRequiredByCustomer = false, mIsFrpChallengeRequired = false, mIsUsedSprintNewSetupWizard = false
+07-30 17:10:23:655 WifiSetupWizard : isVendorSupportTSS : false SalesCode : TMB
+07-30 17:10:23:657 WifiSetupWizard : updateButton isNext:false, viewEnable:true
+07-30 17:10:23:660 WifiSetupWizard : isVendorSupportTSS : false SalesCode : TMB
+07-30 17:10:23:667 WifiSetupWizard : updateButton isNext:false, viewEnable:true
+07-30 17:10:23:667 WifiSetupWizard : updateButton isNext:false, viewEnable:true
+07-30 17:10:24:165 SecEsimSetupWrapper : onDestroy
+07-30 17:10:24:657 WifiSetupWizard : onClick MainAction isWifiNetworkConnected() = false isNetworkAvailable() = true mIsSkipButtonEnabled = true
+07-30 17:10:24:658 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.B2B_CHECK_PROGRESS cmp=com.sec.android.app.SecSetupWizard/.kme.B2bDeviceCheckActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:10:24:665 B2bDeviceCheckActivity : KME_Analysis: B2B check dialog: onCreatetrue
+07-30 17:10:24:665 B2bDeviceCheckActivity : KME_Analysis: B2B check dialog: onCreatecom.sec.android.app.secsetupwizard.B2B_CHECK_PROGRESS
+07-30 17:10:24:667 KmeManager : Adding listener: B2bDeviceCheckActivity
+07-30 17:10:24:667 Utils : [GET] persist.sys.knox.provisioning_in_progress : 0
+07-30 17:10:24:667 Poller : Step: 1
+07-30 17:10:24:667 Poller : poller started
+07-30 17:10:24:667 B2bDeviceCheckActivity : Small width : 360
+07-30 17:10:24:667 KmeManager : Starting b2b device check ...
+07-30 17:10:24:668 B2bDeviceCheckActivity : KME_Analysis: B2B check dialog:Start Elapsed Time : 65579
+07-30 17:10:24:668 Utils : isNetworkConnected : Mobile Network
+07-30 17:10:24:668 KmeManager : isNetworkAvailable: true
+07-30 17:10:24:668 KmeManager : KME_Analysis: startEnrollmentCheck() Elapsed Time: 65579
+07-30 17:10:24:670 KmeManager : KME_Analysis: onEnrollmentStatusReceived: false mSwipeEnrollStatus =false Elapsed Time: 65581
+07-30 17:10:24:670 KmeManager : KME_Analysis: updateB2BDeviceStatus: false mSwipeEnrollStatus =false
+07-30 17:10:24:670 B2bDeviceCheckActivity : Receiving result: NOT_B2B_DEVICE from class com.sec.android.app.SecSetupWizard.kme.B2bDeviceCheckActivity
+07-30 17:10:24:670 Poller : poller stopped
+07-30 17:10:24:670 KmeManager : KME_Analysis: updateB2BDeviceStatus: false mSwipeEnrollStatus =false
+07-30 17:10:24:670 KmeManager : Removing listener: B2bDeviceCheckActivity
+07-30 17:10:24:670 Utils : isGoogleFrpEnabled() ret : false
+07-30 17:10:24:670 LogHelper : onActivityResuming, com.android.settings
+07-30 17:10:24:678 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:24:681 SecWifiSetupWrapper : onActivityResult : 22
+07-30 17:10:24:681 SecWifiSetupWrapper : onActivityResult finishAction
+07-30 17:10:24:681 SecWifiSetupWrapper : start Service - com.sec.android.easyMover.Agent.UpdatePackageOnSuwService
+07-30 17:10:24:681 SecWifiSetupWrapper : call com.android.wizard.NEXT and finish
+07-30 17:10:24:681 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_wifi_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:10:24:682 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+07-30 17:10:24:682 Utils : isNetworkConnected : Mobile Network
+07-30 17:10:24:682 KmeManager : KME_Analysis: Binding to KmeService Elapsed Time: 65593 mIsBoundToKmeService = true
+07-30 17:10:24:682 Utils : isNetworkConnected : Mobile Network
+07-30 17:10:24:682 TSSutils : getActivationStatus: 0
+07-30 17:10:24:728 TSSutils : This device is not Network based TSS.
+07-30 17:10:24:728 Utils : Package not found : com.samsung.android.app.deviceownersetup
+07-30 17:10:24:728 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_esim_setup, resultCode 105
+07-30 17:10:24:729 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:24:738 B2bDeviceCheckActivity : KME_Analysis: B2B check dialog: Stop
+07-30 17:10:24:741 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.ESIM_SETUP pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.SecEsimSetupWrapper }, com.sec.android.app.SecSetupWizard
+07-30 17:10:24:744 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:24:751 SecEsimSetupWrapper : onCreate
+07-30 17:10:24:751 SecEsimSetupWrapper : isEnabledSimDetected : no pSIM
+07-30 17:10:24:752 SecEsimSetupWrapper : isESimDetected : enabled or disabled eSIM is detected
+07-30 17:10:24:752 SecEsimSetupWrapper : pSIM or eSIM is detected. eSIM activation is skipped.
+07-30 17:10:24:752 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_esim_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:10:24:752 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <VZW_ACT> : false
+07-30 17:10:24:752 CustomerRegionChecker : isVzwActivationStepOnlyDevice:false
+07-30 17:10:24:752 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId sec_esim_post_setup, resultCode -1
+07-30 17:10:24:752 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:24:765 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.POST_ESIM_SETUP pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.PostESimSetup }, com.sec.android.app.SecSetupWizard
+07-30 17:10:24:767 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:24:771 PostESimSetup : call com.android.wizard.NEXT and finish
+07-30 17:10:24:771 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId sec_esim_post_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:10:24:771 Utils : isGoogleFrpEnabled() ret : false
+07-30 17:10:24:771 Utils : isNetworkConnected : Mobile Network
+07-30 17:10:24:772 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId check_frp, resultCode 200
+07-30 17:10:24:772 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:24:779 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.CHECK_FRP pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.account.CheckFrp }, com.google.android.setupwizard
+07-30 17:10:24:782 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:24:791 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:24:793 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:24:797 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:24:800 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:24:804 LogHelper : onActivityStarting, Intent { act=com.android.setupwizard.PROV_PROFILE_CHECKING pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.network.ProvisioningProfileCheckerFragment }, com.google.android.setupwizard
+07-30 17:10:24:806 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:24:814 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:24:816 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:24:820 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.PRE_CHECKIN_AND_UPDATE pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.network.CompatCheckinAndEarlyUpdate }, com.google.android.setupwizard
+07-30 17:10:24:822 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:330 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:26:333 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:343 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.POST_CHECKIN_AND_UPDATE pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.update.PostCheckinAndUpdateActivity }, com.google.android.setupwizard
+07-30 17:10:26:346 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:355 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:26:356 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:360 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.NETWORK_CHECK pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.network.NetworkCheck }, com.google.android.setupwizard
+07-30 17:10:26:363 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:374 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:26:376 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:382 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:26:388 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:395 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.ZERO_TOUCH_SETUP pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.user.ZeroTouchWrapper }, com.google.android.setupwizard
+07-30 17:10:26:397 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:409 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:26:411 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:415 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.RESTORE_ID_SELECTION pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.google.RestoreIdSelectionActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:10:26:417 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:26:420 RestoreIdSelectionActivity : call com.android.wizard.NEXT and finish
+07-30 17:10:26:420 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId restore_id_selection, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:10:26:420 Utils : isGoogleFrpEnabled() ret : false
+07-30 17:10:26:420 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId unified_restore_flow, resultCode 204
+07-30 17:10:26:422 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:26:431 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:26:434 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:438 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.USB_MIGRATION pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.restore.D2dMigrationWrapper }, com.google.android.setupwizard
+07-30 17:10:26:440 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:26:448 LogHelper : onActivityStarting, Intent { act=com.google.android.apps.restore.ACTION_FLOW_CHOICE pkg=com.google.android.apps.restore cmp=com.google.android.apps.restore/com.google.android.apps.pixelmigrate.component.FlowChoiceActivity }, com.google.android.apps.restore
+07-30 17:10:29:227 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:29:234 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:29:251 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.NEW_DEVICE_SELECTION pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.google.NewDeviceSelectionActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:10:29:256 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:29:261 NewDeviceSelectionActivity : call com.android.wizard.NEXT and finish
+07-30 17:10:29:261 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId new_device_selection, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:10:29:262 Utils : isNetworkConnected : Mobile Network
+07-30 17:10:29:262 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId setup_as_new_flow, resultCode -1
+07-30 17:10:29:262 Utils : put Boolean in SharedPreferences [Select_NewDevice] : true
+07-30 17:10:29:262 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:29:276 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:29:282 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:29:295 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.GET_RESTORE_FLOW pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.restore.GetRestoreFlowActivity }, com.google.android.setupwizard
+07-30 17:10:29:298 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:29:311 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:29:314 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:29:320 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.LOAD_ADD_ACCOUNT_INTENT pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.account.LoadAddAccountIntent }, com.google.android.setupwizard
+07-30 17:10:29:324 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:30:843 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:30:848 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:30:859 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.ACCOUNT_SETUP pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.account.AccountSetupWrapper }, com.google.android.setupwizard
+07-30 17:10:30:863 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:30:878 LogHelper : onActivityStarting, Intent { act=com.google.android.gms.ui.UNPACKING_REDIRECT dat=intent://com.google.android.gms.auth.uiflows.common/... pkg=com.google.android.gms cmp=com.google.android.gms/.auth.uiflows.common.UnpackingRedirectActivity }, com.google.android.gms
+07-30 17:10:30:971 LogHelper : onActivityStarting, Intent { cat=[FLAG_ACTIVITY_FORWARD_RESULT,categoryhack:sessionid=ff462a86-921a-4ebc-ba40-8bfba7ba0e85,defaultPendingIntent] cmp=com.google.android.gms/.auth.uiflows.addaccount.AccountIntroActivity }, com.google.android.gms
+07-30 17:10:30:973 LogHelper : onActivityResuming, com.google.android.gms
+07-30 17:10:30:984 LogHelper : onActivityStarting, Intent { cmp=com.google.android.gms/.auth.uiflows.addaccount.WrapperControlledActivity }, com.google.android.gms
+07-30 17:10:30:985 LogHelper : onActivityResuming, com.google.android.gms
+07-30 17:10:31:010 LogHelper : onActivityStarting, Intent { act=com.google.android.gms.auth.addaccount.PRE_ADD_ACCOUNT cmp=com.google.android.gms/.auth.uiflows.addaccount.PreAddAccountActivity }, com.google.android.gms
+07-30 17:10:33:786 LogHelper : onActivityResuming, com.google.android.gms
+07-30 17:10:33:799 LogHelper : onActivityStarting, Intent { cmp=com.google.android.gms/.auth.uiflows.minutemaid.MinuteMaidActivity }, com.google.android.gms
+07-30 17:10:33:803 LogHelper : onActivityResuming, com.google.android.gms
+07-30 17:10:38:986 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:38:996 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:39:014 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:39:019 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:39:028 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:39:031 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:39:039 LogHelper : onActivityStarting, Intent { act=com.android.setupwizard.DATE_TIME pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.time.DateTimeActivity }, com.google.android.setupwizard
+07-30 17:10:39:042 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:39:056 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:39:060 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:39:066 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.GED_LOCK_SCREEN pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.SecLockSetupWrapper }, com.sec.android.app.SecSetupWizard
+07-30 17:10:39:071 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:39:077 SecLockSetupWrapper : onCreate() SecLockSetupWrapper
+07-30 17:10:39:078 SecLockSetupWrapper : Start LockScreen with 3P lock...
+07-30 17:10:39:079 LogHelper : onActivityStarting, Intent { act=com.android.settings.SETUP_LOCK_SCREEN cmp=com.android.settings/.password.SetupChooseLockGeneric }, com.android.settings
+07-30 17:10:41:794 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:41:805 SecLockSetupWrapper : onActivityResult : 11
+07-30 17:10:41:805 SecLockSetupWrapper : onActivityResult finishAction
+07-30 17:10:41:805 SecLockSetupWrapper : call com.android.wizard.NEXT and finish
+07-30 17:10:41:805 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId lock_screen, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:10:41:805 WizardScriptManager : getNextIntentFromWizardScript : [Next] use default intent
+07-30 17:10:41:806 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:41:820 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.GOOGLE_SERVICES pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.user.GoogleServicesWrapper }, com.google.android.setupwizard
+07-30 17:10:41:823 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:41:834 LogHelper : onActivityStarting, Intent { act=com.google.android.gms.auth.GOOGLE_SERVICES pkg=com.google.android.gms cmp=com.google.android.gms/.setupservices.GoogleServicesActivity }, com.google.android.gms
+07-30 17:10:43:891 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:43:899 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:43:921 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.GED_PAI_SCREEN pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.wrapper.GooglePAIWrapper }, com.sec.android.app.SecSetupWizard
+07-30 17:10:43:925 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:43:930 GooglePAIWrapper : onCreate() GooglePAIWrapper
+07-30 17:10:43:931 GooglePAIWrapper : New model launched after U OS supports Galaxy Store Restore.
+07-30 17:10:43:931 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <GooglePAI> : true
+07-30 17:10:43:931 Utils : isNetworkConnected : Mobile Network
+07-30 17:10:43:931 GooglePAIWrapper : isEnablePAIConfigMode is true, packageName : android.autoinstalls.config.samsung
+07-30 17:10:43:931 GooglePAIWrapper : Start Google PAI...
+07-30 17:10:43:931 Utils : isIntentAvailable() Intent not available : Intent { cmp=com.android.vending/com.google.android.finsky.setup.VpaSelectionOptionalStepActivity }
+07-30 17:10:43:931 GooglePAIWrapper : Use new PAI activity
+07-30 17:10:43:932 LogHelper : onActivityStarting, Intent { cmp=com.android.vending/com.google.android.finsky.setupui.VpaSelectionOptionalStepActivity }, com.android.vending
+07-30 17:10:43:968 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:43:986 GooglePAIWrapper : onActivityResult : -1
+07-30 17:10:43:987 GooglePAIWrapper : onActivityResult launchNextStep
+07-30 17:10:43:987 Utils : put Boolean in SharedPreferences [google_pai_completed] : true
+07-30 17:10:43:987 GooglePAIWrapper : call com.android.wizard.NEXT and finish
+07-30 17:10:43:987 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId google_pai, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:10:43:987 WizardScriptManager : getNextIntentFromWizardScript : [Next] use default intent
+07-30 17:10:43:988 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:43:996 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.FINAL_HOLD pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.account.FinalHold }, com.google.android.setupwizard
+07-30 17:10:43:999 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:45:518 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:10:45:522 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:10:45:534 LogHelper : onActivityStarting, Intent { act=com.android.setupwizard.OEM_POST_SETUP pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.WizardFlowManager }, com.sec.android.app.SecSetupWizard
+07-30 17:10:45:538 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:45:541 SequenceList : SequenceList()
+07-30 17:10:45:542 SequenceList : sequence list is made
+07-30 17:10:45:542 WizardFlowManager : ===== start WizardFlowManager =====
+07-30 17:10:45:545 SecSetupWizardActivity : onCreate: User is Unlocked
+07-30 17:10:45:545 SecSetupWizardActivity : ===== start with directboot or WizardFlowManager =====
+07-30 17:10:45:545 SecSetupWizardActivity : startSecSetupWizard: SetupWizard_ConfigStepSequenceType : GooglePAI
+07-30 17:10:45:545 SecSetupWizardActivity : startSecSetupWizard: mSetupWizardUseWizardScript true, mIsOwner true, isSupportServerAID true, isActivatedServerAID true
+07-30 17:10:45:545 SecSetupWizardActivity : startSecSetupWizard: isSupportLanguageSelection false, isSupportLanguageRolling false, isSupportCountrySelectionStep false
+07-30 17:10:45:545 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:10:45:545 SecSetupWizardActivity : startSecSetupWizard: getLength 2, current start
+07-30 17:10:45:546 OemPostSetupUtils : getSequenceListId : SalesCode TMB, IsOwner true
+07-30 17:10:45:546 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <VanillaStep> : false
+07-30 17:10:45:546 OemPostSetupUtils : Samsung Cloud step is not inserted by selecting Don't copy in unified restore flow.
+07-30 17:10:45:546 OemPostSetupUtils : isStartSmartSwitchTransferWithSetting : smartswitch_transfer_start_in_oobe = 0
+07-30 17:10:45:546 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <BTSPurple> : false
+07-30 17:10:45:546 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <ThomBrowne> : false
+07-30 17:10:45:546 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <blackpink> : false
+07-30 17:10:45:546 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DCL> : false
+07-30 17:10:45:546 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <OlympicGames> : false
+07-30 17:10:45:546 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <OlympicAthletes> : false
+07-30 17:10:45:546 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <Paralympic> : false
+07-30 17:10:45:547 SecSetupWizardActivity : insert in list : sec_account_setup
+07-30 17:10:45:547 SecSetupWizardActivity : insert in list : sec_intelligence_service_agree
+07-30 17:10:45:548 SecSetupWizardActivity : insert in list : sec_bixby_setup
+07-30 17:10:45:548 SecSetupWizardActivity : insert in list : sec_pay_setup
+07-30 17:10:45:549 SecSetupWizardActivity : insert in list : sec_device_based_integration_agreement
+07-30 17:10:45:549 SecSetupWizardActivity : insert in list : alternative_permission
+07-30 17:10:45:549 SecSetupWizardActivity : insert in list : state_selection
+07-30 17:10:45:550 SecSetupWizardActivity : insert in list : dob_screen_wrapper
+07-30 17:10:45:550 SecSetupWizardActivity : insert in list : restriction_screen_wrapper
+07-30 17:10:45:551 SecSetupWizardActivity : insert in list : usa_carrier_setting
+07-30 17:10:45:551 SecSetupWizardActivity : insert in list : sec_darkmode_setup
+07-30 17:10:45:551 SecSetupWizardActivity : insert in list : omc_agent_setup
+07-30 17:10:45:552 SecSetupWizardActivity : insert in list : outro
+07-30 17:10:45:552 Utils : isNetworkConnected : Mobile Network
+07-30 17:10:45:552 SecSetupWizardActivity : getNext: sec_account_setup : Intent { act=com.osp.app.signin.action.SAMSUNG_ACCOUNT_SETUPWIZARD (has extras) }
+07-30 17:10:45:552 SecSetupWizardActivity : startActivityForResult, current: sec_account_setup
+07-30 17:10:45:553 LogHelper : onActivityStarting, Intent { act=com.osp.app.signin.action.SAMSUNG_ACCOUNT_SETUPWIZARD cmp=com.osp.app.signin/.AccountView }, com.osp.app.signin
+07-30 17:10:45:555 WizardFlowManager : try to connect GSA service
+07-30 17:10:45:556 WizardFlowManager : bind SSB_SERVICE
+07-30 17:10:45:570 WizardFlowManager : SSB_SERVICE connected
+07-30 17:10:45:570 WizardFlowManager : SSB_SERVICE message sent
+07-30 17:10:46:384 LogHelper : onActivityStarting, Intent { act=3bbefbfd-627a-4140-b8b3-ea00cdce6ad9 cmp=com.android.credentialmanager/.CredentialSelectorActivity }, com.android.credentialmanager
+07-30 17:10:46:489 LogHelper : onActivityResuming, com.osp.app.signin
+07-30 17:10:51:391 LogHelper : onActivityStarting, Intent { cmp=com.osp.app.signin/com.samsung.android.samsungaccount.authentication.ui.signin.helpmenu.AccountHelpMenuSuwActivity }, com.osp.app.signin
+07-30 17:10:52:367 LogHelper : onActivityStarting, Intent { cmp=com.osp.app.signin/com.samsung.android.samsungaccount.authentication.ui.signin.helpmenu.AccountSkipGuideSuwActivity }, com.osp.app.signin
+07-30 17:10:53:484 LogHelper : onActivityResuming, com.osp.app.signin
+07-30 17:10:53:495 LogHelper : onActivityResuming, com.osp.app.signin
+07-30 17:10:53:504 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:53:512 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode 7 of sec_account_setup
+07-30 17:10:53:512 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:10:53:512 WizardSystemBarHelper : Enable back button
+07-30 17:10:53:513 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:10:53:513 SecSetupWizardActivity : completeSecAccount : isLogIn false
+07-30 17:10:53:513 SecSetupWizardActivity : completeSecBackup : sec backup not found
+07-30 17:10:53:513 SecSetupWizardActivity : Intelligence Service step is not provided because SA is not log-in.
+07-30 17:10:53:514 SecSetupWizardActivity : getNext: [skip] sec_intelligence_service_agree : Intent { act=com.samsung.android.settings.action.INTELLIGENCE_SERVICE_SETUP_WIZARD (has extras) }
+07-30 17:10:53:514 SecSetupWizardActivity : getNext: [skip] sec_bixby_setup : Intent { act=com.samsung.android.bixby.onboarding.action.START_SUW_PROVISION (has extras) }
+07-30 17:10:53:514 Utils : isNetworkConnected : Mobile Network
+07-30 17:10:53:514 SecSetupWizardActivity : getNext: [skip] sec_pay_setup : Intent { act=com.samsung.android.spay.signin.setupwizard (has extras) }
+07-30 17:10:53:514 SecSetupWizardActivity : getNext: sec_device_based_integration_agreement : Intent { act=com.samsung.android.dbsc.SET_SUW_CONSENT (has extras) }
+07-30 17:10:53:514 SecSetupWizardActivity : startActivityForResult, current: sec_device_based_integration_agreement
+07-30 17:10:53:515 LogHelper : onActivityStarting, Intent { act=com.samsung.android.dbsc.SET_SUW_CONSENT cmp=com.samsung.android.dbsc/.presenter.ui.ConsentSuwActivity }, com.samsung.android.dbsc
+07-30 17:10:56:070 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:56:075 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode 1010 of sec_device_based_integration_agreement
+07-30 17:10:56:075 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:10:56:075 WizardSystemBarHelper : Enable back button
+07-30 17:10:56:076 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:10:56:076 SecSetupWizardActivity : getNext: alternative_permission : Intent { cmp=com.sec.android.app.SecSetupWizard/.UI.AlternativePermissionActivity (has extras) }
+07-30 17:10:56:076 SecSetupWizardActivity : startActivityForResult, current: alternative_permission
+07-30 17:10:56:077 LogHelper : onActivityStarting, Intent { cmp=com.sec.android.app.SecSetupWizard/.UI.AlternativePermissionActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:10:56:123 AlternativePermissionActivity : initPermissionView [0] com.samsung.android.rampart - Auto Blocker : DB info system,rampart_suw_main_on,1,0
+07-30 17:10:56:129 AlternativePermissionActivity : initPermissionView [1] com.samsung.android.rubin.app - Customization Service : DB info null,null,-100,-100
+07-30 17:10:56:214 AlternativePermissionActivity : initPermissionView [2] com.samsung.android.smartsuggestions - Personal data intelligence : DB info null,null,-100,-100
+07-30 17:10:57:559 AlternativePermissionActivity : saveSwitchState [0] [true, true, true]
+07-30 17:10:57:560 AlternativePermissionActivity : finishAction: goto Next step
+07-30 17:10:57:560 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:57:564 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode -1 of alternative_permission
+07-30 17:10:57:565 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:10:57:565 WizardSystemBarHelper : Enable back button
+07-30 17:10:57:565 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:10:57:565 SecSetupWizardActivity : getNext: state_selection : Intent { act=com.sec.android.app.secsetupwizard.STATE_SELECTION (has extras) }
+07-30 17:10:57:565 SecSetupWizardActivity : startActivityForResult, current: state_selection
+07-30 17:10:57:566 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.STATE_SELECTION cmp=com.sec.android.app.SecSetupWizard/.UI.StateSelectionActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:10:57:586 StateSelectionActivity : onCreate() StateSelectionActivity
+07-30 17:10:57:588 StateSelectionActivity : initializeBaseView()
+07-30 17:10:58:790 Utils : put Int in SharedPreferences [selected_state_index] : 1
+07-30 17:10:59:874 Utils : put Int in SharedPreferences [selected_state_index] : 1
+07-30 17:10:59:874 StateSelectionActivity : finishAction: goto Next step
+07-30 17:10:59:875 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:59:884 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode 11 of state_selection
+07-30 17:10:59:884 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:10:59:884 WizardSystemBarHelper : Enable back button
+07-30 17:10:59:885 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:10:59:885 SecSetupWizardActivity : getNext: dob_screen_wrapper : Intent { act=com.sec.android.app.secsetupwizard.DOB_SCREEN (has extras) }
+07-30 17:10:59:885 SecSetupWizardActivity : startActivityForResult, current: dob_screen_wrapper
+07-30 17:10:59:886 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.DOB_SCREEN cmp=com.sec.android.app.SecSetupWizard/.wrapper.DateOfBirthWrapper }, com.sec.android.app.SecSetupWizard
+07-30 17:10:59:899 DateOfBirthWrapper : onCreate() DateOfBirthWrapper
+07-30 17:10:59:900 DateOfBirthWrapper : stateName:Other isInUtahRegion:false hasSamsungAccount:false
+07-30 17:10:59:900 DateOfBirthWrapper : [skip] launchDateOfBirthStep
+07-30 17:10:59:900 DateOfBirthWrapper : finishAction: goto Next step
+07-30 17:10:59:900 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:59:907 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode 11 of dob_screen_wrapper
+07-30 17:10:59:907 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:10:59:908 WizardSystemBarHelper : Enable back button
+07-30 17:10:59:908 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:10:59:908 SecSetupWizardActivity : getNext: restriction_screen_wrapper : Intent { act=com.sec.android.app.secsetupwizard.CONTENT_RESTRICTION (has extras) }
+07-30 17:10:59:908 SecSetupWizardActivity : startActivityForResult, current: restriction_screen_wrapper
+07-30 17:10:59:910 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.CONTENT_RESTRICTION cmp=com.sec.android.app.SecSetupWizard/.wrapper.ContentRestrictionWrapper }, com.sec.android.app.SecSetupWizard
+07-30 17:10:59:917 ContentRestrictionWrapper : onCreate() ContentRestrictionWrapper
+07-30 17:10:59:920 ContentRestrictionWrapper : [skip] launchContentRestrictionStep
+07-30 17:10:59:920 ContentRestrictionWrapper : finishAction: goto Next step
+07-30 17:10:59:921 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:10:59:929 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode 11 of restriction_screen_wrapper
+07-30 17:10:59:929 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:10:59:930 WizardSystemBarHelper : Enable back button
+07-30 17:10:59:930 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:10:59:930 SecSetupWizardActivity : getNext: usa_carrier_setting : Intent { act=com.sec.android.app.secsetupwizard.SEC_USA_CARRIER_SETUP (has extras) }
+07-30 17:10:59:930 SecSetupWizardActivity : startActivityForResult, current: usa_carrier_setting
+07-30 17:10:59:931 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.SEC_USA_CARRIER_SETUP cmp=com.sec.android.app.SecSetupWizard/.wrapper.SecUsaCarrierSetupWrapper }, com.sec.android.app.SecSetupWizard
+07-30 17:10:59:940 SecUsaCarrierWrapper : onCreate() SecUsaCarrierWrapper
+07-30 17:10:59:944 SecUsaCarrierWrapper : launchUsaCarrierSetupfalse
+07-30 17:10:59:945 LogHelper : onActivityStarting, Intent { cmp=com.tmobile.echolocate/.ui.OOBEActivity }, com.tmobile.echolocate
+07-30 17:11:02:911 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:11:02:919 SecUsaCarrierWrapper : onActivityResult : requestCode 1011, resultCode : 0
+07-30 17:11:02:919 SecUsaCarrierWrapper : finishAction: goto Next step
+07-30 17:11:02:921 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:11:02:927 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode 11 of usa_carrier_setting
+07-30 17:11:02:928 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:11:02:928 WizardSystemBarHelper : Enable back button
+07-30 17:11:02:928 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:11:02:928 OemPostSetupUtils : isStartSmartSwitchTransferWithSetting : smartswitch_transfer_start_in_oobe = 0
+07-30 17:11:02:928 SecSetupWizardActivity : getNext: sec_darkmode_setup : Intent { act=com.samsung.android.display.SECSETUP_DARK_MODE (has extras) }
+07-30 17:11:02:929 SecSetupWizardActivity : startActivityForResult, current: sec_darkmode_setup
+07-30 17:11:02:930 LogHelper : onActivityStarting, Intent { act=com.samsung.android.display.SECSETUP_DARK_MODE cmp=com.android.settings/com.samsung.android.settings.display.SecDarkModeSetupWizardActivity }, com.android.settings
+07-30 17:11:02:945 DarkModeSetupWizard : onCreate
+07-30 17:11:04:211 DarkModeSetupWizard : onCreate
+07-30 17:11:05:398 DarkModeSetupWizard : onCreate
+07-30 17:11:05:848 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:11:05:853 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode -1 of sec_darkmode_setup
+07-30 17:11:05:854 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:11:05:854 WizardSystemBarHelper : Enable back button
+07-30 17:11:05:855 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:11:05:855 SecSetupWizardActivity : getNext: omc_agent_setup : Intent { act=com.samsung.omcagent.intent.action.OMC_SETUPWIZARD (has extras) }
+07-30 17:11:05:855 SecSetupWizardActivity : startActivityForResult, current: omc_agent_setup
+07-30 17:11:05:856 LogHelper : onActivityStarting, Intent { act=com.samsung.omcagent.intent.action.OMC_SETUPWIZARD cmp=com.samsung.android.app.omcagent/.rna.ui.SUWActivity }, com.samsung.android.app.omcagent
+07-30 17:11:07:047 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:11:07:050 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode 1010 of omc_agent_setup
+07-30 17:11:07:051 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:11:07:051 WizardSystemBarHelper : Enable back button
+07-30 17:11:07:051 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:11:07:051 SecSetupWizardActivity : getNext: outro : Intent { cmp=com.sec.android.app.SecSetupWizard/.UI.OutroActivity (has extras) }
+07-30 17:11:07:051 SecSetupWizardActivity : startActivityForResult, current: outro
+07-30 17:11:07:052 LogHelper : onActivityStarting, Intent { cmp=com.sec.android.app.SecSetupWizard/.UI.OutroActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:11:07:065 OutroActivity : start Outro page
+07-30 17:11:07:068 OutroActivity : getSmartSwitchState : state : Idle, sourceType : phone, mSourceDeviceType : -1, mTargetDeviceType : 0
+07-30 17:11:07:082 Utils : isNetworkConnected : Mobile Network
+07-30 17:11:07:083 OemPostSetupUtils : isTipsButtonVisible : 3
+07-30 17:11:07:083 Utils : fontScale=1.0, maxFontScale=1.0, textSize=36, text=You're all set up!
+07-30 17:11:07:084 Utils : fontScale=1.0, maxFontScale=1.3, textSize=17, text=Home
+07-30 17:11:07:084 Utils : fontScale=1.0, maxFontScale=1.3, textSize=17, text=See what's new
+07-30 17:11:16:836 Utils : isNetworkConnected : Mobile Network
+07-30 17:11:16:838 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:11:16:847 SecSetupWizardActivity : onActivityResult: requestCode 1010, resultCode 14 of outro
+07-30 17:11:16:847 SecSetupWizardActivity : checkingAECondition dpm.getUserProvisioningState() :  0
+07-30 17:11:16:848 WizardSystemBarHelper : Enable back button
+07-30 17:11:16:849 WizardSystemBarHelper : disableNotifications disable : 61145088
+07-30 17:11:16:849 SecSetupWizardActivity : finishAction : mSetupWizardUseWizardScript true, USER_SETUP_COMPLETE false
+07-30 17:11:16:849 WizardSystemBarHelper : enableNotifications - mStatusBarManager is not null So enable Notifications
+07-30 17:11:16:850 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+07-30 17:11:16:850 SecSetupWizardActivity : setHomeLauncher is not yet. so, set Default launcher
+07-30 17:11:16:852 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId oem_post_setup, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:11:16:852 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId enterprise_finalization_flow, resultCode -1
+07-30 17:11:16:853 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:11:16:858 SystemActivity : success setDefaultLauncher [com.sec.android.app.launcher]
+07-30 17:11:16:859 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:11:16:876 LogHelper : onActivityStarting, Intent { act=com.android.wizard.LOAD cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:11:16:881 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:11:16:886 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.PRE_ENTERPRISE_SETUP pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.provision.PreEnterpriseSetupActivity }, com.google.android.setupwizard
+07-30 17:11:16:887 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:11:16:895 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:11:16:897 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:11:16:901 LogHelper : onActivityStarting, Intent { act=com.google.android.setupwizard.KID_POST_SETUP pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.account.KidPostSetupWrapper }, com.google.android.setupwizard
+07-30 17:11:16:902 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:11:16:910 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:11:16:912 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:11:16:915 LogHelper : onActivityStarting, Intent { act=com.sec.android.app.secsetupwizard.SEC_SETUP_COMPLETE pkg=com.sec.android.app.SecSetupWizard cmp=com.sec.android.app.SecSetupWizard/.SecSetupCompleteActivity }, com.sec.android.app.SecSetupWizard
+07-30 17:11:16:918 LogHelper : onActivityResuming, com.sec.android.app.SecSetupWizard
+07-30 17:11:16:921 SecSetupCompleteActivity : onCreate
+07-30 17:11:16:925 SecSetupCompleteActivity : setupComplete
+07-30 17:11:16:932 KmeManager :  checkDeviceSupportsKme already mKmeInitialized=true
+07-30 17:11:16:932 SecSetupCompleteActivity : KME stop with Thread
+07-30 17:11:16:932 SecSetupCompleteActivity : restoreDefaultValue : stop SettingsObserverService
+07-30 17:11:16:934 KmeManager : KME_Analysis: Unbinding from BulkEnrollmentCheckService Elapsed Time: 117845 mIsBoundToKmeService = true
+07-30 17:11:16:934 Utils : put Boolean in SharedPreferences [isBackupOrientation] : false
+07-30 17:11:16:934 Utils : restoreDefaultScreenOrientation, set auto rotate 1
+07-30 17:11:16:935 Utils : LOG:SetupWizard startTime 22557, endTime 117846
+07-30 17:11:16:936 Utils : [SET] Component is disable : com.sec.android.app.SecSetupWizard.SecureInterceptActivity
+07-30 17:11:16:936 Utils : [SET] Component is disable : com.sec.android.app.SecSetupWizard.SecSetupWizardActivity
+07-30 17:11:16:937 Utils : [SET] Component is disable : com.sec.android.app.SecSetupWizard.SetupWizardPreActionActivity
+07-30 17:11:17:144 WizardScriptManager : getNextIntentFromWizardScript : [Current] actionId complete, mIsSetupFlow true, mIsSetupComplete false
+07-30 17:11:17:144 WizardScriptManager : getScriptIntent_Complete : isStartSmartSwitchTransfer false, hasSamsungAccount false
+07-30 17:11:17:144 WizardScriptManager : getNextIntentFromWizardScript : [Next] actionId exit, resultCode 1
+07-30 17:11:17:145 LogHelper : onActivityStarting, Intent { act=com.android.wizard.NEXT cmp=com.google.android.setupwizard/.WizardManagerActivity }, com.google.android.setupwizard
+07-30 17:11:17:148 SecSetupCompleteActivity : [BR] sendBroadcast - com.sec.android.app.secsetupwizard.SETUPWIZARD_COMPLETE
+07-30 17:11:17:149 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:11:17:149 Utils : put Boolean in SharedPreferences [UseWizardScript] : false
+07-30 17:11:17:149 SecSetupCompleteActivity : setupComplete : sys.pdp.action setupwizard_finish
+07-30 17:11:17:149 SecSetupCompleteActivity : setupComplete : reset UseWizardScript's pref value as false
+07-30 17:11:17:152 SettingsObserverService : onDestroy
+07-30 17:11:17:152 SettingsObserverService : unregister RotationObserver
+07-30 17:11:17:153 SettingsObserverService : unregister DeviceProvisionedObserver
+07-30 17:11:17:154 SettingsObserverService : onChange(), auto rotate setting is enabled by com.sec.android.app.SecSetupWizard
+07-30 17:11:17:154 SettingsObserverService : ignore auto rotate change to On by SUW
+07-30 17:11:17:159 LogHelper : onActivityStarting, Intent { act=com.android.setupwizard.EXIT pkg=com.google.android.setupwizard cmp=com.google.android.setupwizard/.SetupWizardExitActivity }, com.google.android.setupwizard
+07-30 17:11:17:162 LogHelper : onActivityResuming, com.google.android.setupwizard
+07-30 17:11:17:250 LogHelper : onActivityStarting, Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] cmp=com.sec.android.app.launcher/.activities.LauncherActivity }, com.sec.android.app.launcher
+07-30 17:11:17:257 LogHelper : onActivityResuming, com.sec.android.app.launcher
+07-30 17:11:17:281 SecEsimSetupWrapper : onDestroy
+07-30 17:11:17:905 WizardFlowManager : unbind SSB_SERVICE
+07-31 01:36:40:698 SetupWizardApplication : onCreate
+07-31 01:36:40:704 SetupWizardApplication : onCreate setConfiguration
+07-31 01:36:40:726 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+07-31 01:36:40:727 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+07-31 01:36:40:727 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+07-31 01:36:40:728 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+07-31 05:58:28:071 SetupWizardApplication : onCreate
+07-31 05:58:28:111 SoftwareUpdateFor701Wrapper : suw_sep_ver : 160000, current_sep_ver : 160000
+07-31 05:58:28:112 SoftwareUpdateFor701Wrapper : In one UI7 MR, Fota SUW for gemini setup doesn't run.
+07-31 05:58:28:112 SoftwareUpdateFor701Wrapper : finish fota suw
+07-31 05:58:28:112 SystemActivity : disableSetupWizardComponentsForSoftwareUpdate()
+07-31 05:58:28:116 Utils : [SET] Component is disable : com.sec.android.app.SecSetupWizard.fota.SoftwareUpdateFor701Wrapper
+07-31 05:58:59:389 SetupWizardApplication : onCreate
+07-31 05:58:59:391 SetupWizardApplication : onCreate setConfiguration
+07-31 05:58:59:397 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+07-31 05:58:59:398 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+07-31 05:58:59:398 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+07-31 05:58:59:399 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+08-22 13:15:58:763 SetupWizardApplication : onCreate
+08-22 13:15:58:764 SetupWizardApplication : onCreate setConfiguration
+08-22 13:15:58:771 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+08-22 13:15:58:772 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+08-22 13:15:58:772 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+08-22 13:15:58:773 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+08-26 11:03:47:015 SetupWizardApplication : onCreate
+08-26 11:03:47:016 SetupWizardApplication : onCreate setConfiguration
+08-26 11:03:47:023 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+08-26 11:03:47:023 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+08-26 11:03:47:023 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+08-26 11:03:47:024 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+09-19 10:25:31:371 SetupWizardApplication : onCreate
+09-19 10:25:31:372 SetupWizardApplication : onCreate setConfiguration
+09-19 10:25:31:378 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+09-19 10:25:31:382 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+09-19 10:25:31:382 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+09-19 10:25:31:384 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+09-29 02:18:31:733 NetworkDataSource : init NetworkDataSource
+09-29 02:18:31:737 NetworkRepository : init NetworkRepository
+09-29 02:18:31:737 SetupWizardApplication : onCreate setConfiguration
+09-29 02:18:31:740 SetupWizardApplication : isNetworkConnected false
+09-29 02:18:31:754 SoftwareUpdateFor80Wrapper : getOneUiVersion : version.oneui = 80000, result = 8.0
+09-29 02:18:31:755 Utils : getSharedPreferences() : SharedPreferences(pref) is created.
+09-29 02:18:31:756 Utils : getSharedPreferencesEdit() : SharedPreferences.Editor is created.
+09-29 02:18:31:758 Utils : put String in SharedPreferences [sw_update_oneui_ver] : 8.0
+09-29 02:18:31:759 SoftwareUpdateFor80Wrapper : suw_sep_ver : 160000, current_sep_ver : 170000
+09-29 02:18:31:790 SoftwareUpdateFor80Wrapper : onCreate()
+09-29 02:18:31:797 SoftwareUpdateFor80Wrapper : SW update SUW start
+09-29 02:18:31:802 SequenceList : SequenceList()
+09-29 02:18:31:802 SequenceList : sequence list is made
+09-29 02:18:31:811 WizardSystemBarHelper : disableNotifications disable : 61145088
+09-29 02:18:31:812 WizardSystemBarHelper : hideNavigationBar : window = com.android.internal.policy.PhoneWindow@e64dd8d
+09-29 02:18:31:813 Utils : put Boolean in SharedPreferences [fotaSuwRunning] : true
+09-29 02:18:31:813 SoftwareUpdateActivity : onCreate: User is Locked
+09-29 02:18:30:277 NetworkDataSource : onAvailable 100, NetworkCapabilities:[true, false, false, true]
+09-29 02:18:30:279 NetworkDataSource : updateValue true
+09-29 02:18:30:279 SetupWizardApplication : isNetworkConnected true
+09-29 07:06:07:654 SoftwareUpdateActivity : Now it's unlocked. Let's run SecSetupWizardSoftwareUpdate
+09-29 07:06:07:655 SoftwareUpdateActivity : processSoftwareUpdate
+09-29 07:06:07:661 SoftwareUpdateActivity : insert in list : intro_sw_update
+09-29 07:06:07:661 SoftwareUpdateActivity : terms_and_condition : removed because T&C is provided only in beta binary.
+09-29 07:06:07:662 SoftwareUpdateActivity : insert in list : sec_intelligence_service_agree
+09-29 07:06:07:662 SoftwareUpdateActivity : sec_account_setup : removed because ss account is already logged in
+09-29 07:06:07:663 SoftwareUpdateActivity : insert in list : sec_account_setup_ai_agreement
+09-29 07:06:07:663 SoftwareUpdateActivity : sec_account_setup_for_fota : removed because Intelligence feature is supported
+09-29 07:06:07:663 SoftwareUpdateActivity : insert in list : sec_gemini_guide
+09-29 07:06:07:664 SoftwareUpdateActivity : insert in list : omc_agent_setup_for_fota
+09-29 07:06:07:664 SoftwareUpdateActivity : insert in list : outro_sw_update
+09-29 07:06:07:664 SoftwareUpdateActivity : start SettingsObserverService
+09-29 07:06:07:667 SoftwareUpdateActivity : startSoftwareUpdate: list Length 8, current start
+09-29 07:06:07:668 SoftwareUpdateActivity : getNext: intro_sw_update : Intent { cmp=com.sec.android.app.SecSetupWizard/.fota.SwUpdateIntroActivity (has extras) }
+09-29 07:06:07:668 SoftwareUpdateActivity : startActivityForResult, current: intro_sw_update, preSequence: start
+09-29 07:06:07:681 SettingsObserverService : onCreate
+09-29 07:06:07:682 SettingsObserverService : registerSecureFrpModeObserver
+09-29 07:06:07:682 SettingsObserverService : registerDeviceProvisionedObserver
+09-29 07:06:07:683 SettingsObserverService : startForeground
+09-29 07:06:07:702 SwUpdateIntroActivity : onCreate
+09-29 07:06:08:223 WizardSystemBarHelper : hideNavigationBar : window = com.android.internal.policy.PhoneWindow@4529327
+09-29 07:06:08:224 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+09-29 07:06:08:224 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+09-29 07:06:08:225 IntroHelper : updateBackgroundView
+09-29 07:06:08:313 IntroHelper : [-864.0, 0.0], [0, 0, 2808, 2340]
+09-29 07:06:08:314 SwUpdateIntroActivity : onResume : mIsFirstRunning = true
+09-29 07:06:08:314 IntroHelper : playVideoIn
+09-29 07:06:08:314 SwUpdateIntroActivity : startAnimation
+09-29 07:06:08:314 SwUpdateIntroActivity : startSpreadingCircleAnimation : display size getting from WindowMetrics is (1080, 2340)
+09-29 07:06:08:314 IntroSpreadingCircleAnimation : playTitleAnimation : str = Welcome
+09-29 07:06:08:456 IntroHelper : playVideoIn onPrepared : mp4 play start
+09-29 07:06:10:932 IntroHelper : playVideoIn onCompletion : mp4 play done
+09-29 07:06:12:957 SwUpdateIntroActivity : animationHandler msg what : 1000
+09-29 07:06:12:957 SwUpdateIntroActivity : animationHandler : playStartButtonAnimation
+09-29 07:06:15:704 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+09-29 07:06:15:704 SecSetupWizardIntentReceiver : isAllSetupWizardDone : enabled suw activity =com.sec.android.app.SecSetupWizard.fota.SoftwareUpdateFor80Wrapper
+09-29 07:06:15:705 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=false
+09-29 07:06:17:119 SwUpdateCommonActivity : makeTextButton onClick : type = 1
+09-29 07:06:17:126 SwUpdateIntroActivity : onPause
+09-29 07:06:17:128 SoftwareUpdateActivity : onActivityResult: requestCode 1010, resultCode 14 of intro_sw_update
+09-29 07:06:17:129 WizardSystemBarHelper : showNavigationBar : window = com.android.internal.policy.PhoneWindow@e64dd8d
+09-29 07:06:17:129 SoftwareUpdateActivity : finishAction
+09-29 07:06:17:144 SecSetupCompleteActivity : onCreate
+09-29 07:06:17:155 WizardSystemBarHelper : enableNotifications - mStatusBarManager is not null So enable Notifications
+09-29 07:06:17:155 SecSetupCompleteActivity : swUpdateComplete
+09-29 07:06:17:156 SecSetupCompleteActivity : stop SettingsObserverService
+09-29 07:06:17:157 SystemActivity : disableSetupWizardComponentsForSoftwareUpdate()
+09-29 07:06:17:158 Utils : [SET] Component is disable : com.sec.android.app.SecSetupWizard.fota.SoftwareUpdateFor80Wrapper
+09-29 07:06:17:158 SecSetupCompleteActivity : [BR] sendBroadcast - com.sec.android.app.secsetupwizard.FOTA_SUW_COMPLETE
+09-29 07:06:17:158 Utils : put Boolean in SharedPreferences [fotaSuwRunning] : false
+09-29 07:06:17:161 SettingsObserverService : onDestroy
+09-29 07:06:17:161 SettingsObserverService : unregister DeviceProvisionedObserver
+09-29 07:06:17:162 SettingsObserverService : unregister SecureFrpModeObserver
+09-29 07:06:21:270 NetworkDataSource : onLost 100
+09-29 07:06:21:270 NetworkDataSource : updateValue false
+09-29 07:06:21:270 SetupWizardApplication : isNetworkConnected false
+11-02 17:29:07:723 NetworkDataSource : init NetworkDataSource
+11-02 17:29:07:727 NetworkRepository : init NetworkRepository
+11-02 17:29:07:727 SetupWizardApplication : onCreate setConfiguration
+11-02 17:29:07:728 SetupWizardApplication : isNetworkConnected false
+11-02 17:29:07:730 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+11-02 17:29:07:731 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+11-02 17:29:07:731 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+11-02 17:29:07:733 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+11-11 00:42:29:280 NetworkDataSource : init NetworkDataSource
+11-11 00:42:29:281 NetworkRepository : init NetworkRepository
+11-11 00:42:29:282 SetupWizardApplication : onCreate setConfiguration
+11-11 00:42:29:282 NetworkDataSource : onAvailable 100, NetworkCapabilities:[true, true, false, true]
+11-11 00:42:29:282 NetworkDataSource : updateValue true
+11-11 00:42:29:283 SetupWizardApplication : isNetworkConnected false
+11-11 00:42:29:284 SetupWizardApplication : isNetworkConnected true
+11-11 00:42:29:284 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+11-11 00:42:29:284 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+11-11 00:42:29:284 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+11-11 00:42:29:285 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+11-24 16:58:15:916 NetworkDataSource : init NetworkDataSource
+11-24 16:58:15:920 NetworkRepository : init NetworkRepository
+11-24 16:58:15:920 SetupWizardApplication : onCreate setConfiguration
+11-24 16:58:15:922 SetupWizardApplication : isNetworkConnected false
+11-24 16:58:15:925 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+11-24 16:58:15:925 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+11-24 16:58:15:926 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+11-24 16:58:15:927 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+11-24 16:58:21:413 NetworkDataSource : onAvailable 102, NetworkCapabilities:[true, false, false, true]
+11-24 16:58:21:413 NetworkDataSource : updateValue true
+11-24 16:58:21:413 SetupWizardApplication : isNetworkConnected true
+12-18 06:21:20:685 NetworkDataSource : init NetworkDataSource
+12-18 06:21:20:691 NetworkDataSource : onAvailable 102, NetworkCapabilities:[true, true, false, true]
+12-18 06:21:20:693 NetworkRepository : init NetworkRepository
+12-18 06:21:20:694 NetworkDataSource : updateValue true
+12-18 06:21:20:695 SetupWizardApplication : onCreate setConfiguration
+12-18 06:21:20:696 SetupWizardApplication : isNetworkConnected false
+12-18 06:21:20:700 SetupWizardApplication : isNetworkConnected true
+12-18 06:21:20:701 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+12-18 06:21:20:701 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+12-18 06:21:20:701 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+12-18 06:21:20:702 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+12-18 06:30:00:520 NetworkDataSource : init NetworkDataSource
+12-18 06:30:00:523 NetworkRepository : init NetworkRepository
+12-18 06:30:00:523 SetupWizardApplication : onCreate setConfiguration
+12-18 06:30:00:524 SetupWizardApplication : isNetworkConnected false
+12-18 06:30:00:525 NetworkDataSource : onAvailable 102, NetworkCapabilities:[true, true, false, true]
+12-18 06:30:00:527 NetworkDataSource : updateValue true
+12-18 06:30:00:527 SecSetupWizardIntentReceiver : onReceive() : android.intent.action.BOOT_COMPLETED
+12-18 06:30:00:541 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <SPR> : false
+12-18 06:30:00:541 Utils :  CscFeature_SetupWizard_ConfigStepSequenceType contains <DSH> : false
+12-18 06:30:00:542 SecSetupWizardIntentReceiver : isAllSetupWizardDone : ret=true
+12-18 06:30:00:543 SetupWizardApplication : isNetworkConnected true

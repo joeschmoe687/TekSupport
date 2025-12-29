@@ -1,0 +1,5 @@
+<!--
+    Input:
+        vendor/qcom/proprietary/mm-audio/qasr/qasr_vintf.xml
+-->
+<manifest version="8.0" type="device"/>
