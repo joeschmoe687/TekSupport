@@ -8,14 +8,15 @@ import android.util.TypedValue
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 
 // MainActivity handles the bridge between Flutter and Android for SMS auto-responder features.
-class MainActivity : FlutterActivity() {
+// Extends FlutterFragmentActivity (required by Stripe plugin)
+class MainActivity : FlutterFragmentActivity() {
 
 
     companion object {

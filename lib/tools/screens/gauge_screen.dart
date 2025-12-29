@@ -103,15 +103,12 @@ class _GaugeScreenState extends State<GaugeScreen> {
   final DiagnosticEngine _diagnosticEngine = DiagnosticEngine();
   final MLDataService _mlDataService = MLDataService();
 
-  // Global keys for calibration popup positioning (with unique debugLabels)
-  late final GlobalKey _highSidePressureKey =
-      GlobalKey(debugLabel: 'highSidePressure_$hashCode');
-  late final GlobalKey _lowSidePressureKey =
-      GlobalKey(debugLabel: 'lowSidePressure_$hashCode');
-  late final GlobalKey _suctionLineTempKey =
-      GlobalKey(debugLabel: 'suctionLineTemp_$hashCode');
-  late final GlobalKey _liquidLineTempKey =
-      GlobalKey(debugLabel: 'liquidLineTemp_$hashCode');
+  // Global keys for calibration popup positioning
+  // Use UniqueKey to ensure truly unique keys per widget instance
+  final GlobalKey _highSidePressureKey = GlobalKey();
+  final GlobalKey _lowSidePressureKey = GlobalKey();
+  final GlobalKey _suctionLineTempKey = GlobalKey();
+  final GlobalKey _liquidLineTempKey = GlobalKey();
 
   // Current refrigerant selection
   Refrigerant _currentRefrigerant = Refrigerant.r410a;
