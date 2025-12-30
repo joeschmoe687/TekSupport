@@ -45,6 +45,19 @@ python3 parse_abm200.py extracted_folder/FS/data/log/bt/btsnoop_hci.log
 
 ---
 
+## Quick Links
+
+👉 **New to HCI Capture?** Start here: [HCI_TROUBLESHOOTING.md](HCI_TROUBLESHOOTING.md)
+
+📖 **Documentation Index:**
+- [IN_APP_HCI_CAPTURE.md](IN_APP_HCI_CAPTURE.md) - In-app capture implementation & architecture
+- [PULL_HCI_LOGS.md](PULL_HCI_LOGS.md) - ADB-based log extraction (two methods)
+- **[HCI_TROUBLESHOOTING.md](HCI_TROUBLESHOOTING.md)** - User troubleshooting & quick fixes
+- [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - BLE Sniffer UI guide
+- [TECHNICAL_ARCHITECTURE.md](TECHNICAL_ARCHITECTURE.md) - Device protocol analysis
+
+---
+
 ## Purpose
 
 This folder contains all BLE sniffing captures, analysis scripts, and extracted protocol data for HVAC tools. Use this as the reference when implementing new device support or debugging existing connections.

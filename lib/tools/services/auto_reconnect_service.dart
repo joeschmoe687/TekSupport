@@ -29,6 +29,7 @@ class AutoReconnectService {
 
   bool _isInitialized = false;
   bool _isScanning = false;
+  bool _isPaused = false; // Allow user to temporarily pause auto-reconnect
 
   /// Stream of reconnect status updates
   Stream<ReconnectStatus> get reconnectStatus =>
@@ -37,8 +38,25 @@ class AutoReconnectService {
   /// Currently connected device IDs
   Set<String> get connectedDeviceIds => Set.unmodifiable(_connectedDeviceIds);
 
+  /// Check if auto-reconnect is paused
+  bool get isPaused => _isPaused;
+
   /// Check if a device is connected
   bool isConnected(String remoteId) => _connectedDeviceIds.contains(remoteId);
+
+  /// Pause auto-reconnect temporarily (useful when user wants to connect via other apps)
+  void pause() {
+    _isPaused = true;
+    stopBackgroundScanning();
+  }
+
+  /// Resume auto-reconnect
+  void resume() {
+    _isPaused = false;
+    if (_isInitialized) {
+      _startBackgroundScanning();
+    }
+  }
 
   /// Initialize the auto-reconnect service
   Future<void> init() async {
@@ -62,14 +80,23 @@ class AutoReconnectService {
     // Cancel any existing timer
     _backgroundScanTimer?.cancel();
 
-    // Scan every 30 seconds for known devices that aren't connected
+    // Scan every 60 seconds for known devices that aren't connected
+    // (Reduced frequency to be less aggressive)
     _backgroundScanTimer = Timer.periodic(
-      const Duration(seconds: 30),
-      (_) => _scanForKnownDevices(),
+      const Duration(seconds: 60),
+      (_) {
+        if (!_isPaused) {
+          _scanForKnownDevices();
+        }
+      },
     );
 
-    // Do initial scan
-    _scanForKnownDevices();
+    // Do initial scan after 5 seconds (give user time to navigate)
+    Future.delayed(const Duration(seconds: 5), () {
+      if (!_isPaused && _isInitialized) {
+        _scanForKnownDevices();
+      }
+    });
   }
 
   /// Stop background scanning
@@ -80,7 +107,7 @@ class AutoReconnectService {
 
   /// Scan for known devices that need reconnection
   Future<void> _scanForKnownDevices() async {
-    if (_isScanning) return;
+    if (_isScanning || _isPaused) return;
 
     try {
       final state = await ble.FlutterBluePlus.adapterState.first;

@@ -267,6 +267,9 @@ The connection chain MUST remain intact for probes to receive data:
   - **Cloud Sync** - Syncs captures to Firebase `ble_sniff_logs` (Dec 19) ✅
   - **Session History** - Local persistence with load/delete/sync (Dec 19) ✅
   - **Device ID** - Manufacturer detection from Bluetooth Company IDs (Dec 19) ✅
+  - **HCI Log Capture** - System-wide Bluetooth packet capture (Dec 29) ✅
+    - See [docs/BLE-Sniffing/HCI_TROUBLESHOOTING.md](docs/BLE-Sniffing/HCI_TROUBLESHOOTING.md) for user guide
+    - See [docs/BLE-Sniffing/IN_APP_HCI_CAPTURE.md](docs/BLE-Sniffing/IN_APP_HCI_CAPTURE.md) for technical details
 - **Storage Screen** (Settings → Storage)
   - View saved devices, connection history
   - ML learned patterns storage

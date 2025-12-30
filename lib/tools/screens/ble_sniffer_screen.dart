@@ -15,6 +15,7 @@ import '../services/ble_pattern_analyzer.dart';
 import '../services/smart_device_classifier.dart';
 import '../services/profile_generator_service.dart';
 import '../services/ble_sniff_upload_service.dart';
+import '../services/hci_log_capture_service.dart';
 
 /// Admin-only BLE Sniffer screen for debugging HVAC tool protocols.
 /// Allows scanning, connecting, and viewing raw GATT data.
@@ -28,9 +29,13 @@ class BleSnifferScreen extends StatefulWidget {
 class _BleSnifferScreenState extends State<BleSnifferScreen> {
   final BluetoothService _bleService = BluetoothService();
   final BleSniffUploadService _uploadService = BleSniffUploadService();
+  final HciLogCaptureService _hciService = HciLogCaptureService();
 
   bool _isScanning = false;
   bool _isConnecting = false;
+  bool _isCapturingHci = false;
+  bool _hciEnabled = false;
+  HciLogData? _lastHciCapture;
   List<ble.ScanResult> _scanResults = [];
   ble.BluetoothDevice? _connectedDevice;
   List<ble.BluetoothService> _services = [];
@@ -88,10 +93,10 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
       _sniffBox = await Hive.openBox('ble_sniff_sessions');
       _currentSessionId = 'session_${DateTime.now().millisecondsSinceEpoch}';
       _loadSavedSessions();
-      
+
       // Load upload service settings
       await _uploadService.loadSettings();
-      
+
       // Auto-upload any unsynced sessions on startup
       _autoUploadUnsyncedSessions();
     } catch (e) {
@@ -121,11 +126,12 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
   /// Auto-upload unsynced sessions in the background
   Future<void> _autoUploadUnsyncedSessions() async {
     if (_sniffBox == null) return;
-    
+
     try {
       final count = await _uploadService.uploadUnsyncedSessions(_sniffBox!);
       if (count > 0) {
-        _addLog('Auto-uploaded $count unsynced session(s) to Firebase', type: 'success');
+        _addLog('Auto-uploaded $count unsynced session(s) to Firebase',
+            type: 'success');
       }
     } catch (e) {
       debugPrint('[BLE Sniffer] Auto-upload failed: $e');
@@ -179,13 +185,15 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
 
     await _sniffBox!.put(_currentSessionId, jsonEncode(sessionData));
     _loadSavedSessions();
-    
+
     // Auto-upload if enabled
-    _uploadService.autoUploadSessionIfEnabled(
+    _uploadService
+        .autoUploadSessionIfEnabled(
       _sniffBox!,
       _currentSessionId,
       sessionData,
-    ).then((uploaded) {
+    )
+        .then((uploaded) {
       if (uploaded) {
         _addLog('Session auto-uploaded to Firebase', type: 'success');
       }
@@ -198,6 +206,9 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
 
   Future<void> _initBle() async {
     await _bleService.init(verbose: true);
+
+    // Check HCI logging status
+    _checkHciStatus();
 
     _scanSubscription = ble.FlutterBluePlus.scanResults.listen((results) {
       if (!mounted) return;
@@ -229,6 +240,189 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
     super.dispose();
   }
 
+  /// Check if HCI logging is enabled on device
+  Future<void> _checkHciStatus() async {
+    try {
+      final enabled = await _hciService.isHciLoggingEnabled();
+      setState(() {
+        _hciEnabled = enabled;
+      });
+    } catch (e) {
+      debugPrint('[HCI] Status check failed: $e');
+    }
+  }
+
+  /// Capture and parse HCI log to show Bluetooth sniff data
+  Future<void> _captureHciLog() async {
+    if (!_hciEnabled) {
+      _addLog('❌ HCI logging not enabled. Enable in Developer Settings:',
+          type: 'error');
+      _addLog(
+          '   Settings → Developer Options → Bluetooth HCI snoop log → Enabled',
+          type: 'error');
+      _addLog('   Then restart Bluetooth or reboot device.', type: 'error');
+      return;
+    }
+
+    setState(() {
+      _isCapturingHci = true;
+    });
+
+    _addLog('🔍 Capturing HCI Bluetooth log...', type: 'action');
+
+    try {
+      // Capture log file
+      _addLog('   Accessing /data/misc/bluetooth/logs/btsnoop_hci.log...',
+          type: 'info');
+      final logPath = await _hciService.captureHciLog();
+
+      if (logPath == null) {
+        _showHciTroubleshootingGuide();
+        return;
+      }
+
+      _addLog('✅ Log file captured: $logPath', type: 'success');
+      _addLog('📝 Parsing HCI log file...', type: 'action');
+
+      // Parse the log
+      final hciData = await _hciService.parseHciLog(logPath);
+
+      if (hciData == null) {
+        _addLog('❌ Failed to parse HCI log file', type: 'error');
+        return;
+      }
+
+      if (hciData.devices.isEmpty && hciData.totalPackets == 0) {
+        _addLog('⚠️  HCI log was empty or contained no Bluetooth data',
+            type: 'warning');
+        _addLog(
+            '   Make sure Bluetooth devices are actively scanning/broadcasting',
+            type: 'info');
+        return;
+      }
+
+      setState(() {
+        _lastHciCapture = hciData;
+      });
+
+      // Display captured data in logs
+      _displayHciCapture(hciData);
+
+      _addLog(
+          '✅ HCI capture complete: ${hciData.devices.length} device(s), ${hciData.totalPackets} packets',
+          type: 'success');
+
+      // Auto-save session with HCI data
+      _autoSaveSession();
+    } catch (e) {
+      _addLog('❌ HCI capture failed: $e', type: 'error');
+      debugPrint('[HCI Sniffer] Exception: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isCapturingHci = false;
+        });
+      }
+    }
+  }
+
+  /// Display HCI capture data in logs section
+  void _displayHciCapture(HciLogData hciData) {
+    _addLog('', type: 'info');
+    _addLog('═══════ HCI CAPTURE RESULTS ═══════', type: 'info');
+    _addLog(
+        'Captured ${hciData.totalPackets} BLE packets from ${hciData.devices.length} device(s)',
+        type: 'info');
+    _addLog('File: ${hciData.filePath}', type: 'info');
+    _addLog('Captured at: ${hciData.capturedAt.toString()}', type: 'info');
+    _addLog('', type: 'info');
+
+    // Display detected devices
+    for (final device in hciData.devices) {
+      _addLog('▼ ${device.name} [${device.address}]', type: 'device');
+      _addLog('  RSSI: ${device.rssi}', type: 'info');
+      _addLog('  First seen: ${device.firstSeen.toString()}', type: 'info');
+      _addLog('  Last seen: ${device.lastSeen.toString()}', type: 'info');
+      _addLog('', type: 'info');
+    }
+
+    // Show sample of all packets
+    if (hciData.packets.isNotEmpty) {
+      _addLog('All HCI Packets (showing first 10):', type: 'info');
+      final sampleCount =
+          hciData.packets.length > 10 ? 10 : hciData.packets.length;
+      for (int i = 0; i < sampleCount; i++) {
+        final packet = hciData.packets[i];
+        final hex = packet.data
+            .map((b) => b.toRadixString(16).padLeft(2, '0'))
+            .join(' ');
+        final displayHex = hex.length > 48 ? '${hex.substring(0, 48)}...' : hex;
+        _addLog('  [${i + 1}] ${packet.type} (${packet.size}B) $displayHex',
+            type: 'data');
+      }
+      _addLog('', type: 'info');
+    }
+
+    _addLog('═══════ END HCI CAPTURE ═══════', type: 'info');
+    _addLog('', type: 'info');
+  }
+
+  /// Show detailed HCI troubleshooting guide when capture fails
+  void _showHciTroubleshootingGuide() {
+    _addLog('', type: 'error');
+    _addLog('═════════════════════════════════════════════════════════════',
+        type: 'error');
+    _addLog('🔴 HCI LOG CAPTURE FAILED - TROUBLESHOOTING GUIDE', type: 'error');
+    _addLog('═════════════════════════════════════════════════════════════',
+        type: 'error');
+    _addLog('', type: 'error');
+    _addLog('❌ The app cannot directly access the HCI log file due to',
+        type: 'error');
+    _addLog('   Android security restrictions (SELinux policies).',
+        type: 'error');
+    _addLog('', type: 'error');
+    _addLog('✅ SOLUTION: Use ADB to copy the HCI log manually', type: 'info');
+    _addLog('', type: 'info');
+    _addLog('STEP 1: Ensure HCI Logging is Enabled', type: 'action');
+    _addLog(
+        '   On Device: Settings → Developer Options → Bluetooth HCI snoop log',
+        type: 'info');
+    _addLog('   Make sure it is toggled ON', type: 'info');
+    _addLog('', type: 'info');
+    _addLog('STEP 2: Start Your BLE Scan or Device Activity', type: 'action');
+    _addLog('   Let Bluetooth devices scan/advertise for 10-30 seconds',
+        type: 'info');
+    _addLog('', type: 'info');
+    _addLog('STEP 3: Copy HCI Log via ADB', type: 'action');
+    _addLog('   Run these commands on your computer:', type: 'info');
+    _addLog('', type: 'info');
+    _addLog('   # Enable HCI logging via ADB (no root needed):', type: 'info');
+    _addLog('   adb shell settings put global bluetooth_hci_snoop_log_output 1',
+        type: 'info');
+    _addLog('', type: 'info');
+    _addLog('   # Toggle Bluetooth to generate logs:', type: 'info');
+    _addLog('   adb shell svc bluetooth disable', type: 'info');
+    _addLog('   sleep 2', type: 'info');
+    _addLog('   adb shell svc bluetooth enable', type: 'info');
+    _addLog('   sleep 3', type: 'info');
+    _addLog('', type: 'info');
+    _addLog('   # Copy HCI log to your computer:', type: 'info');
+    _addLog(
+        '   adb shell cat /data/misc/bluetooth/logs/btsnoop_hci.log > btsnoop.log',
+        type: 'info');
+    _addLog('', type: 'info');
+    _addLog('STEP 4: Analyze the Log File', type: 'action');
+    _addLog('   The btsnoop.log file is a standard Bluetooth HCI capture',
+        type: 'info');
+    _addLog('   You can analyze it with:', type: 'info');
+    _addLog('   - Wireshark (open as "Bluetooth HCI H4")', type: 'info');
+    _addLog('   - btsnoop analyzers', type: 'info');
+    _addLog('', type: 'error');
+    _addLog('════════════════════════════════════════════════════════════',
+        type: 'error');
+  }
+
+  /// Add a log entry to the console with timestamp and type styling
   void _addLog(String message, {String type = 'info'}) {
     if (!mounted) return;
     setState(() {
@@ -354,7 +548,7 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
 
       // Read Device Information Service to get real names
       await _readDeviceInfoService();
-      
+
       // Run smart device classification (NEW)
       _classifyConnectedDevice();
     } catch (e) {
@@ -383,15 +577,16 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
               // Capture packet for smart analysis
               _capturedPackets.add(List<int>.from(value));
               _packetTimestamps.add(DateTime.now());
-              
+
               // Limit stored packets to last 50
               if (_capturedPackets.length > 50) {
                 _capturedPackets.removeAt(0);
                 _packetTimestamps.removeAt(0);
               }
-              
+
               // Run smart analysis every 5 packets
-              if (_capturedPackets.length % 5 == 0 && _capturedPackets.isNotEmpty) {
+              if (_capturedPackets.length % 5 == 0 &&
+                  _capturedPackets.isNotEmpty) {
                 _runSmartAnalysis();
               }
 
@@ -421,7 +616,7 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
                 _addLog('  float32 LE: ${float32LE.toStringAsFixed(4)}',
                     type: 'debug');
               }
-              
+
               // Show smart analysis suggestions for this packet
               if (_showSmartAnalysis && _currentAnalysis != null) {
                 final suggestions = _currentAnalysis!.suggestions.take(2);
@@ -723,29 +918,29 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
   /// Run smart pattern analysis on captured packets (NEW - Professional Feature)
   void _runSmartAnalysis() {
     if (_capturedPackets.isEmpty) return;
-    
+
     try {
       // Analyze data patterns
       final analysis = BlePatternAnalyzer.analyzeDataStream(_capturedPackets);
-      
+
       setState(() {
         _currentAnalysis = analysis;
       });
-      
+
       // Log analysis results
       if (analysis.confidence > 0.5 && analysis.suggestions.isNotEmpty) {
         _addLog(
           '🧠 SMART ANALYSIS: Detected ${analysis.detectedFormat} with ${(analysis.confidence * 100).toStringAsFixed(0)}% confidence',
           type: 'success',
         );
-        
+
         final topSuggestion = analysis.suggestions.first;
         _addLog(
           '   Best match: ${topSuggestion.categoryDisplay} at ${topSuggestion.humanReadable}',
           type: 'success',
         );
       }
-      
+
       // Analyze timing
       if (_packetTimestamps.length >= 3) {
         final timing = BlePatternAnalyzer.analyzeTiminginfo(_packetTimestamps);
@@ -753,10 +948,11 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
           _addLog('   Update rate: ${timing.humanReadable}', type: 'info');
         }
       }
-      
+
       // Detect checksums
       if (_capturedPackets.isNotEmpty) {
-        final checksum = BlePatternAnalyzer.detectChecksum(_capturedPackets.last);
+        final checksum =
+            BlePatternAnalyzer.detectChecksum(_capturedPackets.last);
         if (checksum != null && checksum.confidence > 0.8) {
           _addLog(
             '   Checksum detected: ${checksum.type} at byte ${checksum.position}',
@@ -773,14 +969,14 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
   /// Classify device intelligently (NEW - Professional Feature)
   void _classifyConnectedDevice() {
     if (_connectedDevice == null) return;
-    
+
     try {
       // Find scan result for this device
       final scanResult = _scanResults.firstWhere(
         (r) => r.device.remoteId.str == _connectedDevice!.remoteId.str,
         orElse: () => throw Exception('Scan result not found'),
       );
-      
+
       final classification = SmartDeviceClassifier.classifyDevice(
         deviceName: _connectedDevice!.platformName,
         serviceUuids: scanResult.advertisementData.serviceUuids,
@@ -789,14 +985,14 @@ class _BleSnifferScreenState extends State<BleSnifferScreen> {
         connectable: scanResult.advertisementData.connectable,
         serviceData: scanResult.advertisementData.serviceData,
       );
-      
+
       setState(() {
         _deviceClassification = classification;
       });
-      
+
       _addLog('🎯 DEVICE CLASSIFICATION:', type: 'success');
       _addLog('   ${classification.summary}', type: 'success');
-      
+
       // Auto-detect unit based on classification
       switch (classification.category) {
         case 'temperature_probe':
@@ -1590,7 +1786,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
     final deviceTypeCode = String.fromCharCodes(data.sublist(2, 4));
     String deviceTypeName = getFieldpieceDeviceTypeName(data);
     String reading = 'N/A';
-    
+
     // Extract battery and model info
     final batteryLevel = getFieldpieceBatteryLevel(data);
     final modelNumber = getFieldpieceModelNumber(data);
@@ -1621,7 +1817,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         final wetBulb = readings['wetBulb'] ?? double.nan;
         final dryBulb = readings['dryBulb'] ?? double.nan;
         final humidity = readings['humidity'] ?? double.nan;
-        
+
         List<String> readingParts = [];
         if (!wetBulb.isNaN) {
           readingParts.add('WB: ${wetBulb.toStringAsFixed(1)}°F');
@@ -1632,7 +1828,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         if (!humidity.isNaN) {
           readingParts.add('${humidity.toStringAsFixed(1)}%RH');
         }
-        
+
         if (readingParts.isNotEmpty) {
           reading = readingParts.join(', ');
         }
@@ -1646,7 +1842,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         break;
     }
 
-     return Container(
+    return Container(
       margin: const EdgeInsets.only(top: 4),
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
@@ -1670,8 +1866,11 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
           if (batteryLevel != null) ...[
             const SizedBox(width: 6),
             Icon(
-              batteryLevel > 50 ? Icons.battery_full : 
-              batteryLevel > 20 ? Icons.battery_std : Icons.battery_alert,
+              batteryLevel > 50
+                  ? Icons.battery_full
+                  : batteryLevel > 20
+                      ? Icons.battery_std
+                      : Icons.battery_alert,
               size: 12,
               color: batteryLevel > 20 ? AppColors.primaryCyan : Colors.orange,
             ),
@@ -1928,6 +2127,27 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             ),
             onPressed: _toggleDataInterpreter,
             tooltip: 'Toggle Data Interpreter',
+          ),
+          // HCI Capture button - Capture Bluetooth sniff data
+          IconButton(
+            icon: _isCapturingHci
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryCyan,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Icon(
+                    Icons.fiber_smart_record,
+                    color:
+                        _hciEnabled ? AppColors.success : AppColors.textMuted,
+                  ),
+            onPressed: _isCapturingHci ? null : _captureHciLog,
+            tooltip: _hciEnabled
+                ? 'Capture HCI Bluetooth Log'
+                : 'HCI Logging Disabled',
           ),
           // Save Profile button
           if (_connectedDevice != null)
@@ -2258,8 +2478,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                Icon(Icons.history,
-                    color: AppColors.primaryCyan, size: 18),
+                Icon(Icons.history, color: AppColors.primaryCyan, size: 18),
                 const SizedBox(width: 8),
                 Text(
                   'Saved Sessions (${_savedSessions.length})',
@@ -2320,8 +2539,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                             connectedDevice != null
                                 ? connectedDevice['name'] ?? 'Unknown'
                                 : '$deviceCount devices scanned',
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 13),
+                            style: TextStyle(color: Colors.white, fontSize: 13),
                           ),
                           subtitle: Text(
                             '${date.month}/${date.day} ${date.hour}:${date.minute.toString().padLeft(2, '0')} • $logCount logs',
@@ -2475,8 +2693,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.filter_alt_off,
-                size: 64, color: AppColors.textMuted),
+            Icon(Icons.filter_alt_off, size: 64, color: AppColors.textMuted),
             const SizedBox(height: 16),
             Text(
               '${_scanResults.length} devices hidden (Apple filter)',
@@ -2525,7 +2742,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
 
         // Guess device type from name/services
         final deviceType = _guessDeviceType(name, adv.serviceUuids);
-        
+
         // Run smart classification on this device (NEW)
         final smartClass = SmartDeviceClassifier.classifyDevice(
           deviceName: name,
@@ -2573,8 +2790,8 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
             ),
             title: Text(
               name,
-              style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w500),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -2592,15 +2809,14 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                     adv.advName != device.platformName)
                   Text(
                     'Local Name: ${adv.advName}',
-                    style:
-                        TextStyle(color: AppColors.warning, fontSize: 10),
+                    style: TextStyle(color: AppColors.warning, fontSize: 10),
                   ),
                 // Manufacturer if known
                 if (manufacturerInfo.isNotEmpty)
                   Text(
                     manufacturerInfo,
-                    style: TextStyle(
-                        color: AppColors.primaryCyan, fontSize: 10),
+                    style:
+                        TextStyle(color: AppColors.primaryCyan, fontSize: 10),
                   ),
                 // Raw manufacturer data (for debugging unknown devices)
                 if (adv.manufacturerData.isNotEmpty)
@@ -2615,15 +2831,14 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                 if (deviceType != 'unknown')
                   Text(
                     'Type: $deviceType',
-                    style:
-                        TextStyle(color: AppColors.success, fontSize: 10),
+                    style: TextStyle(color: AppColors.success, fontSize: 10),
                   ),
                 // Service UUIDs
                 if (services.isNotEmpty)
                   Text(
                     'Services: $services',
-                    style: TextStyle(
-                        color: AppColors.textSecondary, fontSize: 9),
+                    style:
+                        TextStyle(color: AppColors.textSecondary, fontSize: 9),
                   ),
                 // Service data (often contains model/serial info)
                 if (adv.serviceData.isNotEmpty)
@@ -2638,8 +2853,7 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                 if (adv.txPowerLevel != null)
                   Text(
                     'TX Power: ${adv.txPowerLevel} dBm',
-                    style: TextStyle(
-                        color: AppColors.textMuted, fontSize: 9),
+                    style: TextStyle(color: AppColors.textMuted, fontSize: 9),
                   ),
                 // Connectable status
                 Text(
@@ -2655,7 +2869,8 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
                 if (smartClass.confidence > 30)
                   Container(
                     margin: const EdgeInsets.only(top: 4),
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: smartClass.confidence >= 70
                           ? AppColors.success.withOpacity(0.2)
@@ -2924,6 +3139,9 @@ double _parse${_toPascalCase(key)}(List<int> rawData) {
         break;
       case 'debug':
         color = const Color(0xFF66AAFF); // Light blue for debug interpretations
+        break;
+      case 'device':
+        color = AppColors.primaryPurple; // Purple for HCI device headers
         break;
       default:
         color = AppColors.textSecondary;

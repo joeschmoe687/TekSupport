@@ -190,38 +190,83 @@ class _ToolsHubScreenState extends State<ToolsHubScreen> {
                 color: AppColors.textPrimary,
               ),
             ),
-            if (_isScanning)
-              Row(
-                children: [
-                  SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        AppColors.primaryCyan,
+            Row(
+              children: [
+                // Auto-reconnect pause toggle
+                Tooltip(
+                  message: _reconnectService.isPaused
+                      ? 'Auto-reconnect paused'
+                      : 'Auto-reconnect active',
+                  child: IconButton(
+                    icon: Icon(
+                      _reconnectService.isPaused
+                          ? Icons.bluetooth_disabled
+                          : Icons.bluetooth_connected,
+                      color: _reconnectService.isPaused
+                          ? AppColors.textSecondary
+                          : AppColors.primaryCyan,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        if (_reconnectService.isPaused) {
+                          _reconnectService.resume();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Auto-reconnect resumed'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        } else {
+                          _reconnectService.pause();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Auto-reconnect paused - connect to other apps'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      });
+                    },
+                    tooltip: _reconnectService.isPaused
+                        ? 'Resume auto-reconnect'
+                        : 'Pause auto-reconnect',
+                  ),
+                ),
+                if (_isScanning)
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primaryCyan,
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Scanning...',
+                        style: TextStyle(
+                          color: AppColors.primaryCyan,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  IconButton(
+                    icon: Icon(Icons.refresh, color: AppColors.textSecondary),
+                    onPressed: () {
+                      _hasScannedOnce = false;
+                      _autoScanForDevices();
+                    },
+                    tooltip: 'Scan for devices',
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Scanning...',
-                    style: TextStyle(
-                      color: AppColors.primaryCyan,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              )
-            else
-              IconButton(
-                icon: Icon(Icons.refresh, color: AppColors.textSecondary),
-                onPressed: () {
-                  _hasScannedOnce = false;
-                  _autoScanForDevices();
-                },
-                tooltip: 'Scan for devices',
-              ),
+              ],
+            ),
           ],
         ),
         Text(

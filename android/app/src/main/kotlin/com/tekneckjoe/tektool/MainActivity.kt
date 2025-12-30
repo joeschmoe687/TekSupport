@@ -20,9 +20,10 @@ class MainActivity : FlutterFragmentActivity() {
 
 
     companion object {
-        // MethodChannel name for Flutter/Dart communication
+        // MethodChannel names for Flutter/Dart communication
         private const val CHANNEL = "com.tekneckjoe.tektool/sms_autoresponder"
-        // Request code for SMS permissions
+        private const val HCI_CHANNEL = "com.tekneckjoe.tektool/hci_capture"
+        // Request codes for permissions
         private const val SMS_PERMISSION_REQUEST_CODE = 101
         // Log tag for theme debugging
         private const val TAG = "MainActivity"
@@ -54,7 +55,8 @@ class MainActivity : FlutterFragmentActivity() {
     // Sets up the MethodChannel for communication with Dart. Call this in configureFlutterEngine for FlutterActivity.
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        // Set up MethodChannel after Flutter is initialized
+        
+        // Set up SMS MethodChannel
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call: MethodCall, result: MethodChannel.Result ->
             when (call.method) {
                 // Handles permission request from Flutter
@@ -109,6 +111,24 @@ class MainActivity : FlutterFragmentActivity() {
                 }
             }
         }
+        
+        // Set up HCI Capture MethodChannel
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, HCI_CHANNEL).setMethodCallHandler { call: MethodCall, result: MethodChannel.Result ->
+            when (call.method) {
+                "checkHciLogging" -> {
+                    result.success(isHciLoggingEnabled())
+                }
+                "enableHciLogging" -> {
+                    result.success(enableHciLogging())
+                }
+                "captureHciLog" -> {
+                    captureHciLogAsync(result)
+                }
+                else -> {
+                    result.notImplemented()
+                }
+            }
+        }
     }
 
     // Checks if all required SMS permissions are granted.
@@ -126,5 +146,212 @@ class MainActivity : FlutterFragmentActivity() {
             Manifest.permission.READ_SMS
         )
         ActivityCompat.requestPermissions(this, permissions, SMS_PERMISSION_REQUEST_CODE)
+    }
+    
+    // ========================================================================
+    // HCI LOG CAPTURE METHODS
+    // ========================================================================
+    
+    // Check if HCI logging is currently enabled
+    private fun isHciLoggingEnabled(): Boolean {
+        return try {
+            // Try multiple property names (Samsung/different Android versions)
+            val properties = listOf(
+                "persist.bluetooth.btsnooplogmode",
+                "persist.bluetooth.btsnoopenable",
+                "persist.vendor.bluetooth.btsnooplogmode"
+            )
+            
+            for (propName in properties) {
+                try {
+                    val prop = Runtime.getRuntime().exec("getprop $propName")
+                    val reader = prop.inputStream.bufferedReader()
+                    val value = reader.readText().trim()
+                    
+                    Log.d(TAG, "Checking $propName: $value")
+                    
+                    // Check various enabled states
+                    if (value.equals("full", ignoreCase = true) ||
+                        value.equals("filtered", ignoreCase = true) ||
+                        value.equals("true", ignoreCase = true) ||
+                        value == "1"
+                    ) {
+                        Log.d(TAG, "✅ HCI logging enabled via $propName = $value")
+                        return true
+                    }
+                } catch (e: Exception) {
+                    // Try next property
+                    continue
+                }
+            }
+            
+            // Fallback: Check if HCI log file exists and is being written to
+            val hciLogFile = java.io.File("/data/misc/bluetooth/logs/btsnoop_hci.log")
+            if (hciLogFile.exists()) {
+                val lastModified = hciLogFile.lastModified()
+                val ageMinutes = (System.currentTimeMillis() - lastModified) / 1000 / 60
+                Log.d(TAG, "HCI log file exists, modified $ageMinutes minutes ago")
+                
+                // If log was modified in last 5 minutes, assume logging is active
+                if (ageMinutes < 5) {
+                    Log.d(TAG, "✅ HCI logging enabled (file recently modified)")
+                    return true
+                }
+            }
+            
+            Log.w(TAG, "❌ HCI logging not detected via any method")
+            false
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking HCI logging: ${e.message}")
+            false
+        }
+    }
+    
+    // Enable HCI logging (requires developer options)
+    private fun enableHciLogging(): Boolean {
+        return try {
+            // Note: This typically requires user to enable in Developer Options
+            // We can only check/inform, not actually enable it programmatically
+            Log.i(TAG, "HCI logging must be enabled manually in Developer Options")
+            false // Return false to indicate user action needed
+        } catch (e: Exception) {
+            Log.e(TAG, "Error enabling HCI: ${e.message}")
+            false
+        }
+    }
+    
+    // Capture HCI log asynchronously (runs in background thread)
+    private fun captureHciLogAsync(result: MethodChannel.Result) {
+        Thread {
+            try {
+                val logPath = captureHciLog()
+                if (logPath != null) {
+                    runOnUiThread {
+                        result.success(logPath)
+                    }
+                } else {
+                    runOnUiThread {
+                        result.error("CAPTURE_FAILED", "Failed to capture HCI log", null)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "HCI capture error: ${e.message}")
+                runOnUiThread {
+                    result.error("CAPTURE_ERROR", e.message, null)
+                }
+            }
+        }.start()
+    }
+    
+    // Capture HCI log from Android system
+    private fun captureHciLog(): String? {
+        return try {
+            Log.i(TAG, "🔍 Starting HCI log capture...")
+            
+            val appDir = applicationContext.getExternalFilesDir(null)
+            val timestamp = System.currentTimeMillis()
+            val destDir = java.io.File("$appDir/hci_logs")
+            destDir.mkdirs()
+            val destPath = "$appDir/hci_logs/btsnoop_${timestamp}.log"
+            val destFile = java.io.File(destPath)
+            
+            // Try multiple methods to access HCI log with proper error handling
+            
+            // Method 1: Direct file access (works if app has system permissions)
+            Log.d(TAG, "📋 Method 1: Direct file access...")
+            try {
+                val hciLogPath = "/data/misc/bluetooth/logs/btsnoop_hci.log"
+                val hciLogFile = java.io.File(hciLogPath)
+                
+                if (hciLogFile.exists() && hciLogFile.canRead()) {
+                    hciLogFile.inputStream().use { input ->
+                        destFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    if (destFile.length() > 0) {
+                        Log.i(TAG, "✅ Method 1 success: Direct file access worked")
+                        Log.i(TAG, "   File: $destPath (${destFile.length()} bytes)")
+                        return destPath
+                    }
+                }
+                Log.w(TAG, "❌ Method 1 failed: File not readable (exists: ${hciLogFile.exists()}, canRead: ${hciLogFile.canRead()})")
+            } catch (e: Exception) {
+                Log.w(TAG, "❌ Method 1 exception: ${e.message}")
+            }
+            
+            // Method 2: Try via sh -c command (better compatibility)
+            Log.d(TAG, "📋 Method 2: Shell command (sh -c)...")
+            try {
+                val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "cat /data/misc/bluetooth/logs/btsnoop_hci.log"))
+                process.inputStream.use { input ->
+                    destFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                process.waitFor()
+                
+                if (destFile.length() > 0) {
+                    Log.i(TAG, "✅ Method 2 success: Shell command worked")
+                    Log.i(TAG, "   File: $destPath (${destFile.length()} bytes)")
+                    return destPath
+                }
+                Log.w(TAG, "❌ Method 2 failed: Empty output (${destFile.length()} bytes)")
+            } catch (e: Exception) {
+                Log.w(TAG, "❌ Method 2 exception: ${e.message}")
+            }
+            
+            // Method 3: Try raw ProcessBuilder approach
+            Log.d(TAG, "📋 Method 3: ProcessBuilder (cat command)...")
+            try {
+                val processBuilder = ProcessBuilder("cat", "/data/misc/bluetooth/logs/btsnoop_hci.log")
+                val process = processBuilder.start()
+                process.inputStream.use { input ->
+                    destFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                process.waitFor()
+                
+                if (destFile.length() > 0) {
+                    Log.i(TAG, "✅ Method 3 success: ProcessBuilder worked")
+                    Log.i(TAG, "   File: $destPath (${destFile.length()} bytes)")
+                    return destPath
+                }
+                Log.w(TAG, "❌ Method 3 failed: Empty output")
+            } catch (e: Exception) {
+                Log.w(TAG, "❌ Method 3 exception: ${e.message}")
+            }
+            
+            // Method 4: Check app's private directory for HCI logs (Android 12+)
+            Log.d(TAG, "📋 Method 4: Checking private app directories...")
+            try {
+                val privateHciDir = java.io.File(filesDir, "bluetooth_logs")
+                if (privateHciDir.exists()) {
+                    val files = privateHciDir.listFiles()
+                    if (files != null && files.isNotEmpty()) {
+                        Log.i(TAG, "✅ Method 4 success: Found HCI log in app dir")
+                        Log.i(TAG, "   File: ${files[0].absolutePath}")
+                        return files[0].absolutePath
+                    }
+                }
+                Log.w(TAG, "❌ Method 4 failed: No logs in app private dir")
+            } catch (e: Exception) {
+                Log.w(TAG, "❌ Method 4 exception: ${e.message}")
+            }
+            
+            // All methods failed
+            Log.e(TAG, "❌ HCI log not accessible via any method:")
+            Log.e(TAG, "   Possible causes:")
+            Log.e(TAG, "   1. HCI logging disabled in Developer Settings")
+            Log.e(TAG, "   2. SELinux policies preventing access (/data/misc/bluetooth/logs/)")
+            Log.e(TAG, "   3. Device requires root or elevated privileges")
+            Log.e(TAG, "   4. HCI log file not yet created (toggle Bluetooth to generate)")
+            null
+        } catch (e: Exception) {
+            Log.e(TAG, "❌ HCI capture outer exception: ${e.message}")
+            e.printStackTrace()
+            null
+        }
     }
 }
