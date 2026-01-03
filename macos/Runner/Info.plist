@@ -28,5 +28,23 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	
+	<!-- Bluetooth permissions for HVAC tool connectivity -->
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>TekTool needs Bluetooth to connect to your HVAC gauges, temperature probes, refrigerant scales, and other smart tools.</string>
+	
+	<!-- Camera permissions for equipment tag scanning and payment card scanning -->
+	<key>NSCameraUsageDescription</key>
+	<string>TekTool uses the camera to scan equipment nameplates and payment cards for secure checkout.</string>
+	
+	<!-- Location permissions for job profiles -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>TekTool uses your location to automatically detect job sites and organize your service calls.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>TekTool uses your location to automatically detect job sites even when the app is in the background.</string>
+	
+	<!-- Network permissions for Firebase and API calls -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>TekTool needs network access to sync data with Firebase and communicate with cloud services.</string>
 </dict>
 </plist>
