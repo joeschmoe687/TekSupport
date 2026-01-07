@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:cloud_functions/cloud_functions.dart';
 
 /// Service to handle Stripe payments and Google Pay integration
 class PaymentService {
@@ -55,9 +54,7 @@ class PaymentService {
   /// Create a payment intent on the server
   /// Returns the client secret for confirming payment
   ///
-  /// Note: This method supports guest payments. If the user is not signed
-  /// in the app will still attempt to create a payment intent by sending
-  /// nullable `userId` and `email` fields to the backend.
+  /// Note: This method requires authentication. User must be logged in.
   Future<String?> createPaymentIntent({
     required int amountCents,
     required String currency,
@@ -66,40 +63,26 @@ class PaymentService {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        // Allow guest payments: log and continue with nullable fields
-        debugPrint('⚠️ User not authenticated, proceeding as guest');
+        debugPrint('❌ User not authenticated');
+        throw Exception('Must be logged in to make payments');
       }
 
-      // Get the Cloud Function URL from Firestore settings
-      final doc = await FirebaseFirestore.instance
-          .collection('settings')
-          .doc('stripe')
-          .get();
+      // Call the Firebase Callable function (shared with website)
+      final callable =
+          FirebaseFunctions.instance.httpsCallable('createPaymentIntent');
 
-      final createPaymentIntentUrl =
-          doc.data()?['createPaymentIntentUrl'] as String?;
-      if (createPaymentIntentUrl == null) {
-        throw Exception('Payment Intent URL not configured');
-      }
+      final result = await callable.call({
+        'amount': amountCents,
+        'currency': currency,
+        'description': description,
+        'paymentType': 'session',
+        'plan': 'support',
+      });
 
-      // Call the Cloud Function to create payment intent
-      final response = await http.post(
-        Uri.parse(createPaymentIntentUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'amount': amountCents,
-          'currency': currency,
-          'description': description,
-          'userId': user?.uid,
-          'email': user?.email,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return data['clientSecret'] as String?;
+      if (result.data['success'] == true) {
+        return result.data['clientSecret'] as String?;
       } else {
-        debugPrint('❌ Failed to create payment intent: ${response.body}');
+        debugPrint('❌ Failed to create payment intent: ${result.data}');
         return null;
       }
     } catch (e) {
@@ -119,7 +102,7 @@ class PaymentService {
     debugPrint('💳 Amount: \$${amountCents / 100}');
     debugPrint('💳 Support Type: $supportType');
     debugPrint('💳 Initialized: $_isInitialized');
-    
+
     if (!_isInitialized) {
       debugPrint('⚠️ Payment service not initialized, initializing now...');
       await initialize();
@@ -145,13 +128,15 @@ class PaymentService {
         debugPrint('❌ Failed to create payment intent');
         return PaymentResult(
           success: false,
-          error: 'Failed to create payment intent. Please check your connection.',
+          error:
+              'Failed to create payment intent. Please check your connection.',
         );
       }
 
-      debugPrint('✅ Payment intent created, client secret: ${clientSecret.substring(0, 20)}...');
+      debugPrint(
+          '✅ Payment intent created, client secret: ${clientSecret.substring(0, 20)}...');
       debugPrint('💳 Initializing payment sheet...');
-      
+
       // Present card form to user
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
@@ -168,12 +153,12 @@ class PaymentService {
 
       debugPrint('✅ Payment sheet initialized');
       debugPrint('💳 Presenting payment sheet...');
-      
+
       // Show payment sheet
       await Stripe.instance.presentPaymentSheet();
 
       debugPrint('✅ Payment sheet completed successfully');
-      
+
       // Payment successful - log transaction
       await _logTransaction(
         supportType: supportType,
@@ -192,7 +177,7 @@ class PaymentService {
       debugPrint('❌ Declined Code: ${e.error.declineCode}');
       debugPrint('❌ Full Error: $e');
       debugPrint('❌ ========================================');
-      
+
       return PaymentResult(
         success: false,
         error: e.error.message ?? 'Payment failed',
@@ -203,7 +188,7 @@ class PaymentService {
       debugPrint('❌ Payment error: $e');
       debugPrint('❌ Stack trace: $stackTrace');
       debugPrint('❌ ========================================');
-      
+
       return PaymentResult(
         success: false,
         error: 'An unexpected error occurred: $e',

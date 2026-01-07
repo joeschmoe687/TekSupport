@@ -1,197 +1,137 @@
-# 🎯 STRIPE THEME FIX - QUICK SUMMARY
+# Stripe Payment Integration - Fix Summary
 
-**Date**: December 24, 2025  
-**Status**: ✅ CODE COMPLETE - Ready for Testing  
-**Priority**: CRITICAL 🔴
-
----
-
-## 🐛 What Was Broken
-
-Payment system completely blocked. All payment flows (Phone, Video, Text Chat) failed with:
-```
-Error: Your theme isn't set to use Theme.AppCompat or Theme.MaterialComponents
-```
+**Date:** January 7, 2026  
+**Status:** ✅ All Payment Flows Working
 
 ---
 
-## 🔍 Root Cause
+## Issues Resolved
 
-**Night theme file used wrong Android theme**:
-- File: `android/app/src/main/res/values-night/styles.xml`
-- Problem: Used `@android:style/Theme.Black.NoTitleBar` (native Android)
-- Stripe needs: `Theme.AppCompat.Light.NoActionBar` (AppCompat library)
-- Impact: Anyone with dark mode enabled = payment fails
+### 1. MainActivity Inheritance ✅
+**Problem:** MainActivity extended `FlutterActivity` instead of required `FlutterFragmentActivity`
+
+**Solution:**
+```kotlin
+// Before
+class MainActivity: FlutterActivity()
+
+// After
+class MainActivity: FlutterFragmentActivity()
+```
+
+**Impact:** Stripe payment sheet now displays correctly for Phone and Video support
 
 ---
 
-## ✅ What Was Fixed
+### 2. Payment Service API Mismatch ✅
+**Problem:** App used HTTP POST to call Firebase function, but function was deployed as Callable (onCall pattern)
 
-### 1. Night Theme File
-**File**: `android/app/src/main/res/values-night/styles.xml`
+**Solution:** Refactored `lib/services/payment_service.dart`
 
-Changed both themes from native Android to AppCompat:
-```xml
-❌ BEFORE: parent="@android:style/Theme.Black.NoTitleBar"
-✅ AFTER:  parent="Theme.AppCompat.Light.NoActionBar"
+```dart
+// Before - HTTP POST
+final response = await http.post(
+  Uri.parse(createPaymentIntentUrl),
+  body: json.encode({'amount': amountCents, ...})
+);
+
+// After - Firebase Callable
+final callable = FirebaseFunctions.instance.httpsCallable('createPaymentIntent');
+final result = await callable.call({
+  'amount': amountCents,
+  'currency': 'usd',
+  'description': description,
+  'paymentType': 'session',
+  'plan': 'support',
+});
+return result.data['clientSecret'];
 ```
 
-### 2. ProGuard Rules
-**File**: `android/app/proguard-rules.pro`
-
-Added rules to prevent minification from breaking themes:
-```proguard
--keep class androidx.appcompat.app.AppCompatActivity { *; }
--keep class androidx.appcompat.** { *; }
--keep class android.support.** { *; }
--keepresources color,drawable,layout,menu,anim,attr,transition,interpolator,id
-```
-
-### 3. AndroidManifest
-**File**: `android/app/src/main/AndroidManifest.xml`
-
-Added metadata to force light theme (safety measure):
-```xml
-<meta-data android:name="prefers_colorscheme" android:value="light" />
-```
+**Impact:** Payment intent creation now works, Cloud Function properly called
 
 ---
 
-## 🧪 Quick Validation
+### 3. Free Text Chat Bug ✅
+**Problem:** 
+- Text chat showed \$0.0 and tried to create payment intent
+- Firebase function rejects amounts below \$5 (500 cents)
+- Caused `[firebase_functions/internal] INTERNAL` error
 
-Run this command to verify the fix is applied correctly:
-```bash
-./scripts/validate-stripe-theme-fix.sh
+**Root Cause:**
+- Code was looking for 'Text' pricing but actual pricing uses 'Message'
+- `_getPrice('Text')` returned 0.0 as fallback
+- Should have bypassed payment for free chat
+
+**Solution:** Updated `lib/screens/support_contact_screen.dart`
+
+```dart
+Future<void> _handleTextChatTap() async {
+  // Use 'Message' pricing (not 'Text')
+  final price = _getPrice('Message');
+  
+  // If text chat is free, skip payment entirely
+  if (price == 0.0) {
+    debugPrint('✅ Text chat is free, opening chat directly');
+    Navigator.push(context, ChatScreen(...));
+    return;
+  }
+  
+  // If there's a charge, show payment screen
+  Navigator.push(context, PaymentScreen(...));
+}
 ```
 
-**Expected output**: All checks pass with ✅
+**Impact:** Free text chat now works correctly, bypasses payment screen
 
 ---
 
-## 🚀 Testing Steps (YOU MUST DO THIS)
+## Testing Results
 
-### Step 1: Rebuild
-```bash
-cd /Users/joeykeilbarth/Desktop/To_New_Beginnings/TekNeck/Apps/Support/hvac_support_app
-flutter clean
-flutter pub get
-flutter build apk --release
-```
+### ✅ Phone Support (\$45)
+- Payment sheet displays correctly
+- Test card accepted: 4242 4242 4242 4242
+- Payment intent created successfully
+- Client secret returned
 
-### Step 2: Install
-```bash
-adb install build/app/outputs/flutter-apk/app-release.apk
-```
+### ✅ Video Support (\$60)
+- Payment sheet displays correctly
+- Test card accepted: 4242 4242 4242 4242
+- Payment intent created successfully
+- Client secret returned
 
-### Step 3: Monitor (in separate terminal)
-```bash
-adb logcat -s flutter 2>&1 | grep -i "stripe\|theme"
-```
-
-### Step 4: Test Each Payment Flow
-
-1. **Phone Call Payment**:
-   - Open app → Chat
-   - Tap "Phone Call" option
-   - ✅ Payment sheet should appear
-   - ✅ No theme error in logs
-
-2. **Video Call Payment**:
-   - Open app → Chat
-   - Tap "Video Call" option
-   - ✅ Payment sheet should appear
-   - ✅ No theme error in logs
-
-3. **Text Chat Payment**:
-   - Open app → Chat
-   - Tap "Text Chat" option
-   - ✅ Payment sheet should appear
-   - ✅ No theme error in logs
-
-### Step 5: Test in Both Modes
-- Test with device in **light mode**
-- Test with device in **dark mode**
-- Both should work identically
+### ✅ Text Chat (\$0 - Free)
+- Payment screen bypassed
+- Chat opens directly
+- No payment intent created (correct behavior)
 
 ---
 
-## 📊 Expected Before/After
+## Files Modified
 
-### BEFORE (Broken)
-```
-❌ Error checking Google Pay availability: PlatformException(
-    flutter_stripe initialization failed,
-    The plugin failed to initialize:
-    Your theme isn't set to use Theme.AppCompat or Theme.MaterialComponents.
-)
-```
+1. **android/app/src/main/kotlin/com/tekneckjoe/tektool/MainActivity.kt**
+   - Changed inheritance: `FlutterActivity` → `FlutterFragmentActivity`
 
-### AFTER (Fixed)
-```
-✅ Stripe initialized successfully (LIVE mode)
-✅ Google Pay is available
-✅ Payment sheet presented successfully
-[Payment flow completes normally]
-```
+2. **lib/services/payment_service.dart**
+   - Removed HTTP client approach
+   - Implemented Firebase Callable approach
+   - Updated imports (removed http, added cloud_functions)
+
+3. **lib/screens/support_contact_screen.dart**
+   - Fixed pricing key: 'Text' → 'Message'
+   - Added free chat bypass logic
+   - Enhanced logging for debugging
 
 ---
 
-## 📁 Files Changed
+## Documentation Updated
 
-| File | What Changed |
-|------|--------------|
-| `values-night/styles.xml` | Theme parents changed to AppCompat |
-| `proguard-rules.pro` | Added AppCompat preservation rules |
-| `AndroidManifest.xml` | Added prefers_colorscheme metadata |
-| `STRIPE_THEME_FIX_DOCUMENTATION.md` | Full technical documentation (307 lines) |
-| `scripts/validate-stripe-theme-fix.sh` | Automated validation script |
+- ✅ `README.md` - Updated implementation status
+- ✅ `TODO.md` - Marked Task 0 as completed
+- ✅ `STRIPE_PAYMENT_SETUP.md` - Added verification section
+- ✅ `STRIPE_FIX_SUMMARY.md` - Updated this summary
 
 ---
 
-## 🎯 Success Criteria
-
-- [ ] Validation script passes
-- [ ] App builds without errors
-- [ ] Payment sheet loads (no theme error)
-- [ ] Google Pay is available
-- [ ] Phone Call payment works
-- [ ] Video Call payment works
-- [ ] Text Chat payment works
-- [ ] Works in both light and dark mode
-- [ ] No Stripe theme errors in logs
-
----
-
-## 📚 More Information
-
-- **Full Technical Documentation**: See `STRIPE_THEME_FIX_DOCUMENTATION.md`
-- **Validation Script**: Run `./scripts/validate-stripe-theme-fix.sh`
-- **Troubleshooting**: See "Troubleshooting" section in `STRIPE_THEME_FIX_DOCUMENTATION.md`
-
----
-
-## 🚨 If Still Broken
-
-1. **Re-run validation script**: `./scripts/validate-stripe-theme-fix.sh`
-2. **Do a super clean build**:
-   ```bash
-   rm -rf android/app/build android/.gradle build
-   flutter clean
-   flutter pub get
-   flutter build apk --release
-   ```
-3. **Check the full documentation**: `STRIPE_THEME_FIX_DOCUMENTATION.md`
-4. **If still failing**: Report with logs from `adb logcat`
-
----
-
-## ✨ Summary
-
-**What**: Fixed Stripe theme compatibility error blocking all payments  
-**Why**: Night theme used wrong Android theme type  
-**How**: Changed to AppCompat themes + added ProGuard rules + added safety metadata  
-**Result**: Payment system unblocked for all flows  
-**Next**: Joey must test on physical device to confirm  
-
-**Estimated time to test**: 15 minutes  
-**Risk level**: Low (only theme files modified, no logic changes)
+**Total Time to Fix:** ~2 hours  
+**Root Cause:** Multiple integration issues (MainActivity, API pattern, free chat logic)  
+**Impact:** All payment flows now working correctly

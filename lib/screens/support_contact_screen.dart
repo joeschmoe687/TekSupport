@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,13 +19,22 @@ class SupportContactScreen extends StatefulWidget {
 class _SupportContactScreenState extends State<SupportContactScreen> {
   late Map<String, double> _pricing = {};
   bool _isBusinessHours = false;
-  bool _isPricingLoaded = false;  // Add loading state flag
+  bool _isPricingLoaded = false; // Add loading state flag
+  StreamSubscription<DocumentSnapshot>?
+      _pricingSubscription; // Real-time pricing listener
 
   @override
   void initState() {
     super.initState();
     _isBusinessHours = _checkBusinessHours();
     _loadPricing();
+    _setupPricingListener(); // Set up real-time pricing updates
+  }
+
+  @override
+  void dispose() {
+    _pricingSubscription?.cancel(); // Clean up listener
+    super.dispose();
   }
 
   bool _checkBusinessHours() {
@@ -66,7 +76,7 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
             'twentyFourPhone': (doc['twentyFourPhone'] ?? 60).toDouble(),
             'twentyFourVideo': (doc['twentyFourVideo'] ?? 80).toDouble(),
           };
-          _isPricingLoaded = true;  // Mark pricing as loaded
+          _isPricingLoaded = true; // Mark pricing as loaded
         });
       } else {
         debugPrint('❌ Pricing document not found in Firestore');
@@ -90,6 +100,36 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
         );
       }
     }
+  }
+
+  /// Set up real-time listener for pricing changes in Firebase
+  void _setupPricingListener() {
+    _pricingSubscription = FirebaseFirestore.instance
+        .collection('settings')
+        .doc('pricing')
+        .snapshots()
+        .listen((doc) {
+      if (doc.exists && mounted) {
+        final Map<String, double> newPricing = {
+          'bizMessage': (doc['bizMessage'] ?? 0).toDouble(),
+          'bizPhone': (doc['bizPhone'] ?? 45).toDouble(),
+          'bizVideo': (doc['bizVideo'] ?? 60).toDouble(),
+          'twentyFourMessage': (doc['twentyFourMessage'] ?? 45).toDouble(),
+          'twentyFourPhone': (doc['twentyFourPhone'] ?? 60).toDouble(),
+          'twentyFourVideo': (doc['twentyFourVideo'] ?? 80).toDouble(),
+        };
+
+        // Only update if prices actually changed
+        if (_pricing.toString() != newPricing.toString()) {
+          setState(() {
+            _pricing = newPricing;
+          });
+          debugPrint('🔄 Pricing updated from Firebase: $_pricing');
+        }
+      }
+    }, onError: (error) {
+      debugPrint('❌ Pricing listener error: $error');
+    });
   }
 
   double _getPrice(String type) {
@@ -172,8 +212,10 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
 
   Future<void> _handleTextChatTap() async {
     try {
-      debugPrint('💳 Text Chat tapped - Amount: \$${_getPrice('Text')}');
-      
+      // Text chat is free - use 'Message' pricing which is $0 during business hours
+      final price = _getPrice('Message');
+      debugPrint('💳 Text Chat tapped - Amount: \$$price');
+
       // Verify user is authenticated
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
@@ -187,16 +229,31 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
         }
         return;
       }
-      
+
       debugPrint('✅ User authenticated: ${user.email}');
-      
-      // Open payment screen for text chat
+
+      // If text chat is free ($0), skip payment and go directly to chat
+      if (price == 0.0) {
+        debugPrint('✅ Text chat is free, opening chat directly');
+        if (!mounted) return;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(onToggleTheme: () {}),
+          ),
+        );
+        return;
+      }
+
+      // If there's a charge, open payment screen
+      debugPrint('💳 Text chat requires payment: \$$price');
       final result = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
           builder: (context) => PaymentScreen(
             supportType: 'text',
-            amountCents: (_getPrice('Text') * 100).toInt(),
+            amountCents: (price * 100).toInt(),
             description: 'Text Chat Support - Chat with HVAC techs',
           ),
         ),
@@ -461,10 +518,12 @@ class _SupportContactScreenState extends State<SupportContactScreen> {
                         icon: Icons.chat_bubble,
                         title: 'Text Chat',
                         price: messagePrice,
-                        onTap: !_isPricingLoaded ? null : () {
-                          // Wrap async logic in a synchronous function
-                          _handleTextChatTap();
-                        },
+                        onTap: !_isPricingLoaded
+                            ? null
+                            : () {
+                                // Wrap async logic in a synchronous function
+                                _handleTextChatTap();
+                              },
                       ),
                       const SizedBox(height: 12),
 

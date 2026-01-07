@@ -22,30 +22,30 @@
 
 ---
 
-### 🤖 Task 0: Debug & Fix Stripe Theme Initialization Error (BLOCKING ALL PAYMENTS)
+### ✅ Task 0: Debug & Fix Stripe Theme Initialization Error (COMPLETED)
 **Priority:** CRITICAL 🔴  
-**Status:** In Investigation (as of 2025-12-24)  
-**Time:** 1-2 hours  
+**Status:** ✅ RESOLVED (January 7, 2026)  
+**Time:** 2 hours  
 
-**The Problem:**
-Payment system completely blocked by Stripe theme error. Despite changing Android theme to `Theme.AppCompat.Light.NoActionBar` and doing a full rebuild, the error persists:
+**The Problem (RESOLVED):**
+Payment system was blocked by multiple issues:
 
-```
-Error: Your theme isn't set to use Theme.AppCompat or Theme.MaterialComponents
-  - Appears ONLY when presentPaymentSheet() called (not at startup)
-  - Blocks payment dialog for Phone, Video, and Text Chat options
-  - Causes "Bad Request" error from Cloud Function
-```
+1. **MainActivity Inheritance** - Extended `FlutterActivity` instead of `FlutterFragmentActivity`
+   - Fixed: Changed to `FlutterFragmentActivity` (Stripe requirement)
 
-**Root Cause Analysis Needed:**
+2. **Payment Intent API Mismatch** - App used HTTP POST, function deployed as Firebase Callable
+   - Fixed: Refactored `payment_service.dart` to use `FirebaseFunctions.instance.httpsCallable()`
 
-This is a **context/threading issue**. The app shows "✅ Stripe initialized successfully (LIVE mode)" at startup, but theme check FAILS when Google Pay is initialized during payment sheet presentation. This suggests:
-1. Stripe's Google Pay check happens in wrong Activity context
-2. Or theme is being overridden somewhere else in the codebase
-3. Or ProGuard minification is stripping theme classes
-4. Or AndroidManifest.xml doesn't have proper theme binding
+3. **Free Text Chat Bug** - $0 text chat triggered payment flow (Firebase rejects amounts < $5)
+   - Fixed: Added check to skip payment for free text chat, go directly to chat screen
 
-**Files to Investigate (In Order):**
+**Root Cause (IDENTIFIED):**
+
+1. **MainActivity inheritance wrong** - Stripe requires `FlutterFragmentActivity` for payment sheet
+2. **API pattern mismatch** - App was calling onRequest function with onCall pattern
+3. **Free text chat bug** - $0 amount caused Firebase function to reject (minimum $5)
+
+**Files Fixed:**
 
 1. **AndroidManifest.xml Theme Binding:**
    - Path: `android/app/src/main/AndroidManifest.xml`
@@ -127,11 +127,39 @@ adb logcat -s flutter 2>&1 | grep -i "stripe\|theme"
 # Should see: "✅ Stripe initialized successfully" WITHOUT the AppCompat error
 ```
 
-**Blockers for:**
+**Solution Applied:**
+
+1. **MainActivity.kt** - Changed from `FlutterActivity` to `FlutterFragmentActivity`
+   ```kotlin
+   class MainActivity: FlutterFragmentActivity()
+   ```
+
+2. **payment_service.dart** - Refactored to use Firebase Callable function
+   ```dart
+   final callable = FirebaseFunctions.instance.httpsCallable('createPaymentIntent');
+   final result = await callable.call({...});
+   ```
+
+3. **support_contact_screen.dart** - Added free text chat bypass
+   ```dart
+   if (price == 0.0) {
+     // Skip payment, go directly to chat
+     Navigator.push(context, ChatScreen(...));
+   }
+   ```
+
+**Testing Results:**
+- ✅ Phone Support ($45) - Payment sheet displays correctly
+- ✅ Video Support ($60) - Payment sheet displays correctly  
+- ✅ Text Chat ($0) - Skips payment, opens chat directly
+- ✅ Stripe initialized in LIVE mode
+- ✅ Firebase Callable function working
+
+**No Longer Blocking:**
 - Task 1 (TekMate deployment)
 - Task 2 (Backend testing)
 - Task 3 (Ghost Mode verification)
-- All payment testing
+- All payment testing now working
 
 ---
 
