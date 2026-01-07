@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "tekneck-support"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

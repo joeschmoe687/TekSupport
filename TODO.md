@@ -384,7 +384,7 @@ firebase projects:list | grep tekneck
 **Why needed:** TekMate AI must be running for app to work
 
 ```bash
-ssh jolo@192.168.1.117
+ssh jolo@192.168.0.179
 systemctl status tekmate.service
 systemctl status tekmate-proxy.service
 systemctl status tekmate-tunnel.service
