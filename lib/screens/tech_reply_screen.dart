@@ -38,12 +38,11 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
 
   void _setupStream() {
     // Don't use orderBy to avoid index requirements - sort in Dart instead
-    _messagesStream =
-        FirebaseFirestore.instance
-            .collection('supportRooms')
-            .doc(widget.messageId)
-            .collection('messages')
-            .snapshots();
+    _messagesStream = FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.messageId)
+        .collection('messages')
+        .snapshots();
   }
 
   Future<void> _claimMessage() async {
@@ -52,14 +51,14 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
 
     try {
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.messageId)
           .update({
-            'status': 'claimed',
-            'claimedBy': user.uid,
-            'hasLiveTech': true,
-            'updatedAt': FieldValue.serverTimestamp(),
-          });
+        'status': 'claimed',
+        'claimedBy': user.uid,
+        'hasLiveTech': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
     } catch (e) {
       debugPrint('Error claiming message: $e');
     }
@@ -84,40 +83,40 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
       final filename =
           '${DateTime.now().millisecondsSinceEpoch}_${pickedFile.name}';
       final storageRef = FirebaseStorage.instance.ref().child(
-        'chat_images/${widget.messageId}/$filename',
-      );
+            'chat_images/${widget.messageId}/$filename',
+          );
 
       await storageRef.putFile(file);
       final downloadUrl = await storageRef.getDownloadURL();
 
       // Send message with image
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.messageId)
           .collection('messages')
           .add({
-            'role': 'support',
-            'senderType': 'tech',
-            'from': 'tech',
-            'techId': user.uid,
-            'messageText': '📷 Image',
-            'text': '📷 Image',
-            'imageUrl': downloadUrl,
-            'createdAt': FieldValue.serverTimestamp(),
-            'timestamp': FieldValue.serverTimestamp(),
-          });
+        'role': 'support',
+        'senderType': 'tech',
+        'from': 'tech',
+        'techId': user.uid,
+        'messageText': '📷 Image',
+        'text': '📷 Image',
+        'imageUrl': downloadUrl,
+        'createdAt': FieldValue.serverTimestamp(),
+        'timestamp': FieldValue.serverTimestamp(),
+      });
 
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.messageId)
           .update({
-            'lastMessage': '📷 Image',
-            'status': 'claimed',
-            'claimedBy': user.uid,
-            'hasLiveTech': true,
-            'unreadByCustomer': FieldValue.increment(1),
-            'updatedAt': FieldValue.serverTimestamp(),
-          });
+        'lastMessage': '📷 Image',
+        'status': 'claimed',
+        'claimedBy': user.uid,
+        'hasLiveTech': true,
+        'unreadByCustomer': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
     } catch (e) {
       debugPrint('Error uploading image: $e');
       if (mounted) {
@@ -137,97 +136,93 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder:
-          (context) => SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    leading: Icon(
-                      Icons.camera_alt,
-                      color: AppColors.primaryCyan,
-                    ),
-                    title: const Text(
-                      'Take Photo',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _pickAndUploadImage(ImageSource.camera);
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.photo_library,
-                      color: AppColors.primaryCyan,
-                    ),
-                    title: const Text(
-                      'Choose from Gallery',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _pickAndUploadImage(ImageSource.gallery);
-                    },
-                  ),
-                ],
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: AppColors.primaryCyan,
+                ),
+                title: const Text(
+                  'Take Photo',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickAndUploadImage(ImageSource.camera);
+                },
               ),
-            ),
+              ListTile(
+                leading: Icon(
+                  Icons.photo_library,
+                  color: AppColors.primaryCyan,
+                ),
+                title: const Text(
+                  'Choose from Gallery',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickAndUploadImage(ImageSource.gallery);
+                },
+              ),
+            ],
           ),
+        ),
+      ),
     );
   }
 
   void _showFullImage(BuildContext context, String imageUrl) {
     showDialog(
       context: context,
-      builder:
-          (context) => Dialog(
-            backgroundColor: Colors.transparent,
-            insetPadding: EdgeInsets.zero,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(color: Colors.black87),
-                ),
-                InteractiveViewer(
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    fit: BoxFit.contain,
-                    placeholder:
-                        (context, url) => Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.primaryCyan,
-                          ),
-                        ),
-                    errorWidget:
-                        (context, url, error) => const Center(
-                          child: Icon(
-                            Icons.broken_image,
-                            color: Colors.white54,
-                            size: 48,
-                          ),
-                        ),
-                  ),
-                ),
-                Positioned(
-                  top: 40,
-                  right: 16,
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-              ],
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(color: Colors.black87),
             ),
-          ),
+            InteractiveViewer(
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.contain,
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryCyan,
+                  ),
+                ),
+                errorWidget: (context, url, error) => const Center(
+                  child: Icon(
+                    Icons.broken_image,
+                    color: Colors.white54,
+                    size: 48,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 40,
+              right: 16,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -240,32 +235,32 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
 
     try {
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.messageId)
           .collection('messages')
           .add({
-            'role': 'support',
-            'senderType': 'tech',
-            'from': 'tech',
-            'techId': user.uid,
-            'messageText': text,
-            'text': text,
-            'createdAt': FieldValue.serverTimestamp(),
-            'timestamp': FieldValue.serverTimestamp(),
-          });
+        'role': 'support',
+        'senderType': 'tech',
+        'from': 'tech',
+        'techId': user.uid,
+        'messageText': text,
+        'text': text,
+        'createdAt': FieldValue.serverTimestamp(),
+        'timestamp': FieldValue.serverTimestamp(),
+      });
 
       // Update room last message and status
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.messageId)
           .update({
-            'lastMessage': text,
-            'status': 'claimed',
-            'claimedBy': user.uid,
-            'hasLiveTech': true,
-            'unreadByCustomer': FieldValue.increment(1),
-            'updatedAt': FieldValue.serverTimestamp(),
-          });
+        'lastMessage': text,
+        'status': 'claimed',
+        'claimedBy': user.uid,
+        'hasLiveTech': true,
+        'unreadByCustomer': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
 
       _replyController.clear();
     } catch (e) {
@@ -282,37 +277,36 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            backgroundColor: AppColors.surfaceDark,
-            title: const Text(
-              'Mark Session Complete?',
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surfaceDark,
+        title: const Text(
+          'Mark Session Complete?',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'The customer will need to pay for a new session to start another chat.',
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.success,
+            ),
+            child: const Text(
+              'Complete',
               style: TextStyle(color: Colors.white),
             ),
-            content: const Text(
-              'The customer will need to pay for a new session to start another chat.',
-              style: TextStyle(color: Colors.white70),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(color: AppColors.textSecondary),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, true),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.success,
-                ),
-                child: const Text(
-                  'Complete',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
           ),
+        ],
+      ),
     );
 
     if (confirmed != true) return;
@@ -326,11 +320,11 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
           .collection('supportRooms')
           .doc(widget.messageId)
           .update({
-            'status': 'completed',
-            'completedAt': FieldValue.serverTimestamp(),
-            'completedBy': user.email ?? 'tech',
-            'completedByUid': user.uid,
-          });
+        'status': 'completed',
+        'completedAt': FieldValue.serverTimestamp(),
+        'completedBy': user.email ?? 'tech',
+        'completedByUid': user.uid,
+      });
 
       // Add system message
       await FirebaseFirestore.instance
@@ -338,12 +332,12 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
           .doc(widget.messageId)
           .collection('messages')
           .add({
-            'text':
-                '✅ This support session has been marked as complete. Thank you for using TekNeck Support!',
-            'role': 'system',
-            'isSystemMessage': true,
-            'timestamp': FieldValue.serverTimestamp(),
-          });
+        'text':
+            '✅ This support session has been marked as complete. Thank you for using TekNeck Support!',
+        'role': 'system',
+        'isSystemMessage': true,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -412,20 +406,18 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
                 }
 
                 // Sort messages manually to handle both old (timestamp) and new (createdAt) fields
-                var messages =
-                    (snapshot.data?.docs ?? []).toList()..sort((a, b) {
-                      final aData = a.data() as Map<String, dynamic>;
-                      final bData = b.data() as Map<String, dynamic>;
-                      final aTime =
-                          aData['createdAt'] ??
-                          aData['timestamp'] ??
-                          Timestamp.now();
-                      final bTime =
-                          bData['createdAt'] ??
-                          bData['timestamp'] ??
-                          Timestamp.now();
-                      return (aTime as Timestamp).compareTo(bTime as Timestamp);
-                    });
+                var messages = (snapshot.data?.docs ?? []).toList()
+                  ..sort((a, b) {
+                    final aData = a.data() as Map<String, dynamic>;
+                    final bData = b.data() as Map<String, dynamic>;
+                    final aTime = aData['createdAt'] ??
+                        aData['timestamp'] ??
+                        Timestamp.now();
+                    final bTime = bData['createdAt'] ??
+                        bData['timestamp'] ??
+                        Timestamp.now();
+                    return (aTime as Timestamp).compareTo(bTime as Timestamp);
+                  });
 
                 return ListView.builder(
                   itemCount: messages.length,
@@ -450,10 +442,9 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
                         ),
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color:
-                              isAI
-                                  ? AppColors.primaryPurple.withOpacity(0.3)
-                                  : isTech
+                          color: isAI
+                              ? AppColors.primaryPurple.withOpacity(0.3)
+                              : isTech
                                   ? AppColors.primaryCyan.withOpacity(0.2)
                                   : AppColors.surfaceDark,
                           borderRadius: BorderRadius.circular(8),
@@ -474,32 +465,31 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: GestureDetector(
-                                  onTap:
-                                      () => _showFullImage(context, imageUrl),
+                                  onTap: () =>
+                                      _showFullImage(context, imageUrl),
                                   child: CachedNetworkImage(
                                     imageUrl: imageUrl,
-                                    placeholder:
-                                        (context, url) => Container(
-                                          height: 150,
-                                          color: AppColors.surfaceLight,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              color: AppColors.primaryCyan,
-                                              strokeWidth: 2,
-                                            ),
-                                          ),
+                                    placeholder: (context, url) => Container(
+                                      height: 150,
+                                      color: AppColors.surfaceLight,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.primaryCyan,
+                                          strokeWidth: 2,
                                         ),
-                                    errorWidget:
-                                        (context, url, error) => Container(
-                                          height: 150,
-                                          color: AppColors.surfaceLight,
-                                          child: const Center(
-                                            child: Icon(
-                                              Icons.broken_image,
-                                              color: Colors.white54,
-                                            ),
-                                          ),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      height: 150,
+                                      color: AppColors.surfaceLight,
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.broken_image,
+                                          color: Colors.white54,
                                         ),
+                                      ),
+                                    ),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -531,22 +521,22 @@ class _TechReplyScreenState extends State<TechReplyScreen> {
                   // Attachment button
                   _isUploading
                       ? Container(
-                        width: 40,
-                        height: 40,
-                        padding: const EdgeInsets.all(8),
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.primaryCyan,
-                        ),
-                      )
+                          width: 40,
+                          height: 40,
+                          padding: const EdgeInsets.all(8),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.primaryCyan,
+                          ),
+                        )
                       : IconButton(
-                        icon: Icon(
-                          Icons.attach_file,
-                          color: AppColors.primaryCyan,
+                          icon: Icon(
+                            Icons.attach_file,
+                            color: AppColors.primaryCyan,
+                          ),
+                          onPressed: () => _showImageSourceDialog(context),
+                          tooltip: 'Attach image',
                         ),
-                        onPressed: () => _showImageSourceDialog(context),
-                        tooltip: 'Attach image',
-                      ),
                   Expanded(
                     child: TextField(
                       controller: _replyController,

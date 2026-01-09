@@ -64,7 +64,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     try {
       final roomDoc =
           await FirebaseFirestore.instance
-              .collection('supportRooms')
+              .collection('chats')
               .doc(widget.roomId)
               .get();
 
@@ -132,7 +132,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     try {
       final roomDoc =
           await FirebaseFirestore.instance
-              .collection('supportRooms')
+              .collection('chats')
               .doc(widget.roomId)
               .get();
 
@@ -149,7 +149,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
               status == 'open' ||
               status.isEmpty)) {
         await FirebaseFirestore.instance
-            .collection('supportRooms')
+            .collection('chats')
             .doc(widget.roomId)
             .update({
               'status': 'claimed',
@@ -174,7 +174,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     try {
       // Add message to subcollection
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.roomId)
           .collection('messages')
           .add({
@@ -192,7 +192,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
 
       // Update room
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.roomId)
           .update({
             'lastMessage': text,
@@ -251,7 +251,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
 
       // Add image message to Firestore
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.roomId)
           .collection('messages')
           .add({
@@ -268,7 +268,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
 
       // Update room
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.roomId)
           .update({
             'lastMessage': '📷 Image',
@@ -437,7 +437,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
   Future<List<Map<String, dynamic>>> _getRecentMessages() async {
     try {
       final messagesSnapshot = await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.roomId)
           .collection('messages')
           .orderBy('createdAt', descending: true)
@@ -627,7 +627,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
   Future<void> _markComplete() async {
     try {
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.roomId)
           .update({
             'status': 'completed',
@@ -678,7 +678,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
     if (confirm == true) {
       try {
         await FirebaseFirestore.instance
-            .collection('supportRooms')
+            .collection('chats')
             .doc(widget.roomId)
             .delete();
 
@@ -999,7 +999,7 @@ class _AdminChatDetailScreenState extends State<AdminChatDetailScreen> {
             child: StreamBuilder<QuerySnapshot>(
               stream:
                   FirebaseFirestore.instance
-                      .collection('supportRooms')
+                      .collection('chats')
                       .doc(widget.roomId)
                       .collection('messages')
                       .snapshots(),

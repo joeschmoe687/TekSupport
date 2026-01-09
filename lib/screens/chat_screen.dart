@@ -215,7 +215,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   : StreamBuilder<QuerySnapshot>(
                       key: ValueKey('chat_stream_${user.uid}'),
                       stream: FirebaseFirestore.instance
-                          .collection('supportRooms')
+                          .collection('chats')
                           .where('customerUID', isEqualTo: user.uid)
                           .snapshots(),
                       builder: (context, snapshot) {

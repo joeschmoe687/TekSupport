@@ -45,7 +45,7 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     
-    // Support rooms (chat sessions)
+    // Support rooms (chat sessions) - LEGACY, use 'chats' collection instead
     match /supportRooms/{roomId} {
       // Users can read rooms they created
       // Admins and techs can read all rooms
@@ -84,6 +84,54 @@ service cloud.firestore {
         allow update: if isAuthenticated() && 
           (get(/databases/$(database)/documents/supportRooms/$(roomId)).data.userId == request.auth.uid ||
            get(/databases/$(database)/documents/supportRooms/$(roomId)).data.customerUID == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only admins can delete messages
+        allow delete: if isAdmin();
+      }
+    }
+    
+    // Unified chats collection (replaces supportRooms, chatRooms)
+    match /chats/{chatId} {
+      // Users can read chats they created
+      // Admins and techs can read all chats
+      allow read: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || 
+         resource.data.customerUID == request.auth.uid ||
+         isTechOrAdmin());
+      
+      // Users can create their own chats
+      allow create: if isAuthenticated() && 
+        (request.resource.data.userId == request.auth.uid ||
+         request.resource.data.customerUID == request.auth.uid);
+      
+      // Users can update their own chats, admins/techs can update any
+      allow update: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || 
+         resource.data.customerUID == request.auth.uid ||
+         isTechOrAdmin());
+      
+      // Only admins can delete chats
+      allow delete: if isAdmin();
+      
+      // Messages subcollection
+      match /messages/{messageId} {
+        // Only chat participants and techs/admins can read messages
+        allow read: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/chats/$(chatId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/chats/$(chatId)).data.customerUID == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only chat participants and techs/admins can create messages
+        allow create: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/chats/$(chatId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/chats/$(chatId)).data.customerUID == request.auth.uid ||
+           isTechOrAdmin());
+        
+        // Only chat participants and techs/admins can update messages
+        allow update: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/chats/$(chatId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/chats/$(chatId)).data.customerUID == request.auth.uid ||
            isTechOrAdmin());
         
         // Only admins can delete messages

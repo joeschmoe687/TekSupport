@@ -163,6 +163,144 @@ adb logcat -s flutter 2>&1 | grep -i "stripe\|theme"
 
 ---
 
+### 👤 Task 0.6: Collection Migration (supportRooms → chats)
+**Priority:** HIGH  
+**Status:** Code Complete ✅ | Migration Pending 👤  
+**Time:** 1 hour  
+
+**Completed:**
+- ✅ Updated all app code to use 'chats' collection
+- ✅ Updated Firestore rules for 'chats' collection
+- ✅ Maintained backward compatibility for 'supportRooms'
+
+**Joey Must Do:**
+This requires Firestore console access to migrate existing chat data.
+
+**Migration Script Needed:**
+```javascript
+// Run in Firebase console or Cloud Function
+const chatsRef = db.collection('chats');
+const supportRoomsRef = db.collection('supportRooms');
+
+const snapshot = await supportRoomsRef.get();
+for (const doc of snapshot.docs) {
+  const data = doc.data();
+  // Copy to new collection with source tracking
+  await chatsRef.doc(doc.id).set({
+    ...data,
+    source: 'app',
+    sourceCollection: 'supportRooms',
+    migratedAt: admin.firestore.FieldValue.serverTimestamp()
+  });
+  
+  // Copy messages subcollection
+  const messages = await doc.ref.collection('messages').get();
+  for (const msg of messages.docs) {
+    await chatsRef.doc(doc.id).collection('messages').doc(msg.id).set(msg.data());
+  }
+}
+```
+
+**After Migration:**
+- Monitor for 1 week with both collections active
+- Archive supportRooms collection (keep for 30 days)
+- Remove legacy rules from firestore.rules
+
+---
+
+### 👤 Task 0.7: Assign Tech Roles for Remote Technicians
+**Priority:** CRITICAL  
+**Time:** 5 min per tech  
+
+**Script Created:** ✅ `scripts/assign_tech_role.js`
+
+**Usage:**
+```bash
+cd /Users/joeykeilbarth/Desktop/To_New_Beginnings/TekNeck/Apps/Support/hvac_support_app
+node scripts/assign_tech_role.js tech@example.com
+```
+
+**Required for Launch:**
+- [ ] Assign at least 2-3 techs before launch
+- [ ] Test tech login on airpronwa.com
+- [ ] Verify tech sees Tech Inbox in website dashboard
+- [ ] Test chat claiming and responding
+
+**To List Current Techs:**
+```bash
+node scripts/assign_tech_role.js --list
+```
+
+---
+
+### 🤝 Task 0.8: Twilio Integration for Voice Calls
+**Priority:** HIGH  
+**Time:** 3-5 hours  
+**Dependencies:** Website Twilio deployment (see airpro-website/TODO.md Task 4)
+
+**Background:**  
+App currently doesn't have voice call UI. Website handles calls via Twilio proxy.
+For app launch, techs can use website dashboard for voice calls.
+
+**Future Enhancement:**  
+Add Twilio Voice SDK to Flutter app for in-app calling:
+```yaml
+dependencies:
+  twilio_voice: ^0.2.0
+```
+
+**For Now:**
+- [ ] Complete website Twilio integration first (see airpro-website/TODO.md)
+- [ ] Techs use website dashboard for voice calls
+- [ ] App shows "Call tech" button → opens website in browser
+- [ ] Or: Display Twilio proxy number for customers to call
+
+**Steps (When Ready):**
+
+1. **Add Twilio Voice to pubspec.yaml:**
+   ```yaml
+   dependencies:
+     twilio_voice: ^0.2.0
+   ```
+
+2. **Create VoiceCallScreen:**
+   - UI for call controls (mute, speaker, hang up)
+   - Call status display (connecting, in call, ended)
+   - Call timer
+   - Call recording indicator (with consent)
+
+3. **Integrate with Firebase Functions:**
+   - Use same Cloud Functions as website
+   - Request access token from `generateTwilioAccessToken` function
+   - Connect to Twilio Client
+
+4. **Update AndroidManifest.xml:**
+   ```xml
+   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+   <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+   ```
+
+5. **iOS Info.plist:**
+   ```xml
+   <key>NSMicrophoneUsageDescription</key>
+   <string>TekTool needs microphone access for voice calls with techs</string>
+   ```
+
+**Cost Estimate (Same as Website):**
+| Feature | Monthly Cost |
+|---------|-------------|
+| Calls via Twilio | $0.0085/min |
+| SMS via Twilio | $0.0079/message |
+| **Example:** 50 calls (5 min) | ~$2/month |
+
+**Success Criteria:**
+- [ ] Twilio functions deployed (website handles this)
+- [ ] App can display Twilio proxy number
+- [ ] OR: App opens website for voice calls
+- [ ] Future: In-app calling with Twilio Voice SDK
+
+---
+
 ### 👤 Task 0.5: Migrate Firebase Functions Config (functions.config() → .env)
 **Priority:** MEDIUM (Before March 2026 deadline)  
 **Time:** 30 min (research/planning phase)  

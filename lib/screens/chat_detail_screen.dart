@@ -42,7 +42,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       // Regular support chat flow
       // Add message to room
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.roomId)
           .collection('messages')
           .add({
@@ -58,7 +58,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
       // Update room
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.roomId)
           .update({
         'lastMessage': text,
@@ -81,7 +81,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     try {
       // Add user message to Firestore
       await FirebaseFirestore.instance
-          .collection('supportRooms')
+          .collection('chats')
           .doc(widget.roomId)
           .collection('messages')
           .add({
@@ -106,7 +106,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       if (mounted) {
         // Add TekMate response to Firestore
         await FirebaseFirestore.instance
-            .collection('supportRooms')
+            .collection('chats')
             .doc(widget.roomId)
             .collection('messages')
             .add({

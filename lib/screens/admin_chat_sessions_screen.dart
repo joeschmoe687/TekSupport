@@ -29,13 +29,13 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
     _roomsSub?.cancel();
     _allDocs.clear();
     _roomsSub = FirebaseFirestore.instance
-        .collection('supportRooms')
+        .collection('chats')
         .limit(200)
         .snapshots()
         .listen((snap) {
-          debugPrint('supportRooms docs: ${snap.docs.length}');
-          _mergeDocs(snap.docs);
-        });
+      debugPrint('chats docs: ${snap.docs.length}');
+      _mergeDocs(snap.docs);
+    });
   }
 
   void _mergeDocs(List<QueryDocumentSnapshot> docs) {
@@ -162,45 +162,41 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
                     );
                   }
 
-                  final docs =
-                      _allDocs.where((d) {
-                        final m = d.data() as Map<String, dynamic>;
-                        final s = (m['status'] ?? '').toString().toLowerCase();
-                        final hasLiveTech = (m['hasLiveTech'] ?? false) == true;
-                        final inQueue =
-                            s == 'unclaimed' ||
-                            s == 'new' ||
-                            s == 'open' ||
-                            s == 'pending' ||
-                            s.isEmpty;
-                        if (_filter == 'all') {
-                          return true;
-                        } else if (_filter == 'queue') {
-                          return inQueue;
-                        } else if (_filter == 'claimed') {
-                          return s == 'claimed' ||
-                              s == 'active' ||
-                              s == 'assigned' ||
-                              s == 'inprogress' ||
-                              s == 'engaged' ||
-                              hasLiveTech;
-                        }
-                        return true;
-                      }).toList();
+                  final docs = _allDocs.where((d) {
+                    final m = d.data() as Map<String, dynamic>;
+                    final s = (m['status'] ?? '').toString().toLowerCase();
+                    final hasLiveTech = (m['hasLiveTech'] ?? false) == true;
+                    final inQueue = s == 'unclaimed' ||
+                        s == 'new' ||
+                        s == 'open' ||
+                        s == 'pending' ||
+                        s.isEmpty;
+                    if (_filter == 'all') {
+                      return true;
+                    } else if (_filter == 'queue') {
+                      return inQueue;
+                    } else if (_filter == 'claimed') {
+                      return s == 'claimed' ||
+                          s == 'active' ||
+                          s == 'assigned' ||
+                          s == 'inprogress' ||
+                          s == 'engaged' ||
+                          hasLiveTech;
+                    }
+                    return true;
+                  }).toList();
 
                   docs.sort((a, b) {
                     final ma = a.data() as Map<String, dynamic>;
                     final mb = b.data() as Map<String, dynamic>;
                     final ta = ma['updatedAt'] ?? ma['createdAt'];
                     final tb = mb['updatedAt'] ?? mb['createdAt'];
-                    final da =
-                        ta is Timestamp
-                            ? ta.toDate()
-                            : DateTime.fromMillisecondsSinceEpoch(0);
-                    final db =
-                        tb is Timestamp
-                            ? tb.toDate()
-                            : DateTime.fromMillisecondsSinceEpoch(0);
+                    final da = ta is Timestamp
+                        ? ta.toDate()
+                        : DateTime.fromMillisecondsSinceEpoch(0);
+                    final db = tb is Timestamp
+                        ? tb.toDate()
+                        : DateTime.fromMillisecondsSinceEpoch(0);
                     return db.compareTo(da);
                   });
 
@@ -258,8 +254,7 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
     BuildContext context,
     Color primaryAccent,
   ) {
-    final userName =
-        data['customerName'] ??
+    final userName = data['customerName'] ??
         data['customerEmail'] ??
         data['userEmail'] ??
         (data['userData']?['name']) ??
@@ -320,11 +315,10 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (_) => AdminChatDetailScreen(
-                      roomId: roomId,
-                      onToggleTheme: widget.onToggleTheme,
-                    ),
+                builder: (_) => AdminChatDetailScreen(
+                  roomId: roomId,
+                  onToggleTheme: widget.onToggleTheme,
+                ),
               ),
             );
           },
@@ -463,11 +457,10 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder:
-                                  (_) => AdminChatDetailScreen(
-                                    roomId: roomId,
-                                    onToggleTheme: widget.onToggleTheme,
-                                  ),
+                              builder: (_) => AdminChatDetailScreen(
+                                roomId: roomId,
+                                onToggleTheme: widget.onToggleTheme,
+                              ),
                             ),
                           );
                         },
@@ -542,15 +535,12 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
 
   Future<void> _markComplete(String roomId) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('supportRooms')
-          .doc(roomId)
-          .update({
-            'status': 'completed',
-            'hasLiveTech': false,
-            'completedAt': FieldValue.serverTimestamp(),
-            'updatedAt': FieldValue.serverTimestamp(),
-          });
+      await FirebaseFirestore.instance.collection('chats').doc(roomId).update({
+        'status': 'completed',
+        'hasLiveTech': false,
+        'completedAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
     } catch (e) {
       debugPrint('Error marking complete: $e');
     }
@@ -558,10 +548,7 @@ class _AdminChatSessionsScreenState extends State<AdminChatSessionsScreen> {
 
   Future<void> _deleteChat(String roomId) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('supportRooms')
-          .doc(roomId)
-          .delete();
+      await FirebaseFirestore.instance.collection('chats').doc(roomId).delete();
     } catch (e) {
       debugPrint('Error deleting: $e');
     }
