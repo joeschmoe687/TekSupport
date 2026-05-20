@@ -28,8 +28,9 @@ class _TechInboxScreenState extends State<TechInboxScreen> {
 
     _messagesStream =
         FirebaseFirestore.instance
-            .collection('incomingSMS')
-            .where('status', whereIn: ['new', 'assigned'])
+            .collection('chats')
+            .where('status', whereIn: ['open', 'assigned'])
+            .where('hasLiveTech', isEqualTo: false)
             .orderBy('createdAt', descending: true)
             .snapshots();
   }
@@ -77,46 +78,57 @@ class _TechInboxScreenState extends State<TechInboxScreen> {
             itemBuilder: (context, index) {
               final msg = messages[index];
               final data = msg.data() as Map<String, dynamic>;
-              final customerPhone = data['customerPhone'] ?? 'Unknown';
-              final messageText = data['messageText'] ?? '';
-              final status = data['status'] ?? 'new';
+              final customerName = data['customerName'] ?? 'Unknown';
+              final supportType = data['supportType'] ?? 'text';
+              final status = data['status'] ?? 'open';
               final timestamp = data['createdAt'] as Timestamp?;
+              final claimedBy = data['claimedBy'];
 
               return ListTile(
-                title: Text('From: $customerPhone'),
+                title: Text(customerName),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      messageText.length > 50
-                          ? '${messageText.substring(0, 50)}...'
-                          : messageText,
+                      'Support Type: ${supportType.toUpperCase()}',
+                      style: const TextStyle(fontSize: 12),
                     ),
                     Text(
-                      'Status: $status',
-                      style: TextStyle(fontSize: 12),
+                      'Status: ${claimedBy != null ? "Claimed by tech" : "Unclaimed"}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: claimedBy != null ? Colors.orange : Colors.green,
+                      ),
                     ),
                     if (timestamp != null)
                       Text(
                         timestamp.toDate().toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 10,
                           color: Colors.grey,
                         ),
                       ),
                   ],
                 ),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: claimedBy == null
+                    ? ElevatedButton(
+                        onPressed: () => _claimSession(msg.id),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryCyan,
+                          foregroundColor: Colors.black,
+                        ),
+                        child: const Text('Claim'),
+                      )
+                    : const Icon(Icons.check_circle, color: Colors.green),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder:
-                          (_) => TechReplyScreen(
-                            messageId: msg.id,
-                            customerPhone: customerPhone,
-                            onToggleTheme: widget.onToggleTheme,
-                          ),
+                      builder: (_) => TechReplyScreen(
+                        messageId: msg.id,
+                        customerPhone: customerName,
+                        onToggleTheme: widget.onToggleTheme,
+                      ),
                     ),
                   );
                 },
@@ -126,5 +138,32 @@ class _TechInboxScreenState extends State<TechInboxScreen> {
         },
       ),
     );
+  }
+
+  // Helper: Claim a support session by setting claimedBy and hasLiveTech
+  Future<void> _claimSession(String chatId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      await FirebaseFirestore.instance.collection('chats').doc(chatId).update({
+        'claimedBy': user.uid,
+        'hasLiveTech': true,
+        'status': 'assigned',
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Session claimed successfully')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error claiming session: $e')),
+        );
+      }
+    }
   }
 }

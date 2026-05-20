@@ -315,7 +315,7 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
       console.log('✅ Stripe initialized with key starting with:', stripeKey.substring(0, 10) + '...');
     }
 
-    const { amount, currency, description, userId, email } = req.body;
+    const { amount, currency, description, userId, email, supportType } = req.body;
 
     // Validate required parameters
     if (!amount || !currency || !userId) {
@@ -332,7 +332,7 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
       return;
     }
 
-    console.log(`Creating payment intent for user ${userId}, amount: ${amount} ${currency}`);
+    console.log(`Creating payment intent for user ${userId}, amount: ${amount} ${currency}, supportType: ${supportType}`);
 
     // Create payment intent with Stripe
     const paymentIntent = await stripe.paymentIntents.create({
@@ -342,6 +342,7 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
       metadata: {
         userId: userId,
         email: email || '',
+        supportType: supportType || 'text',
         platform: 'flutter_app',
         timestamp: new Date().toISOString(),
       },

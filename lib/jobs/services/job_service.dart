@@ -134,7 +134,7 @@ class JobService {
         ),
       ]);
     } else {
-      // Service call - simpler flow, goes to tools
+      // Service call - simpler support flow
       steps.add(JobStep(
         id: '',
         jobId: jobId,
@@ -142,7 +142,7 @@ class JobService {
         status: StepStatus.pending,
         orderIndex: orderIndex++,
         title: 'Diagnostics',
-        description: 'Use TekTool for diagnostics',
+        description: 'Document your findings and chat with our support team',
         createdAt: DateTime.now(),
       ));
     }

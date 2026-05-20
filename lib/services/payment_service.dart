@@ -59,6 +59,7 @@ class PaymentService {
     required int amountCents,
     required String currency,
     required String description,
+    required String supportType,
   }) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -75,6 +76,7 @@ class PaymentService {
         'amount': amountCents,
         'currency': currency,
         'description': description,
+        'supportType': supportType,
         'paymentType': 'session',
         'plan': 'support',
       });
@@ -122,6 +124,7 @@ class PaymentService {
         amountCents: amountCents,
         currency: 'usd',
         description: description,
+        supportType: supportType,
       );
 
       if (clientSecret == null) {
@@ -219,6 +222,7 @@ class PaymentService {
         amountCents: amountCents,
         currency: 'usd',
         description: description,
+        supportType: supportType,
       );
 
       if (clientSecret == null) {
