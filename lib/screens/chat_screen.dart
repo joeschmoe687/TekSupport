@@ -120,6 +120,7 @@ class _ChatScreenState extends State<ChatScreen> {
     // Debug: Print admin status every time widget rebuilds
     debugPrint('ChatScreen.build() - _isAdmin: $_isAdmin, user: ${user?.uid}');
 
+    // Main chat screen scaffold
     return GradientScaffold(
       body: SafeArea(
         child: Column(
@@ -204,6 +205,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
             ),
+            // Main chat list area
             Expanded(
               child: user == null
                   ? const Center(
@@ -219,16 +221,52 @@ class _ChatScreenState extends State<ChatScreen> {
                           .where('customerUID', isEqualTo: user.uid)
                           .snapshots(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                        // Helper: print debug info for snapshot
+                        debugPrint('ChatScreen StreamBuilder - connectionState: \\${snapshot.connectionState}, hasData: \\${snapshot.hasData}, hasError: \\${snapshot.hasError}');
+                        if (snapshot.hasError) {
+                          // Show error message if Firestore/network fails
+                          debugPrint('ChatScreen StreamBuilder ERROR: \\${snapshot.error}');
                           return Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.primaryCyan,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.error, color: Colors.red, size: 40),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'Failed to load chats. Please check your connection or try again.',
+                                  style: TextStyle(color: Colors.red[200]),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  snapshot.error?.toString() ?? '',
+                                  style: const TextStyle(fontSize: 12, color: Colors.white54),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                           );
                         }
-
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          // Show loading spinner while waiting for Firestore
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  color: AppColors.primaryCyan,
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  'Loading chats...',
+                                  style: TextStyle(color: Colors.white54),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                          // No chats found for this user
                           return Center(
                             child: Text(
                               'No support chats yet. Create one to get started!',
@@ -238,7 +276,6 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           );
                         }
-
                         // Sort manually to avoid needing Firestore index
                         final rooms = snapshot.data!.docs.toList()
                           ..sort((a, b) {
@@ -253,7 +290,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             if (bTime == null) return -1;
                             return bTime.compareTo(aTime); // Descending
                           });
-
+                        // List of chat sessions
                         return ListView.builder(
                           padding: const EdgeInsets.all(8),
                           itemCount: rooms.length,
@@ -267,12 +304,12 @@ class _ChatScreenState extends State<ChatScreen> {
                             final timeAgo = updatedAt != null
                                 ? _formatTimeAgo(updatedAt.toDate())
                                 : 'just now';
-
+                            // Each chat session card
                             return Card(
                               margin: const EdgeInsets.symmetric(vertical: 4),
                               child: ListTile(
                                 title: Text(
-                                  'Session ${index + 1}',
+                                  'Session \\${index + 1}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
