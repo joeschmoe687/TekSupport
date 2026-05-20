@@ -268,21 +268,46 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
       // Try environment variable first (Gen 2)
       let stripeKey = STRIPE_SECRET_KEY;
       
-      // If env var not set, try Firestore or use test key for testing
+      // If env var not set, try Firebase SQL or Firestore or use test key for testing
       if (!stripeKey || stripeKey === 'sk_dummy_for_deployment') {
         try {
-          const settings = await admin.firestore().collection('settings').doc('stripe').get();
-          const stripeConfig = settings.data();
-          stripeKey = stripeConfig?.secretKey;
-        } catch (firestoreError) {
-          console.warn('⚠️  Could not fetch from Firestore, using test key:', firestoreError.message);
-          // Fallback to test key for development
-          stripeKey = 'sk_dummy_for_deployment';
+          // First, try Firebase SQL (recommended for secrets)
+          const sqlClient = require('pg').Client;
+          // Cloud SQL connection string from Firebase config
+          const connectionString = process.env.CLOUD_SQL_CONNECTION_STRING || 
+            'postgresql://stripe_user@localhost/teksupport';
+          
+          const client = new sqlClient(connectionString);
+          await client.connect();
+          const result = await client.query(
+            'SELECT secret_key FROM stripe_config WHERE environment = $1 LIMIT 1',
+            [process.env.NODE_ENV || 'test']
+          );
+          await client.end();
+          
+          if (result.rows.length > 0) {
+            stripeKey = result.rows[0].secret_key;
+            console.log('✅ Loaded Stripe key from Cloud SQL');
+          }
+        } catch (sqlError) {
+          console.warn('⚠️  Could not fetch from Cloud SQL, trying Firestore:', sqlError.message);
+          try {
+            const settings = await admin.firestore().collection('settings').doc('stripe').get();
+            const stripeConfig = settings.data();
+            stripeKey = stripeConfig?.secretKey;
+            if (stripeKey) {
+              console.log('✅ Loaded Stripe key from Firestore');
+            }
+          } catch (firestoreError) {
+            console.warn('⚠️  Could not fetch from Firestore, using test key:', firestoreError.message);
+            // Fallback to test key for development
+            stripeKey = 'sk_dummy_for_deployment';
+          }
         }
         
-        if (!stripeKey) {
-          console.error('❌ Stripe secret key not found anywhere');
-          return res.status(500).send({ error: 'Payment service not configured. Missing secretKey in Firestore settings/stripe.' });
+        if (!stripeKey || stripeKey === 'sk_dummy_for_deployment') {
+          console.error('❌ Stripe secret key not found in Cloud SQL or Firestore');
+          return res.status(500).send({ error: 'Payment service not configured. Missing secretKey in Cloud SQL or Firestore settings/stripe.' });
         }
       }
       

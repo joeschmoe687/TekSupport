@@ -75,6 +75,18 @@ logs/
 
 # Environment files
 .env
+.env.local
+.env.*.local
+.env.*.production
+functions/.env
+functions/.env.local
+functions/.env.*.local
+
+# Secrets and credentials
+**/secrets.json
+**/*.key
+**/*.pem
+**/private-key.json
 
 # BLE Sniffing bugreports (large)
 docs/BLE-Sniffing/*.zip
