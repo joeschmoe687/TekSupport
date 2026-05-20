@@ -35,7 +35,7 @@
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
     
     <application
-        android:label="TekTool"
+        android:label="TekSupport"
         android:icon="@mipmap/ic_launcher">
         
         <!-- Documentation hint for light theme on Stripe-related screens.

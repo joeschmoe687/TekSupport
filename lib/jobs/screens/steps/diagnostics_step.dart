@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../widgets/gradient_scaffold.dart';
-import '../../../tools/screens/tools_hub_screen.dart';
 import '../../models/job.dart';
 import '../../models/job_step.dart';
 
@@ -25,15 +24,6 @@ class DiagnosticsStep extends StatefulWidget {
 }
 
 class _DiagnosticsStepState extends State<DiagnosticsStep> {
-  void _openTools() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ToolsHubScreen(onToggleTheme: widget.onToggleTheme),
-      ),
-    );
-  }
-
   void _continue() {
     widget.onComplete({});
   }
@@ -65,7 +55,7 @@ class _DiagnosticsStepState extends State<DiagnosticsStep> {
           const SizedBox(height: 12),
           Text(
             isServiceCall
-                ? 'Use TekTool to diagnose the system issue'
+                ? 'Document your findings and chat with our support team'
                 : widget.step.description ?? 'Review readings and adjust as needed',
             style: TextStyle(
               fontSize: 16,
@@ -102,11 +92,6 @@ class _DiagnosticsStepState extends State<DiagnosticsStep> {
             ),
           ),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: _openTools,
-            icon: const Icon(Icons.build),
-            label: const Text('Open TekTool'),
-          ),
           if (!isServiceCall) ...[
             const SizedBox(height: 32),
             Card(

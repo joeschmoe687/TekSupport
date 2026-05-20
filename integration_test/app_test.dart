@@ -1,20 +1,15 @@
-/// TekTool - Comprehensive Integration Test Suite
+/// TekSupport - Integration Test Suite
 ///
-/// This test navigates through ALL screens and tests ALL buttons/functions.
-/// Skips Bluetooth device tests since no devices are connected.
+/// This test navigates through support chat and admin features.
 ///
 /// Run with:
 ///   flutter test integration_test/app_test.dart --device-id=<device_id>
-///
-/// Or for report generation:
-///   flutter drive --driver=integration_test/test_driver.dart \
-///     --target=integration_test/app_test.dart
 
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:tektool/main.dart' as app;
+import 'package:teksupport/main.dart' as app;
 
 /// Test results tracker for report generation
 class TestResults {

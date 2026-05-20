@@ -4,9 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'auth_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/gradient_scaffold.dart';
-import '../tools/screens/storage_screen.dart';
 import '../auto_responder/auto_responder_service.dart';
-import '../tools/services/ml_data_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -25,10 +23,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _endHour = 19;
   final _replyTextController = TextEditingController();
   bool _isDarkTheme = true;
-  bool _mlDataSharingEnabled = true;
 
   String role = 'user';
-  final MLDataService _mlDataService = MLDataService();
 
   @override
   void initState() {
@@ -37,16 +33,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadAutoResponderSettings();
     _checkSmsPermissions();
     _loadThemePreference();
-    _loadMLDataPreference();
-  }
-
-  Future<void> _loadMLDataPreference() async {
-    await _mlDataService.init();
-    if (mounted) {
-      setState(() {
-        _mlDataSharingEnabled = _mlDataService.isMLDataSharingEnabled;
-      });
-    }
   }
 
   Future<void> _loadThemePreference() async {
@@ -239,99 +225,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: TextStyle(color: AppColors.textSecondary),
                 ),
                 activeColor: AppColors.primaryCyan,
-              ),
-            ),
-            const SizedBox(height: 12),
-            // Storage tile
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.surfaceDark.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
-              ),
-              child: ListTile(
-                leading: Icon(Icons.storage, color: AppColors.primaryCyan),
-                title: Text(
-                  'Storage',
-                  style: TextStyle(color: AppColors.textPrimary),
-                ),
-                subtitle: Text(
-                  'View saved devices, ML data & profiles',
-                  style: TextStyle(color: AppColors.textSecondary),
-                ),
-                trailing: Icon(Icons.chevron_right, color: AppColors.textMuted),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const StorageScreen()),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 12),
-            // ML Data Sharing Settings
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.surfaceDark.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
-              ),
-              child: Column(
-                children: [
-                  SwitchListTile(
-                    value: _mlDataSharingEnabled,
-                    onChanged: (value) async {
-                      setState(() {
-                        _mlDataSharingEnabled = value;
-                      });
-                      await _mlDataService.setMLDataSharing(value);
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              value
-                                  ? 'ML data sharing enabled - helping improve diagnostics'
-                                  : 'ML data sharing disabled',
-                            ),
-                            backgroundColor: value ? AppColors.success : AppColors.info,
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    },
-                    title: Text(
-                      'Share Diagnostic Data for ML',
-                      style: TextStyle(color: AppColors.textPrimary),
-                    ),
-                    subtitle: Text(
-                      'Help improve AI diagnostics by anonymously sharing system readings',
-                      style: TextStyle(color: AppColors.textSecondary),
-                    ),
-                    activeColor: AppColors.primaryCyan,
-                  ),
-                  if (_mlDataSharingEnabled) ...[
-                    Divider(color: AppColors.border, height: 1),
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Row(
-                        children: [
-                          Icon(Icons.info_outline,
-                              color: AppColors.info, size: 16),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'All data is anonymized. Customer info and location are never shared.',
-                              style: TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
               ),
             ),
             const SizedBox(height: 12),

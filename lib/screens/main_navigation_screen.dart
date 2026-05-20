@@ -3,12 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../widgets/gradient_scaffold.dart';
-import '../tools/screens/tools_hub_screen.dart';
-import '../tools/screens/devices_screen.dart';
-import '../jobs/screens/job_launch_screen.dart';
 import 'settings_screen.dart';
 import 'tech_inbox_screen.dart';
-import 'admin_dispatch_screen.dart';
 import 'welcome_screen.dart';
 import 'admin_chat_sessions_screen.dart';
 import 'admin_dashboard_screen.dart';
@@ -55,19 +51,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
     setState(() {
       if (_userRole == 'admin') {
+        // Admin chat-only interface: Chats → Admin Dashboard → Settings
         _screens = [
-          ToolsHubScreen(onToggleTheme: widget.onToggleTheme),
-          DevicesScreen(onToggleTheme: widget.onToggleTheme),
           AdminChatSessionsScreen(onToggleTheme: widget.onToggleTheme),
           AdminDashboardScreen(onToggleTheme: widget.onToggleTheme),
           SettingsScreen(onToggleTheme: widget.onToggleTheme),
         ];
         _navItems = const [
-          BottomNavigationBarItem(icon: Icon(Icons.build), label: 'Tools'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bluetooth),
-            label: 'Devices',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble),
             label: 'Chats',
@@ -82,38 +72,20 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
         ];
       } else if (_userRole == 'tech') {
+        // Tech chat-only interface: Inbox → Settings
         _screens = [
-          ToolsHubScreen(onToggleTheme: widget.onToggleTheme),
-          DevicesScreen(onToggleTheme: widget.onToggleTheme),
           TechInboxScreen(onToggleTheme: widget.onToggleTheme),
           SettingsScreen(onToggleTheme: widget.onToggleTheme),
         ];
         _navItems = const [
-          BottomNavigationBarItem(icon: Icon(Icons.build), label: 'Tools'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.bluetooth), label: 'Devices'),
           BottomNavigationBarItem(icon: Icon(Icons.inbox), label: 'Inbox'),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ];
-      } else {
-        _screens = [
-          ToolsHubScreen(onToggleTheme: widget.onToggleTheme),
-          DevicesScreen(onToggleTheme: widget.onToggleTheme),
-          SettingsScreen(onToggleTheme: widget.onToggleTheme),
-        ];
-        _navItems = const [
-          BottomNavigationBarItem(icon: Icon(Icons.build), label: 'Tools'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.bluetooth), label: 'Devices'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ];
       }
+      // Note: Regular users are handled by ChatScreen in RoleRouter, not here
     });
 
     debugPrint('🧠 Logged in as: $_userRole');
@@ -121,16 +93,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);
-  }
-
-  void _launchJob() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            JobLaunchScreen(onToggleTheme: widget.onToggleTheme),
-      ),
-    );
   }
 
   @override
@@ -142,15 +104,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               child: CircularProgressIndicator(color: AppColors.primaryCyan),
             )
           : _screens[_selectedIndex],
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'main_nav_fab',
-        onPressed: _launchJob,
-        icon: const Icon(Icons.work_outline),
-        label: const Text('Start Job'),
-        backgroundColor: AppColors.primaryPurple,
-        foregroundColor: Colors.white,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: _navItems.isEmpty
           ? null
           : SafeArea(

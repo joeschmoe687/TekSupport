@@ -1,5 +1,4 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 
 class LocationService {
@@ -60,57 +59,20 @@ class LocationService {
     }
   }
 
-  // Get address from coordinates
+  // Get address from coordinates - simplified without geocoding
   Future<String?> getAddressFromCoordinates(double latitude, double longitude) async {
     try {
-      final placemarks = await placemarkFromCoordinates(latitude, longitude);
-      if (placemarks.isNotEmpty) {
-        final place = placemarks.first;
-        final parts = <String>[];
-        
-        if (place.street != null && place.street!.isNotEmpty) {
-          parts.add(place.street!);
-        }
-        if (place.locality != null && place.locality!.isNotEmpty) {
-          parts.add(place.locality!);
-        }
-        if (place.administrativeArea != null && place.administrativeArea!.isNotEmpty) {
-          parts.add(place.administrativeArea!);
-        }
-        if (place.postalCode != null && place.postalCode!.isNotEmpty) {
-          parts.add(place.postalCode!);
-        }
-        
-        return parts.join(', ');
-      }
+      // Without geocoding package, return coordinates as fallback
+      return '$latitude, $longitude';
     } catch (e) {
-      debugPrint('Error getting address from coordinates: $e');
+      debugPrint('Error formatting coordinates: $e');
     }
     return null;
   }
 
-  // Get coordinates from address
+  // Get coordinates from address - not supported without geocoding package
   Future<Position?> getCoordinatesFromAddress(String address) async {
-    try {
-      final locations = await locationFromAddress(address);
-      if (locations.isNotEmpty) {
-        final location = locations.first;
-        return Position(
-          latitude: location.latitude,
-          longitude: location.longitude,
-          timestamp: DateTime.now(),
-          accuracy: 100.0, // Typical accuracy for geocoded addresses
-          altitude: 0,
-          altitudeAccuracy: 0,
-          heading: 0,
-          headingAccuracy: 0,
-          speed: 0,
-          speedAccuracy: 0,
-        );
-      }
-    } catch (e) {
-      debugPrint('Error getting coordinates from address: $e');
-    }
-    return null;
+    debugPrint('Address-based coordinates lookup not available');
+    return null; // Geocoding not available without external package
   }
 }

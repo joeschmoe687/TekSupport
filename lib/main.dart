@@ -10,11 +10,6 @@ import 'widgets/gradient_scaffold.dart';
 import 'services/notification_service.dart';
 import 'services/payment_service.dart';
 import 'services/error_log_service.dart';
-import 'tools/services/calibration_service.dart';
-import 'tools/services/gauge_zero_service.dart';
-import 'tools/services/ml_data_service.dart';
-import 'tools/screens/devices_screen.dart';
-import 'tools/screens/device_scan_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,30 +38,17 @@ void main() async {
   // Initialize payment service
   await PaymentService().initialize();
 
-  // Initialize calibration service (for persistent sensor offsets)
-  await CalibrationService().init();
-
-  // Load gauge zero offsets from persistent storage
-  await GaugeZeroService().loadZeroOffsets();
-
-  // Initialize ML data service
-  await MLDataService().init();
-
-  // Initialize live data sync service (only on mobile, not web)
-  // TODO: Implement LiveDataSyncService
-  // await LiveDataSyncService().init();
-
-  runApp(const TekToolApp());
+  runApp(const TekSupportApp());
 }
 
-class TekToolApp extends StatefulWidget {
-  const TekToolApp({super.key});
+class TekSupportApp extends StatefulWidget {
+  const TekSupportApp({super.key});
 
   @override
-  State<TekToolApp> createState() => _TekToolAppState();
+  State<TekSupportApp> createState() => _TekSupportAppState();
 }
 
-class _TekToolAppState extends State<TekToolApp> {
+class _TekSupportAppState extends State<TekSupportApp> {
   ThemeMode _themeMode = ThemeMode.dark;
 
   @override
@@ -106,7 +88,7 @@ class _TekToolAppState extends State<TekToolApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TekTool',
+      title: 'TekSupport',
       theme: ThemeData.light().copyWith(
         colorScheme: ColorScheme.light(
           primary: AppColors.primaryCyan,
@@ -221,11 +203,6 @@ class _TekToolAppState extends State<TekToolApp> {
       ),
       themeMode: _themeMode,
       debugShowCheckedModeBanner: false,
-      routes: {
-        '/devices': (context) => DevicesScreen(onToggleTheme: _toggleTheme),
-        '/device-scan': (context) =>
-            DeviceScanScreen(onToggleTheme: _toggleTheme),
-      },
       // Start on Welcome; it routes into MainNavigationScreen after login
       home: WelcomeScreen(onToggleTheme: _toggleTheme),
     );

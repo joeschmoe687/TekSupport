@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../widgets/gradient_scaffold.dart';
-import '../../../tools/screens/devices_screen.dart';
 import '../../models/job_step.dart';
 
 class GaugeConnectionStep extends StatefulWidget {
@@ -22,17 +21,6 @@ class GaugeConnectionStep extends StatefulWidget {
 }
 
 class _GaugeConnectionStepState extends State<GaugeConnectionStep> {
-  void _openDevices() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DevicesScreen(onToggleTheme: widget.onToggleTheme),
-      ),
-    ).then((_) {
-      // User returned from devices screen
-    });
-  }
-
   void _continue() {
     widget.onComplete({});
   }
@@ -106,11 +94,6 @@ class _GaugeConnectionStepState extends State<GaugeConnectionStep> {
             ),
           ),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: _openDevices,
-            icon: const Icon(Icons.bluetooth),
-            label: const Text('Connect Devices'),
-          ),
           const Spacer(),
           ElevatedButton(
             onPressed: _continue,

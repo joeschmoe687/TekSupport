@@ -1,5 +1,5 @@
-name: tektool
-description: "TekTool - Universal HVAC Bluetooth Hub for contractors."
+name: teksupport
+description: "TekSupport - Remote HVAC Tech Support & Bluetooth Hub."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -31,24 +31,6 @@ dependencies:
   record: ^6.0.0
   geolocator: ^11.0.0
   flutter_local_notifications: ^19.0.0
-  
-  # TekTool - Bluetooth HVAC tools
-  flutter_blue_plus: ^1.32.12
-  flutter_foreground_task: ^8.12.0
-  
-  # TekTool - Local storage (survives app updates)
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  path_provider: ^2.1.5
-  
-  # TekTool - OCR for equipment tag scanning
-  google_mlkit_text_recognition: ^0.14.0
-  
-  # TekTool - Geocoding for job profiles
-  geocoding: ^3.0.0
-  
-  # TekTool - Share functionality for BLE sniffer
-  share_plus: ^10.0.0
   
   # Error logging and device info
   device_info_plus: ^11.1.0
