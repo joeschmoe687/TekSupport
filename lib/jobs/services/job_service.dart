@@ -291,7 +291,7 @@ class JobService {
         throw Exception('Job not found');
       }
 
-      final data = snapshot.data() as Map<String, dynamic>?;
+      final data = snapshot.data();
       final jobUserId = data?['userId'] as String?;
 
       if (jobUserId == null || jobUserId != user.uid) {

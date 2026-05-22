@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/gradient_scaffold.dart';
 import 'settings_screen.dart';
 import 'tech_inbox_screen.dart';
-import 'welcome_screen.dart';
 import 'admin_chat_sessions_screen.dart';
 import 'admin_dashboard_screen.dart';
 

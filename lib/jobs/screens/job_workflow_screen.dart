@@ -125,14 +125,12 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
           jobId: widget.jobId,
           step: step,
           onComplete: (data) async {
-            // Save completion notes if provided
-            if (data != null && _job != null) {
-              final updatedMetadata = Map<String, dynamic>.from(_job!.metadata ?? {});
-              updatedMetadata.addAll(data);
-              final updatedJob = _job!.copyWith(metadata: updatedMetadata);
-              await _jobService.updateJob(updatedJob);
-            }
-            
+            // Save completion notes
+            final updatedMetadata =
+                Map<String, dynamic>.from(_job!.metadata ?? {});
+            updatedMetadata.addAll(data);
+            final updatedJob = _job!.copyWith(metadata: updatedMetadata);
+            await _jobService.updateJob(updatedJob);
             await _jobService.completeJob(widget.jobId);
             if (mounted) {
               Navigator.of(context).pop();
@@ -182,7 +180,9 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
           // Find current step (first incomplete step)
           final currentStepIndex = () {
             final index = steps.indexWhere(
-              (s) => s.status != StepStatus.completed && s.status != StepStatus.skipped,
+              (s) =>
+                  s.status != StepStatus.completed &&
+                  s.status != StepStatus.skipped,
             );
             if (index == -1) {
               return steps.length - 1; // All done, show last step
@@ -196,7 +196,7 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
             children: [
               // Progress indicator
               _buildProgressIndicator(steps, currentStepIndex),
-              
+
               // Current step content
               Expanded(
                 child: _buildStepWidget(currentStep),
@@ -209,7 +209,8 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
   }
 
   Widget _buildProgressIndicator(List<JobStep> steps, int currentIndex) {
-    final completedSteps = steps.where((s) => s.status == StepStatus.completed).length;
+    final completedSteps =
+        steps.where((s) => s.status == StepStatus.completed).length;
     final totalSteps = steps.length;
     final progress = completedSteps / totalSteps;
 
@@ -250,7 +251,8 @@ class _JobWorkflowScreenState extends State<JobWorkflowScreen> {
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: AppColors.border.withOpacity(0.3),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryCyan),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(AppColors.primaryCyan),
               minHeight: 8,
             ),
           ),

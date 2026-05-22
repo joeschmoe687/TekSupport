@@ -383,8 +383,7 @@ class _DebugInfoRow extends StatelessWidget {
           Text(label,
               style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
           Text(value,
-              style: TextStyle(
-                  color: AppColors.textSecondary, fontSize: 12)),
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
         ],
       ),
     );
@@ -882,7 +881,6 @@ class _PricebookPaneState extends State<_PricebookPane> {
               final data = itemDoc.data();
               final itemName = (data['name'] ?? 'Item').toString();
               final price = (data['price'] ?? '').toString();
-              final code = (data['code'] ?? '').toString();
               return Container(
                 decoration: BoxDecoration(
                   border: Border(
@@ -933,7 +931,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
         .collection('settings')
         .doc('admin')
         .snapshots();
-    
+
     final geminiSettingsStream = FirebaseFirestore.instance
         .collection('settings')
         .doc('gemini')
@@ -980,10 +978,11 @@ class _SettingsPaneState extends State<_SettingsPane> {
                     final data = snapshot.data!.data() ?? {};
                     final enableChatNotify =
                         (data['enableChatNotifications'] ?? true) == true;
-                    final enableDispatch = (data['enableDispatch'] ?? true) == true;
+                    final enableDispatch =
+                        (data['enableDispatch'] ?? true) == true;
                     final requireAdminLogin =
                         (data['requireAdminLogin'] ?? true) == true;
-                    
+
                     return Column(
                       children: [
                         _SettingsToggle(
@@ -1026,15 +1025,16 @@ class _SettingsPaneState extends State<_SettingsPane> {
                     );
                   },
                 ),
-                
+
                 const SizedBox(height: 24),
                 const Divider(color: Colors.white24),
                 const SizedBox(height: 24),
-                
+
                 // Gemini AI Settings Section
                 Row(
                   children: [
-                    Icon(Icons.auto_awesome, color: AppColors.primaryPurple, size: 20),
+                    Icon(Icons.auto_awesome,
+                        color: AppColors.primaryPurple, size: 20),
                     const SizedBox(width: 8),
                     Text(
                       'Gemini AI Assistant',
@@ -1052,7 +1052,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                   style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),
                 const SizedBox(height: 12),
-                
+
                 StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                   stream: geminiSettingsStream,
                   builder: (context, snapshot) {
@@ -1061,13 +1061,16 @@ class _SettingsPaneState extends State<_SettingsPane> {
                     }
                     final data = snapshot.data!.data() ?? {};
                     final geminiEnabled = (data['enabled'] ?? false) == true;
-                    final hasApiKey = (data['apiKey'] as String?)?.isNotEmpty ?? false;
-                    
+                    final hasApiKey =
+                        (data['apiKey'] as String?)?.isNotEmpty ?? false;
+
                     return Column(
                       children: [
                         _SettingsToggle(
                           title: 'Enable Gemini AI',
-                          subtitle: hasApiKey ? 'API key configured' : 'API key required',
+                          subtitle: hasApiKey
+                              ? 'API key configured'
+                              : 'API key required',
                           value: geminiEnabled,
                           onChanged: (v) async {
                             if (v && !hasApiKey) {
@@ -1082,7 +1085,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                             }
                           },
                         ),
-                        
+
                         // API Key Button
                         Container(
                           margin: const EdgeInsets.only(bottom: 12),
@@ -1094,7 +1097,9 @@ class _SettingsPaneState extends State<_SettingsPane> {
                             ),
                             leading: Icon(
                               hasApiKey ? Icons.key : Icons.key_off,
-                              color: hasApiKey ? AppColors.success : Colors.white54,
+                              color: hasApiKey
+                                  ? AppColors.success
+                                  : Colors.white54,
                             ),
                             title: Text(
                               hasApiKey ? 'API Key Configured' : 'Set API Key',
@@ -1104,15 +1109,18 @@ class _SettingsPaneState extends State<_SettingsPane> {
                               ),
                             ),
                             subtitle: Text(
-                              hasApiKey ? 'Tap to update' : 'Required for Gemini',
-                              style: TextStyle(color: Colors.white70, fontSize: 12),
+                              hasApiKey
+                                  ? 'Tap to update'
+                                  : 'Required for Gemini',
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 12),
                             ),
-                            trailing: const Icon(Icons.arrow_forward_ios, 
+                            trailing: const Icon(Icons.arrow_forward_ios,
                                 color: Colors.white54, size: 16),
                             onTap: () => _showApiKeyDialog(context),
                           ),
                         ),
-                        
+
                         // Personality Tuning Button
                         Container(
                           margin: const EdgeInsets.only(bottom: 12),
@@ -1122,7 +1130,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                               borderRadius: BorderRadius.circular(10),
                               side: const BorderSide(color: Colors.white10),
                             ),
-                            leading: Icon(Icons.psychology, 
+                            leading: Icon(Icons.psychology,
                                 color: AppColors.primaryPurple),
                             title: const Text(
                               'Personality Tuning',
@@ -1133,11 +1141,13 @@ class _SettingsPaneState extends State<_SettingsPane> {
                             ),
                             subtitle: const Text(
                               'Customize AI response style',
-                              style: TextStyle(color: Colors.white70, fontSize: 12),
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 12),
                             ),
-                            trailing: const Icon(Icons.arrow_forward_ios, 
+                            trailing: const Icon(Icons.arrow_forward_ios,
                                 color: Colors.white54, size: 16),
-                            onTap: () => _showPersonalityDialog(context, data['personality']),
+                            onTap: () => _showPersonalityDialog(
+                                context, data['personality']),
                           ),
                         ),
                       ],
@@ -1154,12 +1164,12 @@ class _SettingsPaneState extends State<_SettingsPane> {
 
   void _showApiKeyDialog(BuildContext context) {
     final controller = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
-        title: Text('Gemini API Key', 
+        title: Text('Gemini API Key',
             style: TextStyle(color: AppColors.textPrimary)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1207,7 +1217,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                     .set({
                   'apiKey': apiKey,
                 }, SetOptions(merge: true));
-                
+
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -1219,28 +1229,28 @@ class _SettingsPaneState extends State<_SettingsPane> {
                 }
               }
             },
-            child: Text('Save', 
-                style: TextStyle(color: AppColors.primaryCyan)),
+            child: Text('Save', style: TextStyle(color: AppColors.primaryCyan)),
           ),
         ],
       ),
     );
   }
 
-  void _showPersonalityDialog(BuildContext context, String? currentPersonality) {
+  void _showPersonalityDialog(
+      BuildContext context, String? currentPersonality) {
     final controller = TextEditingController(
-      text: currentPersonality ?? 
-            'You are a helpful HVAC technical support assistant. '
-            'You provide clear, professional guidance to HVAC technicians and homeowners. '
-            'Be concise, practical, and safety-conscious in your responses. '
-            'When providing troubleshooting advice, explain the reasoning behind your recommendations.',
+      text: currentPersonality ??
+          'You are a helpful HVAC technical support assistant. '
+              'You provide clear, professional guidance to HVAC technicians and homeowners. '
+              'Be concise, practical, and safety-conscious in your responses. '
+              'When providing troubleshooting advice, explain the reasoning behind your recommendations.',
     );
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceDark,
-        title: Text('Personality Tuning', 
+        title: Text('Personality Tuning',
             style: TextStyle(color: AppColors.textPrimary)),
         content: SingleChildScrollView(
           child: Column(
@@ -1280,7 +1290,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.lightbulb_outline, 
+                        Icon(Icons.lightbulb_outline,
                             color: AppColors.info, size: 16),
                         SizedBox(width: 6),
                         Text(
@@ -1325,7 +1335,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                     .set({
                   'personality': personality,
                 }, SetOptions(merge: true));
-                
+
                 if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -1337,8 +1347,7 @@ class _SettingsPaneState extends State<_SettingsPane> {
                 }
               }
             },
-            child: Text('Save', 
-                style: TextStyle(color: AppColors.primaryCyan)),
+            child: Text('Save', style: TextStyle(color: AppColors.primaryCyan)),
           ),
         ],
       ),
@@ -1346,6 +1355,10 @@ class _SettingsPaneState extends State<_SettingsPane> {
   }
 }
 
+// Removed: _PricebookItemsPane is not currently referenced or used in the app.
+// To re-enable in future: uncomment this section and add navigation logic to AdminDashboardScreen.
+
+/*
 class _PricebookItemsPane extends StatelessWidget {
   final String categoryId;
   final String categoryName;
@@ -1438,6 +1451,7 @@ class _PricebookItemsPane extends StatelessWidget {
     );
   }
 }
+*/
 
 class _SettingsToggle extends StatelessWidget {
   final String title;
@@ -2114,8 +2128,7 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
               Navigator.pop(context);
               _endSession();
             },
-            child: Text('Done',
-                style: TextStyle(color: AppColors.primaryCyan)),
+            child: Text('Done', style: TextStyle(color: AppColors.primaryCyan)),
           ),
         ],
       ),
@@ -2209,8 +2222,7 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
                     borderRadius: BorderRadius.circular(10),
                     borderSide: const BorderSide(color: Color(0xFF4EC7F3)),
                   ),
-                  prefixIcon:
-                      Icon(Icons.devices, color: AppColors.primaryCyan),
+                  prefixIcon: Icon(Icons.devices, color: AppColors.primaryCyan),
                 ),
               ),
               const SizedBox(height: 16),
@@ -2250,8 +2262,7 @@ class _MLDeviceLearningScreenState extends State<_MLDeviceLearningScreen> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.data_usage,
-                          color: AppColors.primaryCyan),
+                      Icon(Icons.data_usage, color: AppColors.primaryCyan),
                       const SizedBox(width: 12),
                       Text(
                         'Samples Collected: $_sampleCount',

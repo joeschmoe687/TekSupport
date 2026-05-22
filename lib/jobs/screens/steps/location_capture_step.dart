@@ -22,9 +22,8 @@ class LocationCaptureStep extends StatefulWidget {
 class _LocationCaptureStepState extends State<LocationCaptureStep> {
   final LocationService _locationService = LocationService();
   final TextEditingController _addressController = TextEditingController();
-  
+
   bool _isLoading = false;
-  String? _detectedAddress;
   double? _latitude;
   double? _longitude;
 
@@ -50,7 +49,6 @@ class _LocationCaptureStepState extends State<LocationCaptureStep> {
 
         if (mounted) {
           setState(() {
-            _detectedAddress = address;
             _addressController.text = address ?? '';
             _isLoading = false;
           });

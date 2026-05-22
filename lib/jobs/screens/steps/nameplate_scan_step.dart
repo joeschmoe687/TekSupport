@@ -24,8 +24,7 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _modelController = TextEditingController();
   final TextEditingController _serialController = TextEditingController();
-  
-  bool _hasScanned = false;
+
   String? _capturedImagePath;
 
   Future<void> _scanNameplate() async {
@@ -33,7 +32,6 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
       if (image != null) {
         setState(() {
-          _hasScanned = true;
           _capturedImagePath = image.path;
         });
         // TODO: Implement OCR with google_mlkit_text_recognition
@@ -41,7 +39,8 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Photo captured. Please verify or enter equipment details.'),
+              content: Text(
+                  'Photo captured. Please verify or enter equipment details.'),
               backgroundColor: AppColors.primaryCyan,
             ),
           );
@@ -62,7 +61,7 @@ class _NameplateScanStepState extends State<NameplateScanStep> {
   void _continue() {
     final brand = _brandController.text.trim();
     final model = _modelController.text.trim();
-    
+
     if (brand.isEmpty || model.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

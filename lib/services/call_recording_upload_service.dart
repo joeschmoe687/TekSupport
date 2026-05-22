@@ -114,9 +114,7 @@ class CallRecordingUploadService {
           .orderBy('uploadedAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
+      return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       print('Error getting uploaded recordings: $e');
       return [];
@@ -229,14 +227,12 @@ class CallRecordingUploadService {
         query = query.where(
           'uploadedAt',
           isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate),
-        ) as Query<Map<String, dynamic>>;
+        );
       }
 
       final snapshot = await query.get();
 
-      return snapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
+      return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       print('Error getting audit log: $e');
       return [];

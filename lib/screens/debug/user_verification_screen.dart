@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+
 import '../../widgets/gradient_scaffold.dart';
 import '../../services/payment_service.dart';
 
@@ -95,7 +95,8 @@ class _UserVerificationScreenState extends State<UserVerificationScreen> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  const Icon(Icons.verified_user, size: 48, color: Color(0xFF4EC7F3)),
+                  const Icon(Icons.verified_user,
+                      size: 48, color: Color(0xFF4EC7F3)),
                   const SizedBox(height: 16),
                   const Text(
                     'User Verification',
@@ -126,7 +127,8 @@ class _UserVerificationScreenState extends State<UserVerificationScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.error, color: Colors.red, size: 48),
+                                const Icon(Icons.error,
+                                    color: Colors.red, size: 48),
                                 const SizedBox(height: 16),
                                 Text(
                                   _error!,
@@ -238,7 +240,7 @@ class _UserVerificationScreenState extends State<UserVerificationScreen> {
       final value = entry.value is Map
           ? '\n${_formatMap(entry.value as Map)}'
           : entry.value.toString();
-      
+
       return Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Row(
@@ -277,8 +279,6 @@ class _UserVerificationScreenState extends State<UserVerificationScreen> {
   }
 
   String _formatMap(Map map) {
-    return map.entries
-        .map((e) => '  ${e.key}: ${e.value}')
-        .join('\n');
+    return map.entries.map((e) => '  ${e.key}: ${e.value}').join('\n');
   }
 }

@@ -183,7 +183,8 @@ void main() {
     await pump(tester);
   }
 
-  /// Helper to scroll until finding widget
+  /// Helper to scroll until finding widget (currently unused - commented for future use)
+  /*
   Future<bool> scrollToFind(
     WidgetTester tester,
     Finder scrollable,
@@ -197,6 +198,7 @@ void main() {
     }
     return exists(target);
   }
+  */
 
   group('TekTool - Full UI Test Suite', () {
     testWidgets('Complete App Navigation Test', (WidgetTester tester) async {
