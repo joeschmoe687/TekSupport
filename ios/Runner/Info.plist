@@ -6,16 +6,16 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-    <key>CFBundleDisplayName</key>
-    <string>TekSupport</string>
+	<key>CFBundleDisplayName</key>
+	<string>TekSupport</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-    <key>CFBundleName</key>
-    <string>TekSupport</string>
+	<key>CFBundleName</key>
+	<string>TekSupport</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -26,8 +26,47 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>TekTool needs Bluetooth to connect to your HVAC gauges, temperature probes, refrigerant scales, and other smart tools.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>TekTool needs Bluetooth to connect to your HVAC gauges, temperature probes, refrigerant scales, and other smart tools.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>TekTool uses the camera to scan equipment nameplates and payment cards for secure checkout.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>TekTool uses your location to automatically detect job sites even when the app is in the background.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>TekTool uses your location to automatically detect job sites and organize your service calls.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>TekTool needs photo library access to save equipment tag photos with job records.</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>UIWindowScene</string>
+					<key>UISceneConfigurationName</key>
+					<string>flutter</string>
+					<key>UISceneDelegateClassName</key>
+					<string>FlutterSceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -39,31 +78,5 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
-	
-	<!-- Bluetooth permissions for HVAC tool connectivity -->
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>TekTool needs Bluetooth to connect to your HVAC gauges, temperature probes, refrigerant scales, and other smart tools.</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>TekTool needs Bluetooth to connect to your HVAC gauges, temperature probes, refrigerant scales, and other smart tools.</string>
-	
-	<!-- Background modes for persistent BLE connection -->
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>bluetooth-central</string>
-		<string>fetch</string>
-		<string>remote-notification</string>
-	</array>
-	
-	<!-- Location permissions for job profiles -->
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>TekTool uses your location to automatically detect job sites and organize your service calls.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>TekTool uses your location to automatically detect job sites even when the app is in the background.</string>
-	
-	<!-- Camera permissions for equipment tag scanning and payment card scanning -->
-	<key>NSCameraUsageDescription</key>
-	<string>TekTool uses the camera to scan equipment nameplates and payment cards for secure checkout.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>TekTool needs photo library access to save equipment tag photos with job records.</string>
 </dict>
 </plist>

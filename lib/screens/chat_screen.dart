@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:async';
 import '../widgets/gradient_scaffold.dart';
 import 'chat_detail_screen.dart';
 import 'support_contact_screen.dart';
@@ -21,24 +22,40 @@ class _ChatScreenState extends State<ChatScreen> {
   Map<String, double> _pricing = {};
   bool _isBusinessHours = false;
   bool _isAdmin = false;
+  bool _firestoreHung = false;
   final TekMateChatService _tekMateService = TekMateChatService();
 
   @override
   void initState() {
     super.initState();
+    debugPrint('🟢 ChatScreen initState starting...');
     _isBusinessHours = _checkBusinessHours();
     _loadPricing();
     _checkAdminStatus();
+
+    // Debug: Set a timeout to detect if Firestore is hanging
+    Future.delayed(Duration(seconds: 5), () {
+      if (mounted) {
+        debugPrint('⚠️ ChatScreen: Firestore might be hung (no data after 5s)');
+        setState(() {
+          _firestoreHung = true;
+        });
+      }
+    });
   }
 
   Future<void> _checkAdminStatus() async {
-    final isAdmin = await _tekMateService.init();
-    debugPrint('ChatScreen - Admin status: $isAdmin');
-    if (mounted) {
-      setState(() {
-        _isAdmin = isAdmin;
-      });
-      debugPrint('ChatScreen - _isAdmin set to: $_isAdmin');
+    debugPrint('🟡 Checking admin status...');
+    try {
+      final isAdmin = await _tekMateService.init();
+      debugPrint('✅ Admin status checked: $isAdmin');
+      if (mounted) {
+        setState(() {
+          _isAdmin = isAdmin;
+        });
+      }
+    } catch (e) {
+      debugPrint('❌ Error checking admin status: $e');
     }
   }
 
@@ -52,11 +69,18 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _loadPricing() async {
+    debugPrint('🟡 Loading pricing from Firestore...');
     try {
       final doc = await FirebaseFirestore.instance
           .collection('settings')
           .doc('pricing')
-          .get();
+          .get()
+          .timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          throw TimeoutException('Firestore pricing query timed out');
+        },
+      );
 
       if (doc.exists && mounted) {
         setState(() {
@@ -72,9 +96,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 (doc.data()?['twentyFourVideo'] ?? 80).toDouble(),
           };
         });
+        debugPrint('✅ Pricing loaded successfully');
+      } else {
+        debugPrint('⚠️ Pricing document does not exist');
       }
+    } on TimeoutException catch (e) {
+      debugPrint('❌ Pricing query timeout: $e');
     } catch (error) {
-      debugPrint('Error loading pricing: $error');
+      debugPrint('❌ Error loading pricing: $error');
     }
   }
 
@@ -221,11 +250,13 @@ class _ChatScreenState extends State<ChatScreen> {
                           .where('customerUID', isEqualTo: user.uid)
                           .snapshots(),
                       builder: (context, snapshot) {
-                        // Helper: print debug info for snapshot
-                        debugPrint('ChatScreen StreamBuilder - connectionState: \\${snapshot.connectionState}, hasData: \\${snapshot.hasData}, hasError: \\${snapshot.hasError}');
+                        // Helper: Debug logging for Firestore query state
+                        debugPrint(
+                            '📊 Chat StreamBuilder - state: ${snapshot.connectionState}, hasData: ${snapshot.hasData}, hasError: ${snapshot.hasError}, docs: ${snapshot.data?.docs.length ?? "?"}');
+
                         if (snapshot.hasError) {
-                          // Show error message if Firestore/network fails
-                          debugPrint('ChatScreen StreamBuilder ERROR: \\${snapshot.error}');
+                          // Show error with retry option
+                          debugPrint('❌ Chat query error: ${snapshot.error}');
                           return Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -233,22 +264,36 @@ class _ChatScreenState extends State<ChatScreen> {
                                 Icon(Icons.error, color: Colors.red, size: 40),
                                 const SizedBox(height: 12),
                                 Text(
-                                  'Failed to load chats. Please check your connection or try again.',
+                                  'Failed to load chats',
                                   style: TextStyle(color: Colors.red[200]),
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  snapshot.error?.toString() ?? '',
-                                  style: const TextStyle(fontSize: 12, color: Colors.white54),
+                                  snapshot.error?.toString() ?? 'Unknown error',
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.white54),
                                   textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    debugPrint('🔄 Retrying chat list...');
+                                    setState(() {
+                                      _firestoreHung = false;
+                                    });
+                                  },
+                                  child: const Text('Retry'),
                                 ),
                               ],
                             ),
                           );
                         }
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          // Show loading spinner while waiting for Firestore
+
+                        // Show loading state or hung detection
+                        if (snapshot.connectionState ==
+                                ConnectionState.waiting ||
+                            !snapshot.hasData) {
                           return Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -261,12 +306,74 @@ class _ChatScreenState extends State<ChatScreen> {
                                   'Loading chats...',
                                   style: TextStyle(color: Colors.white54),
                                 ),
+                                const SizedBox(height: 24),
+                                if (_firestoreHung) ...[
+                                  // If Firestore seems hung, show debug info & retry
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 24),
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red.withOpacity(0.1),
+                                      border: Border.all(
+                                        color: Colors.red.withOpacity(0.3),
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          '⚠️ Firestore Query Slow',
+                                          style: TextStyle(
+                                            color: Colors.red[300],
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'This usually means:\n1. Missing google-services.json\n2. Poor internet connection\n3. Firestore security rules blocking query',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.white60,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(height: 12),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            debugPrint(
+                                                '🔄 Retrying Firestore query...');
+                                            // Force rebuild to retry StreamBuilder
+                                            if (mounted) {
+                                              setState(() {
+                                                _firestoreHung = false;
+                                              });
+                                            }
+                                          },
+                                          child: const Text('Retry Query'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ] else ...[
+                                  // Show troubleshooting tips if not yet hung
+                                  Text(
+                                    'If this takes too long:\n• Check internet connection\n• Verify google-services.json exists\n• Check Firestore rules',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white30,
+                                    ),
+                                  ),
+                                ],
                               ],
                             ),
                           );
                         }
-                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          // No chats found for this user
+
+                        // No chats found - show empty state
+                        if (snapshot.data!.docs.isEmpty) {
+                          debugPrint('ℹ️ No chats found for user');
                           return Center(
                             child: Text(
                               'No support chats yet. Create one to get started!',
@@ -276,7 +383,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           );
                         }
-                        // Sort manually to avoid needing Firestore index
+
+                        // Load chats successfully - show list
+                        debugPrint(
+                            '✅ Chat list loaded: ${snapshot.data!.docs.length} chats');
                         final rooms = snapshot.data!.docs.toList()
                           ..sort((a, b) {
                             final aTime =
@@ -290,7 +400,6 @@ class _ChatScreenState extends State<ChatScreen> {
                             if (bTime == null) return -1;
                             return bTime.compareTo(aTime); // Descending
                           });
-                        // List of chat sessions
                         return ListView.builder(
                           padding: const EdgeInsets.all(8),
                           itemCount: rooms.length,

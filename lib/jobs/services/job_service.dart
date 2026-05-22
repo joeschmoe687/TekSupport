@@ -23,8 +23,9 @@ class JobService {
       createdAt: DateTime.now(),
     );
 
-    final docRef = await _firestore.collection('jobs').add(jobData.toFirestore());
-    
+    final docRef =
+        await _firestore.collection('jobs').add(jobData.toFirestore());
+
     // Initialize workflow steps based on job type
     await _initializeWorkflowSteps(docRef.id, type);
 
@@ -169,13 +170,13 @@ class JobService {
   Future<Job?> getJob(String jobId) async {
     final doc = await _firestore.collection('jobs').doc(jobId).get();
     if (!doc.exists) return null;
-    
+
     final job = Job.fromFirestore(doc);
     final user = _auth.currentUser;
     if (user == null || job.userId != user.uid) {
       throw Exception('Unauthorized: Cannot access job owned by another user');
     }
-    
+
     return job;
   }
 
@@ -191,7 +192,8 @@ class JobService {
         .where('userId', isEqualTo: user.uid)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Job.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Job.fromFirestore(doc)).toList());
   }
 
   // Get job steps
@@ -201,7 +203,8 @@ class JobService {
         .where('jobId', isEqualTo: jobId)
         .orderBy('orderIndex')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => JobStep.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => JobStep.fromFirestore(doc)).toList());
   }
 
   // Update job
@@ -222,7 +225,10 @@ class JobService {
 
   // Update job step
   Future<void> updateJobStep(JobStep step) async {
-    await _firestore.collection('jobSteps').doc(step.id).update(step.toFirestore());
+    await _firestore
+        .collection('jobSteps')
+        .doc(step.id)
+        .update(step.toFirestore());
   }
 
   // Complete job step
@@ -235,7 +241,8 @@ class JobService {
 
   // Add equipment to job
   Future<Equipment> addEquipment(Equipment equipment) async {
-    final docRef = await _firestore.collection('equipment').add(equipment.toFirestore());
+    final docRef =
+        await _firestore.collection('equipment').add(equipment.toFirestore());
     return equipment.copyWith(id: docRef.id);
   }
 
@@ -246,7 +253,8 @@ class JobService {
         .where('jobId', isEqualTo: jobId)
         .orderBy('createdAt')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Equipment.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Equipment.fromFirestore(doc)).toList());
   }
 
   // Update equipment
@@ -259,7 +267,8 @@ class JobService {
     // Verify the equipment's job belongs to the current user
     final job = await getJob(equipment.jobId);
     if (job == null || job.userId != user.uid) {
-      throw Exception('Unauthorized: Cannot update equipment for job owned by another user');
+      throw Exception(
+          'Unauthorized: Cannot update equipment for job owned by another user');
     }
 
     await _firestore.collection('equipment').doc(equipment.id).update(
@@ -286,7 +295,8 @@ class JobService {
       final jobUserId = data?['userId'] as String?;
 
       if (jobUserId == null || jobUserId != user.uid) {
-        throw Exception('Unauthorized: Cannot complete job owned by another user');
+        throw Exception(
+            'Unauthorized: Cannot complete job owned by another user');
       }
 
       transaction.update(jobRef, {

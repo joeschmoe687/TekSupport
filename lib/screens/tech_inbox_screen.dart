@@ -26,13 +26,12 @@ class _TechInboxScreenState extends State<TechInboxScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    _messagesStream =
-        FirebaseFirestore.instance
-            .collection('chats')
-            .where('status', whereIn: ['open', 'assigned'])
-            .where('hasLiveTech', isEqualTo: false)
-            .orderBy('createdAt', descending: true)
-            .snapshots();
+    _messagesStream = FirebaseFirestore.instance
+        .collection('chats')
+        .where('status', whereIn: ['open', 'assigned'])
+        .where('hasLiveTech', isEqualTo: false)
+        .orderBy('createdAt', descending: true)
+        .snapshots();
   }
 
   @override
@@ -80,7 +79,6 @@ class _TechInboxScreenState extends State<TechInboxScreen> {
               final data = msg.data() as Map<String, dynamic>;
               final customerName = data['customerName'] ?? 'Unknown';
               final supportType = data['supportType'] ?? 'text';
-              final status = data['status'] ?? 'open';
               final timestamp = data['createdAt'] as Timestamp?;
               final claimedBy = data['claimedBy'];
 
@@ -152,7 +150,7 @@ class _TechInboxScreenState extends State<TechInboxScreen> {
         'status': 'assigned',
         'updatedAt': FieldValue.serverTimestamp(),
       });
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Session claimed successfully')),

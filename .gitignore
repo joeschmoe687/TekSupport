@@ -104,3 +104,6 @@ test_results/
 coverage/
 integration_test_report.txt
 *.test.log
+# Firebase config files
+ios/Runner/GoogleService-Info.plist
+android/app/google-services.json

@@ -244,22 +244,24 @@ exports.tekmateChatProxy = functions.https.onCall(async (data, context) => {
 /**
  * Create Stripe Payment Intent
  * Used for processing support payments in the app
+ * 
+ * Called as: FirebaseFunctions.instance.httpsCallable('createPaymentIntent')
+ * Parameters: {
+ *   amount: int (in cents),
+ *   currency: string (e.g. 'usd'),
+ *   description: string,
+ *   supportType: string ('text', 'phone', 'video', 'emergency'),
+ *   paymentType: string (unused),
+ *   plan: string (unused)
+ * }
  */
-exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
-  // Enable CORS
-  res.set('Access-Control-Allow-Origin', '*');
-  
-  if (req.method === 'OPTIONS') {
-    res.set('Access-Control-Allow-Methods', 'POST');
-    res.set('Access-Control-Allow-Headers', 'Content-Type');
-    res.status(204).send('');
-    return;
-  }
-
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    res.status(405).send({ error: 'Method not allowed' });
-    return;
+exports.createPaymentIntent = functions.https.onCall(async (data, context) => {
+  // Require authentication
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      'unauthenticated',
+      'Authentication required'
+    );
   }
 
   try {
@@ -307,7 +309,10 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
         
         if (!stripeKey || stripeKey === 'sk_dummy_for_deployment') {
           console.error('❌ Stripe secret key not found in Cloud SQL or Firestore');
-          return res.status(500).send({ error: 'Payment service not configured. Missing secretKey in Cloud SQL or Firestore settings/stripe.' });
+          throw new functions.https.HttpsError(
+            'internal',
+            'Payment service not configured. Missing secretKey in Cloud SQL or Firestore settings/stripe.'
+          );
         }
       }
       
@@ -315,24 +320,34 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
       console.log('✅ Stripe initialized with key starting with:', stripeKey.substring(0, 10) + '...');
     }
 
-    const { amount, currency, description, userId, email, supportType } = req.body;
+    const { amount, currency, description, userId, email, supportType } = data;
+    const authUserId = context.auth.uid;
+
+    // Verify user can only create payment intents for themselves
+    if (userId && userId !== authUserId) {
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        'Cannot create payment intent for another user'
+      );
+    }
 
     // Validate required parameters
-    if (!amount || !currency || !userId) {
-      res.status(400).send({ 
-        error: 'Missing required parameters',
-        required: ['amount', 'currency', 'userId']
-      });
-      return;
+    if (!amount || !currency) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'Missing required parameters: amount, currency'
+      );
     }
 
     // Validate amount is positive
     if (amount <= 0) {
-      res.status(400).send({ error: 'Amount must be positive' });
-      return;
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'Amount must be positive'
+      );
     }
 
-    console.log(`Creating payment intent for user ${userId}, amount: ${amount} ${currency}, supportType: ${supportType}`);
+    console.log(`Creating payment intent for user ${authUserId}, amount: ${amount} ${currency}, supportType: ${supportType}`);
 
     // Create payment intent with Stripe
     const paymentIntent = await stripe.paymentIntents.create({
@@ -340,8 +355,8 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
       currency: currency.toLowerCase(),
       description: description || 'TekNeck Support Service',
       metadata: {
-        userId: userId,
-        email: email || '',
+        userId: authUserId,
+        email: email || context.auth.token.email || '',
         supportType: supportType || 'text',
         platform: 'flutter_app',
         timestamp: new Date().toISOString(),
@@ -355,21 +370,27 @@ exports.createPaymentIntent = functions.https.onRequest(async (req, res) => {
     console.log(`Payment intent created: ${paymentIntent.id}`);
 
     // Return client secret to app
-    res.status(200).send({
+    return {
+      success: true,
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
-    });
+    };
 
   } catch (error) {
     console.error('Error creating payment intent:', error);
     
+    // If it's already an HttpsError, rethrow it
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
+    
     // Return appropriate error message
     if (error.type === 'StripeCardError') {
-      res.status(400).send({ error: error.message });
+      throw new functions.https.HttpsError('failed-precondition', error.message);
     } else if (error.type === 'StripeInvalidRequestError') {
-      res.status(400).send({ error: 'Invalid request to payment processor' });
+      throw new functions.https.HttpsError('invalid-argument', 'Invalid request to payment processor');
     } else {
-      res.status(500).send({ error: 'Internal server error' });
+      throw new functions.https.HttpsError('internal', 'Internal server error');
     }
   }
 });
@@ -409,11 +430,44 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
       const paymentIntent = event.data.object;
       console.log(`Payment succeeded: ${paymentIntent.id}`);
       
-      // Update transaction in Firestore
+      // Create a new support session (chats document)
       try {
         const userId = paymentIntent.metadata.userId;
+        const supportType = paymentIntent.metadata.supportType || 'text';
+        const email = paymentIntent.metadata.email;
         
-        // Find and update the transaction
+        // Get user info to get display name
+        const userDoc = await admin.firestore()
+          .collection('users')
+          .doc(userId)
+          .get();
+        
+        const customerName = userDoc.data()?.displayName || email || 'Customer';
+        
+        // Create chats document for this support session
+        const chatDoc = await admin.firestore()
+          .collection('chats')
+          .add({
+            customerId: userId,
+            customerUID: userId,
+            customerName: customerName,
+            customerEmail: email,
+            supportType: supportType,
+            status: 'open',
+            hasLiveTech: false,
+            claimedBy: null,
+            amount: paymentIntent.amount / 100, // Convert cents to dollars
+            amountCents: paymentIntent.amount,
+            paymentIntentId: paymentIntent.id,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            messages: [],
+            lastMessageTime: null,
+          });
+        
+        console.log(`✅ Chat session created: ${chatDoc.id} for user ${userId}`);
+        
+        // Update transaction in Firestore
         const transactionQuery = await admin.firestore()
           .collection('supportTransactions')
           .where('userId', '==', userId)
@@ -427,12 +481,13 @@ exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
           await doc.ref.update({
             status: 'completed',
             paymentIntentId: paymentIntent.id,
+            chatId: chatDoc.id,
             completedAt: admin.firestore.FieldValue.serverTimestamp(),
           });
           console.log(`Transaction updated for user ${userId}`);
         }
       } catch (error) {
-        console.error('Error updating transaction:', error);
+        console.error('Error creating chat session or updating transaction:', error);
       }
       break;
 

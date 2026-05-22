@@ -67,7 +67,7 @@ adb logcat -s flutter 2>&1 | grep -E "💳|✅|❌|⚠️"
    - Collection: `settings`
    - Document: `tekmate`
    - Fields:
-     - `apiUrl`: "https://tekmate.airpronwa.com/api/personality-chat"
+     - `apiUrl`: "https://tekmate.tekneck.net/api/personality-chat"
      - `apiKey`: [your_key]
 
 ---

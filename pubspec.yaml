@@ -26,20 +26,20 @@ dependencies:
   cached_network_image: ^3.4.1
   url_launcher: ^6.2.5
   shared_preferences: ^2.2.2
+  intl: ^0.19.0
   # Call recording and tracking
   # Note: phone_state_listener package doesn't exist; using native platform channels instead
   record: ^6.0.0
-  geolocator: ^11.0.0
-  flutter_local_notifications: ^19.0.0
+  geolocator: ^14.0.2
+  flutter_local_notifications: ^21.0.0
   
   # Error logging and device info
-  device_info_plus: ^11.1.0
-  package_info_plus: ^8.1.0
+  device_info_plus: ^12.4.0
+  package_info_plus: ^9.0.1
   
   # Payment integration
-  flutter_stripe: ^11.5.0
-  pay: ^2.0.0
-  timezone: ^0.10.0
+  flutter_stripe: ^12.6.0
+  timezone: ^0.11.0
   
   # AI Integration
   google_generative_ai: ^0.4.6
@@ -49,7 +49,7 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
 
 flutter:
