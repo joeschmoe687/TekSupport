@@ -24,6 +24,27 @@
 
 ---
 
+## 🔄 AUTO-SAVE FILE WORKFLOW (CRITICAL)
+
+**BEFORE running ANY of these commands, ALWAYS save all open files first:**
+- `flutter run` / `flutter build` / `flutter test`
+- `firebase deploy` / `firebase functions:log`
+- `flutter analyze`
+- Any debug/test commands
+
+**VS Code Setup:**
+- Files auto-save after 1 second of inactivity (`.vscode/settings.json`)
+- VS Code Tasks have `"saveAll": true` (`.vscode/tasks.json`)
+- **Agent responsibility:** Before running any command, confirm all files are saved
+
+**Workflow:**
+1. Make file changes
+2. Wait ~1 second for auto-save (or manually Cmd+S)
+3. Then run command (npm, firebase, flutter, tests)
+4. If unsure files saved, run Cmd+Shift+P → "Save All"
+
+---
+
 ## 📋 PROJECT CONTEXT
 
 ### What This Is
